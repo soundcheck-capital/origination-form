@@ -28,11 +28,8 @@ const PersonalInfoStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <div className="logo-container">
-        <img src={logo} alt="Logo" className="logo" />
-      </div>
-      <h2 className="step-title">Let's get to know each other</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Your email</h3>
+    
+      <h2 className="step-title">Get Funding !</h2>
       <div className="form-group">
         <input
           type="email"

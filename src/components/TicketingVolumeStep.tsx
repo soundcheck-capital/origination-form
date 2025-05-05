@@ -1,9 +1,68 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateVolumeInfo } from '../store/formSlice';
+import { formatCurrency } from '../utils/format';
 
-const VolumeStep: React.FC = () => {
+interface CurrencyInputProps {
+  fieldName: string;
+  initialValue?: string;
+}
+
+const CurrencyInput: React.FC<CurrencyInputProps> = ({ fieldName, initialValue = "" }) => {
+  const dispatch = useDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [displayValue, setDisplayValue] = useState(() => formatCurrency(initialValue));
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    
+    // Autorise suppression
+    const cleanInput = input.replace(/[$,]/g, '');
+    
+    if (cleanInput === '') {
+      setDisplayValue('');
+      dispatch(updateVolumeInfo({ [fieldName]: '' }));
+      return;
+    }
+  
+    // Autorise chiffres + point décimal (y compris entrée partielle comme "12.")
+    if (!/^\d*\.?\d*$/.test(cleanInput)) return;
+  
+    // Ne formatte pas tant qu'on est sur une saisie partielle (ex: "12.")
+    if (cleanInput.endsWith('.')) {
+      setDisplayValue(cleanInput);
+      return;
+    }
+  
+    const numericValue = parseFloat(cleanInput);
+    if (isNaN(numericValue)) return;
+  
+    const newFormatted = formatCurrency(numericValue);
+    setDisplayValue(newFormatted);
+    dispatch(updateVolumeInfo({ [fieldName]: numericValue }));
+  
+    requestAnimationFrame(() => {
+      const el = inputRef.current;
+      if (el) el.setSelectionRange(el.value.length, el.value.length);
+    });
+  };
+  
+
+  return (
+    <input
+      type="text"
+      ref={inputRef}
+      name={fieldName}
+      value={displayValue}
+      onChange={handleChange}
+      placeholder="Online Gross Ticket Sales ($)"
+      className="form-control"
+    />
+  );
+};
+
+const TicketingVolumeStep: React.FC = () => {
   const dispatch = useDispatch();
   const volumeInfo = useSelector((state: RootState) => state.form.formData.volumeInfo);
 
@@ -44,13 +103,9 @@ const VolumeStep: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <input
-            type="number"
-            name="lastYearSales"
-            value={volumeInfo.lastYearSales}
-            onChange={handleChange}
-            placeholder="Online Gross Tickets Sales ($)"
-            className="form-control"
+          <CurrencyInput
+            fieldName="lastYearSales"
+            initialValue={volumeInfo.lastYearSales}
           />
         </div>
       </div>
@@ -78,13 +133,9 @@ const VolumeStep: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <input
-            type="number"
-            name="nextYearSales"
-            value={volumeInfo.nextYearSales}
-            onChange={handleChange}
-            placeholder="Online Gross Tickets Sales ($)"
-            className="form-control"
+          <CurrencyInput
+            fieldName="nextYearSales"
+            initialValue={volumeInfo.nextYearSales}
           />
         </div>
       </div>
@@ -92,4 +143,4 @@ const VolumeStep: React.FC = () => {
   );
 };
 
-export default VolumeStep; 
+export default TicketingVolumeStep; 

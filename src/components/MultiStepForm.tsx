@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { setCurrentStep } from '../store/formSlice';
 import PersonalInfoStep from './PersonalInfoStep';
-import LegalInfoStep from './LegalInfoStep';
 import CompanyInfoStep from './CompanyInfoStep';
 import TicketingStep from './TicketingStep';
-import VolumeStep from './VolumeStep';
-import FundsStep from './FundsStep';
+import TicketingVolumeStep from './TicketingVolumeStep';
 import OwnershipStep from './OwnershipStep';
 import FinancesStep from './FinancesStep';
+import FundsStep from './FundsStep';
 import DiligenceStep from './DiligenceStep';
-import PreferencesStep from './PreferencesStep';
+import SummaryStep from './SummaryStep';
+import logo from '../assets/logo_black_name.svg';
 
 const MultiStepForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,35 +39,35 @@ const MultiStepForm: React.FC = () => {
       case 3:
         return <TicketingStep />;
       case 4:
-        return <VolumeStep />;
+        return <TicketingVolumeStep />;
       case 5:
         return <FundsStep />;
       case 6:
-        return <LegalInfoStep />;
-      case 7:
         return <OwnershipStep />;
-      case 8:
+      case 7:
         return <FinancesStep />;
-      case 9:
+      case 8:
         return <DiligenceStep />;
-      case 10:
-        return <PreferencesStep />;
+      case 9:
+        return <SummaryStep />;
       default:
         return null;
     }
   };
 
   const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-
   return (
     <div className="multi-step-form">
       <div className="progress-bar">
-        <div
-          className="progress-bar-fill"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
       </div>
+      
+      <div className="logo-container">
+        <img src={logo} alt="Logo" className="logo" />
+      </div>
+
       {renderStep()}
+
       <div className="form-navigation">
         {currentStep > 1 && (
           <button className="btn btn-secondary" onClick={previousStep}>

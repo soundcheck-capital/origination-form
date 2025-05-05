@@ -17,6 +17,7 @@ const fundUses = [
 const FundsStep: React.FC = () => {
   const dispatch = useDispatch();
   const fundsInfo = useSelector((state: RootState) => state.form.formData.fundsInfo);
+  const volumeInfo = useSelector((state: RootState) => state.form.formData.volumeInfo);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, min, max } = e.target;
@@ -24,6 +25,18 @@ const FundsStep: React.FC = () => {
     e.target.style.background = `linear-gradient(to right, #F99927 0%, #F99927 ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
     dispatch(updateFundsInfo({ [name]: value }));
   };
+
+  // Calculate max value for "Your funds" slider (20% of last year's sales)
+  const maxFundsValue = volumeInfo.lastYearSales ? Math.round(parseFloat(volumeInfo.lastYearSales) * 0.2) : 0;
+
+  // Calculate min/max values for recoupment percentage
+  const lastYearSales = parseFloat(volumeInfo.lastYearSales) || 0;
+  const lastYearTickets = parseFloat(volumeInfo.lastYearTickets) || 0;
+  const lastYearSalesPerTicket = lastYearSales / lastYearTickets;
+  const yourFunds = parseFloat(fundsInfo.yourFunds) || 0;
+  const recoupmentPercentage = parseFloat(fundsInfo.recoupmentPercentage) || 0;
+  const minRecoupmentPercentage = lastYearSales > 0 ? Math.round(yourFunds/((lastYearSales*recoupmentPercentage)*12)) : 0;
+  const maxRecoupmentPercentage = minRecoupmentPercentage * 12;
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -37,55 +50,67 @@ const FundsStep: React.FC = () => {
 
       <div className="slider-group">
         <label className="slider-label">Your funds</label>
-        <input
-          type="range"
-          name="funds"
-          min="0"
-          max="1000000"
-          step="10000"
-          value={fundsInfo.funds}
-          onChange={handleSliderChange}
-          className="slider"
-          style={{
-            background: `linear-gradient(to right, #F99927 0%, #F99927 ${(parseInt(fundsInfo.funds) / 1000000) * 100}%, #ddd ${(parseInt(fundsInfo.funds) / 1000000) * 100}%, #ddd 100%)`
-          }}
-        />
-        <span className="slider-value">${parseInt(fundsInfo.funds).toLocaleString()}</span>
+        <div className="slider-range">
+          <span className="min-value">$0</span>
+          <input
+            type="range"
+            name="yourFunds"
+            min="0"
+            max={maxFundsValue}
+            step="10000"
+            value={fundsInfo.yourFunds}
+            onChange={handleSliderChange}
+            className="slider"
+            style={{
+              background: `linear-gradient(to right, #F99927 0%, #F99927 ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd 100%)`
+            }}
+          />
+          <span className="max-value">${maxFundsValue.toLocaleString()}</span>
+        </div>
+        <span className="slider-value">${parseInt(fundsInfo.yourFunds).toLocaleString()}</span>
       </div>
 
       <div className="slider-group">
         <label className="slider-label">Target recoupment period</label>
-        <input
-          type="range"
-          name="recoupmentPeriod"
-          min="1"
-          max="24"
-          step="1"
-          value={fundsInfo.recoupmentPeriod}
-          onChange={handleSliderChange}
-          className="slider"
-          style={{
-            background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 23) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 23) * 100}%, #ddd 100%)`
-          }}
-        />
+        <div className="slider-range">
+          <span className="min-value">1 month</span>
+          <input
+            type="range"
+            name="recoupmentPeriod"
+            min="1"
+            max="12"
+            step="1"
+            value={fundsInfo.recoupmentPeriod}
+            onChange={handleSliderChange}
+            className="slider"
+            style={{
+              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd 100%)`
+            }}
+          />
+          <span className="max-value">12 months</span>
+        </div>
         <span className="slider-value">{fundsInfo.recoupmentPeriod} months</span>
       </div>
 
       <div className="slider-group">
         <label className="slider-label">% recoupment from ticket sales</label>
-        <input
-          type="range"
-          name="recoupmentPercentage"
-          min="0"
-          max="100"
-          step="1"
-          value={fundsInfo.recoupmentPercentage}
-          onChange={handleSliderChange}
-          className="slider"
-          style={{
-            background: `linear-gradient(to right, #F99927 0%, #F99927 ${parseInt(fundsInfo.recoupmentPercentage)}%, #ddd ${parseInt(fundsInfo.recoupmentPercentage)}%, #ddd 100%)`
-          }}
-        />
+        <div className="slider-range">
+          <span className="min-value">{minRecoupmentPercentage}%</span>
+          <input
+            type="range"
+            name="recoupmentPercentage"
+            min={minRecoupmentPercentage}
+            max={maxRecoupmentPercentage}
+            step="1"
+            value={fundsInfo.recoupmentPercentage}
+            onChange={handleSliderChange}
+            className="slider"
+            style={{
+              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd 100%)`
+            }}
+          />
+          <span className="max-value">{maxRecoupmentPercentage}%</span>
+        </div>
         <span className="slider-value">{fundsInfo.recoupmentPercentage}%</span>
       </div>
 

@@ -42,7 +42,8 @@ interface FormState {
       nextYearSales: string;
     };
     fundsInfo: {
-      funds: string;
+      yourFunds: string;
+      otherFunds: string;
       recoupmentPeriod: string;
       recoupmentPercentage: string;
       fundUse: string;
@@ -126,9 +127,10 @@ const initialState: FormState = {
       nextYearSales: '',
     },
     fundsInfo: {
-      funds: '0',
-      recoupmentPeriod: '12',
-      recoupmentPercentage: '50',
+      yourFunds: '0',
+      otherFunds: '0',
+      recoupmentPeriod: '0',
+      recoupmentPercentage: '0',
       fundUse: '',
     },
   },
