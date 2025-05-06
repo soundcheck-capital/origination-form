@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/soundcheck-origination-form/static/css/main.94edc3b7.css",
+    "main.js": "/soundcheck-origination-form/static/js/main.012d78a4.js",
+    "static/js/453.0f85d08b.chunk.js": "/soundcheck-origination-form/static/js/453.0f85d08b.chunk.js",
+    "static/media/logo_black_name.svg": "/soundcheck-origination-form/static/media/logo_black_name.8f48ceb24dbcd1aebc6c62a22e78b983.svg",
+    "index.html": "/soundcheck-origination-form/index.html",
+    "main.94edc3b7.css.map": "/soundcheck-origination-form/static/css/main.94edc3b7.css.map",
+    "main.012d78a4.js.map": "/soundcheck-origination-form/static/js/main.012d78a4.js.map",
+    "453.0f85d08b.chunk.js.map": "/soundcheck-origination-form/static/js/453.0f85d08b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.94edc3b7.css",
+    "static/js/main.012d78a4.js"
+  ]
+}
