@@ -132,7 +132,6 @@ const TicketingStep: React.FC = () => {
       <h3 className="step-subtitle" style={{ color: '#F99927' }}>Company &lt;&gt; Ticketing co</h3>
       
       <div className="form-group">
-        <label className="select-label">Current partner</label>
         <div className="select-with-icon">
           <select
             name="currentPartner"
@@ -165,7 +164,6 @@ const TicketingStep: React.FC = () => {
       )}
 
       <div className="form-group">
-        <label className="select-label">Settlement policy</label>
         <select
           name="settlementPolicy"
           value={ticketingInfo.settlementPolicy}
@@ -182,7 +180,6 @@ const TicketingStep: React.FC = () => {
       </div>
 
       <div className="form-group">
-        <label className="select-label">Membership</label>
         <select
           name="membership"
           value={ticketingInfo.membership}

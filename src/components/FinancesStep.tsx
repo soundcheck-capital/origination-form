@@ -7,6 +7,11 @@ const debtTypes = [
   'Credit card debt',
   'Account payables',
   'Terms loans',
+  'Merchant Cash Advance', 
+  'Line of Credit', 'Term Loan',
+   'Equipment Loan',
+    'SBA Loan',
+     'Bank Note', 'Shareholder Loan', 'Convertible Note',
   'Other'
 ];
 

@@ -19,29 +19,41 @@ const FundsStep: React.FC = () => {
   const fundsInfo = useSelector((state: RootState) => state.form.formData.fundsInfo);
   const volumeInfo = useSelector((state: RootState) => state.form.formData.volumeInfo);
 
+  const yourFunds = parseFloat(fundsInfo.yourFunds) || 0;
+  const lastYearSales = parseFloat(volumeInfo.lastYearSales) || 1;
+  const minRecoupmentPercentage = (yourFunds / lastYearSales) * 100;
+  const maxRecoupmentPercentage = Math.min(minRecoupmentPercentage * 12, 100);
+
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, min, max } = e.target;
-    const percentage = ((parseInt(value) - parseInt(min)) / (parseInt(max) - parseInt(min))) * 100;
+    const percentage = ((parseFloat(value) - parseFloat(min)) / (parseFloat(max) - parseFloat(min))) * 100;
     e.target.style.background = `linear-gradient(to right, #F99927 0%, #F99927 ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
-    dispatch(updateFundsInfo({ [name]: value }));
+
+    if (name === "recoupmentPeriod") {
+      const months = parseInt(value);
+      const recoupmentPercentage = Math.min(minRecoupmentPercentage * (12 / months), 100);
+      dispatch(updateFundsInfo({
+        recoupmentPeriod: months.toString(),
+        recoupmentPercentage: recoupmentPercentage.toString()
+      }));
+    } else if (name === "recoupmentPercentage") {
+      const percent = parseFloat(value);
+      const newMonths = Math.max(1, Math.round(12 * (minRecoupmentPercentage / percent)));
+      dispatch(updateFundsInfo({
+        recoupmentPeriod: newMonths.toString(),
+        recoupmentPercentage: percent.toString()
+      }));
+    } else {
+      dispatch(updateFundsInfo({ [name]: value }));
+    }
   };
-
-  // Calculate max value for "Your funds" slider (20% of last year's sales)
-  const maxFundsValue = volumeInfo.lastYearSales ? Math.round(parseFloat(volumeInfo.lastYearSales) * 0.2) : 0;
-
-  // Calculate min/max values for recoupment percentage
-  const lastYearSales = parseFloat(volumeInfo.lastYearSales) || 0;
-  const lastYearTickets = parseFloat(volumeInfo.lastYearTickets) || 0;
-  const lastYearSalesPerTicket = lastYearSales / lastYearTickets;
-  const yourFunds = parseFloat(fundsInfo.yourFunds) || 0;
-  const recoupmentPercentage = parseFloat(fundsInfo.recoupmentPercentage) || 0;
-  const minRecoupmentPercentage = lastYearSales > 0 ? Math.round(yourFunds/((lastYearSales*recoupmentPercentage)*12)) : 0;
-  const maxRecoupmentPercentage = minRecoupmentPercentage * 12;
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     dispatch(updateFundsInfo({ [name]: value }));
   };
+
+  const maxFundsValue = lastYearSales ? Math.round(lastYearSales * 0.2) : 0;
 
   return (
     <div className="form-step">
@@ -57,7 +69,7 @@ const FundsStep: React.FC = () => {
             name="yourFunds"
             min="0"
             max={maxFundsValue}
-            step="10000"
+            step="1000"
             value={fundsInfo.yourFunds}
             onChange={handleSliderChange}
             className="slider"
@@ -95,23 +107,23 @@ const FundsStep: React.FC = () => {
       <div className="slider-group">
         <label className="slider-label">% recoupment from ticket sales</label>
         <div className="slider-range">
-          <span className="min-value">{minRecoupmentPercentage}%</span>
+          <span className="min-value">{minRecoupmentPercentage.toFixed(2)}%</span>
           <input
             type="range"
             name="recoupmentPercentage"
             min={minRecoupmentPercentage}
             max={maxRecoupmentPercentage}
-            step="1"
+            step="0.01"
             value={fundsInfo.recoupmentPercentage}
             onChange={handleSliderChange}
             className="slider"
             style={{
-              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd 100%)`
+              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd 100%)`
             }}
           />
-          <span className="max-value">{maxRecoupmentPercentage}%</span>
+          <span className="max-value">{maxRecoupmentPercentage.toFixed(2)}%</span>
         </div>
-        <span className="slider-value">{fundsInfo.recoupmentPercentage}%</span>
+        <span className="slider-value">{parseFloat(fundsInfo.recoupmentPercentage).toFixed(2)}%</span>
       </div>
 
       <div className="form-group">
@@ -134,4 +146,4 @@ const FundsStep: React.FC = () => {
   );
 };
 
-export default FundsStep; 
+export default FundsStep;

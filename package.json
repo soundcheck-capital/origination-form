@@ -2,7 +2,7 @@
   "name": "soundcheck-origination-form",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://guittoncandice.github.io/soundcheck-origination-form",
+  "homepage": "https://guittoncandice.github.io/soundcheck-origination-form/",
   "dependencies": {
     "@reduxjs/toolkit": "^2.7.0",
     "@testing-library/dom": "^10.4.0",

@@ -51,7 +51,22 @@ const DiligenceStep: React.FC = () => {
       <h3 className="step-subtitle" style={{ color: '#F99927' }}>Diligence</h3>
 
       <div className="diligence-container">
-        <h4 className="diligence-title">Plaid - Connect your Bank Account</h4>
+       
+
+        {renderFileUploadSection(
+          'Ticketing - Upload Historical Ticket Sales',
+          'Minimum to provide: This year + last 3 year reports from ticketing company. Best to provide: This year + last 3 year reports from ticketing company month by month',
+          'ticketingFiles',
+          diligenceInfo.ticketingFiles
+        )}
+
+        {renderFileUploadSection(
+          'Financial - Upload financial statements',
+          'Minimum to provide: Up to Date Balance Sheet and Most Current P&L. Best to provide: Up to Date Balance Sheet, Most Current P&L and 3 years of financial statements',
+          'financialFiles',
+          diligenceInfo.financialFiles
+        )}
+ <h4 className="diligence-title">Plaid - Connect your Bank Account</h4>
         
         <div className="diligence-description">
           <p>
@@ -73,21 +88,6 @@ const DiligenceStep: React.FC = () => {
         >
           Link Bank Account
         </button>
-
-        {renderFileUploadSection(
-          'Ticketing - Upload Historical Ticket Sales',
-          'Minimum to provide: This year + last 3 year reports from ticketing company. Best to provide: This year + last 3 year reports from ticketing company month by month',
-          'ticketingFiles',
-          diligenceInfo.ticketingFiles
-        )}
-
-        {renderFileUploadSection(
-          'Financial - Upload financial statements',
-          'Minimum to provide: Up to Date Balance Sheet and Most Current P&L. Best to provide: Up to Date Balance Sheet, Most Current P&L and 3 years of financial statements',
-          'financialFiles',
-          diligenceInfo.financialFiles
-        )}
-
         {renderFileUploadSection(
           'Other (optional) - Upload relevant documents about your business',
           'Minimum: if a venue copy of the lease, if a promoter a copy of the venue/rental agreement, if an outdoor event copy of the event cancelation insurance. Best: Budget, insurance certificate, bank letter, investor deck, etc.',

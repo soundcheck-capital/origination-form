@@ -1,5 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface Owner {
+  id: string;
+  name: string;
+  ownershipPercentage: string;
+  sameAddress: boolean;
+  ownerAddress: string;
+  ownerCity: string;
+  ownerState: string;
+  ownerZipCode: string;
+}
+
 interface FormState {
   currentStep: number;
   email: string;
@@ -26,7 +37,7 @@ interface FormState {
       zipCode: string;
       city: string;
       state: string;
-      ein: string;
+      taxId: string;
     };
     ticketingInfo: {
       currentPartner: string;
@@ -50,17 +61,12 @@ interface FormState {
     };
   };
   ownershipInfo: {
-    name: string;
-    address: string;
-    city: string;
-    zipCode: string;
-    state: string;
-    ownership: string;
-    sameAddress: boolean;
-    ownerAddress: string;
-    ownerCity: string;
-    ownerZipCode: string;
-    ownerState: string;
+    companyName: string;
+    companyAddress: string;
+    companyCity: string;
+    companyState: string;
+    companyZipCode: string;
+    owners: Owner[];
   };
   financesInfo: {
     filedLastYearTaxes: boolean;
@@ -111,7 +117,7 @@ const initialState: FormState = {
       zipCode: '',
       city: '',
       state: '',
-      ein: '',
+      taxId: '',
     },
     ticketingInfo: {
       currentPartner: '',
@@ -135,17 +141,12 @@ const initialState: FormState = {
     },
   },
   ownershipInfo: {
-    name: '',
-    address: '',
-    city: '',
-    zipCode: '',
-    state: '',
-    ownership: '',
-    sameAddress: true,
-    ownerAddress: '',
-    ownerCity: '',
-    ownerZipCode: '',
-    ownerState: ''
+    companyName: '',
+    companyAddress: '',
+    companyCity: '',
+    companyState: '',
+    companyZipCode: '',
+    owners: []
   },
   financesInfo: {
     filedLastYearTaxes: false,

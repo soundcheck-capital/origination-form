@@ -111,8 +111,8 @@ const LegalInfoStep: React.FC = () => {
       <div className="form-group">
         <input
           type="text"
-          name="ein"
-          value={companyInfo.ein}
+          name="taxId"
+          value={companyInfo.taxId}
           onChange={handleInputChange}
           placeholder="Company Tax ID (EIN)"
           className="form-control"
