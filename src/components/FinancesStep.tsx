@@ -113,7 +113,7 @@ const FinancesStep: React.FC = () => {
                   type="text"
                   value={debt.balance}
                   onChange={(e) => handleDebtBalanceChange(index, e.target.value)}
-                  placeholder="Current outstanding balance"
+                  placeholder="outstanding balance"
                   className="form-control"
                 />
                 <button

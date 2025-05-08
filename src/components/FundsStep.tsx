@@ -61,9 +61,14 @@ const FundsStep: React.FC = () => {
       <h3 className="step-subtitle" style={{ color: '#F99927' }}>Personalize your funds</h3>
 
       <div className="slider-group">
+        <div className="slider-label-container">
         <label className="slider-label">Your funds</label>
+        <span className="slider-value">${parseInt(fundsInfo.yourFunds).toLocaleString()}</span>
+        </div>
+       {/* <span className="min-value">$0</span> */}
+
+        {/* <span className="max-value">${maxFundsValue.toLocaleString()}</span> */}
         <div className="slider-range">
-          <span className="min-value">$0</span>
           <input
             type="range"
             name="yourFunds"
@@ -77,15 +82,18 @@ const FundsStep: React.FC = () => {
               background: `linear-gradient(to right, #F99927 0%, #F99927 ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd 100%)`
             }}
           />
-          <span className="max-value">${maxFundsValue.toLocaleString()}</span>
+                   
         </div>
-        <span className="slider-value">${parseInt(fundsInfo.yourFunds).toLocaleString()}</span>
       </div>
 
       <div className="slider-group">
+        <div className="slider-label-container">
         <label className="slider-label">Target recoupment period</label>
+        <span className="slider-value">{fundsInfo.recoupmentPeriod} months</span>
+        </div>
+        {/* <span className="min-value">1 month</span> */}
+          {/* <span className="max-value">12 months</span> */}
         <div className="slider-range">
-          <span className="min-value">1 month</span>
           <input
             type="range"
             name="recoupmentPeriod"
@@ -99,15 +107,19 @@ const FundsStep: React.FC = () => {
               background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd 100%)`
             }}
           />
-          <span className="max-value">12 months</span>
+          
         </div>
-        <span className="slider-value">{fundsInfo.recoupmentPeriod} months</span>
       </div>
 
       <div className="slider-group">
+        <div className="slider-label-container">
         <label className="slider-label">% recoupment from ticket sales</label>
+        <span className="slider-value">{parseFloat(fundsInfo.recoupmentPercentage).toFixed(2)}%</span>
+        </div>
+        {/* <span className="min-value">{minRecoupmentPercentage.toFixed(2)}%</span> */}
+
+        {/* <span className="max-value">{maxRecoupmentPercentage.toFixed(2)}%</span> */}
         <div className="slider-range">
-          <span className="min-value">{minRecoupmentPercentage.toFixed(2)}%</span>
           <input
             type="range"
             name="recoupmentPercentage"
@@ -121,9 +133,8 @@ const FundsStep: React.FC = () => {
               background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd 100%)`
             }}
           />
-          <span className="max-value">{maxRecoupmentPercentage.toFixed(2)}%</span>
+                    
         </div>
-        <span className="slider-value">{parseFloat(fundsInfo.recoupmentPercentage).toFixed(2)}%</span>
       </div>
 
       <div className="form-group">

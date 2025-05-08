@@ -178,6 +178,7 @@ const OwnershipStep: React.FC = () => {
               </div>
 
               <div className="form-group">
+                <div className="radio-label-container">
                 <label className="radio-label">Same address as company?</label>
                 <div className="radio-group">
                   <label>
@@ -196,6 +197,7 @@ const OwnershipStep: React.FC = () => {
                     />
                     No
                   </label>
+                </div>
                 </div>
               </div>
 

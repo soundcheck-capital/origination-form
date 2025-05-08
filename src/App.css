@@ -48,7 +48,7 @@ h1 {
 
 .multi-step-form {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
@@ -78,9 +78,9 @@ h1 {
 
 .progress-bar {
   width: 100%;
-  height: 4px;
+  height: 8px;
   background-color: #e0e0e0;
-  border-radius: 2px;
+  border-radius: 5px;
   margin-bottom: 3rem;
   position: relative;
   overflow: hidden;
@@ -99,23 +99,23 @@ h1 {
   margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
+  align-items: center;
 }
 
 .form-group {
   margin-bottom: 2rem;
   width: 100%;
-  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  
 }
 
 .ticketon-form-group {
   margin-bottom: 2rem;
-  width: 90%;
-  max-width: 600px;
+  width: 100%;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -125,7 +125,7 @@ h1 {
   margin-bottom: 0.75rem;
   color: #333;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 300;
 }
 
 .question-row {
@@ -172,8 +172,8 @@ h1 {
   font-size: 1.1rem;
   transition: border-color 0.3s ease;
   text-align: left;
-  padding-left: 1.2rem;
   background-color: white;
+  box-sizing: border-box;
 }
 
 .form-control:focus {
@@ -277,23 +277,31 @@ select.form-control {
 .slider-group {
   margin-bottom: 3rem;
   width: 100%;
-  max-width: 500px;
+  max-width: 700px;
 }
 
 .slider-label {
   display: block;
-  margin-bottom: 1rem;
+  text-align: left;
   color: #333;
   font-size: 1rem;
+  font-weight: 300;
+  
+}
+
+.slider-label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .slider {
   width: 100%;
-  height: 4px;
+  height: 12px;
   -webkit-appearance: none;
   background: #ddd;
   outline: none;
-  border-radius: 2px;
+  border-radius: 6px;
   margin: 1rem 0;
   background: linear-gradient(to right, #F99927 0%, #F99927 50%, #ddd 50%, #ddd 100%);
 }
@@ -303,7 +311,7 @@ select.form-control {
   appearance: none;
   width: 20px;
   height: 20px;
-  background: #F99927;
+  background: #EF2A5F;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -332,7 +340,7 @@ select.form-control {
 
 .slider-value {
   display: block;
-  text-align: center;
+  text-align: right;
   color: #F99927;
   font-weight: bold;
   font-size: 1.2rem;
@@ -347,7 +355,7 @@ select.form-control {
 }
 
 .diligence-container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
   text-align: left;
 }
@@ -377,9 +385,10 @@ select.form-control {
 .upload-section {
   margin-top: 3rem;
   padding: 2.5rem;
-  background-color: #f8f9fa;
   border-radius: 8px;
+  border: 1px solid #ddd;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .upload-title {
@@ -400,6 +409,7 @@ select.form-control {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  
 }
 
 .file-input {
@@ -525,7 +535,6 @@ select.form-control {
 }
 
 .summary-section {
-  background-color: #f8f9fa;
   border-radius: 8px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -678,8 +687,14 @@ select.form-control {
 
 .owners-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   margin-top: 2rem;
+ 
+}
+
+.radio-label-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .owner-row {
@@ -711,11 +726,9 @@ select.form-control {
 }
 
 .owner-section {
-  background: #f8f9fa;
   border-radius: 8px;
-  padding: 1.5rem;
   margin-bottom: 1.5rem;
-}
+  }
 
 .owner-header {
   display: flex;
@@ -734,6 +747,8 @@ select.form-control {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  box-sizing: border-box;
+  
 }
 
 .owner-address-fields {
@@ -743,6 +758,7 @@ select.form-control {
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #dee2e6;
+
 }
 
 .btn-icon {
@@ -764,22 +780,17 @@ select.form-control {
   width: 100%;
   max-width: 800px;
   margin: 2rem auto;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
   overflow: hidden;
 }
 
 .matrix-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
 }
 
 .matrix-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  border-bottom: 1px solid #dee2e6;
 }
 
 .matrix-row:last-child {
@@ -800,8 +811,7 @@ select.form-control {
 
 .matrix-row .matrix-cell:first-child {
   font-weight: 500;
-  color: #666;
-  background-color: #f8f9fa;
+  color: #333;
 }
 
 .matrix-row .matrix-cell input {
