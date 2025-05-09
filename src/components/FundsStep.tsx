@@ -59,7 +59,9 @@ const FundsStep: React.FC = () => {
     <div className="form-step">
       <h2 className="step-title">Customize your funding</h2>
       {/*<h3 className="step-subtitle" style={{ color: '#F99927' }}>Personalize your funding</h3>*/}
-
+      <p className="step-description">
+      Select your advance, target recoupment period and % of recoupment. See your repayment terms below.
+      </p>
       <div className="slider-group">
         <div className="slider-label-container">
         <label className="slider-label">Your funding</label>

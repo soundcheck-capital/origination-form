@@ -116,7 +116,7 @@ const LegalInfoStep: React.FC = () => {
         <input
           type="text"
           name="address"
-          value={companyInfo.address}
+          value={companyInfo.address.street}
           onChange={handleInputChange}
           placeholder="Legal entity address"
           className="form-control"
@@ -127,7 +127,7 @@ const LegalInfoStep: React.FC = () => {
         <input
           type="text"
           name="zipCode"
-          value={companyInfo.zipCode}
+          value={companyInfo.address.zipcode}
           onChange={handleInputChange}
           placeholder="ZIP code"
           className="form-control"
@@ -138,7 +138,7 @@ const LegalInfoStep: React.FC = () => {
         <input
           type="text"
           name="city"
-          value={companyInfo.city}
+          value={companyInfo.address.city}
           onChange={handleInputChange}
           placeholder="City"
           className="form-control"
@@ -148,7 +148,7 @@ const LegalInfoStep: React.FC = () => {
       <div className="form-group">
         <select
           name="state"
-          value={companyInfo.state}
+          value={companyInfo.address.state}
           onChange={handleInputChange}
           className="form-control"
         >

@@ -76,18 +76,6 @@ const CompanyInfoStep: React.FC = () => {
           className="form-control"
         />
       </div>
-
-      <div className="form-group">
-        <input
-          type="text"
-          name="socials"
-          value={companyInfo.socials}
-          onChange={handleChange}
-          placeholder="Company Socials (Instagram, websites)"
-          className="form-control"
-        />
-      </div>
-
       <div className="form-group">
         <select
           name="type"
@@ -103,6 +91,18 @@ const CompanyInfoStep: React.FC = () => {
           ))}
         </select>
       </div>
+      <div className="form-group">
+        <input
+          type="text"
+          name="socials"
+          value={companyInfo.socials}
+          onChange={handleChange}
+          placeholder="Company Socials (Instagram, websites)"
+          className="form-control"
+        />
+      </div>
+
+      
     </div>
   );
 };

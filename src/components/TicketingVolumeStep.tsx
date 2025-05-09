@@ -63,8 +63,8 @@ const TicketingVolumeStep: React.FC = () => {
         <div className="matrix-header">
           <div className="matrix-cell"></div>
           <div className="matrix-cell">Number of Events</div>
-          <div className="matrix-cell">Number of Tickets sold</div>
-          <div className="matrix-cell">Online Gross Tickets Sales</div>
+          <div className="matrix-cell">Number of Tickets sold online</div>
+          <div className="matrix-cell">Online Gross Tickets Sales ($)</div>
         </div>
 
         <div className="matrix-row">

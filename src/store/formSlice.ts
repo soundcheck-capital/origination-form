@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface Address {
+  street: string;
+  city: string;
+  zipcode: string;
+  state: string;
+  country: string;
+}
 interface Owner {
   id: string;
   name: string;
-  ownershipPercentage: string;
+  ownershipPercentage: number;
   sameAddress: boolean;
-  ownerAddress: string;
-  ownerCity: string;
-  ownerState: string;
-  ownerZipCode: string;
+  address: Address;
 }
 
 interface FormState {
@@ -22,7 +26,9 @@ interface FormState {
     address: {
       street: string;
       city: string;
-      postalCode: string;
+      zipcode: string;
+      state: string;
+      country: string;
     };
     preferences: {
       newsletter: boolean;
@@ -34,10 +40,7 @@ interface FormState {
       yearsInBusiness: string;
       socials: string;
       type: string;
-      address: string;
-      zipCode: string;
-      city: string;
-      state: string;
+      address: Address;
       taxId: string;
     };
     ticketingInfo: {
@@ -60,15 +63,14 @@ interface FormState {
       recoupmentPercentage: string;
       fundUse: string;
     };
+    ownershipInfo: {
+      companyName: string;
+      companyAddress: Address;
+      owners: Owner[];
+      totalOwnership: number;
+    };
   };
-  ownershipInfo: {
-    companyName: string;
-    companyAddress: string;
-    companyCity: string;
-    companyState: string;
-    companyZipCode: string;
-    owners: Owner[];
-  };
+ 
   financesInfo: {
     filedLastYearTaxes: boolean;
     hasBusinessDebt: boolean;
@@ -103,7 +105,9 @@ const initialState: FormState = {
     address: {
       street: '',
       city: '',
-      postalCode: '',
+      zipcode: '',
+      state: '',
+      country: '',
     },
     preferences: {
       newsletter: false,
@@ -115,10 +119,7 @@ const initialState: FormState = {
       yearsInBusiness: '',
       socials: '',
       type: '',
-      address: '',
-      zipCode: '',
-      city: '',
-      state: '',
+      address: {street: '', city: '', zipcode: '', state: '', country: ''},
       taxId: '',
     },
     ticketingInfo: {
@@ -141,15 +142,14 @@ const initialState: FormState = {
       recoupmentPercentage: '0',
       fundUse: '',
     },
+    ownershipInfo: {  
+      companyName: '',
+      companyAddress: {street: '', city: '', zipcode: '', state: '', country: ''},
+      owners: [],
+      totalOwnership: 0
+    },
   },
-  ownershipInfo: {
-    companyName: '',
-    companyAddress: '',
-    companyCity: '',
-    companyState: '',
-    companyZipCode: '',
-    owners: []
-  },
+ 
   financesInfo: {
     filedLastYearTaxes: false,
     hasBusinessDebt: false,
@@ -210,8 +210,8 @@ export const formSlice = createSlice({
     updateFundsInfo: (state, action: PayloadAction<Partial<FormState['formData']['fundsInfo']>>) => {
       state.formData.fundsInfo = { ...state.formData.fundsInfo, ...action.payload };
     },
-    updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['ownershipInfo']>>) => {
-      state.ownershipInfo = { ...state.ownershipInfo, ...action.payload };
+    updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['formData']['ownershipInfo']>>) => {
+      state.formData.ownershipInfo = { ...state.formData.ownershipInfo, ...action.payload };
     },
     updateFinancesInfo: (state, action: PayloadAction<Partial<FormState['financesInfo']>>) => {
       state.financesInfo = { ...state.financesInfo, ...action.payload };
@@ -240,3 +240,5 @@ export const {
   updateDiligenceInfo
 } = formSlice.actions;
 export default formSlice.reducer; 
+
+

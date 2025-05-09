@@ -4,7 +4,7 @@ import { RootState } from '../store';
 
 const SummaryStep: React.FC = () => {
   const formData = useSelector((state: RootState) => state.form.formData);
-  const ownershipInfo = useSelector((state: RootState) => state.form.ownershipInfo);
+  const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
   const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
   const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
 
@@ -37,10 +37,10 @@ const SummaryStep: React.FC = () => {
           <p>Name: {formData.companyInfo.name}</p>
           <p>Years in Business: {formData.companyInfo.yearsInBusiness}</p>
           <p>Type: {formData.companyInfo.type}</p>
-          <p>Address: {formData.companyInfo.address}</p>
-          <p>City: {formData.companyInfo.city}</p>
-          <p>State: {formData.companyInfo.state}</p>
-          <p>ZIP Code: {formData.companyInfo.zipCode}</p>
+          <p>Address: {formData.companyInfo.address.street}</p>
+          <p>City: {formData.companyInfo.address.city}</p>
+          <p>State: {formData.companyInfo.address.state}</p>
+          <p>ZIP Code: {formData.companyInfo.address.zipcode}</p>
           <p>Socials: {formData.companyInfo.socials}</p>
         </div>
 
@@ -63,20 +63,8 @@ const SummaryStep: React.FC = () => {
 
         <div className="summary-section">
           <h4>Ownership Information</h4>
-          {ownershipInfo.owners.map((owner, index) => (
-            <div key={owner.id}>
-              <p>Owner {index + 1}: {owner.name}</p>
-              <p>Ownership Percentage: {owner.ownershipPercentage}%</p>
-              {!owner.sameAddress && (
-                <>
-                  <p>Address: {owner.ownerAddress}</p>
-                  <p>City: {owner.ownerCity}</p>
-                  <p>State: {owner.ownerState}</p>
-                  <p>ZIP Code: {owner.ownerZipCode}</p>
-                </>
-              )}
-            </div>
-          ))}
+          <p>Owners: {ownershipInfo.owners.length}</p>
+          <p>Total Ownership: {ownershipInfo.totalOwnership}%</p>
         </div>
 
         <div className="summary-section">
