@@ -29,6 +29,7 @@ interface FormState {
       notifications: boolean;
     };
     companyInfo: {
+      employees: number;
       name: string;
       yearsInBusiness: string;
       socials: string;
@@ -45,12 +46,12 @@ interface FormState {
       membership: string;
     };
     volumeInfo: {
-      lastYearEvents: string;
-      lastYearTickets: string;
-      lastYearSales: string;
-      nextYearEvents: string;
-      nextYearTickets: string;
-      nextYearSales: string;
+      lastYearEvents: number;
+      lastYearTickets: number;
+      lastYearSales: number;
+      nextYearEvents: number;
+      nextYearTickets: number;
+      nextYearSales: number;
     };
     fundsInfo: {
       yourFunds: string;
@@ -109,6 +110,7 @@ const initialState: FormState = {
       notifications: false,
     },
     companyInfo: {
+      employees: 0,
       name: '',
       yearsInBusiness: '',
       socials: '',
@@ -125,12 +127,12 @@ const initialState: FormState = {
       membership: '',
     },
     volumeInfo: {
-      lastYearEvents: '',
-      lastYearTickets: '',
-      lastYearSales: '',
-      nextYearEvents: '',
-      nextYearTickets: '',
-      nextYearSales: '',
+      lastYearEvents: 0,
+      lastYearTickets: 0,
+      lastYearSales: 0,
+      nextYearEvents: 0,
+      nextYearTickets: 0,
+      nextYearSales: 0,
     },
     fundsInfo: {
       yourFunds: '0',

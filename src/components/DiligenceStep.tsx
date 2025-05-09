@@ -47,8 +47,8 @@ const DiligenceStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Let's get to know each other</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Diligence</h3>
+      <h2 className="step-title">Diligence</h2>
+      <h3 className="step-subtitle" style={{ color: '#F99927' }}></h3>
 
       <div className="diligence-container">
        
@@ -66,7 +66,7 @@ const DiligenceStep: React.FC = () => {
           'financialFiles',
           diligenceInfo.financialFiles
         )}
- <h4 className="diligence-title">Plaid - Connect your Bank Account</h4>
+{/*  <h4 className="diligence-title">Plaid - Connect your Bank Account</h4>
         
         <div className="diligence-description">
           <p>
@@ -87,7 +87,7 @@ const DiligenceStep: React.FC = () => {
           style={{ marginTop: '2rem' }}
         >
           Link Bank Account
-        </button>
+        </button> */}
         {renderFileUploadSection(
           'Other (optional) - Upload relevant documents about your business',
           'Minimum: if a venue copy of the lease, if a promoter a copy of the venue/rental agreement, if an outdoor event copy of the event cancelation insurance. Best: Budget, insurance certificate, bank letter, investor deck, etc.',

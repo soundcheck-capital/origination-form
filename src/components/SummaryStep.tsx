@@ -55,10 +55,10 @@ const SummaryStep: React.FC = () => {
           <h4>Volume Information</h4>
           <p>Last Year Events: {formData.volumeInfo.lastYearEvents}</p>
           <p>Last Year Tickets: {formData.volumeInfo.lastYearTickets}</p>
-          <p>Last Year Sales: {formatNumber(formData.volumeInfo.lastYearSales)}</p>
+          <p>Last Year Sales: {formData.volumeInfo.lastYearSales}</p>
           <p>Next Year Events: {formData.volumeInfo.nextYearEvents}</p>
           <p>Next Year Tickets: {formData.volumeInfo.nextYearTickets}</p>
-          <p>Next Year Sales: {formatNumber(formData.volumeInfo.nextYearSales)}</p>
+          <p>Next Year Sales: {formData.volumeInfo.nextYearSales}</p>
         </div>
 
         <div className="summary-section">

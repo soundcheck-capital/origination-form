@@ -14,7 +14,17 @@ const companyTypes = [
   'Museum',
   'Attraction',
   'Other'
+];  
+
+const yearsInBusiness = [
+  'Less than 1 year',
+  '1-2 years',
+  '2-5 years',
+  '5-10 years',
+  'More than 10 years',
+ 
 ];
+
 
 const CompanyInfoStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,8 +37,8 @@ const CompanyInfoStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Let's get to know each other</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Your company</h3>
+      <h2 className="step-title">Tell us about your business</h2>
+      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Company Information</h3>
       
       <div className="form-group">
         <input
@@ -42,12 +52,27 @@ const CompanyInfoStep: React.FC = () => {
       </div>
 
       <div className="form-group">
-        <input
-          type="number"
+        <select
           name="yearsInBusiness"
           value={companyInfo.yearsInBusiness}
           onChange={handleChange}
-          placeholder="Years in business"
+          className="form-control"
+        >
+          <option value="">Years in business</option>
+          {yearsInBusiness.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <input
+          type="number"
+          name="employees"
+          value={companyInfo.employees == 0 ? '' : companyInfo.employees}
+          onChange={handleChange}
+          placeholder="Number of employees"
           className="form-control"
         />
       </div>

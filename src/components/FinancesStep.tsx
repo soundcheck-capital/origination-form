@@ -148,8 +148,8 @@ const FinancesStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Let's get to know each other</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Finances</h3>
+      <h2 className="step-title">Finances</h2>
+      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Tell us about your finances</h3>
 
       {renderQuestion("Have you filed last year's business taxes?", 'filedLastYearTaxes')}
       {renderQuestion("Do you have any business debt or material liabilities?", 'hasBusinessDebt')}

@@ -52,8 +52,8 @@ const TicketingVolumeStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Let's get to know each other</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Ticketing Volume</h3>
+      <h2 className="step-title">Tell us about your business</h2>
+      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Annual ticketing volume</h3>
       
       <p className="step-description">
         We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility in minutes. We only collect the information we need to provide you the best possible offer.
@@ -91,7 +91,7 @@ const TicketingVolumeStep: React.FC = () => {
           </div>
           <div className="matrix-cell">
             <CurrencyInput
-              value={ticketingVolume.lastYearSales}
+              value={ticketingVolume.lastYearSales.toString()}
               onChange={(value) => handleCurrencyChange('lastYearSales', value)}
               placeholder="Fill in"
             />
@@ -122,7 +122,7 @@ const TicketingVolumeStep: React.FC = () => {
           </div>
           <div className="matrix-cell">
             <CurrencyInput
-              value={ticketingVolume.nextYearSales}
+              value={ticketingVolume.nextYearSales.toString()}
               onChange={(value) => handleCurrencyChange('nextYearSales', value)}
               placeholder="Fill in"
             />

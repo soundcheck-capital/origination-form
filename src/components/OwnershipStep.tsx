@@ -72,8 +72,9 @@ const OwnershipStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Let's get to know each other</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Ownership</h3>
+      <h2 className="step-title">Business & Ownership</h2>
+      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Tell us about your business legal information
+      </h3>
       
       <p className="step-description">
         We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility in minutes. We only collect the information we need to provide you the best possible offer.

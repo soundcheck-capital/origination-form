@@ -20,7 +20,7 @@ const FundsStep: React.FC = () => {
   const volumeInfo = useSelector((state: RootState) => state.form.formData.volumeInfo);
 
   const yourFunds = parseFloat(fundsInfo.yourFunds) || 0;
-  const lastYearSales = parseFloat(volumeInfo.lastYearSales) || 1;
+  const lastYearSales = volumeInfo.lastYearSales;
   const minRecoupmentPercentage = (yourFunds / lastYearSales) * 100;
   const maxRecoupmentPercentage = Math.min(minRecoupmentPercentage * 12, 100);
 
@@ -57,12 +57,12 @@ const FundsStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Let's get to know each other</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Personalize your funds</h3>
+      <h2 className="step-title">Customize your funding</h2>
+      {/*<h3 className="step-subtitle" style={{ color: '#F99927' }}>Personalize your funding</h3>*/}
 
       <div className="slider-group">
         <div className="slider-label-container">
-        <label className="slider-label">Your funds</label>
+        <label className="slider-label">Your funding</label>
         <span className="slider-value">${parseInt(fundsInfo.yourFunds).toLocaleString()}</span>
         </div>
        {/* <span className="min-value">$0</span> */}
@@ -86,30 +86,7 @@ const FundsStep: React.FC = () => {
         </div>
       </div>
 
-      <div className="slider-group">
-        <div className="slider-label-container">
-        <label className="slider-label">Target recoupment period</label>
-        <span className="slider-value">{fundsInfo.recoupmentPeriod} months</span>
-        </div>
-        {/* <span className="min-value">1 month</span> */}
-          {/* <span className="max-value">12 months</span> */}
-        <div className="slider-range">
-          <input
-            type="range"
-            name="recoupmentPeriod"
-            min="1"
-            max="12"
-            step="1"
-            value={fundsInfo.recoupmentPeriod}
-            onChange={handleSliderChange}
-            className="slider"
-            style={{
-              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd 100%)`
-            }}
-          />
-          
-        </div>
-      </div>
+      
 
       <div className="slider-group">
         <div className="slider-label-container">
@@ -137,6 +114,30 @@ const FundsStep: React.FC = () => {
         </div>
       </div>
 
+      <div className="slider-group">
+        <div className="slider-label-container">
+        <label className="slider-label">Target recoupment period</label>
+        <span className="slider-value">{fundsInfo.recoupmentPeriod} months</span>
+        </div>
+        {/* <span className="min-value">1 month</span> */}
+          {/* <span className="max-value">12 months</span> */}
+        <div className="slider-range">
+          <input
+            type="range"
+            name="recoupmentPeriod"
+            min="1"
+            max="12"
+            step="1"
+            value={fundsInfo.recoupmentPeriod}
+            onChange={handleSliderChange}
+            className="slider"
+            style={{
+              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd 100%)`
+            }}
+          />
+          
+        </div>
+      </div>
       <div className="form-group">
         <label className="select-label">How do you plan to use your funds?</label>
         <select

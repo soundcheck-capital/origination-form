@@ -95,9 +95,11 @@ const ticketingPartners = [
 ];
 
 const settlementPolicies = [
-  'We are paid monthly',
-  'We are paid weekly',
-  'We are paid after the event(s)'
+  'Paid daily',
+  'Paid weekly',
+  'Paid monthly',
+  'Paid bi-monthly',
+  'Paid after the event(s)'
 ];
 
 const memberships = [
@@ -128,7 +130,7 @@ const TicketingStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Let's get to know each other</h2>
+      <h2 className="step-title">Tell us about your business</h2>
       <h3 className="step-subtitle" style={{ color: '#F99927' }}>Company &lt;&gt; Ticketing co</h3>
       
       <div className="form-group">
@@ -170,7 +172,7 @@ const TicketingStep: React.FC = () => {
           onChange={handleChange}
           className="form-control"
         >
-          <option value="">What is your ticketing partner settlement/policy?</option>
+          <option value="">What is your ticketing partner settlement/payout policy?</option>
           {settlementPolicies.map((policy) => (
             <option key={policy} value={policy}>
               {policy}
