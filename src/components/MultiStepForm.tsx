@@ -21,6 +21,8 @@ const MultiStepForm: React.FC = () => {
   const nextStep = () => {
     if (currentStep < totalSteps) {
       dispatch(setCurrentStep(currentStep + 1));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
   };
 

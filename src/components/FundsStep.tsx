@@ -55,6 +55,34 @@ const FundsStep: React.FC = () => {
 
   const maxFundsValue = lastYearSales ? Math.round(lastYearSales * 0.2) : 0;
 
+  const formatCurrency = (value: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Number(value));
+  };
+
+  const calculateSoundCheckFees = () => {
+    const totalFunds = Number(fundsInfo.yourFunds) + Number(fundsInfo.otherFunds);
+    const recoupmentPeriod = Number(fundsInfo.recoupmentPeriod);
+    const recoupmentPercentage = Number(fundsInfo.recoupmentPercentage);
+    
+    // Calculate monthly payment
+    const monthlyPayment = (totalFunds * (recoupmentPercentage / 100)) / recoupmentPeriod;
+    
+    // Calculate SoundCheck fees (2% of total funds)
+    const soundCheckFees = totalFunds * 0.02;
+    
+    return {
+      monthlyPayment,
+      soundCheckFees
+    };
+  };
+
+  const { monthlyPayment, soundCheckFees } = calculateSoundCheckFees();
+
   return (
     <div className="form-step">
       <h2 className="step-title">Customize your funding</h2>
@@ -65,7 +93,7 @@ const FundsStep: React.FC = () => {
       <div className="slider-group">
         <div className="slider-label-container">
         <label className="slider-label">Your funding</label>
-        <span className="slider-value">${parseInt(fundsInfo.yourFunds).toLocaleString()}</span>
+        <span className="slider-value">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
         </div>
        {/* <span className="min-value">$0</span> */}
 
@@ -156,6 +184,33 @@ const FundsStep: React.FC = () => {
           ))}
         </select>
       </div>
+
+      <div className="funds-summary">
+        <h4>Your pre-qualified offer</h4>
+        <div className="summary-item">
+          <span className="summary-label">Advance:</span>
+          <span className="summary-value">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
+        </div>
+        <div className="summary-item">
+          <span className="summary-label">Target Recoupment Period:</span>
+          <span className="summary-value">{fundsInfo.recoupmentPeriod} months</span>
+        </div>
+        <div className="summary-item">
+          <span className="summary-label">Recoupment per ticket:</span>
+          <span className="summary-value">{fundsInfo.recoupmentPercentage}%</span>
+        </div>
+        <div className="summary-item">
+          <span className="summary-label">SoundCheck Fees per ticket:</span>
+          <span className="summary-value">{formatCurrency(soundCheckFees.toString())}</span>
+        </div>
+        <div className="summary-item">
+          <span className="summary-label">Early Repayment/Buy-out:</span>
+          <span className="summary-value">Available at anytime / no fee</span>
+        </div>
+ 
+      </div>
+      <p className="step-description" style={{ fontSize: '12px' }}>SoundCheck fee is charged until advance is fully recouped.
+Binding offer is subject to final due delligence.</p>
     </div>
   );
 };

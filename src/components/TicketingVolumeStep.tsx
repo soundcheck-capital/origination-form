@@ -16,7 +16,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placehol
     onChange(numericValue);
   };
 
-  const formatValue = (value: string) => {
+  const formatCurrencyValue = (value: string) => {
     if (!value) return '';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -26,10 +26,11 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placehol
     }).format(Number(value));
   };
 
+  
   return (
     <input
       type="text"
-      value={formatValue(value)}
+      value={formatCurrencyValue(value)}
       onChange={handleChange}
       placeholder={placeholder}
       className="form-control"
