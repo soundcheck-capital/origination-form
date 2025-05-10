@@ -10,9 +10,12 @@ interface Address {
 interface Owner {
   id: string;
   name: string;
-  ownershipPercentage: number;
+  ownershipPercentage: string;
   sameAddress: boolean;
-  address: Address;
+  ownerAddress: string;
+  ownerCity: string;
+  ownerState: string;
+  ownerZipCode: string;
 }
 
 interface FormState {
@@ -65,9 +68,11 @@ interface FormState {
     };
     ownershipInfo: {
       companyName: string;
-      companyAddress: Address;
+      companyAddress: string;
+      companyCity: string;
+      companyState: string;
+      companyZipCode: string;
       owners: Owner[];
-      totalOwnership: number;
     };
   };
  
@@ -144,9 +149,11 @@ const initialState: FormState = {
     },
     ownershipInfo: {  
       companyName: '',
-      companyAddress: {street: '', city: '', zipcode: '', state: '', country: ''},
+      companyAddress: '',
+      companyCity: '',
+      companyState: '',
+      companyZipCode: '',
       owners: [],
-      totalOwnership: 0
     },
   },
  

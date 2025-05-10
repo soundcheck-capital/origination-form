@@ -64,7 +64,7 @@ const SummaryStep: React.FC = () => {
         <div className="summary-section">
           <h4>Ownership Information</h4>
           <p>Owners: {ownershipInfo.owners.length}</p>
-          <p>Total Ownership: {ownershipInfo.totalOwnership}%</p>
+          <p>Total Ownership: {ownershipInfo.owners.reduce((total, owner) => total + parseFloat(owner.ownershipPercentage), 0)}%</p>
         </div>
 
         <div className="summary-section">
