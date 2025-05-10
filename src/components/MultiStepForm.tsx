@@ -12,6 +12,7 @@ import FundsStep from './FundsStep';
 import DiligenceStep from './DiligenceStep';
 import SummaryStep from './SummaryStep';
 import logo from '../assets/logo_black_name.svg';
+import LegalInfoStep from './LegalInfoStep';
 
 const MultiStepForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -45,12 +46,14 @@ const MultiStepForm: React.FC = () => {
       case 5:
         return <FundsStep />;
       case 6:
-        return <OwnershipStep />;
+        return <LegalInfoStep />;
       case 7:
-        return <FinancesStep />;
+        return <OwnershipStep />;
       case 8:
-        return <DiligenceStep />;
+        return <FinancesStep />;
       case 9:
+        return <DiligenceStep />;
+      case 10:
         return <SummaryStep />;
       default:
         return null;

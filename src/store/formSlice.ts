@@ -66,13 +66,16 @@ interface FormState {
       recoupmentPercentage: string;
       fundUse: string;
     };
-    ownershipInfo: {
+    ownershipInfo: {  
       companyName: string;
+      dba: string;
       companyAddress: string;
       companyCity: string;
       companyState: string;
       companyZipCode: string;
+      companyType: string;
       owners: Owner[];
+      ein: string;
     };
   };
  
@@ -149,11 +152,14 @@ const initialState: FormState = {
     },
     ownershipInfo: {  
       companyName: '',
+      dba: '',
       companyAddress: '',
       companyCity: '',
       companyState: '',
       companyZipCode: '',
+      companyType: '',
       owners: [],
+      ein: '',
     },
   },
  

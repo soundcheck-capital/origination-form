@@ -153,7 +153,7 @@ const FinancesStep: React.FC = () => {
 
       {renderQuestion("Have you filed last year's business taxes?", 'filedLastYearTaxes')}
       {renderQuestion("Do you have any business debt or material liabilities?", 'hasBusinessDebt')}
-      {renderQuestion("Are any of these liabilities not within terms and/or overdue?", 'hasOverdueLiabilities')}
+      {financesInfo.hasBusinessDebt && financesInfo.debts.length > 0 && renderQuestion("Are any of these liabilities not within terms and/or overdue?", 'hasOverdueLiabilities')}
       {renderQuestion("Are you currently leasing your business location?", 'isLeasingLocation', true)}
       {renderQuestion("Does this legal entity have any outstanding tax liens?", 'hasTaxLiens')}
       {renderQuestion("Does this business that you're currently applying or if you are a sole proprietor, do you have any judgments or lawsuits?", 'hasJudgments')}

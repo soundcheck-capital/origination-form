@@ -695,6 +695,7 @@ select.form-control {
 .radio-label-container {
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 
 .owner-row {
@@ -758,6 +759,8 @@ select.form-control {
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #dee2e6;
+  max-width: 700px;
+  width: 100%;
 
 }
 

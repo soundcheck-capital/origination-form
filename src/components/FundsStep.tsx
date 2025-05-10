@@ -210,7 +210,7 @@ const FundsStep: React.FC = () => {
  
       </div>
       <p className="step-description" style={{ fontSize: '12px' }}>SoundCheck fee is charged until advance is fully recouped.
-Binding offer is subject to final due delligence.</p>
+Binding offer is subject to final due diligence.</p>
     </div>
   );
 };
