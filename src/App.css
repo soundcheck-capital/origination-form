@@ -530,48 +530,81 @@ select.form-control {
 .summary-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
 }
 
 .summary-section {
+  background: white;
   border-radius: 8px;
-  padding: 2rem;
-  margin-bottom: 2rem;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.summary-section h4 {
-  color: #F99927;
-  margin: 2rem 0 1rem;
-  font-size: 1.2rem;
+.summary-section-title {
+  color: #333;
+  font-size: 1.25rem;
   font-weight: 600;
-  padding-bottom: 0.5rem;
+  padding-bottom: 8px;
   border-bottom: 2px solid #F99927;
 }
 
-.summary-section h4:first-child {
-  margin-top: 0;
+.summary-subsection-title {
+  color: #666;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 16px 0 12px;
 }
 
-.summary-section p {
-  margin: 0.75rem 0;
+.owner-title {
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 12px 0 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.summary-label {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.summary-value {
   color: #333;
   font-size: 1rem;
-  line-height: 1.5;
 }
 
-.summary-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0.75rem 0;
+.owner-summary {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 16px;
 }
 
-.summary-section li {
-  margin: 0.5rem 0;
-  color: #333;
-  font-size: 1rem;
-  line-height: 1.5;
-  padding-left: 1rem;
-  border-left: 2px solid #ddd;
+.debts-list {
+  grid-column: 1 / -1;
+}
+
+.debts-list .summary-value {
+  margin-top: 8px;
+}
+
+.debts-list .summary-value > div {
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.debts-list .summary-value > div:last-child {
+  border-bottom: none;
 }
 
 .submit-button {
@@ -829,7 +862,6 @@ select.form-control {
 }
 
 .funds-summary {
-  margin-top: 1rem;
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #e9ecef;
@@ -844,12 +876,29 @@ select.form-control {
   font-weight: 600;
 }
 
+.funds-summary-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.funds-summary-item:last-child {
+  border-bottom: none;
+}
+
+.funds-summary-label {
+  color: #666;
+  font-size: 1rem;
+}
+.funds-summary-value {
+  color: #333;
+  font-size: 1rem;
+}
 .summary-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #e9ecef;
 }
 
 .summary-item:last-child {

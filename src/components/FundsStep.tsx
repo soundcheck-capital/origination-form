@@ -187,25 +187,25 @@ const FundsStep: React.FC = () => {
 
       <div className="funds-summary">
         <h4>Your pre-qualified offer</h4>
-        <div className="summary-item">
-          <span className="summary-label">Advance:</span>
-          <span className="summary-value">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
+        <div className="funds-summary-item">
+          <span className="funds-summary-label">Advance:</span>
+          <span className="funds-summary-value">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
         </div>
-        <div className="summary-item">
-          <span className="summary-label">Target Recoupment Period:</span>
-          <span className="summary-value">{fundsInfo.recoupmentPeriod} months</span>
+        <div className="funds-summary-item">
+          <span className="funds-summary-label">Target Recoupment Period:</span>
+          <span className="funds-summary-value">{fundsInfo.recoupmentPeriod} months</span>
         </div>
-        <div className="summary-item">
-          <span className="summary-label">Recoupment per ticket:</span>
-          <span className="summary-value">{fundsInfo.recoupmentPercentage}%</span>
+        <div className="funds-summary-item">
+          <span className="funds-summary-label">Recoupment per ticket:</span>
+          <span className="funds-summary-value">{fundsInfo.recoupmentPercentage}%</span>
         </div>
-        <div className="summary-item">
-          <span className="summary-label">SoundCheck Fees per ticket:</span>
-          <span className="summary-value">{formatCurrency(soundCheckFees.toString())}</span>
+        <div className="funds-summary-item">
+          <span className="funds-summary-label">SoundCheck Fees per ticket:</span>
+          <span className="funds-summary-value">{formatCurrency(soundCheckFees.toString())}</span>
         </div>
-        <div className="summary-item">
-          <span className="summary-label">Early Repayment/Buy-out:</span>
-          <span className="summary-value">Available at anytime / no fee</span>
+        <div className="funds-summary-item">
+          <span className="funds-summary-label">Early Repayment/Buy-out:</span>
+          <span className="funds-summary-value">Available at anytime / no fee</span>
         </div>
  
       </div>
