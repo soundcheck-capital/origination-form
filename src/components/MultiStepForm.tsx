@@ -162,7 +162,7 @@ const MultiStepForm: React.FC = () => {
           </button>
         )}
         {currentStep === totalSteps && (
-          <button className="btn btn-success" onClick={() => console.log('Submit')}>
+          <button className="btn btn-success" onClick={handleSubmit}>
             Submit
           </button>
         )}
