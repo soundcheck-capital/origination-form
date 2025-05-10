@@ -18,7 +18,83 @@ const MultiStepForm: React.FC = () => {
   const dispatch = useDispatch();
   const currentStep = useSelector((state: RootState) => state.form.currentStep);
   const totalSteps = 10; // Updated total steps
+  const application = useSelector((state: RootState) => state.form.formData);
+  const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
+  const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
 
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append('email', application.personalInfo.email);
+    formData.append('currentPartner', application.ticketingInfo.currentPartner);
+    formData.append('settlementPolicy', application.ticketingInfo.settlementPolicy);
+    formData.append('membership', application.ticketingInfo.membership);
+    formData.append('lastYearEvents', application.volumeInfo.lastYearEvents.toString());
+    formData.append('lastYearTickets', application.volumeInfo.lastYearTickets.toString());
+    formData.append('lastYearSales', application.volumeInfo.lastYearSales.toString());
+    formData.append('nextYearEvents', application.volumeInfo.nextYearEvents.toString());
+    formData.append('nextYearTickets', application.volumeInfo.nextYearTickets.toString());
+    formData.append('nextYearSales', application.volumeInfo.nextYearSales.toString());
+    formData.append('yourFunds', application.fundsInfo.yourFunds);
+    formData.append('recoupmentPeriod', application.fundsInfo.recoupmentPeriod);
+    formData.append('recoupmentPercentage', application.fundsInfo.recoupmentPercentage);
+    formData.append('fundUse', application.fundsInfo.fundUse);
+    formData.append('companyName', application.companyInfo.name);
+    formData.append('companyWebsite', application.companyInfo.socials);
+    formData.append('companySize', application.companyInfo.employees.toString());
+    formData.append('companyYearsInBusiness', application.companyInfo.yearsInBusiness);
+    formData.append('companyTaxId', application.companyInfo.taxId);
+    
+    formData.append('ein', application.ownershipInfo.ein);
+    formData.append('dba', application.ownershipInfo.dba);
+    formData.append('companyType', application.ownershipInfo.companyType);
+    formData.append('legalEntityType', application.ownershipInfo.legalEntityType);
+    formData.append('companyAddress', application.ownershipInfo.companyAddress);
+    formData.append('companyCity', application.ownershipInfo.companyCity);
+    formData.append('companyState', application.ownershipInfo.companyState);
+    formData.append('companyZipCode', application.ownershipInfo.companyZipCode);
+    formData.append('companyOwners', application.ownershipInfo.owners.toString());
+
+    formData.append('filedLastYearTaxes', financesInfo.filedLastYearTaxes.toString());
+    formData.append('hasBusinessDebt', financesInfo.hasBusinessDebt.toString());
+    formData.append('hasOverdueLiabilities', financesInfo.hasOverdueLiabilities.toString());
+    formData.append('isLeasingLocation', financesInfo.isLeasingLocation.toString());
+    formData.append('leaseEndDate', financesInfo.leaseEndDate);
+    formData.append('hasTaxLiens', financesInfo.hasTaxLiens.toString());
+    formData.append('hasJudgments', financesInfo.hasJudgments.toString());
+    formData.append('hasBankruptcy', financesInfo.hasBankruptcy.toString());
+    formData.append('ownershipChanged', financesInfo.ownershipChanged.toString());
+
+    formData.append('bankAccountLinked', diligenceInfo.bankAccountLinked.toString()); 
+    formData.append('ticketingCompanyReport', diligenceInfo.ticketingCompanyReport[0]); 
+    formData.append('ticketingProjections', diligenceInfo.ticketingProjections[0]); 
+    formData.append('ticketingServiceAgreement', diligenceInfo.ticketingServiceAgreement[0]); 
+    formData.append('incorporationCertificate', diligenceInfo.incorporationCertificate[0]); 
+    formData.append('legalEntityChart', diligenceInfo.legalEntityChart[0]); 
+    formData.append('governmentId', diligenceInfo.governmentId[0]); 
+    formData.append('einAuthentication', diligenceInfo.einAuthentication[0]); 
+    formData.append('financialStatements', diligenceInfo.financialStatements[0]); 
+    formData.append('bankStatement', diligenceInfo.bankStatement[0]); 
+    if(financesInfo.hasBusinessDebt) {
+      formData.append('hasBusinessDebt', financesInfo.hasBusinessDebt.toString());
+      let debts = '';
+      financesInfo.debts.forEach(debt => {
+        debts += debt.type + ' ' + debt.balance + '-';
+     
+      });
+      formData.append('debts', debts);
+
+    }else{
+      formData.append('hasBusinessDebt', financesInfo.hasBusinessDebt.toString());
+    }
+
+  
+    await fetch('https://hook.us1.make.com/b85lqkc7q9giu8qeru1kf8svtxig7ltx', {
+      method: 'POST',
+      body: formData, // pas de headers ! Let the browser set it
+    });
+  };
+  
+  
   const nextStep = () => {
     if (currentStep < totalSteps) {
       dispatch(setCurrentStep(currentStep + 1));
@@ -58,6 +134,7 @@ const MultiStepForm: React.FC = () => {
       default:
         return null;
     }
+
   };
 
   const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;

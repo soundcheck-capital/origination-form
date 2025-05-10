@@ -102,8 +102,8 @@ const LegalInfoStep: React.FC = () => {
       </div>
       <div className="form-group">
         <select
-          name="companyType"
-          value={ownershipInfo.companyType}
+          name="legalEntityType"
+          value={ownershipInfo.legalEntityType}
           onChange={handleInputChange}
           className="form-control"
         >

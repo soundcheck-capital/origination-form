@@ -26,17 +26,6 @@ interface FormState {
     personalInfo: {
       email: string;
     };
-    address: {
-      street: string;
-      city: string;
-      zipcode: string;
-      state: string;
-      country: string;
-    };
-    preferences: {
-      newsletter: boolean;
-      notifications: boolean;
-    };
     companyInfo: {
       employees: number;
       name: string;
@@ -66,7 +55,8 @@ interface FormState {
       recoupmentPercentage: string;
       fundUse: string;
     };
-    ownershipInfo: {  
+    ownershipInfo: {
+      legalEntityType: string;  
       companyName: string;
       dba: string;
       companyAddress: string;
@@ -116,17 +106,6 @@ const initialState: FormState = {
     personalInfo: {
       email: '',
     },
-    address: {
-      street: '',
-      city: '',
-      zipcode: '',
-      state: '',
-      country: '',
-    },
-    preferences: {
-      newsletter: false,
-      notifications: false,
-    },
     companyInfo: {
       employees: 0,
       name: '',
@@ -157,6 +136,7 @@ const initialState: FormState = {
       fundUse: '',
     },
     ownershipInfo: {  
+      legalEntityType: '',
       companyName: '',
       dba: '',
       companyAddress: '',
@@ -217,12 +197,7 @@ export const formSlice = createSlice({
     updatePersonalInfo: (state, action: PayloadAction<Partial<FormState['formData']['personalInfo']>>) => {
       state.formData.personalInfo = { ...state.formData.personalInfo, ...action.payload };
     },
-    updateAddress: (state, action: PayloadAction<Partial<FormState['formData']['address']>>) => {
-      state.formData.address = { ...state.formData.address, ...action.payload };
-    },
-    updatePreferences: (state, action: PayloadAction<Partial<FormState['formData']['preferences']>>) => {
-      state.formData.preferences = { ...state.formData.preferences, ...action.payload };
-    },
+  
     updateCompanyInfo: (state, action: PayloadAction<Partial<FormState['formData']['companyInfo']>>) => {
       state.formData.companyInfo = { ...state.formData.companyInfo, ...action.payload };
     },
@@ -254,8 +229,6 @@ export const {
   nextStep,
   prevStep,
   updatePersonalInfo,
-  updateAddress,
-  updatePreferences,
   updateCompanyInfo,
   updateTicketingInfo,
   updateVolumeInfo,
