@@ -64,6 +64,7 @@ const FundsStep: React.FC = () => {
     }).format(Number(value));
   };
 
+ 
   const calculateSoundCheckFees = () => {
     const totalFunds = Number(fundsInfo.yourFunds) + Number(fundsInfo.otherFunds);
     const recoupmentPeriod = Number(fundsInfo.recoupmentPeriod);

@@ -9,6 +9,12 @@ interface CurrencyInputProps {
   placeholder?: string;
 }
 
+interface NumberInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}
+
 const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placeholder }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
@@ -38,12 +44,36 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placehol
   );
 };
 
+const NumberInput: React.FC<NumberInputProps> = ({ value, onChange, placeholder }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    const numericValue = input.replace(/[^0-9.]/g, '');
+    onChange(numericValue);
+  };
+
+  const formatNumberValue = (value: string) => {
+    if (!value) return '';
+    return new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: 2, 
+       }).format(Number(value));
+  };
+
+  
+  return (
+    <input
+      type="text"
+      value={formatNumberValue(value)}
+      onChange={handleChange}
+      placeholder={placeholder}
+      className="form-control"
+    />
+  );
+};
 const TicketingVolumeStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleNumberChange = (name: string, value: string) => {
     dispatch(updateVolumeInfo({ [name]: value }));
   };
 
@@ -71,23 +101,17 @@ const TicketingVolumeStep: React.FC = () => {
         <div className="matrix-row">
           <div className="matrix-cell">Last 12 months</div>
           <div className="matrix-cell">
-            <input
-              type="text"
-              name="lastYearEvents"
-              value={ticketingVolume.lastYearEvents}
-              onChange={handleInputChange}
+            <NumberInput
+              value={ticketingVolume.lastYearEvents.toString()}
+              onChange={(value) => handleNumberChange('lastYearEvents', value)}
               placeholder="Fill in"
-              className="form-control"
             />
           </div>
           <div className="matrix-cell">
-            <input
-              type="text"
-              name="lastYearTickets"
-              value={ticketingVolume.lastYearTickets}
-              onChange={handleInputChange}
+            <NumberInput
+              value={ticketingVolume.lastYearTickets.toString()}
+              onChange={(value) => handleNumberChange('lastYearTickets', value)}
               placeholder="Fill in"
-              className="form-control"
             />
           </div>
           <div className="matrix-cell">
@@ -102,23 +126,17 @@ const TicketingVolumeStep: React.FC = () => {
         <div className="matrix-row">
           <div className="matrix-cell">Next 12 months</div>
           <div className="matrix-cell">
-            <input
-              type="text"
-              name="nextYearEvents"
-              value={ticketingVolume.nextYearEvents}
-              onChange={handleInputChange}
+            <NumberInput
+              value={ticketingVolume.nextYearEvents.toString()}
+              onChange={(value) => handleNumberChange('nextYearEvents', value)}
               placeholder="Fill in"
-              className="form-control"
             />
           </div>
           <div className="matrix-cell">
-            <input
-              type="text"
-              name="nextYearTickets"
-              value={ticketingVolume.nextYearTickets}
-              onChange={handleInputChange}
+            <NumberInput
+              value={ticketingVolume.nextYearTickets.toString()}
+              onChange={(value) => handleNumberChange('nextYearTickets', value)}
               placeholder="Fill in"
-              className="form-control"
             />
           </div>
           <div className="matrix-cell">
