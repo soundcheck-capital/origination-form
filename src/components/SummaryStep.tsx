@@ -106,14 +106,18 @@ const SummaryStep: React.FC = () => {
         <div className="summary-section">
           <h4>Diligence Information</h4>
           <p>Bank Account Linked: {diligenceInfo.bankAccountLinked ? 'Yes' : 'No'}</p>
-          <p>Ticketing Files: {diligenceInfo.ticketingFiles.length} files</p>
-          <p>Financial Files: {diligenceInfo.financialFiles.length} files</p>
-          <p>Other Files: {diligenceInfo.otherFiles.length} files</p>
+          <p>Ticketing Company Report: {diligenceInfo.ticketingCompanyReport.length} files</p>
+          <p>Ticketing Service Agreement: {diligenceInfo.ticketingServiceAgreement.length} files</p>
+          <p>Ticketing Projections: {diligenceInfo.ticketingProjections.length} files</p>
+          <p>Incorporation Certificate: {diligenceInfo.incorporationCertificate.length} files</p>
+          <p>Legal Entity Chart: {diligenceInfo.legalEntityChart.length} files</p>
+          <p>Government ID: {diligenceInfo.governmentId.length} files</p>
+          
         </div>
 
-        <button className="submit-button" onClick={handleSubmit}>
+        {/* <button className="submit-button" onClick={handleSubmit}>
           Submit Application
-        </button>
+        </button> */}
       </div>
     </div>
   );

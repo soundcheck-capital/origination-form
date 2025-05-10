@@ -96,9 +96,15 @@ interface FormState {
   };
   diligenceInfo: {
     bankAccountLinked: boolean;
-    ticketingFiles: File[];
-    financialFiles: File[];
-    otherFiles: File[];
+    ticketingCompanyReport: File[];
+    ticketingServiceAgreement: File[];
+    ticketingProjections: File[];
+    incorporationCertificate: File[];
+    legalEntityChart: File[];
+    governmentId: File[];
+    einAuthentication: File[];
+    financialStatements: File[];
+    bankStatement: File[];
   };
 }
 
@@ -177,9 +183,15 @@ const initialState: FormState = {
   },
   diligenceInfo: {
     bankAccountLinked: false,
-    ticketingFiles: [],
-    financialFiles: [],
-    otherFiles: []
+    ticketingCompanyReport: [],
+    ticketingServiceAgreement: [],
+    ticketingProjections: [],
+    incorporationCertificate: [],
+    legalEntityChart: [],
+    governmentId: [],
+    einAuthentication: [],
+    financialStatements: [],
+    bankStatement: []
   },
 };
 
