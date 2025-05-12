@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateOwnershipInfo } from '../store/formSlice';
@@ -21,6 +21,32 @@ const LegalInfoStep: React.FC = () => {
     const { name, value } = e.target;
     dispatch(updateOwnershipInfo({ [name]: value }));
   };
+
+  const [ein, setEin] = useState(ownershipInfo.ein);
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const formatted = formatEIN(e.target.value);
+  setEin(formatted);
+  dispatch(updateOwnershipInfo({ ein: formatted }));
+};
+
+  const formatEIN = (value: string): string => {
+    // Supprime tout ce qui n'est pas chiffre
+    const digitsOnly = value.replace(/\D/g, '');
+  
+    // Tronque à 9 chiffres max
+    const truncated = digitsOnly.slice(0, 9);
+  
+    // Formate en XX-XXXXXXX
+    if (truncated.length <= 2) {
+      return truncated;
+    } else if (truncated.length <= 9) {
+      return `${truncated.slice(0, 2)}-${truncated.slice(2)}`;
+    }
+  
+    return truncated;
+  };
+  
 
   return (
     
@@ -120,9 +146,11 @@ const LegalInfoStep: React.FC = () => {
         <input
           type="text"
           name="ein"
-          value={ownershipInfo.ein}
-          onChange={handleInputChange}
+          value={ein}
+          onChange={handleChange}
           placeholder="Tax ID (EIN)"
+          maxLength={10} // 9 chiffres + 1 tiret
+
           className="form-control"
         />
       </div>
