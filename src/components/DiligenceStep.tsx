@@ -20,32 +20,33 @@ const DiligenceStep: React.FC = () => {
       <h3 className="step-subtitle" style={{ color: '#F99927' }}>Upload Required Documents</h3>
       
       <p className="step-description">
-        Please upload all required documents to complete your application. All documents should be in PDF format.
+        Please upload all required documents to complete your application.
       </p>
-
       <div className="form-group">
-        {/*<label className="form-label">Ticketing Company Report</label>*/}
-        <p className="upload-description">
-        Reports from ticketing company (last 3 years), not just Excel summary, including # events, $ gross ticket sales, # tickets sold per month        </p>
-        <input
-          type="file"
-          accept=".xlsx,.pdf,.csv,.jpg,.png"
-          onChange={handleFileChange('ticketingCompanyReport')}
-          className="form-control"
-        />
+          <h4>Ticketing Information</h4>
+
+        <div className="form-group">
+          <p className="upload-description">
+          Reports from ticketing company (last 3 years), not just Excel summary, including # events, $ gross ticket sales, # tickets sold per month        </p>
+          <input
+            type="file"
+            accept=".xlsx,.pdf,.csv,.jpg,.png"
+            onChange={handleFileChange('ticketingCompanyReport')}
+            className="form-control"
+          />
+        </div>
+
+        <div className="form-group">
+          <p className="upload-description">Copy of Ticketing Service Agreement </p>
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleFileChange('ticketingServiceAgreement')}
+            className="form-control"
+          />
+        </div>
       </div>
-
-      <div className="form-group">
-        <p className="upload-description">Copy of Ticketing Service Agreement </p>
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileChange('ticketingServiceAgreement')}
-          className="form-control"
-        />
-      </div>
-
-      <div className="form-group">
+      {/* <div className="form-group">
         <p className="upload-description">Ticketing projections for next 2 years per month </p>
         <input  
           type="file"
@@ -53,9 +54,39 @@ const DiligenceStep: React.FC = () => {
           onChange={handleFileChange('ticketingProjections')}
           className="form-control"
         />
+      </div> */}
+
+      <div className="form-group">
+        <h4>Financial Information</h4>
+
+        <div className="form-group">
+        <p className="upload-description">Last 2 years and YTD detailed financial statements (P&L, B/S, Cash Flow) per month</p>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange('financialStatements')}
+          className="form-control"
+        />
       </div>
 
       <div className="form-group">
+        <p className="upload-description">Last 6 months of bank statements</p>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange('bankStatement')}
+          className="form-control"
+        />
+      </div>
+
+
+      </div>
+
+
+      <div className="form-group">
+        <h4>Contractual and legal Information</h4>
+
+        <div className="form-group">
         <p className="upload-description">Certificate of Incorporation of contracting entity</p>
         <input
           type="file"
@@ -76,7 +107,7 @@ const DiligenceStep: React.FC = () => {
       </div>
 
       <div className="form-group">
-        <p className="upload-description">Scanned copy of government issued ID (along with any other named partners in the agreement with SoundCheck)</p>
+        <p className="upload-description">Scanned copy of government issued ID of the signatory of the Agreement with SoundCheck</p>
         <input
           type="file"
           accept=".pdf"
@@ -86,7 +117,7 @@ const DiligenceStep: React.FC = () => {
       </div>
 
       <div className="form-group">
-        <p className="upload-description">Completed Form W-9 and IRS Letter 147C or SS-4 to authenticate your EIN </p>
+        <p className="upload-description">Completed Form W-9</p>
         <input
           type="file"
           accept=".pdf"
@@ -95,25 +126,10 @@ const DiligenceStep: React.FC = () => {
         />
       </div>
 
-      <div className="form-group">
-        <p className="upload-description">Last 2 years and YTD detailed financial statements (P&L, B/S, Cash Flow) per month</p>
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileChange('financialStatements')}
-          className="form-control"
-        />
-      </div>
+        </div>
+      
 
-      <div className="form-group">
-        <p className="upload-description">Last 6 months of bank statements</p>
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileChange('bankStatement')}
-          className="form-control"
-        />
-      </div>
+     
 
       {/* Plaid Auth code commented for later use
        const handleLinkBankAccount = () => {

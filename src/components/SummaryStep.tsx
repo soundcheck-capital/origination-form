@@ -39,6 +39,10 @@ const SummaryStep: React.FC = () => {
               <span className="summary-value">{formData.companyInfo.type}</span>
             </div>
             <div className="summary-item">
+              <span className="summary-label">Legal Entity Type:</span>
+              <span className="summary-value">{formData.ownershipInfo.companyType}</span>
+            </div>
+            <div className="summary-item">
               <span className="summary-label">Years in Business:</span>
               <span className="summary-value">{formData.companyInfo.yearsInBusiness}</span>
             </div>
@@ -125,10 +129,7 @@ const SummaryStep: React.FC = () => {
               <span className="summary-label">Your Funds:</span>
               <span className="summary-value">{formatCurrency(parseFloat(formData.fundsInfo.yourFunds))}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Other Funds:</span>
-              <span className="summary-value">{formatCurrency(parseFloat(formData.fundsInfo.otherFunds))}</span>
-            </div>
+           
             <div className="summary-item">
               <span className="summary-label">Recoupment Period:</span>
               <span className="summary-value">{formData.fundsInfo.recoupmentPeriod} months</span>

@@ -95,17 +95,17 @@ const ticketingPartners = [
 ];
 
 const settlementPolicies = [
-  'Paid daily',
-  'Paid weekly',
-  'Paid monthly',
-  'Paid bi-monthly',
-  'Paid after the event(s)'
+  'Daily payout',
+  'Weekly payout',
+  'Bi-monthly payout',
+  'Monthly payout',
+  'Payout after the event'
 ];
 
 const memberships = [
-  'NATO (National Association of Theater Owners)',
   'NIVA (National Independent Venue Association)',
   'Promotores Unidos',
+  'NATO (National Association of Theater Owners)',
   'Other'
 ];
 
