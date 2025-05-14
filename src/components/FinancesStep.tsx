@@ -30,6 +30,13 @@ const FinancesStep: React.FC = () => {
         debts: [{ type: '', balance: '' }]
       }));
     }
+
+    if (name === 'filedLastYearTaxes' && isYes) {
+      dispatch(updateFinancesInfo({
+        filedLastYearTaxes: true,
+        lastYearTaxes:[]
+      }));
+    }
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +56,18 @@ const FinancesStep: React.FC = () => {
     dispatch(updateFinancesInfo({ debts: newDebts }));
   };
 
+  const handleFileChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        dispatch(updateFinancesInfo({ [field]: content }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
   const addDebt = () => {
     dispatch(updateFinancesInfo({
       debts: [...financesInfo.debts, { type: '', balance: '' }]
@@ -141,6 +160,19 @@ const FinancesStep: React.FC = () => {
             onChange={handleDateChange}
             className="form-control"
           />
+        </div>
+      )}
+      {name === 'filedLastYearTaxes' && financesInfo[name] && (
+        <div className="conditional-content">
+         <div className="form-group">
+        <p className="upload-description">Last year tax file</p>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange('lastYearTaxes')}
+          className="form-control"
+        />
+      </div>
         </div>
       )}
     </div>

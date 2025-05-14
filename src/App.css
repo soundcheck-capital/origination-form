@@ -880,6 +880,7 @@ select.form-control {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 0.5rem 0;
 }
 
 .funds-summary-item:last-child {
@@ -893,6 +894,7 @@ select.form-control {
 .funds-summary-value {
   color: #333;
   font-size: 1rem;
+  font-weight: 600;
 }
 .summary-item {
   display: flex;

@@ -71,6 +71,7 @@ interface FormState {
  
   financesInfo: {
     filedLastYearTaxes: boolean;
+    lastYearTaxes: File[];
     hasBusinessDebt: boolean;
     debts: Array<{
       type: string;
@@ -151,6 +152,7 @@ const initialState: FormState = {
  
   financesInfo: {
     filedLastYearTaxes: false,
+    lastYearTaxes: [],
     hasBusinessDebt: false,
     debts: [],
     hasOverdueLiabilities: false,

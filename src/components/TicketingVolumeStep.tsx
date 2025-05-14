@@ -18,7 +18,9 @@ interface NumberInputProps {
 const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placeholder }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    const numericValue = input.replace(/[^0-9]/g, '');
+    const numericValue = input.replace(/[^0-9]*/g, '');
+    console.log('value in', input);
+    console.log('value out', numericValue);
     onChange(numericValue);
   };
 
@@ -27,8 +29,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placehol
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+   
     }).format(Number(value));
   };
 
