@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { useParams, useNavigate } from 'react-router-dom';
+import { RootState, AppDispatch } from '../store';
+import { saveApplication, fetchApplicationById } from '../store/authSlice';
 import { setCurrentStep } from '../store/formSlice';
 import PersonalInfoStep from './PersonalInfoStep';
 import CompanyInfoStep from './CompanyInfoStep';
@@ -15,98 +17,51 @@ import logo from '../assets/logo_black_name.svg';
 import LegalInfoStep from './LegalInfoStep';
 
 const MultiStepForm: React.FC = () => {
-  const dispatch = useDispatch();
-  const currentStep = useSelector((state: RootState) => state.form.currentStep);
-  const totalSteps = 10; // Updated total steps
-  const application = useSelector((state: RootState) => state.form.formData);
-  const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
-  const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [currentStep, setCurrentStep] = useState(0);
+  const formData = useSelector((state: RootState) => state.form);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+
+  // Load application data if ID is provided
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchApplicationById(id));
+    }
+  }, [id, dispatch]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    setSaveMessage('');
+    try {
+      await dispatch(saveApplication({ ...formData, currentStep }));
+      setSaveMessage('Application saved successfully!');
+      
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setSaveMessage('');
+      }, 3000);
+    } catch (error) {
+      setSaveMessage('Failed to save application. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append('email', application.personalInfo.email);
-    formData.append('currentPartner', application.ticketingInfo.currentPartner);
-    formData.append('settlementPolicy', application.ticketingInfo.settlementPolicy);
-    formData.append('membership', application.ticketingInfo.membership);
-    formData.append('lastYearEvents', application.volumeInfo.lastYearEvents.toString());
-    formData.append('lastYearTickets', application.volumeInfo.lastYearTickets.toString());
-    formData.append('lastYearSales', application.volumeInfo.lastYearSales.toString());
-    formData.append('nextYearEvents', application.volumeInfo.nextYearEvents.toString());
-    formData.append('nextYearTickets', application.volumeInfo.nextYearTickets.toString());
-    formData.append('nextYearSales', application.volumeInfo.nextYearSales.toString());
-    formData.append('yourFunds', application.fundsInfo.yourFunds);
-    formData.append('recoupmentPeriod', application.fundsInfo.recoupmentPeriod);
-    formData.append('recoupmentPercentage', application.fundsInfo.recoupmentPercentage);
-    formData.append('fundUse', application.fundsInfo.fundUse);
-    formData.append('companyName', application.companyInfo.name);
-    formData.append('companyWebsite', application.companyInfo.socials);
-    formData.append('companySize', application.companyInfo.employees.toString());
-    formData.append('companyYearsInBusiness', application.companyInfo.yearsInBusiness);
-    formData.append('companyTaxId', application.companyInfo.taxId);
-    
-    formData.append('ein', application.ownershipInfo.ein);
-    formData.append('dba', application.ownershipInfo.dba);
-    formData.append('companyType', application.ownershipInfo.companyType);
-    formData.append('legalEntityType', application.ownershipInfo.legalEntityType);
-    formData.append('companyAddress', application.ownershipInfo.companyAddress);
-    formData.append('companyCity', application.ownershipInfo.companyCity);
-    formData.append('companyState', application.ownershipInfo.companyState);
-    formData.append('companyZipCode', application.ownershipInfo.companyZipCode);
-    formData.append('companyOwners', application.ownershipInfo.owners.toString());
-
-    formData.append('filedLastYearTaxes', financesInfo.filedLastYearTaxes.toString());
-    formData.append('hasBusinessDebt', financesInfo.hasBusinessDebt.toString());
-    formData.append('hasOverdueLiabilities', financesInfo.hasOverdueLiabilities.toString());
-    formData.append('isLeasingLocation', financesInfo.isLeasingLocation.toString());
-    formData.append('leaseEndDate', financesInfo.leaseEndDate);
-    formData.append('hasTaxLiens', financesInfo.hasTaxLiens.toString());
-    formData.append('hasJudgments', financesInfo.hasJudgments.toString());
-    formData.append('hasBankruptcy', financesInfo.hasBankruptcy.toString());
-    formData.append('ownershipChanged', financesInfo.ownershipChanged.toString());
-
-    formData.append('bankAccountLinked', diligenceInfo.bankAccountLinked.toString()); 
-    formData.append('ticketingCompanyReport', diligenceInfo.ticketingCompanyReport[0]); 
-    formData.append('ticketingProjections', diligenceInfo.ticketingProjections[0]); 
-    formData.append('ticketingServiceAgreement', diligenceInfo.ticketingServiceAgreement[0]); 
-    formData.append('incorporationCertificate', diligenceInfo.incorporationCertificate[0]); 
-    formData.append('legalEntityChart', diligenceInfo.legalEntityChart[0]); 
-    formData.append('governmentId', diligenceInfo.governmentId[0]); 
-    formData.append('einAuthentication', diligenceInfo.einAuthentication[0]); 
-    formData.append('financialStatements', diligenceInfo.financialStatements[0]); 
-    formData.append('bankStatement', diligenceInfo.bankStatement[0]); 
-    if(financesInfo.hasBusinessDebt) {
-      formData.append('hasBusinessDebt', financesInfo.hasBusinessDebt.toString());
-      let debts = '';
-      financesInfo.debts.forEach(debt => {
-        debts += debt.type + ' ' + debt.balance + '-';
-     
-      });
-      formData.append('debts', debts);
-
-    }else{
-      formData.append('hasBusinessDebt', financesInfo.hasBusinessDebt.toString());
-    }
-
-  
-    await fetch('https://hook.us1.make.com/i5625jtll5v0h4i8ru26v26nf6rogyd5', {
-      method: 'POST',
-      body: formData, // pas de headers ! Let the browser set it
-    });
-  };
-  
-  
-  const nextStep = () => {
-    if (currentStep < totalSteps) {
-      dispatch(setCurrentStep(currentStep + 1));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
+    try {
+      await dispatch(saveApplication({ ...formData, currentStep, status: 'submitted' }));
+      navigate('/dashboard');
+    } catch (error) {
+      setSaveMessage('Failed to submit application. Please try again.');
     }
   };
 
-  const previousStep = () => {
-    if (currentStep > 1) {
-      dispatch(setCurrentStep(currentStep - 1));
-    }
+  const handleBackToDashboard = () => {
+    navigate('/dashboard');
   };
 
   const renderStep = () => {
@@ -134,36 +89,68 @@ const MultiStepForm: React.FC = () => {
       default:
         return null;
     }
-
   };
 
-  const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
   return (
     <div className="multi-step-form">
-      <div className="progress-bar">
-        <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+      <div className="form-header">
+        <button 
+          onClick={handleBackToDashboard} 
+          className="back-to-dashboard"
+        >
+          ← Back to Dashboard
+        </button>
+        <div className="logo-container">
+          <img src={logo} alt="Logo" className="logo" />
+        </div>
       </div>
+
+      <div className="funding-label">Origination Form</div>
       
-      <div className="logo-container">
-        <img src={logo} alt="Logo" className="logo" />
+      <div className="progress-bar">
+        <div 
+          className="progress-bar-fill" 
+          style={{ width: `${((currentStep + 1) / 10) * 100}%` }}
+        ></div>
+      </div>
+
+      {saveMessage && <div className="save-message">{saveMessage}</div>}
+      
+      <div className="form-actions top-actions">
+        <button 
+          onClick={handleSave} 
+          className="btn btn-secondary save-button"
+          disabled={isSaving}
+        >
+          {isSaving ? 'Saving...' : 'Save Progress'}
+        </button>
       </div>
 
       {renderStep()}
 
       <div className="form-navigation">
-        {currentStep > 1 && (
-          <button className="btn btn-secondary" onClick={previousStep}>
+        {currentStep > 0 && (
+          <button 
+            onClick={() => setCurrentStep(currentStep - 1)} 
+            className="btn btn-secondary"
+          >
             Previous
           </button>
         )}
-        {currentStep < totalSteps && (
-          <button className="btn btn-primary" onClick={nextStep}>
+        
+        {currentStep < 10 ? (
+          <button 
+            onClick={() => setCurrentStep(currentStep + 1)} 
+            className="btn btn-primary"
+          >
             Next
           </button>
-        )}
-        {currentStep === totalSteps && (
-          <button className="btn btn-success" onClick={handleSubmit}>
-            Submit
+        ) : (
+          <button 
+            onClick={handleSubmit} 
+            className="btn btn-success"
+          >
+            Submit Application
           </button>
         )}
       </div>

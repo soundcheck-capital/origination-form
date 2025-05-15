@@ -221,6 +221,15 @@ export const formSlice = createSlice({
     updateDiligenceInfo: (state, action: PayloadAction<Partial<FormState['diligenceInfo']>>) => {
       state.diligenceInfo = { ...state.diligenceInfo, ...action.payload };
     },
+    loadSavedApplication: (state, action) => {
+      return {
+        ...state,
+        currentStep: action.payload.currentStep || 0,
+        formData: action.payload.formData || initialState.formData,
+        financesInfo: action.payload.financesInfo || initialState.financesInfo,
+        diligenceInfo: action.payload.diligenceInfo || initialState.diligenceInfo
+      };
+    }
   },
 });
 
@@ -237,7 +246,8 @@ export const {
   updateFundsInfo,
   updateOwnershipInfo,
   updateFinancesInfo,
-  updateDiligenceInfo
+  updateDiligenceInfo,
+  loadSavedApplication
 } = formSlice.actions;
 export default formSlice.reducer; 
 
