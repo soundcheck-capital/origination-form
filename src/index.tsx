@@ -17,7 +17,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL ||"/soundcheck-origination-form"}>
         <Routes>
           <Route path="/" element={<App />} />
           
