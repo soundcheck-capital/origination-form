@@ -48,7 +48,6 @@ h1 {
 
 .multi-step-form {
   width: 100%;
-  max-width: 700px;
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
@@ -77,7 +76,7 @@ h1 {
 }
 
 .progress-bar {
-  width: 100%;
+  width: 30%;
   height: 8px;
   background-color: #e0e0e0;
   border-radius: 5px;
@@ -99,7 +98,7 @@ h1 {
   margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 80%;
   align-items: center;
 }
 
@@ -164,15 +163,13 @@ h1 {
 }
 
 .form-control {
-  width: 100%;
-  padding: 1.2rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  transition: border-color 0.3s ease;
-  text-align: left;
-  background-color: white;
+  width: 40%;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
   box-sizing: border-box;
+  border: 0.5px solid #aaa;
+  align-items: center;
+  
 }
 
 .form-control:focus {
@@ -211,14 +208,28 @@ h1 {
   min-width: 160px;
 }
 
+.back-dashboard-button {
+  position: absolute;
+  left: 5%;
+  top: 5%;
+  z-index: 1000;
+}
+
 .btn-primary {
   background-color: #F99927;
   color: white;
+  
 }
 
 .btn-primary-pink {
   background-color: #EF2A5F;
   color: white;
+}
+
+.btn-link {
+  color: #EF2A5F;
+  text-decoration: none;
+  text-align: center;
 }
 
 .btn-secondary {
@@ -1065,7 +1076,7 @@ select.form-control {
 
 .dashboard-sidebar {
   width: 280px;
-  background-color: #222;
+  background-color: #292929;
   color: white;
   flex-shrink: 0;
   display: flex;
@@ -1081,7 +1092,7 @@ select.form-control {
 }
 
 .sidebar-header h3 {
-  color: #F99927;
+  color: #ffffff;
   margin: 0;
   font-size: 1.5rem;
 }

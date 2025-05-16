@@ -116,11 +116,9 @@ const OwnershipStep: React.FC = () => {
               value={owner.ownershipPercentage}
               onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e.target.value)}
               placeholder="Enter ownership percentage"
-              className={`form-control ${hasOwnershipError ? 'error' : ''}`}
+              className="form-control"
             />
-            {hasOwnershipError && (
-              <span className="error-message">Ownership percentage must be higher or equal than 80%</span>
-            )}
+          
           </div>
 
           <div className="form-group">

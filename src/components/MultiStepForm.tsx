@@ -66,25 +66,25 @@ const MultiStepForm: React.FC = () => {
 
   const renderStep = () => {
     switch (currentStep) {
+    //  case 1:
+       // return <PersonalInfoStep />;
       case 1:
-        return <PersonalInfoStep />;
-      case 2:
         return <CompanyInfoStep />;
-      case 3:
+      case 2:
         return <TicketingStep />;
-      case 4:
+      case 3:
         return <TicketingVolumeStep />;
-      case 5:
+      case 4:
         return <FundsStep />;
-      case 6:
+      case 5:
         return <LegalInfoStep />;
-      case 7:
+      case 6:
         return <OwnershipStep />;
-      case 8:
+      case 7:
         return <FinancesStep />;
-      case 9:
+      case 8:
         return <DiligenceStep />;
-      case 10:
+      case 9:
         return <SummaryStep />;
       default:
         return null;
@@ -96,16 +96,16 @@ const MultiStepForm: React.FC = () => {
       <div className="form-header">
         <button 
           onClick={handleBackToDashboard} 
-          className="back-to-dashboard"
+          className="btn btn-secondary back-dashboard-button"
         >
-          ← Back to Dashboard
+          Dashboard
         </button>
+        
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logo" />
         </div>
       </div>
 
-      <div className="funding-label">Origination Form</div>
       
       <div className="progress-bar">
         <div 
@@ -114,17 +114,7 @@ const MultiStepForm: React.FC = () => {
         ></div>
       </div>
 
-      {saveMessage && <div className="save-message">{saveMessage}</div>}
       
-      <div className="form-actions top-actions">
-        <button 
-          onClick={handleSave} 
-          className="btn btn-secondary save-button"
-          disabled={isSaving}
-        >
-          {isSaving ? 'Saving...' : 'Save Progress'}
-        </button>
-      </div>
 
       {renderStep()}
 
@@ -137,7 +127,15 @@ const MultiStepForm: React.FC = () => {
             Previous
           </button>
         )}
-        
+        {saveMessage && <div className="save-message">{saveMessage}</div>}
+      
+        <button 
+          onClick={handleSave} 
+          className="btn btn-secondary save-button"
+          disabled={isSaving}
+        >
+          {isSaving ? 'Saving...' : 'Save Progress'}
+        </button>
         {currentStep < 10 ? (
           <button 
             onClick={() => setCurrentStep(currentStep + 1)} 

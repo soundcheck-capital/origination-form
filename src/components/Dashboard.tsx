@@ -48,7 +48,7 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <aside className="dashboard-sidebar">
         <div className="sidebar-header">
-          <h3>SoundCheck</h3>
+          <h3>SoundCheck Capital</h3>
         </div>
         <div className="sidebar-user">
           <div className="user-avatar">
@@ -62,19 +62,25 @@ const Dashboard: React.FC = () => {
           <ul>
             <li className={activeMenuItem === 'applications' ? 'active' : ''}>
               <button onClick={() => setActiveMenuItem('applications')}>
-                <span className="menu-icon">📄</span>
+                {/* <span className="menu-icon">📄</span> */}
                 Applications
+              </button>
+            </li>
+            <li className={activeMenuItem === 'servicing' ? 'active' : ''}>
+              <button onClick={() => setActiveMenuItem('servicing')}>
+               {/* <span className="menu-icon">💰</span> */}
+                Servicing
               </button>
             </li>
             <li className={activeMenuItem === 'settings' ? 'active' : ''}>
               <button onClick={() => setActiveMenuItem('settings')}>
-                <span className="menu-icon">⚙️</span>
+                {/* <span className="menu-icon">⚙️</span> */}
                 Settings
               </button>
             </li>
             <li>
               <button onClick={handleLogout}>
-                <span className="menu-icon">🚪</span>
+                {/* <span className="menu-icon">🚪</span> */}
                 Logout
               </button>
             </li>
@@ -87,9 +93,7 @@ const Dashboard: React.FC = () => {
           <div className="applications-container">
             <div className="applications-header">
               <h1>My Applications</h1>
-              <Link to="/new-application" className="btn btn-primary">
-                + New Application
-              </Link>
+              <Link to="/new-application" className="btn btn-primary btn-link">New Application</Link>
             </div>
 
             {loading ? (
@@ -99,9 +103,7 @@ const Dashboard: React.FC = () => {
                 <div className="empty-icon">📄</div>
                 <h3>No applications yet</h3>
                 <p>Create your first application to get started</p>
-                <Link to="/new-application" className="btn btn-primary">
-                  Create Application
-                </Link>
+                <Link to="/new-application" className="btn btn-primary btn-link">Create Application</Link>
               </div>
             ) : (
               <div className="applications-list">
@@ -139,6 +141,13 @@ const Dashboard: React.FC = () => {
           <div className="settings-container">
             <h1>Account Settings</h1>
             <p>Account settings will be available soon.</p>
+          </div>
+        )}
+
+        {activeMenuItem === 'servicing' && (
+          <div className="settings-container">
+            <h1>Servicing</h1>
+            <p>Once you have submitted an application, you will be able to access the servicing portal.</p>
           </div>
         )}
       </main>
