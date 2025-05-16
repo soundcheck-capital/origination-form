@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginUser, registerUser, fetchUserApplication } from '../store/authSlice';
+import { RootState } from '../store';
+import { loginUser, registerUser, fetchUserApplication, fetchUserProfile } from '../store/authSlice';
 import { AppDispatch } from '../store';
 
 interface LoginFormProps {
@@ -13,12 +14,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [companyName, setCompanyName] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const toggleMode = () => {
     setMode(mode === 'login' ? 'register' : 'login');
     setError('');
@@ -46,10 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
         return false;
       }
       
-      if (!companyName) {
-        setError('Company name is required');
-        return false;
-      }
+     
     }
 
     return true;
@@ -67,8 +66,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
       if (mode === 'login') {
         const result = await dispatch(loginUser({ email, password }));
         if (result.payload?.token) {
+          dispatch(fetchUserProfile());
           // Fetch user's saved application if available
-          dispatch(fetchUserApplication());
+          dispatch(fetchUserApplication(result.payload.id));
           // Redirect to dashboard
           navigate('/dashboard');
           // Call onClose if it exists
@@ -77,8 +77,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
           setError('Invalid login credentials');
         }
       } else {
-        const result = await dispatch(registerUser({ email, password, companyName }));
+        const result = await dispatch(registerUser({ email, password, lastname, firstname }));
         if (result.payload?.token) {
+            setEmail(result.payload.email);
+            setId(result.payload.id);
           // Redirect to dashboard
           navigate('/dashboard');
           // Call onClose if it exists
@@ -103,6 +105,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
       {error && <div className="error-message">{error}</div>}
       
       <form onSubmit={handleSubmit}>
+          
         <div className="form-group">
           <input
             id="email"
@@ -140,18 +143,30 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
                 required
               />
             </div>
-            
             <div className="form-group">
-              <input
-                id="companyName"
-                type="text"
-                placeholder="Enter your company name"
-                className="form-control-login"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                required
-              />
-            </div>
+
+            <input
+            id="firstname"
+            type="text"
+            placeholder="Enter your first name"
+            className="form-control-login"
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            id="lastname"
+            type="text"
+            placeholder="Enter your last name"
+            className="form-control-login"
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+            required
+          />
+        </div>
+          
           </>
         )}
         

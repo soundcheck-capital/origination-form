@@ -39,7 +39,7 @@ const MultiStepForm: React.FC = () => {
     try {
       await dispatch(saveApplication({ ...formData, currentStep }));
       setSaveMessage('Application saved successfully!');
-      
+
       // Clear message after 3 seconds
       setTimeout(() => {
         setSaveMessage('');
@@ -66,25 +66,25 @@ const MultiStepForm: React.FC = () => {
 
   const renderStep = () => {
     switch (currentStep) {
-    //  case 1:
-       // return <PersonalInfoStep />;
-      case 1:
+      //  case 1:
+      // return <PersonalInfoStep />;
+      case 0:
         return <CompanyInfoStep />;
-      case 2:
+      case 1:
         return <TicketingStep />;
-      case 3:
+      case 2:
         return <TicketingVolumeStep />;
-      case 4:
+      case 3:
         return <FundsStep />;
-      case 5:
+      case 4:
         return <LegalInfoStep />;
-      case 6:
+      case 5:
         return <OwnershipStep />;
-      case 7:
+      case 6:
         return <FinancesStep />;
-      case 8:
+      case 7:
         return <DiligenceStep />;
-      case 9:
+      case 8:
         return <SummaryStep />;
       default:
         return null;
@@ -94,63 +94,68 @@ const MultiStepForm: React.FC = () => {
   return (
     <div className="multi-step-form">
       <div className="form-header">
-        <button 
-          onClick={handleBackToDashboard} 
-          className="btn btn-secondary back-dashboard-button"
-        >
-          Dashboard
-        </button>
-        
+
+
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logo" />
         </div>
       </div>
 
-      
+
+
       <div className="progress-bar">
-        <div 
-          className="progress-bar-fill" 
-          style={{ width: `${((currentStep + 1) / 10) * 100}%` }}
+        <div
+          className="progress-bar-fill"
+          style={{ width: `${((currentStep + 1) / 8) * 100}%` }}
         ></div>
       </div>
 
-      
+      <button
+        onClick={handleBackToDashboard}
+        className="btn btn-secondary"
+      >
+        Dashboard
+      </button>
 
       {renderStep()}
 
       <div className="form-navigation">
+        <div className="form-navigation-left">
         {currentStep > 0 && (
-          <button 
-            onClick={() => setCurrentStep(currentStep - 1)} 
+          <button
+            onClick={() => setCurrentStep(currentStep - 1)}
             className="btn btn-secondary"
           >
             Previous
           </button>
         )}
         {saveMessage && <div className="save-message">{saveMessage}</div>}
-      
-        <button 
-          onClick={handleSave} 
+
+        <button
+          onClick={handleSave}
           className="btn btn-secondary save-button"
           disabled={isSaving}
         >
           {isSaving ? 'Saving...' : 'Save Progress'}
         </button>
-        {currentStep < 10 ? (
-          <button 
-            onClick={() => setCurrentStep(currentStep + 1)} 
+        </div>
+
+        <div className="form-navigation-right">
+        {currentStep < 8 ? (
+          <button
+            onClick={() => setCurrentStep(currentStep + 1)}
             className="btn btn-primary"
           >
             Next
           </button>
         ) : (
-          <button 
-            onClick={handleSubmit} 
+          <button
+            onClick={handleSubmit}
             className="btn btn-success"
           >
             Submit Application
           </button>
-        )}
+        )}</div>
       </div>
     </div>
   );

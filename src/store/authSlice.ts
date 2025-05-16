@@ -21,6 +21,8 @@ interface AuthState {
   user: {
     id: string;
     email: string;
+    firstname: string;
+    lastname: string;
   } | null;
   token: string | null;
   isAuthenticated: boolean;
@@ -48,7 +50,7 @@ export const loginUser = createAsyncThunk(
       
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
-      
+      console.log('response', response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
@@ -59,7 +61,7 @@ export const loginUser = createAsyncThunk(
 // Register thunk
 export const registerUser = createAsyncThunk(
   'auth/register',
-  async (userData: { email: string; password: string; companyName: string }, { rejectWithValue }) => {
+  async (userData: { email: string; password: string; lastname: string; firstname: string }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${API_URL}/auth/register`, userData);
       
@@ -93,14 +95,15 @@ export const fetchUserProfile = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const { auth } = getState() as { auth: AuthState };
-      
+      console.log('auth', auth);
       const config = {
         headers: {
           Authorization: `Bearer ${auth.token}`
         }
       };
       
-      const response = await axios.get(`${API_URL}/auth/me`, config);
+      const response = await axios.get(`${API_URL}/users/${auth.user?.id}`, config);
+      console.log('response', response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user profile');
@@ -148,7 +151,7 @@ export const saveApplication = createAsyncThunk(
         }
       };
       
-      const response = await axios.post(`${API_URL}/applications/save`, { formData }, config);
+      const response = await axios.post(`${API_URL}/applications/update`, { formData }, config);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to save application');
@@ -169,7 +172,7 @@ export const fetchApplications = createAsyncThunk(
         }
       };
       
-      const response = await axios.get(`${API_URL}/applications`, config);
+      const response = await axios.get(`${API_URL}/applications/all`, config);
       
       // Ensure we always return an array
       return Array.isArray(response.data) ? response.data : [];
@@ -223,10 +226,18 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
+      console.log('Thunk réussi');
+
       state.loading = false;
       state.isAuthenticated = true;
       state.token = action.payload.token;
-      state.user = action.payload.user;
+      state.user = {
+        id: action.payload.userId,
+        email: action.payload.email,
+        firstname: action.payload.first_name,
+        lastname: action.payload.last_name
+      }
+      console.log('state.user', state.user);
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;
@@ -263,7 +274,12 @@ const authSlice = createSlice({
     });
     builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
       state.loading = false;
-      state.user = action.payload;
+      state.user = {
+        id: action.payload.id,
+        email: action.payload.email,
+        firstname: action.payload.first_name,
+        lastname: action.payload.last_name
+      }
     });
     builder.addCase(fetchUserProfile.rejected, (state, action) => {
       state.loading = false;

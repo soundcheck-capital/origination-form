@@ -134,7 +134,6 @@ const TicketingStep: React.FC = () => {
       <h3 className="step-subtitle" style={{ color: '#F99927' }}>Company &lt;&gt; Ticketing co</h3>
       
       <div className="form-group">
-        <div className="select-with-icon">
           <select
             name="currentPartner"
             value={ticketingInfo.currentPartner}
@@ -151,7 +150,6 @@ const TicketingStep: React.FC = () => {
           {isTicketonConnected && ticketingInfo.currentPartner === 'Ticketon' && (
             <span className="check-icon">✓</span>
           )}
-        </div>
       </div>
 
       {ticketingInfo.currentPartner === 'Ticketon' && !isTicketonConnected && (

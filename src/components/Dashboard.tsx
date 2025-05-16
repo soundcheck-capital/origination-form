@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
-import { fetchApplications, logoutUser } from '../store/authSlice';
+import { fetchApplications, logoutUser, fetchUserProfile } from '../store/authSlice';
 import { Link } from 'react-router-dom';
-
+import logo from '../assets/logo_white_name.svg';
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const auth = useSelector((state: RootState) => state.auth);
@@ -12,6 +12,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
+      dispatch(fetchUserProfile());
       dispatch(fetchApplications());
     }
   }, [dispatch, isAuthenticated]);
@@ -48,14 +49,16 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <aside className="dashboard-sidebar">
         <div className="sidebar-header">
-          <h3>SoundCheck Capital</h3>
+        <img src={logo} alt="Logo" className="logo" />
+
         </div>
         <div className="sidebar-user">
           <div className="user-avatar">
             {user?.email?.charAt(0).toUpperCase() || 'U'}
           </div>
+          
           <div className="user-info">
-            <div className="user-email">{user?.email || ''}</div>
+            <div className="user-email">{user?.firstname} {user?.lastname}</div>
           </div>
         </div>
         <nav className="sidebar-nav">
