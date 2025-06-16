@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
-import { fetchApplications, logoutUser, fetchUserProfile } from '../store/authSlice';
+import { fetchApplications, logoutUser, fetchUserProfile } from '../store/auth/authThunks';
+import { createApplication } from '../store/form/formThunks';
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo_white_name.svg';
+import Sidebar from './Sidebar';
+
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const auth = useSelector((state: RootState) => state.auth);
@@ -19,6 +21,10 @@ const Dashboard: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+  };
+
+  const handleNewApplication = () => {
+    dispatch(createApplication());
   };
 
   const getStatusColor = (status: string) => {
@@ -47,56 +53,14 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard-container">
-      <aside className="dashboard-sidebar">
-        <div className="sidebar-header">
-        <img src={logo} alt="Logo" className="logo" />
+      <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} />
 
-        </div>
-        <div className="sidebar-user">
-          <div className="user-avatar">
-            {user?.email?.charAt(0).toUpperCase() || 'U'}
-          </div>
-          
-          <div className="user-info">
-            <div className="user-email">{user?.firstname} {user?.lastname}</div>
-          </div>
-        </div>
-        <nav className="sidebar-nav">
-          <ul>
-            <li className={activeMenuItem === 'applications' ? 'active' : ''}>
-              <button onClick={() => setActiveMenuItem('applications')}>
-                {/* <span className="menu-icon">📄</span> */}
-                Applications
-              </button>
-            </li>
-            <li className={activeMenuItem === 'servicing' ? 'active' : ''}>
-              <button onClick={() => setActiveMenuItem('servicing')}>
-               {/* <span className="menu-icon">💰</span> */}
-                Servicing
-              </button>
-            </li>
-            <li className={activeMenuItem === 'settings' ? 'active' : ''}>
-              <button onClick={() => setActiveMenuItem('settings')}>
-                {/* <span className="menu-icon">⚙️</span> */}
-                Settings
-              </button>
-            </li>
-            <li>
-              <button onClick={handleLogout}>
-                {/* <span className="menu-icon">🚪</span> */}
-                Logout
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </aside>
 
       <main className="dashboard-content">
         {activeMenuItem === 'applications' && (
           <div className="applications-container">
-            <div className="applications-header">
-              <h1>My Applications</h1>
-              <Link to="/new-application" className="btn btn-primary btn-link">New Application</Link>
+            <div className="applications-header right-0">
+              <Link to="/new-application" className="btn btn-primary btn-link" onClick={handleNewApplication}>New Application</Link>
             </div>
 
             {loading ? (
@@ -106,7 +70,7 @@ const Dashboard: React.FC = () => {
                 <div className="empty-icon">📄</div>
                 <h3>No applications yet</h3>
                 <p>Create your first application to get started</p>
-                <Link to="/new-application" className="btn btn-primary btn-link">Create Application</Link>
+                <Link to="/new-application" className="btn btn-primary btn-link" onClick={handleNewApplication}>Create Application</Link>
               </div>
             ) : (
               <div className="applications-list">

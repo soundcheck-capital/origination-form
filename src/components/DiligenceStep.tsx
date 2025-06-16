@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateDiligenceInfo } from '../store/formSlice';
+import { updateDiligenceInfo } from '../store/form/formSlice';
 
 const DiligenceStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -16,8 +16,7 @@ const DiligenceStep: React.FC = () => {
 
   return (
     <div className="form-step">
-      <h2 className="step-title">Diligence</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Upload Required Documents</h3>
+      <h3 className="step-subtitle" >Upload Required Documents</h3>
       
       <p className="step-description">
         Please upload all required documents to complete your application.

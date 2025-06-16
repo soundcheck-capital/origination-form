@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateOwnershipInfo } from '../store/formSlice';
+import  updateOwnershipInfo from '../store/form/formSlice';
 
 interface Owner {
   id: string;
@@ -42,7 +42,7 @@ const OwnershipStep: React.FC = () => {
       owner.id === id ? { ...owner, [field]: value } : owner
     );
     setOwners(updatedOwners);
-    dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+   // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
 
   const addOwner = () => {
@@ -58,14 +58,14 @@ const OwnershipStep: React.FC = () => {
     };
     const updatedOwners = [...owners, newOwner];
     setOwners(updatedOwners);
-    dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+   // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
 
   const removeOwner = (id: string) => {
     if (owners.length > 1) {
       const updatedOwners = owners.filter(owner => owner.id !== id);
       setOwners(updatedOwners);
-      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+     // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
     }
   };
 
@@ -80,48 +80,47 @@ const OwnershipStep: React.FC = () => {
 
   return (
 
-
-    <div className="form-step">
-      <h2 className="step-title">Business & Ownership</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Beneficial ownership & control person</h3>
-      <p className="step-description">Please carefully complete the information below and make sure that it is accurate including a complete address with city/state/zip and information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
+    <div className="flex flex-col items-center justify-center w-full">
+      <h3 className="text-gray-600 mb-8 text-2xl font-bold mt-10">Beneficial ownership & control person</h3>
+      <p className="text-gray-400 mb-16 text-center px-20">Please carefully complete the information below and make sure that it is accurate including a complete address with city/state/zip and information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
+     
       {owners.map((owner) => (
-        <div key={owner.id} className="form-group">
-          <div className="owner-header">
-            <h5>Owner Information</h5>
+        <div key={owner.id} className="space-y-4 bg-white p-8 rounded-xl shadow-md border-rose-400 border-2 mb-10">
+          <div className="">
+            <label className='block text-sm font-medium text-gray-700 mb-2'>Owner Information</label>
             {owners.length > 1 && (
               <button
-                className="btn-icon"
+                className="text-sm text-gray-500 hover:text-red-500 focus:outline-none"
                 onClick={() => removeOwner(owner.id)}
                 type="button"
               >
-                ×
+                Delete owner
               </button>
             )}
           </div>
 
-          <div className="form-group">
+          <div className="space-y-2">
             <input
               type="text"
               value={owner.name}
               onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)}
               placeholder="Enter owner name"
-              className="form-control"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
             />
           </div>
 
-          <div className="form-group">
+          <div className="space-y-2">
             <input
               type="text"
               value={owner.ownershipPercentage}
               onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e.target.value)}
               placeholder="Enter ownership percentage"
-              className="form-control"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
             />
           
           </div>
 
-          <div className="form-group">
+          <div className="space-y-2">
             <div className="radio-label-container">
               <label className="radio-label">Same address as company?</label>
               <div className="radio-group">
@@ -147,31 +146,31 @@ const OwnershipStep: React.FC = () => {
 
           {!owner.sameAddress && (
             <div className="owner-address-fields">
-              <div className="form-group">
+              <div className="space-y-2">
                 <input
                   type="text"
                   value={owner.ownerAddress}
                   onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)}
                   placeholder="Enter owner address"
-                  className="form-control"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>
 
-              <div className="form-group">
+              <div className="space-y-2">
                 <input
                   type="text"
                   value={owner.ownerCity}
                   onChange={(e) => handleOwnerChange(owner.id, 'ownerCity', e.target.value)}
                   placeholder="Enter owner city"
-                  className="form-control"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>
 
-              <div className="form-group">
+              <div className="space-y-2">
                 <select
                   value={owner.ownerState}
                   onChange={(e) => handleOwnerChange(owner.id, 'ownerState', e.target.value)}
-                  className="form-control"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
                 >
                   <option value="">Select state</option>
                   {usStates.map((state) => (
@@ -182,13 +181,13 @@ const OwnershipStep: React.FC = () => {
                 </select>
               </div>
 
-              <div className="form-group">
+              <div className="space-y-2">
                 <input
                   type="text"
                   value={owner.ownerZipCode}
                   onChange={(e) => handleOwnerChange(owner.id, 'ownerZipCode', e.target.value)}
                   placeholder="Enter owner ZIP code"
-                  className="form-control"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>
             </div>

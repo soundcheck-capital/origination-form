@@ -1,9 +1,8 @@
 .App {
   text-align: center;
-  min-height: 100vh;
-  background-color: white;
   display: flex;
   justify-content: center;
+  overflow: hidden;
 }
 
 .App-logo {
@@ -18,8 +17,6 @@
 }
 
 .App-header {
-  min-height: 100vh;
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
@@ -28,7 +25,6 @@
 }
 
 h1 {
-  margin-bottom: 2rem;
   font-size: 2.5rem;
   color: #F99927;
 }
@@ -46,42 +42,48 @@ h1 {
   }
 }
 
+.form-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-left: 1rem;
+  margin-top: 3rem;
+}
+
 .multi-step-form {
   width: 100%;
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.logo-container {
-  margin-bottom: 1rem;
+.form-header  {
   display: flex;
-  justify-content: left;
+  justify-content: center;
   width: 100%;
 }
 
+.logo-container {
+  display: flex;
+  justify-content: right;
+  margin-right: 2rem;
+
+}
 .logo {
-  max-width: 300px;
   height: auto;
+  max-width: 200px;
+  margin-right: 2rem;
+
 }
 
-.funding-label {
-  color: #333;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
-  text-align: center;
-  width: 100%;
-}
 
 .progress-bar {
-  width: 30%;
-  height: 8px;
+  width: 100%;
+  height: 15px;
   background-color: #e0e0e0;
-  border-radius: 5px;
-  margin-bottom: 3rem;
-  position: relative;
+  position: fixed;
   overflow: hidden;
 }
 
@@ -95,22 +97,30 @@ h1 {
 }
 
 .form-step {
-  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  width: 80%;
-  align-items: center;
+  width: 100%;
+  align-items: left;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0.7rem;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items:center;
-  
+  align-items:left;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
+.form-group-login {
+  margin-bottom: 0.7rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .ticketon-form-group {
   margin-bottom: 2rem;
   width: 100%;
@@ -149,22 +159,27 @@ h1 {
   border-left: 2px solid #F99927;
 }
 
-.step-title {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.step-subtitle {
+ .step-title{
   font-size: 1.5rem;
-  margin-bottom: 2rem;
-  text-align: center;
+  color: #F99927;
+  text-align: left;
+  margin-bottom: 0.1rem;
+  margin-left: 2rem;
+  font-weight: 700;
 }
 
-.form-control {
+.step-subtitle{
+  font-size: 1.5rem;
+  text-align: left;
+  margin-bottom: 1.5rem;
+  color: #000;
+  font-weight: 400;
+  margin-left: 2rem;
+}
+
+.form-controlinput {
   width: 40%;
-  border-radius: 5px;
+  border-radius: 12px;
   padding: 0.5rem 1rem;
   box-sizing: border-box;
   border: 0.5px solid #aaa;
@@ -176,6 +191,23 @@ h1 {
   outline: none;
   border-color: #F99927;
 }
+
+.form-control {
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 16px 20px;
+  font-family: 'Poppins', sans-serif;
+  transition: box-shadow 0.2s;
+  width: 40%;
+  box-sizing: border-box;
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 2px rgba(249, 153, 39, 0.4);
+}
+
 
 .form-control.error {
   border-color: #ff4444;
@@ -192,32 +224,18 @@ h1 {
 
 .form-navigation {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  width: 100%;
-
-
-}
-
-.form-navigation-right {
-  display: flex;
   justify-content: right;
   gap: 1rem;
   width: 100%;
-  margin-right: 1rem;
+  margin-bottom: 2rem;
+margin-top: 2rem;
+margin-right: 4rem;
 }
 
-.form-navigation-left {
-  display: flex;
-  justify-content: left;
-  gap: 1rem;
-  width: 100%;
-  margin-left: 1rem;
-}
 .btn {
   padding: 1rem 2rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 1.1rem;
   transition: all 0.3s ease;
@@ -225,6 +243,12 @@ h1 {
   min-width: 160px;
 }
 
+.btn-next {
+  background-color: #F99927;
+  color: white;
+  border: none;
+  border-radius: 20px;
+}
 
 .back-dashboard-button {
   position: absolute;
@@ -252,8 +276,13 @@ h1 {
 
 .btn-secondary {
   background-color: white;
-  color: rgba(0, 0, 0, 0.8);
-  border: 1px solid #666;
+  color: rgba(28, 28, 28, 0.8);
+  border: 1px solid #F99927;
+}
+
+.btn-secondary:hover {
+  background-color: #f6efe6;
+  color: rgb(0, 0, 0);
 }
 
 .btn-success {
@@ -280,25 +309,16 @@ select.form-control {
 }
 
 .step-description {
-  text-align: center;
+  text-align: left;
   color: #666;
   margin-bottom: 2rem;
   max-width: 600px;
   line-height: 1.5;
+  margin-left: 2rem;
+  margin-top: 0;
 }
 
-.volume-section {
-  margin-bottom: 3rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin-bottom: 3rem;
 
-
-}
 
 .section-title {
   color: #333;
@@ -308,33 +328,33 @@ select.form-control {
 }
 
 .slider-group {
-  margin-bottom: 3rem;
-  width: 100%;
-  max-width: 700px;
+  margin-bottom: 1rem;
+  margin-left: 2rem;
+  width: 80%;
 }
 
 .slider-label {
   display: block;
   text-align: left;
   color: #333;
-  font-size: 1rem;
-  font-weight: 300;
+  font-size: 1.1rem;
+  font-weight: 400;
   
 }
 
 .slider-label-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: left;
+
 }
 
 .slider {
-  width: 100%;
-  height: 12px;
+  height: 24px;
   -webkit-appearance: none;
   background: #ddd;
   outline: none;
-  border-radius: 6px;
+  border-radius: 12px;
   margin: 1rem 0;
   background: linear-gradient(to right, #F99927 0%, #F99927 50%, #ddd 50%, #ddd 100%);
 }
@@ -342,9 +362,9 @@ select.form-control {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #EF2A5F;
+  width: 32px;
+  height: 32px;
+  background: rgb(45, 103, 184);
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -384,7 +404,7 @@ select.form-control {
   margin-bottom: 0.5rem;
   color: #333;
   font-size: 1rem;
-  text-align: center;
+  text-align: left;
 }
 
 .diligence-container {
@@ -618,6 +638,30 @@ select.form-control {
   font-size: 1rem;
 }
 
+.form-header-title {
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: space-between;
+  width: 100%;
+}
+.zip-code-container {
+  display: table;
+  width: 100%;
+  margin-bottom: 0.7rem;
+}
+
+.zip-code-table-row {
+  display: table-row;
+  justify-content: left;
+  width: 50%;
+}
+
+.zip-code-input {
+  display: table-cell;
+  justify-content: left;
+  width: 50%;
+}
 .owner-summary {
   background: #f8f9fa;
   border-radius: 6px;
@@ -760,8 +804,10 @@ select.form-control {
 
 .radio-label-container {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  margin-top: 1rem;
+}
+.radio-label {
+  margin-right: 1rem;
 }
 
 .owner-row {
@@ -847,34 +893,30 @@ select.form-control {
 
 .volume-matrix {
   width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
   overflow: hidden;
+
 }
 
 .matrix-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 2fr 2fr;
 }
 
 .matrix-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 2fr 2fr;
 }
 
-.matrix-row:last-child {
-  border-bottom: none;
-}
+
 
 .matrix-cell {
-  padding: 1rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: right;
+  justify-content: right;
 }
 
 .matrix-header .matrix-cell {
-  font-weight: 600;
+  font-weight: 400;
   color: #333;
 }
 
@@ -895,12 +937,23 @@ select.form-control {
   font-weight: 500;
 }
 
+.funding-section-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.funding-section {
+  width: 50%;
+}
+
 .funds-summary {
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #e9ecef;
-  width: 100%;
-  max-width: 700px;
+  background-color: #fff;
+  margin-right: 2rem;
 }
 
 .funds-summary h4 {
@@ -908,6 +961,7 @@ select.form-control {
   font-size: 1.2rem;
   margin-bottom: 1rem;
   font-weight: 600;
+  margin-top: 0rem;
 }
 
 .funds-summary-item {
@@ -973,8 +1027,7 @@ select.form-control {
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  font-size: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -1066,14 +1119,15 @@ select.form-control {
 }
 
 .btn-primary {
-  background-color: #F99927;
+  background-color: #F23561 /*#F99927*/;
   border: none;
   color: white;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  border-radius: 4px;
+  border-radius: 2rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
@@ -1086,22 +1140,35 @@ select.form-control {
 }
 
 /* Dashboard Styles */
+
+
 .dashboard-container {
   display: flex;
-  min-height: 100vh;
   width: 100%;
+  background-color: #ffffff;
+  min-height: 100vh;
 }
 
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  border-radius: 1rem;
+}
 .dashboard-sidebar {
-  width: 280px;
-  background-color: #292929;
-  color: white;
+  width: 250px;
+  background-color: #f8f9fa;
+  color: #292929;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  height: 100vh;
   position: sticky;
   top: 0;
+  margin: 1rem;
+  border-radius: 1rem;
 }
 
 .sidebar-header {
@@ -1126,13 +1193,14 @@ select.form-control {
 .user-avatar {
   width: 40px;
   height: 40px;
-  background-color: #F99927;
-  border-radius: 50%;
+  background-color: #EF2A5F;
+  border-radius: 30%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   font-size: 1.2rem;
+  color: #ffffff;
 }
 
 .user-info {
@@ -1141,7 +1209,7 @@ select.form-control {
 
 .user-name {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 2rem;
   margin-bottom: 0.2rem;
   white-space: nowrap;
   overflow: hidden;
@@ -1149,8 +1217,8 @@ select.form-control {
 }
 
 .user-email {
-  font-size: 0.8rem;
-  color: #aaa;
+  font-size: 1.2rem;
+  color: #666;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1184,15 +1252,22 @@ select.form-control {
   cursor: pointer;
   transition: background-color 0.2s;
   font-size: 1rem;
+  border-radius: 1rem;
+
 }
 
 .sidebar-nav li.active button {
-  background-color: #333;
-  color: #F99927;
+  color: #333;
+  font-weight: 600;
+
 }
 
 .sidebar-nav button:hover {
-  background-color: #333;
+  background-color: #F23561;
+  transition: background-color 0.3s ease ;
+  color: #ffffff;
+  opacity: 0.8;
+  border-radius: 1rem;
 }
 
 .menu-icon {
@@ -1200,12 +1275,7 @@ select.form-control {
   min-width: 24px;
 }
 
-.dashboard-content {
-  flex: 1;
-  padding: 2rem;
-  background-color: #f8f9fa;
-  min-height: 100vh;
-}
+
 
 .applications-container {
   max-width: 1200px;
@@ -1214,7 +1284,7 @@ select.form-control {
 
 .applications-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 2rem;
 }
@@ -1408,6 +1478,10 @@ select.form-control {
   padding: 0.5rem 1rem;
   box-sizing: border-box;
   border: 0.5px solid #aaa;
+ 
+  align-items: center;
+  justify-content: center;
+
 }
 
 .form-control-login:focus {

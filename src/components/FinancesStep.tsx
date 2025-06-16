@@ -1,8 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateFinancesInfo } from '../store/formSlice';
-
+import { updateFinancesInfo } from '../store/form/formSlice';
 const debtTypes = [
   'Credit card debt',
   'Account payables',
@@ -80,27 +79,29 @@ const FinancesStep: React.FC = () => {
   };
 
   const renderQuestion = (question: string, name: keyof Pick<typeof financesInfo, 'filedLastYearTaxes' | 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasJudgments' | 'hasBankruptcy' | 'ownershipChanged'>, showDateInput = false) => (
-    <div className="form-group">
-      <div className="question-row">
+    <div className="space-y-6">
+          <div className="flex flex-col gap-6 mb-8">
         <label>{question}</label>
-        <div className="radio-group">
-          <label>
+        <div className="flex items-center space-x-8">
+          <label className="flex items-center space-x-2">
             <input
               type="radio"
               name={name}
               value="yes"
               checked={financesInfo[name]}
               onChange={handleRadioChange}
+              className="mr-2 accent-rose-500 size-6"
             />
             Yes
           </label>
-          <label>
+          <label className="flex items-center space-x-2">
             <input
               type="radio"
               name={name}
               value="no"
               checked={!financesInfo[name]}
               onChange={handleRadioChange}
+              className="mr-2 accent-rose-500 size-6"
             />
             No
           </label>
@@ -119,8 +120,8 @@ const FinancesStep: React.FC = () => {
                 <select
                   value={debt.type}
                   onChange={(e) => handleDebtTypeChange(index, e.target.value)}
-                  className="form-control"
-                >
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
                   <option value="">Select type of debt</option>
                   {debtTypes.map((type) => (
                     <option key={type} value={type}>
@@ -133,8 +134,8 @@ const FinancesStep: React.FC = () => {
                   value={debt.balance}
                   onChange={(e) => handleDebtBalanceChange(index, e.target.value)}
                   placeholder="outstanding balance"
-                  className="form-control"
-                />
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 <button
                   className="btn-icon remove-debt"
                   onClick={() => removeDebt(index)}
@@ -158,19 +159,19 @@ const FinancesStep: React.FC = () => {
             type="date"
             value={financesInfo.leaseEndDate}
             onChange={handleDateChange}
-            className="form-control"
-          />
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
         </div>
       )}
       {name === 'filedLastYearTaxes' && financesInfo[name] && (
         <div className="conditional-content">
-         <div className="form-group">
+         <div className="space-y-2">
         <p className="upload-description">Last year tax file</p>
         <input
           type="file"
           accept=".pdf"
           onChange={handleFileChange('lastYearTaxes')}
-          className="form-control"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
         </div>
@@ -179,9 +180,12 @@ const FinancesStep: React.FC = () => {
   );
 
   return (
-    <div className="form-step">
-      <h2 className="step-title">Finances</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Tell us about your finances</h3>
+
+    <div className="w-full flex flex-col p-4 justify-center items-center">
+          
+      <p className="text-gray-600 mb-8 text-2xl font-bold ">Tell us about your finances</p>
+      <div id="container" className="width: 550px; height: 500px;"></div>
+          <a href="https://sandbox-widget.lendflow.com?env=9ef7849fc9e54fe59745599ae391b612&viewProduct=1&workflowTemplateId=5d60e13d-8f40-4f7b-93cc-9be652fd9725&destination%5Bmode%5D=bp&destination%5Burl%5D=https://sandbox-borrower.lendflow.com?token=borrower-platform-564c999ef4104b33837b5293b3bd631f&destination%5Bscript_url%5D=https://sandbox-borrower.lendflow.com/lfbp.js?token=borrower-platform-564c999ef4104b33837b5293b3bd631f" className="bg-blue-500 text-white px-4 py-2 rounded-md mb-10">Start Funding</a>
 
       {renderQuestion("Have you filed last year's business taxes?", 'filedLastYearTaxes')}
       {renderQuestion("Do you have any business debt or material liabilities?", 'hasBusinessDebt')}

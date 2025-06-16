@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateTicketingInfo } from '../store/formSlice';
+import { updateTicketingInfo } from '../store/form/formSlice';
+import TicketingVolumeStep from './TicketingVolumeStep';
 
 interface LoginPopupProps {
   isOpen: boolean;
@@ -102,12 +103,7 @@ const settlementPolicies = [
   'Payout after the event'
 ];
 
-const memberships = [
-  'NIVA (National Independent Venue Association)',
-  'Promotores Unidos',
-  'NATO (National Association of Theater Owners)',
-  'Other'
-];
+
 
 const TicketingStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -129,32 +125,45 @@ const TicketingStep: React.FC = () => {
   };
 
   return (
-    <div className="form-step">
-      <h2 className="step-title">Tell us about your business</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Company &lt;&gt; Ticketing co</h3>
-      
-      <div className="form-group">
-          <select
-            name="currentPartner"
-            value={ticketingInfo.currentPartner}
-            onChange={handleChange}
-            className="form-control"
-          >
-            <option value="">Current Ticketing Partner</option>
-            {ticketingPartners.map((partner) => (
-              <option key={partner} value={partner}>
-                {partner}
-              </option>
-            ))}
-          </select>
-          {isTicketonConnected && ticketingInfo.currentPartner === 'Ticketon' && (
-            <span className="check-icon">✓</span>
-          )}
+    <div className="flex flex-col items-center justify-center w-full">
+      <p className="text-gray-600 mb-8 text-2xl font-bold mt-10">Annual ticketing volume</p>
+
+
+
+
+      <p className="text-gray-400 mb-16 text-center px-20">
+        We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility in minutes. We only collect the information we need to provide you the best possible offer.
+      </p>
+
+
+
+
+      <div className="relative w-full max-w-md mb-10">
+        <select
+          name="currentPartner"
+          value={ticketingInfo.currentPartner}
+          onChange={handleChange}
+          className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none"
+        >
+          <option value=""></option>
+          {ticketingPartners.map((partner) => (
+            <option key={partner} value={partner}>
+              {partner}
+            </option>
+          ))}
+        </select>
+        <label htmlFor="floating_outlined"
+          className="absolute text-sm text-gray-500 bg-white text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] 
+           px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
+          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Current Ticketing Partner</label>
+        {isTicketonConnected && ticketingInfo.currentPartner === 'Ticketon' && (
+          <span className="check-icon">✓</span>
+        )}
       </div>
 
       {ticketingInfo.currentPartner === 'Ticketon' && !isTicketonConnected && (
-        <div className="form-group">
-          <button 
+        <div className="space-y-6 mb-10">
+          <button
             className="btn btn-primary"
             onClick={() => setShowLoginPopup(true)}
           >
@@ -163,14 +172,19 @@ const TicketingStep: React.FC = () => {
         </div>
       )}
 
-      <div className="form-group">
+      <div className="relative w-full max-w-md mb-10">
+        <label htmlFor="floating_outlined"
+          className="absolute text-sm text-gray-500 bg-white text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] 
+           px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
+          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">What is your ticketing partner settlement/payout policy?</label>
+
         <select
           name="settlementPolicy"
           value={ticketingInfo.settlementPolicy}
           onChange={handleChange}
-          className="form-control"
+          className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none"
         >
-          <option value="">What is your ticketing partner settlement/payout policy?</option>
+          <option value=""></option>
           {settlementPolicies.map((policy) => (
             <option key={policy} value={policy}>
               {policy}
@@ -179,24 +193,10 @@ const TicketingStep: React.FC = () => {
         </select>
       </div>
 
-      <div className="form-group">
-        <select
-          name="membership"
-          value={ticketingInfo.membership}
-          onChange={handleChange}
-          className="form-control"
-        >
-          <option value="">Are you a member of?</option>
-          {memberships.map((member) => (
-            <option key={member} value={member}>
-              {member}
-            </option>
-          ))}
-        </select>
-      </div>
+      <TicketingVolumeStep />
 
-      <LoginPopup 
-        isOpen={showLoginPopup} 
+      <LoginPopup
+        isOpen={showLoginPopup}
         onClose={() => setShowLoginPopup(false)}
         onSuccess={handleLoginSuccess}
       />

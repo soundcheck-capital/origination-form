@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../store';
-import { loginUser, registerUser, fetchUserApplication, fetchUserProfile } from '../store/authSlice';
+import { loginUser, registerUser, fetchUserApplication, fetchUserProfile } from '../store/auth/authThunks';
 import { AppDispatch } from '../store';
 
 interface LoginFormProps {
@@ -106,7 +106,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
       
       <form onSubmit={handleSubmit}>
           
-        <div className="form-group">
+        <div className="form-group-login">
           <input
             id="email"
             type="email"
@@ -118,7 +118,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
           />
         </div>
         
-        <div className="form-group">
+        <div className="form-group-login">
           <input
             id="password"
             type="password"
@@ -132,7 +132,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
         
         {mode === 'register' && (
           <>
-            <div className="form-group">
+            <div className="form-group-login">
               <input
                 id="confirmPassword"
                 type="password"
@@ -143,7 +143,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="form-group-login">
 
             <input
             id="firstname"
@@ -155,7 +155,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
             required
           />
         </div>
-        <div className="form-group">
+        <div className="form-group-login">
           <input
             id="lastname"
             type="text"

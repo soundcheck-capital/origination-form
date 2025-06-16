@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './App.css';
 import LoginForm from './components/LoginForm';
 import { RootState, AppDispatch } from './store';
-import { fetchUserProfile } from './store/authSlice';
+import { fetchUserProfile } from './store/auth/authThunks';  
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();

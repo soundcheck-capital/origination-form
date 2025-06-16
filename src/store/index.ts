@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import formReducer from './formSlice';
-import authReducer from './authSlice';
+import formReducer from './form/formSlice';
+import authReducer from './auth/authSlice';
 
 export const store = configureStore({
   reducer: {

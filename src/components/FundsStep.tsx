@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateFundsInfo } from '../store/formSlice';
+import { updateFundsInfo } from '../store/form/formSlice';
 
 const fundUses = [
   'Artist deposit',
@@ -33,15 +33,15 @@ const FundsStep: React.FC = () => {
       const months = parseInt(value);
       const recoupmentPercentage = Math.min(minRecoupmentPercentage * (12 / months), 100);
       dispatch(updateFundsInfo({
-        recoupmentPeriod: months.toString(),
-        recoupmentPercentage: recoupmentPercentage.toString()
+        // recoupmentPeriod: months.toString(),
+        //recoupmentPercentage: recoupmentPercentage.toString()
       }));
     } else if (name === "recoupmentPercentage") {
       const percent = parseFloat(value);
       const newMonths = Math.max(1, Math.round(12 * (minRecoupmentPercentage / percent)));
       dispatch(updateFundsInfo({
-        recoupmentPeriod: newMonths.toString(),
-        recoupmentPercentage: percent.toString()
+        //recoupmentPeriod: newMonths.toString(),
+        //recoupmentPercentage: percent.toString()
       }));
     } else {
       dispatch(updateFundsInfo({ [name]: value }));
@@ -64,18 +64,18 @@ const FundsStep: React.FC = () => {
     }).format(Number(value));
   };
 
- 
+
   const calculateSoundCheckFees = () => {
     const totalFunds = Number(fundsInfo.yourFunds) + Number(fundsInfo.otherFunds);
     const recoupmentPeriod = Number(fundsInfo.recoupmentPeriod);
     const recoupmentPercentage = Number(fundsInfo.recoupmentPercentage);
-    
+
     // Calculate monthly payment
     const monthlyPayment = (totalFunds * (recoupmentPercentage / 100)) / recoupmentPeriod;
-    
+
     // Calculate SoundCheck fees (2% of total funds)
     const soundCheckFees = totalFunds * 0.02;
-    
+
     return {
       monthlyPayment,
       soundCheckFees
@@ -85,135 +85,257 @@ const FundsStep: React.FC = () => {
   const { monthlyPayment, soundCheckFees } = calculateSoundCheckFees();
 
   return (
-    <div className="form-step">
-      <h2 className="step-title">Customize your funding</h2>
-      {/*<h3 className="step-subtitle" style={{ color: '#F99927' }}>Personalize your funding</h3>*/}
-      <p className="step-description">
-      Select your advance, target recoupment period and % of recoupment. See your repayment terms below.
+    <div className="flex flex-col items-center justify-center w-full bg-white rounded-2xl shadow-sm ">
+            <p className="text-gray-600 mb-8 text-2xl font-bold mt-10">Your funding offer</p>
+
+      <p className="text-gray-400 mb-8 text-center">
+        Select your advance, target recoupment period and % of recoupment. See your repayment terms below.
       </p>
-      <div className="slider-group">
-        <div className="slider-label-container">
-        <label className="slider-label">Your funding</label>
-        <span className="slider-value">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
-        </div>
-       {/* <span className="min-value">$0</span> */}
+      <div className="grid grid-cols-1 gap-x-24 ">
+        <div className="w-full space-y-6 mb-10">
+          <div className="">
+            <div className="flex justify-between">
+              <label className="">Purchase Price</label>
+              <span className="">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
+            </div>
+            {/* <span className="min-value">$0</span> */}
 
-        {/* <span className="max-value">${maxFundsValue.toLocaleString()}</span> */}
-        <div className="slider-range">
-          <input
-            type="range"
-            name="yourFunds"
-            min="0"
-            max={maxFundsValue}
-            step="1000"
-            value={fundsInfo.yourFunds}
-            onChange={handleSliderChange}
-            className="slider"
-            style={{
-              background: `linear-gradient(to right, #F99927 0%, #F99927 ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd 100%)`
-            }}
-          />
-                   
+            {/* <span className="max-value">${maxFundsValue.toLocaleString()}</span> */}
+              <div className="  ">  
+              <input
+                type="range"
+                name="yourFunds"
+                min="0"
+                max={maxFundsValue}
+                step="1000"
+                value={fundsInfo.yourFunds}
+                onChange={handleSliderChange}
+                className="w-full slider"
+                style={{
+                  background: `linear-gradient(to right, #F99927 0%, #F23561 ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd ${(parseInt(fundsInfo.yourFunds) / maxFundsValue) * 100}%, #ddd 100%)`
+                }}
+              />
+
+            </div>
+          </div>
+
+
+
+          <div className="">
+            <div className="flex justify-between">
+              <label className="">% Remittance from Ticket Sales</label>
+              <span className="">{parseFloat(fundsInfo.recoupmentPercentage).toFixed(2)}%</span>
+            </div>
+            {/* <span className="min-value">{minRecoupmentPercentage.toFixed(2)}%</span> */}
+
+            {/* <span className="max-value">{maxRecoupmentPercentage.toFixed(2)}%</span> */}
+            <div className="">
+              <input
+                type="range"
+                name="recoupmentPercentage"
+                min={minRecoupmentPercentage}
+                max={maxRecoupmentPercentage}
+                step="0.01"
+                value={fundsInfo.recoupmentPercentage}
+                onChange={handleSliderChange}
+                className="w-full slider "
+                style={{
+                  background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd 100%)`
+                }}
+              />
+
+            </div>
+          </div>
+
+
+          <div className="">
+            <label className="block text-sm font-medium text-gray-700">How do you plan to use your funds?</label>
+            <select
+              name="fundUse"
+              value={fundsInfo.fundUse}
+              onChange={handleSelectChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select an option</option>
+              {fundUses.map((use) => (
+                <option key={use} value={use}>
+                  {use}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+        <div className="w-full space-y-4 text-gray-700 leading-relaxed bg-gray-100 rounded-2xl p-6 ">
+          <div className="space-y-4">
+            <h4 className="text-gray-600 mb-8 text-2xl font-bold text-center">Your pre-qualified offer</h4>
+            <div className="">
+              <span className="">We are buying <b>$amount</b> of Future Ticket Receivables from you at <b>amount% discount</b> and you receive <b>{formatCurrency(fundsInfo.yourFunds.toString())}</b>  </span>
+            </div>
+
+            <div className="">
+              <span className="">You repay us <b>$amount</b> by remitting <b>{fundsInfo.recoupmentPercentage}% of your Tickets Sales</b> (5% to recoup the advance and {formatCurrency(soundCheckFees.toString())}% for our fees) </span>
+            </div>
+            <div className="">
+              <span className="">Timing to pay the full Total Value is determined by the <b>pace of Ticket Sales</b></span>
+            </div>
+            
+
+            </div>  </div>
+          <p className="text-gray-400 my-4 text-center">SoundCheck fee is charged until advance is fully recouped.
+            Binding offer is subject to final due diligence.</p>
+        
       </div>
-
-      
-
-      <div className="slider-group">
-        <div className="slider-label-container">
-        <label className="slider-label">% recoupment from ticket sales</label>
-        <span className="slider-value">{parseFloat(fundsInfo.recoupmentPercentage).toFixed(2)}%</span>
-        </div>
-        {/* <span className="min-value">{minRecoupmentPercentage.toFixed(2)}%</span> */}
-
-        {/* <span className="max-value">{maxRecoupmentPercentage.toFixed(2)}%</span> */}
-        <div className="slider-range">
-          <input
-            type="range"
-            name="recoupmentPercentage"
-            min={minRecoupmentPercentage}
-            max={maxRecoupmentPercentage}
-            step="0.01"
-            value={fundsInfo.recoupmentPercentage}
-            onChange={handleSliderChange}
-            className="slider"
-            style={{
-              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd 100%)`
-            }}
-          />
-                    
-        </div>
-      </div>
-
-      <div className="slider-group">
-        <div className="slider-label-container">
-        <label className="slider-label">Target recoupment period</label>
-        <span className="slider-value">{fundsInfo.recoupmentPeriod} months</span>
-        </div>
-        {/* <span className="min-value">1 month</span> */}
-          {/* <span className="max-value">12 months</span> */}
-        <div className="slider-range">
-          <input
-            type="range"
-            name="recoupmentPeriod"
-            min="1"
-            max="12"
-            step="1"
-            value={fundsInfo.recoupmentPeriod}
-            onChange={handleSliderChange}
-            className="slider"
-            style={{
-              background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd ${((parseInt(fundsInfo.recoupmentPeriod) - 1) / 11) * 100}%, #ddd 100%)`
-            }}
-          />
-          
-        </div>
-      </div>
-      <div className="form-group">
-        <label className="select-label">How do you plan to use your funds?</label>
-        <select
-          name="fundUse"
-          value={fundsInfo.fundUse}
-          onChange={handleSelectChange}
-          className="form-control"
-        >
-          <option value="">Select an option</option>
-          {fundUses.map((use) => (
-            <option key={use} value={use}>
-              {use}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="funds-summary">
-        <h4>Your pre-qualified offer</h4>
-        <div className="funds-summary-item">
-          <span className="funds-summary-label">Advance:</span>
-          <span className="funds-summary-value">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
-        </div>
-        <div className="funds-summary-item">
-          <span className="funds-summary-label">Target Recoupment Period:</span>
-          <span className="funds-summary-value">{fundsInfo.recoupmentPeriod} months</span>
-        </div>
-        <div className="funds-summary-item">
-          <span className="funds-summary-label">Recoupment per ticket:</span>
-          <span className="funds-summary-value">{fundsInfo.recoupmentPercentage}%</span>
-        </div>
-        <div className="funds-summary-item">
-          <span className="funds-summary-label">SoundCheck Fees per ticket:</span>
-          <span className="funds-summary-value">{formatCurrency(soundCheckFees.toString())}</span>
-        </div>
-        <div className="funds-summary-item">
-          <span className="funds-summary-label">Early Repayment/Buy-out:</span>
-          <span className="funds-summary-value">Available at anytime / no fee</span>
-        </div>
- 
-      </div>
-      <p className="step-description" style={{ fontSize: '12px' }}>SoundCheck fee is charged until advance is fully recouped.
-Binding offer is subject to final due diligence.</p>
     </div>
   );
 };
 
 export default FundsStep;
+/*
+
+
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { updateFundsInfo } from '../store/form/formSlice';
+import { FormState } from '../store/form/formTypes';
+
+const FundsStep: React.FC = () => {
+  const dispatch = useDispatch();
+  const fundsInfo = useSelector((state: RootState) => state.form.formData.fundsInfo);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    dispatch(updateFundsInfo({ [name]: value }));
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const calculateSoundCheckFees = () => {
+    const yourFunds = Number(fundsInfo.yourFunds);
+    const recoupmentPercentage = Number(fundsInfo.recoupmentPercentage);
+    const recoupmentPeriod = Number(fundsInfo.recoupmentPeriod);
+    
+    const totalFees = yourFunds * 0.02; // 2% of total funds
+    const monthlyPayment = (yourFunds * (recoupmentPercentage / 100)) / recoupmentPeriod;
+    
+    return {
+      totalFees,
+      monthlyPayment
+    };
+  };
+
+  const { totalFees, monthlyPayment } = calculateSoundCheckFees();
+
+  return (
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Your Funds</label>
+          <input
+            type="number"
+            name="yourFunds"
+            value={fundsInfo.yourFunds}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your funds amount"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Other Funds</label>
+          <input
+            type="number"
+            name="otherFunds"
+            value={fundsInfo.otherFunds}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter other funds amount"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Recoupment Period (months)</label>
+          <input
+            type="number"
+            name="recoupmentPeriod"
+            value={fundsInfo.recoupmentPeriod}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter recoupment period"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Recoupment Percentage (%)</label>
+          <input
+            type="number"
+            name="recoupmentPercentage"
+            value={fundsInfo.recoupmentPercentage}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter recoupment percentage"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Fund Use</label>
+          <input
+            type="text"
+            name="fundUse"
+            value={fundsInfo.fundUse}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter fund use"
+          />
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Summary</h3>
+        <div className="space-y-3">
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-gray-600">Your Funds</span>
+            <span className="font-medium text-gray-800">{formatCurrency(Number(fundsInfo.yourFunds))}</span>
+          </div>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-gray-600">Other Funds</span>
+            <span className="font-medium text-gray-800">{formatCurrency(Number(fundsInfo.otherFunds))}</span>
+          </div>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-gray-600">Recoupment Period</span>
+            <span className="font-medium text-gray-800">{fundsInfo.recoupmentPeriod} months</span>
+          </div>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-gray-600">Recoupment Percentage</span>
+            <span className="font-medium text-gray-800">{fundsInfo.recoupmentPercentage}%</span>
+          </div>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-gray-600">Fund Use</span>
+            <span className="font-medium text-gray-800">{fundsInfo.fundUse}</span>
+          </div>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-gray-600">SoundCheck Fees</span>
+            <span className="font-medium text-gray-800">{formatCurrency(totalFees)}</span>
+          </div>
+          <div className="flex justify-between py-2">
+            <span className="text-gray-600">Monthly Payment</span>
+            <span className="font-medium text-gray-800">{formatCurrency(monthlyPayment)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FundsStep;
+
+
+
+*/
