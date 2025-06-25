@@ -41,9 +41,9 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placehol
       onChange={handleChange}
     />
     <label htmlFor="floating_outlined"
-      className="absolute text-sm text-gray-500 bg-white rounded-t-md  focus:border-rose-300 text-gray-500 duration-300 transform -translate-y-8 scale-75 top-1 z-10 origin-[0] 
+      className="absolute text-sm text-gray-500 bg-white rounded-t-md  focus:border-rose-300 text-gray-500 duration-300 transform -translate-y-4 scale-75 top-1 z-10 origin-[0] 
            px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
-          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-3">{label}</label>
+          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-3">{label}</label>
   </div>
 
    
@@ -74,9 +74,9 @@ const NumberInput: React.FC<NumberInputProps> = ({ value, onChange, placeholder,
         onChange={handleChange}
       />
       <label htmlFor="floating_outlined"
-        className="absolute text-sm text-gray-500 bg-white rounded-t-md  focus:border-rose-300 text-gray-500 duration-300 transform -translate-y-8 scale-75 top-1 z-10 origin-[0] 
+        className="absolute text-sm text-gray-500 bg-white rounded-t-md  focus:border-rose-300 text-gray-500 duration-300 transform -translate-y-4 scale-75 top-1 z-10 origin-[0] 
            px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
-          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-3">{label}</label>
+          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-3">{label}</label>
     </div>
 
   )
