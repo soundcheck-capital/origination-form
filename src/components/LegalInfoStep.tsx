@@ -63,7 +63,7 @@ const LegalInfoStep: React.FC = () => {
             <input
               type="text"
               name="companyName"
-              value={ownershipInfo.companyName}
+              value=""
               onChange={handleInputChange}
               className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none" placeholder=" " required
               /><label htmlFor="floating_outlined"
@@ -77,7 +77,7 @@ const LegalInfoStep: React.FC = () => {
             <input
               type="text"
               name="dba"
-              value={ownershipInfo.dba}
+              value=""
               onChange={handleInputChange}
               className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none" placeholder=" " required
             />
@@ -173,15 +173,11 @@ const LegalInfoStep: React.FC = () => {
               name="ein"
               value={ein}
               onChange={handleChange}
-              placeholder=" "
+              placeholder="Tax ID (EIN)"
               maxLength={10} // 9 chiffres + 1 tiret
 
-              className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none"  required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <label htmlFor="floating_outlined"
-            className="absolute text-sm text-gray-500 bg-white text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] 
-             px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
-            peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Tax ID (EIN)</label>
           </div>
         </div>
  

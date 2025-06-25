@@ -24,13 +24,18 @@ export interface Address {
     formData: {
       personalInfo: {
         email: string;
+        firstname: string;
+        lastname: string;
+        phone: string;
+        role: string;
       };
       companyInfo: {
         employees: number;
         name: string;
+        dba: string;
         yearsInBusiness: string;
         socials: string;
-        type: string;
+        clientType: string;
         address: Address;
         taxId: string;
       };
@@ -56,8 +61,6 @@ export interface Address {
       };
       ownershipInfo: {
         legalEntityType: string;
-        companyName: string;
-        dba: string;
         companyAddress: string;
         companyCity: string;
         companyState: string;

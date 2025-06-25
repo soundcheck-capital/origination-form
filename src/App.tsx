@@ -21,7 +21,7 @@ function App() {
   
   // Redirect to dashboard if authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
@@ -35,6 +35,7 @@ function App() {
       </header>
     </div>
   );
+  
 }
 
 export default App;

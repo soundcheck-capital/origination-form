@@ -5,9 +5,9 @@ export const initialState: FormState = {
   email: '',
   emailError: '',
   formData: {
-    personalInfo: { email: '' },
+    personalInfo: { email: '', firstname: '', lastname: '', phone: '', role: '' },
     companyInfo: {
-      employees: 0, name: '', yearsInBusiness: '', socials: '', type: '',
+      employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
       address: { street: '', city: '', zipcode: '', state: '', country: '' },
       taxId: ''
     },
@@ -21,7 +21,7 @@ export const initialState: FormState = {
       recoupmentPercentage: '0', fundUse: ''
     },
     ownershipInfo: {
-      legalEntityType: '', companyName: '', dba: '', companyAddress: '',
+      legalEntityType: '', companyAddress: '',
       companyCity: '', companyState: '', companyZipCode: '', companyType: '',
       owners: [], ein: ''
     }

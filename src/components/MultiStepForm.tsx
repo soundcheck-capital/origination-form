@@ -17,6 +17,8 @@ import SummaryStep from './SummaryStep';
 import logo from '../assets/logo_black_name.svg';
 import LegalInfoStep from './LegalInfoStep';
 import Sidebar from './Sidebar';
+import ButtonPrimary from './ButtonPrimary';
+import ButtonSecondary from './ButtonSecondary';
 
 const MultiStepForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -69,22 +71,22 @@ const MultiStepForm: React.FC = () => {
   const stepTitles = () => {
     switch (currentStep) {
       case 1:
-        return 'Authentication';
+        return 'Get Funding';
       case 2:
         return 'Tell us about your business';
       case 3:
         return 'Tell us about your business';
+      // case 4:
+      //   return 'Customize your funding';
       case 4:
-        return 'Customize your funding';
-      case 5:
         return 'Business & Ownership';
-      case 6:
+      case 5:
         return 'Ownership Information';
-      case 7:
+      case 6:
         return 'Finances';
-      case 8:
+      case 7:
         return 'Diligence';
-      case 9:
+      case 8:
         return 'Summary';
       default:
         return 'SoundCheck';
@@ -103,17 +105,17 @@ const MultiStepForm: React.FC = () => {
       case 3:
         return <TicketingStep />;
      
+      // case 4:
+      //   return <FundsStep />;
       case 4:
-        return <FundsStep />;
-      case 5:
         return <LegalInfoStep />;
-      case 6:
+      case 5:
         return <OwnershipStep />;
-      case 7:
+      case 6:
         return <FinancesStep />;
-      case 8:
+      case 7:
         return <DiligenceStep />;
-      case 9:
+      case 8:
         return <SummaryStep />;
       default:
         return null;
@@ -125,77 +127,49 @@ const MultiStepForm: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
 
-      <main className="w-full h-full flex flex-col m-4 bg-gray-50 rounded-xl shadow-sm p-6 border border-gray-100 ">
-        <div className="flex justify-between items-center m-4">
-            <img src={logo} alt="Logo" className="" />
-            <h1 className="text-4xl font-bold text-neutral-600">{stepTitles()}</h1>
-          
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-end gap-4">
-            {/* <button
-              onClick={handleBackToDashboard}
-              className="px-6 py-2 shadow-md rounded-3xl bg-gradient-to-bl from-amber-400 to-orange-600 text-white hover:bg-orange-900 font-bold"
-            >
-              Dashboard
-            </button> */}
-            {/* {saveMessage && <div className="save-message">{saveMessage}</div>}
-
-          <button
-            onClick={handleSave}
-            className="btn-save"
-            disabled={isSaving}
-          >
-            {isSaving ? 'Saving...' : 'Save Progress'}
-          </button> */}
-
-            {currentStep > 1 && (
-              <button
-                onClick={() => setCurrentStep(currentStep - 1)}
-                className={`px-6 py-2 shadow-md rounded-3xl border border-orange-600  text-white hover:bg-orange-500 hover:text-white font-bold text-orange-700 active:translate-y-1 transition-all duration-300`}
-              >
-                Previous
-              </button>
-            )}
-
-            {currentStep < 9 ? (
-              <button
-                onClick={() => {
-                  setCurrentStep(currentStep + 1);
-                  window.scrollTo(0, 0);
-                }}
-                className="px-6 py-2 shadow-md rounded-3xl bg-gradient-to-bl from-rose-500 to-rose-700 hover:bg-gradient-to-bl hover:from-rose-600 hover:to-rose-800 hover:text-white text-white font-bold active:translate-y-1 transition-all duration-300"
-              >
-                Next
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                className="px-6 py-2 shadow-md rounded-3xl bg-gradient-to-bl from-rose-500 to-orange-600 text-white font-bold active:translate-y-1 transition-all duration-300"
-              >
-                Submit Application
-              </button>
-            )}
-          </div>
+      <main className="w-full h-full flex flex-col bg-white p-6">
+        <div className="flex justify-center items-center mt-8">
+            <div className="flex flex-col items-center gap-4">
+            <img src={logo} alt="Logo" className="w-24 " />
+            <h1 className="text-3xl font-bold text-neutral-600">{stepTitles()}</h1>
+            </div>
+        
         </div>
-        <div className="min-h-screen bg-gray-50 py-8">
+        <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
-          <div className="mb-8 ">
+          <div className="w-[30%] mx-auto ">
 
             <div className="relative ">
-              <div className="rounded-xl absolute top-0 left-0 h-3 bg-gray-200 w-full"></div>
+              <div className="rounded-xl absolute top-0 left-0 h-2 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
-                className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-3 transition-all duration-300"
-                style={{ width: `${((currentStep) / 9) * 100}%` }}
+                  className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-2 transition-all duration-300"
+                style={{ width: `${((currentStep) / 8) * 100}%` }}
               ></div>
             </div>
           </div>
 
           {/* Form Content */}
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 w-3/4 mx-auto">
+          <div className="bg-white w-full mx-auto">
             {renderStep()}
           </div>
+{/* Navigation Buttons */}
+          <div className="flex justify-center gap-4 w-[30%] mx-auto ">
+            
+            {currentStep > 1 && (
+              <ButtonSecondary onClick={() => {setCurrentStep(currentStep - 1);window.scrollTo(0, 0);}} disabled={false}>Previous</ButtonSecondary>
+            
+            )}
 
+            {currentStep < 9 ? (
+              <ButtonPrimary onClick={() => {
+                setCurrentStep(currentStep + 1);
+                window.scrollTo(0, 0);
+              }} disabled={false}>Next</ButtonPrimary>
+             
+            ) : (
+              <ButtonPrimary onClick={handleSubmit} disabled={isSaving}>Submit Application</ButtonPrimary>
+            )}
+          </div>
 
         </div>
       </main>
@@ -205,3 +179,4 @@ const MultiStepForm: React.FC = () => {
 };
 
 export default MultiStepForm; 
+

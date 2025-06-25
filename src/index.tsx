@@ -19,14 +19,21 @@ root.render(
     <Provider store={store}>
       <BrowserRouter basename={ process.env.NODE_ENV === 'development' ? "/" :"/soundcheck-origination-form"}>
         <Routes>
+          {/* Direct access to form - bypassing login and dashboard */}
+          <Route path="/" element={<MultiStepForm />} />
+          <Route path="/new-application" element={<MultiStepForm />} />
+          <Route path="/application/:id" element={<MultiStepForm />} />
+          
+          {/* OLD CODE - KEPT FOR LATER USE */}
+          {/* 
           <Route path="/" element={<App />} />
           
-          {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/new-application" element={<MultiStepForm />} />
             <Route path="/application/:id" element={<MultiStepForm />} />
           </Route>
+          */}
         </Routes>
       </BrowserRouter>
     </Provider>

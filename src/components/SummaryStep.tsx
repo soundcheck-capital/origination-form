@@ -36,7 +36,7 @@ const SummaryStep: React.FC = () => {
             </div>
             <div className="summary-item">
               <span className="summary-label">Company Type:</span>
-              <span className="summary-value">{formData.companyInfo.type}</span>
+              <span className="summary-value">{formData.companyInfo.clientType}</span>
             </div>
             <div className="summary-item">
               <span className="summary-label">Legal Entity Type:</span>
@@ -147,14 +147,7 @@ const SummaryStep: React.FC = () => {
         {/* Ownership Information */}
           <h4 className="summary-section-title">Ownership Information</h4>
           <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">Company Name:</span>
-              <span className="summary-value">{formData.ownershipInfo.companyName}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">DBA:</span>
-              <span className="summary-value">{formData.ownershipInfo.dba}</span>
-            </div>
+        
             <div className="summary-item">
               <span className="summary-label">Company Type:</span>
               <span className="summary-value">{formData.ownershipInfo.companyType}</span>
