@@ -11,14 +11,15 @@ import TicketingStep from './TicketingStep';
 import TicketingVolumeStep from './TicketingVolumeStep';
 import OwnershipStep from './OwnershipStep';
 import FinancesStep from './FinancesStep';
-import FundsStep from './FundsStep';
+import FundsStep from './AdvanceSliderStep';
 import DiligenceStep from './DiligenceStep';
 import SummaryStep from './SummaryStep';
 import logo from '../assets/logo_black_name.svg';
 import LegalInfoStep from './LegalInfoStep';
 import Sidebar from './Sidebar';
-import ButtonPrimary from './ButtonPrimary';
-import ButtonSecondary from './ButtonSecondary';
+import ButtonPrimary from './customComponents/ButtonPrimary';
+import ButtonSecondary from './customComponents/ButtonSecondary';
+import YourFundingStep from './YourFundsStep';
 
 const MultiStepForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -104,11 +105,9 @@ const MultiStepForm: React.FC = () => {
         return <CompanyInfoStep />;
       case 3:
         return <TicketingStep />;
-     
-      // case 4:
-      //   return <FundsStep />;
       case 4:
-        return <LegalInfoStep />;
+        return <YourFundingStep />;
+     
       case 5:
         return <OwnershipStep />;
       case 6:
@@ -131,7 +130,6 @@ const MultiStepForm: React.FC = () => {
         <div className="flex justify-center items-center mt-8">
             <div className="flex flex-col items-center gap-4">
             <img src={logo} alt="Logo" className="w-24 " />
-            <h1 className="text-3xl font-bold text-neutral-600">{stepTitles()}</h1>
             </div>
         
         </div>
@@ -150,6 +148,7 @@ const MultiStepForm: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white w-full mx-auto">
+          <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8">{stepTitles()}</h1>
             {renderStep()}
           </div>
 {/* Navigation Buttons */}

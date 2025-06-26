@@ -13,7 +13,7 @@ const formSlice = createSlice({
     updatePersonalInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
       state.formData = { ...state.formData, ...action.payload };
     },
-    updateCompanyInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
+    updateCompanyInfo: (state, action: PayloadAction<Partial<FormState['formData']['companyInfo']>>) => {
       state.formData.companyInfo = { ...state.formData.companyInfo, ...action.payload };
     },
     updateTicketingInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
@@ -25,7 +25,7 @@ const formSlice = createSlice({
     updateFundsInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
       state.formData.fundsInfo = { ...state.formData.fundsInfo, ...action.payload };
     },
-    updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
+    updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['formData']['ownershipInfo']>>) => {
       state.formData.ownershipInfo = { ...state.formData.ownershipInfo, ...action.payload };
     },
     updateFinancesInfo: (state, action: PayloadAction<Partial<FormState['financesInfo']>>) => {

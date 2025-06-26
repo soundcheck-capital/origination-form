@@ -36,8 +36,15 @@ export interface Address {
         yearsInBusiness: string;
         socials: string;
         clientType: string;
-        address: Address;
         taxId: string;
+        legalEntityType: string;
+        companyAddress: string;
+        companyCity: string;
+        companyState: string;
+        companyZipCode: string;
+        companyType: string;
+        ein: string;
+        stateOfIncorporation: string;
       };
       ticketingInfo: {
         currentPartner: string;
@@ -58,16 +65,11 @@ export interface Address {
         recoupmentPeriod: string;
         recoupmentPercentage: string;
         fundUse: string;
+        timeForFunding: string;
+        recoupableAgainst: string;
       };
       ownershipInfo: {
-        legalEntityType: string;
-        companyAddress: string;
-        companyCity: string;
-        companyState: string;
-        companyZipCode: string;
-        companyType: string;
         owners: Owner[];
-        ein: string;
       };
     };
     financesInfo: {

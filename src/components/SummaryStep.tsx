@@ -40,7 +40,7 @@ const SummaryStep: React.FC = () => {
             </div>
             <div className="summary-item">
               <span className="summary-label">Legal Entity Type:</span>
-              <span className="summary-value">{formData.ownershipInfo.companyType}</span>
+              <span className="summary-value">{formData.companyInfo.legalEntityType}</span>
             </div>
             <div className="summary-item">
               <span className="summary-label">Years in Business:</span>
@@ -56,19 +56,19 @@ const SummaryStep: React.FC = () => {
             </div>
             <div className="summary-item">
               <span className="summary-label">Street:</span>
-              <span className="summary-value">{formData.companyInfo.address.street}</span>
+              <span className="summary-value">{formData.companyInfo.companyAddress}</span>
             </div>
             <div className="summary-item">
               <span className="summary-label">City:</span>
-              <span className="summary-value">{formData.companyInfo.address.city}</span>
+              <span className="summary-value">{formData.companyInfo.companyCity}</span>
             </div>
             <div className="summary-item">
               <span className="summary-label">State:</span>
-              <span className="summary-value">{formData.companyInfo.address.state}</span>
+              <span className="summary-value">{formData.companyInfo.companyState}</span>
             </div>
             <div className="summary-item">
               <span className="summary-label">ZIP Code:</span>
-              <span className="summary-value">{formData.companyInfo.address.zipcode}</span>
+              <span className="summary-value">{formData.companyInfo.companyZipCode}</span>
             </div>
           </div>
        
@@ -150,11 +150,11 @@ const SummaryStep: React.FC = () => {
         
             <div className="summary-item">
               <span className="summary-label">Company Type:</span>
-              <span className="summary-value">{formData.ownershipInfo.companyType}</span>
+              <span className="summary-value">{formData.companyInfo.companyType}</span>
             </div>
             <div className="summary-item">
               <span className="summary-label">EIN:</span>
-              <span className="summary-value">{formData.ownershipInfo.ein}</span>
+              <span className="summary-value">{formData.companyInfo.ein}</span>
             </div>
 
           <h5 className="summary-subsection-title">Owners</h5>

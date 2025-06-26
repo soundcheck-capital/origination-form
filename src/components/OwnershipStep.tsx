@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import  updateOwnershipInfo from '../store/form/formSlice';
+import {updateOwnershipInfo} from '../store/form/formSlice';
+import StepTitle from './customComponents/StepTitle';
+import TextField from './customComponents/TextField';
+import AddressAutocomplete from './customComponents/AddressAutocomplete';
 
 interface Owner {
   id: string;
@@ -30,19 +33,77 @@ const OwnershipStep: React.FC = () => {
   const dispatch = useDispatch();
   const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
   const [owners, setOwners] = useState<Owner[]>(ownershipInfo.owners || []);
-
+  const addressInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (owners.length === 0) {
       addOwner();
     }
   }, []);
+  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
 
+  // Load Google Maps script
+  useEffect(() => {
+    if (window.google && window.google.maps && window.google.maps.places) {
+      setIsGoogleLoaded(true);
+      return;
+    }
+
+    const existing = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (existing) return;
+
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyA7_2peM-CW7KqJzdHEAmL2PYK-DEnjX0A&libraries=places&v=beta&loading=async`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      console.log('Google Maps loaded successfully');
+      setIsGoogleLoaded(true);
+    };
+    script.onerror = () => console.error('Google Maps failed to load');
+    document.head.appendChild(script);
+  }, []);
+
+
+  useEffect(() => {
+    if (!isGoogleLoaded || !addressInputRef.current) return;
+
+    const autocomplete = new window.google.maps.places.Autocomplete(
+      addressInputRef.current,
+      {
+        componentRestrictions: { country: 'US' },
+        fields: ['address_components', 'formatted_address', 'geometry'],
+        types: ['address'],
+      }
+    );
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (!place.address_components) return;
+
+      let streetNumber = '', route = '', city = '', state = '', zipCode = '';
+      place.address_components.forEach((c: any) => {
+        if (c.types.includes('street_number')) streetNumber = c.long_name;
+        if (c.types.includes('route')) route = c.long_name;
+        if (c.types.includes('locality')) city = c.long_name;
+        if (c.types.includes('administrative_area_level_1')) state = c.short_name;
+        if (c.types.includes('postal_code')) zipCode = c.long_name;
+      });
+
+      dispatch(updateOwnershipInfo({ owners: owners.map(owner => ({
+        ...owner,
+        ownerAddress: `${streetNumber} ${route}`.trim(),
+        ownerCity: city,
+        ownerState: state,
+        ownerZipCode: zipCode,
+      })) }));
+    });
+  }, [isGoogleLoaded, dispatch]);
   const handleOwnerChange = (id: string, field: keyof Owner, value: string | boolean) => {
     const updatedOwners = owners.map(owner =>
       owner.id === id ? { ...owner, [field]: value } : owner
     );
     setOwners(updatedOwners);
-   // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+    // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
 
   const addOwner = () => {
@@ -58,14 +119,14 @@ const OwnershipStep: React.FC = () => {
     };
     const updatedOwners = [...owners, newOwner];
     setOwners(updatedOwners);
-   // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+    // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
 
   const removeOwner = (id: string) => {
     if (owners.length > 1) {
       const updatedOwners = owners.filter(owner => owner.id !== id);
       setOwners(updatedOwners);
-     // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+      // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
     }
   };
 
@@ -81,16 +142,16 @@ const OwnershipStep: React.FC = () => {
   return (
 
     <div className="flex flex-col items-center justify-center w-full">
-      <h3 className="text-gray-600 mb-8 text-2xl font-bold mt-10">Beneficial ownership & control person</h3>
-      <p className="text-gray-400 mb-16 text-center px-20">Please carefully complete the information below and make sure that it is accurate including a complete address with city/state/zip and information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
-     
+      <StepTitle title="Beneficial ownership & control person" />
+      <p className="text-gray-400 mb-16 text-center px-20 w-[40%]">Please carefully complete the information below and make sure that it is accurate including a complete address with city/state/zip and information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
+
       {owners.map((owner) => (
-        <div key={owner.id} className="space-y-4 bg-white p-8 rounded-xl shadow-md border-rose-400 border-2 mb-10">
-          <div className="">
-            <label className='block text-sm font-medium text-gray-700 mb-2'>Owner Information</label>
+        <div key={owner.id} className="flex flex-col bg-white p-8">
+          <div className="flex flex-col justify-between">
+            <label className='block text-sm font-medium text-gray-700'>Owner {owners.indexOf(owner) + 1}</label>
             {owners.length > 1 && (
               <button
-                className="text-sm text-gray-500 hover:text-red-500 focus:outline-none"
+                className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end mb-4"
                 onClick={() => removeOwner(owner.id)}
                 type="button"
               >
@@ -99,41 +160,28 @@ const OwnershipStep: React.FC = () => {
             )}
           </div>
 
-          <div className="space-y-2">
-            <input
-              type="text"
-              value={owner.name}
-              onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)}
-              placeholder="Enter owner name"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
+
+          <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
+            <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} />
+           
+            <TextField type="number" label="Ownership Percentage" name="ownershipPercentage" value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e.target.value)} error='' onBlur={() => { }} />
+
           </div>
 
-          <div className="space-y-2">
-            <input
-              type="text"
-              value={owner.ownershipPercentage}
-              onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e.target.value)}
-              placeholder="Enter ownership percentage"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
-          
-          </div>
-
-          <div className="space-y-2">
-            <div className="radio-label-container">
-              <label className="radio-label">Same address as company?</label>
-              <div className="radio-group">
+          <div className="flex flex-row justify-between w-full">
+            <div className="flex flex-row  w-full gap-4">
+              <label className="text-sm text-gray-700  w-full">Same address as company?</label>
+              <div className="flex flex-row justify-end w-full gap-4">
                 <label>
-                  <input
+                  <input className='mr-2'
                     type="radio"
                     checked={owner.sameAddress}
                     onChange={(e) => handleOwnerChange(owner.id, 'sameAddress', e.target.checked)}
                   />
                   Yes
                 </label>
-                <label>
-                  <input
+                <label >
+                  <input className='mr-2'
                     type="radio"
                     checked={!owner.sameAddress}
                     onChange={(e) => handleOwnerChange(owner.id, 'sameAddress', !e.target.checked)}
@@ -145,57 +193,28 @@ const OwnershipStep: React.FC = () => {
           </div>
 
           {!owner.sameAddress && (
-            <div className="owner-address-fields">
-              <div className="space-y-2">
-                <input
-                  type="text"
-                  value={owner.ownerAddress}
-                  onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)}
-                  placeholder="Enter owner address"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <input
-                  type="text"
-                  value={owner.ownerCity}
-                  onChange={(e) => handleOwnerChange(owner.id, 'ownerCity', e.target.value)}
-                  placeholder="Enter owner city"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <select
-                  value={owner.ownerState}
-                  onChange={(e) => handleOwnerChange(owner.id, 'ownerState', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                >
-                  <option value="">Select state</option>
-                  {usStates.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <input
-                  type="text"
-                  value={owner.ownerZipCode}
-                  onChange={(e) => handleOwnerChange(owner.id, 'ownerZipCode', e.target.value)}
-                  placeholder="Enter owner ZIP code"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                />
-              </div>
+        
+            <div className="owner-address-fields mt-8">
+              <AddressAutocomplete
+                label="Address"
+                name="companyAddress"
+                value={owner.ownerAddress}
+                onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)}
+                error=''
+                onBlur={() => { }}
+                type="text"
+                ref={addressInputRef as React.RefObject<HTMLInputElement>}
+                id="companyAddress"
+              />
+              <TextField type="text" label="Legal Entity ZIP code" name="companyZipCode" value={owner.ownerZipCode} onChange={(e) => handleOwnerChange(owner.id, 'ownerZipCode', e.target.value)} error='' onBlur={() => { }} />
+              <TextField type="text" label="Legal Entity City" name="companyCity" value={owner.ownerCity} onChange={(e) => handleOwnerChange(owner.id, 'ownerCity', e.target.value)} error='' onBlur={() => { }} />
+              <TextField type="text" label="Legal Entity State" name="companyState" value={owner.ownerState} onChange={(e) => handleOwnerChange(owner.id, 'ownerState', e.target.value)} error='' onBlur={() => { }} />
             </div>
           )}
         </div>
       ))}
       <button
-        className="add-owner"
+        className="add-owner text-sm text-gray-500 hover:text-rose-500 focus:outline-none mb-10"
         onClick={addOwner}
         type="button"
       >

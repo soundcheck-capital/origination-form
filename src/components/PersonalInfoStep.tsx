@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updatePersonalInfo } from '../store/form/formSlice';
-import TextField from './TextField';
-import StepTitle from './StepTitle';
+import TextField from './customComponents/TextField';
+import StepTitle from './customComponents/StepTitle';
 
 const PersonalInfoStep: React.FC = () => {
   const dispatch = useDispatch();

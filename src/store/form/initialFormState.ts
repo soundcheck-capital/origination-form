@@ -8,8 +8,9 @@ export const initialState: FormState = {
     personalInfo: { email: '', firstname: '', lastname: '', phone: '', role: '' },
     companyInfo: {
       employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
-      address: { street: '', city: '', zipcode: '', state: '', country: '' },
-      taxId: ''
+      taxId: '', legalEntityType: '', companyAddress: '',
+      companyCity: '', companyState: '', companyZipCode: '', companyType: '',
+       ein: '', stateOfIncorporation: ''
     },
     ticketingInfo: { currentPartner: '', settlementPolicy: '', membership: '' },
     volumeInfo: {
@@ -18,12 +19,10 @@ export const initialState: FormState = {
     },
     fundsInfo: {
       yourFunds: '0', otherFunds: '0', recoupmentPeriod: '0',
-      recoupmentPercentage: '0', fundUse: ''
+      recoupmentPercentage: '0', fundUse: '', timeForFunding: '', recoupableAgainst: ''
     },
     ownershipInfo: {
-      legalEntityType: '', companyAddress: '',
-      companyCity: '', companyState: '', companyZipCode: '', companyType: '',
-      owners: [], ein: ''
+     owners: [],
     }
   },
   financesInfo: {

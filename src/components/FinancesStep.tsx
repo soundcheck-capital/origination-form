@@ -184,9 +184,7 @@ const FinancesStep: React.FC = () => {
     <div className="w-full flex flex-col p-4 justify-center items-center">
           
       <p className="text-gray-600 mb-8 text-2xl font-bold ">Tell us about your finances</p>
-      <div id="container" className="width: 550px; height: 500px;"></div>
-          <a href="https://sandbox-widget.lendflow.com?env=9ef7849fc9e54fe59745599ae391b612&viewProduct=1&workflowTemplateId=5d60e13d-8f40-4f7b-93cc-9be652fd9725&destination%5Bmode%5D=bp&destination%5Burl%5D=https://sandbox-borrower.lendflow.com?token=borrower-platform-564c999ef4104b33837b5293b3bd631f&destination%5Bscript_url%5D=https://sandbox-borrower.lendflow.com/lfbp.js?token=borrower-platform-564c999ef4104b33837b5293b3bd631f" className="bg-blue-500 text-white px-4 py-2 rounded-md mb-10">Start Funding</a>
-
+  
       {renderQuestion("Have you filed last year's business taxes?", 'filedLastYearTaxes')}
       {renderQuestion("Do you have any business debt or material liabilities?", 'hasBusinessDebt')}
       {financesInfo.hasBusinessDebt && financesInfo.debts.length > 0 && renderQuestion("Are any of these liabilities not within terms and/or overdue?", 'hasOverdueLiabilities')}

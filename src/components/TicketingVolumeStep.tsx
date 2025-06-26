@@ -17,6 +17,8 @@ interface NumberInputProps {
   label?: string;
 }
 
+
+
 const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onChange, placeholder, label }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;

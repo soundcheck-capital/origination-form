@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateTicketingInfo } from '../store/form/formSlice';
+import { updateTicketingInfo, updateVolumeInfo } from '../store/form/formSlice';
 import TicketingVolumeStep from './TicketingVolumeStep';
-
+import StepTitle from './customComponents/StepTitle';
+import DropdownField from './customComponents/DropdownField';
+import TextField from './customComponents/TextField';
+import NumberInput from './customComponents/NumberField';
+import CurrencyField from './customComponents/CurrencyField';
 interface LoginPopupProps {
   isOpen: boolean;
   onClose: () => void;
@@ -108,6 +112,7 @@ const settlementPolicies = [
 const TicketingStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
+  const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [isTicketonConnected, setIsTicketonConnected] = useState(false);
 
@@ -120,48 +125,33 @@ const TicketingStep: React.FC = () => {
     }
   };
 
+  const handleNumberChange = (name: string, value: string) => {
+    dispatch(updateVolumeInfo({ [name]: value }));
+  };
+
+  const handleCurrencyChange = (name: string, value: string) => {
+    dispatch(updateVolumeInfo({ [name]: value }));
+  };
+
   const handleLoginSuccess = () => {
     setIsTicketonConnected(true);
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <p className="text-gray-600 mb-8 text-2xl font-bold mt-10">Annual ticketing volume</p>
+      <p className="text-gray-600 my-8 text-2xl font-bold w-[40%] text-center">Annual ticketing volume</p>
 
-
-
-
-      <p className="text-gray-400 mb-16 text-center px-20">
+      <p className="text-gray-400 mb-16 text-center px-20 w-[40%]">
         We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility in minutes. We only collect the information we need to provide you the best possible offer.
       </p>
 
-
-
-
-      <div className="relative w-full max-w-md mb-10">
-        <select
-          name="currentPartner"
-          value={ticketingInfo.currentPartner}
-          onChange={handleChange}
-          className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none"
-        >
-          <option value=""></option>
-          {ticketingPartners.map((partner) => (
-            <option key={partner} value={partner}>
-              {partner}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="floating_outlined"
-          className="absolute text-sm text-gray-500 bg-white text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] 
-           px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
-          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Current Ticketing Partner</label>
-        {isTicketonConnected && ticketingInfo.currentPartner === 'Ticketon' && (
+      <DropdownField label="Current Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} />
+      {/* {isTicketonConnected && ticketingInfo.currentPartner === 'Ticketon' && (
           <span className="check-icon">✓</span>
-        )}
-      </div>
+        )} */}
 
-      {ticketingInfo.currentPartner === 'Ticketon' && !isTicketonConnected && (
+
+      {/* {ticketingInfo.currentPartner === 'Ticketon' && !isTicketonConnected && (
         <div className="space-y-6 mb-10">
           <button
             className="btn btn-primary"
@@ -170,36 +160,28 @@ const TicketingStep: React.FC = () => {
             Connect to Ticketon
           </button>
         </div>
-      )}
+      )} */}
 
-      <div className="relative w-full max-w-md mb-10">
-        <label htmlFor="floating_outlined"
-          className="absolute text-sm text-gray-500 bg-white text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] 
-           px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
-          peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">What is your ticketing partner settlement/payout policy?</label>
+      <DropdownField label="What is your ticketing partner settlement/payout policy?" name="settlementPolicy" value={ticketingInfo.settlementPolicy} onChange={handleChange} error='' onBlur={() => { }} options={settlementPolicies} />
 
-        <select
-          name="settlementPolicy"
-          value={ticketingInfo.settlementPolicy}
-          onChange={handleChange}
-          className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none"
-        >
-          <option value=""></option>
-          {settlementPolicies.map((policy) => (
-            <option key={policy} value={policy}>
-              {policy}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* <TicketingVolumeStep /> */}
 
-      <TicketingVolumeStep />
 
-      <LoginPopup
+      <StepTitle title="Last 12 Months" />
+      <NumberInput label="Number of Events" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" />
+      <NumberInput label="Number of Tickets sold online" value={ticketingVolume.lastYearTickets.toString()} onChange={(value) => handleNumberChange('lastYearTickets', value)} placeholder="Fill in" />
+      <CurrencyField label="Online Gross Tickets Sales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" />
+
+      {/* Colonne 3 : Next 12 Months */}
+      <StepTitle title="Next 12 Months" />
+      <NumberInput label="Number of Events" value={ticketingVolume.nextYearEvents.toString()} onChange={(value) => handleNumberChange('nextYearEvents', value)} placeholder="Fill in" />
+      <NumberInput label="Number of Tickets sold online" value={ticketingVolume.nextYearTickets.toString()} onChange={(value) => handleNumberChange('nextYearTickets', value)} placeholder="Fill in" />
+      <CurrencyField label="Online Gross Tickets Sales" value={ticketingVolume.nextYearSales.toString()} onChange={(value) => handleCurrencyChange('nextYearSales', value)} placeholder="Fill in" />
+      {/* <LoginPopup
         isOpen={showLoginPopup}
         onClose={() => setShowLoginPopup(false)}
         onSuccess={handleLoginSuccess}
-      />
+      /> */}
     </div>
   );
 };

@@ -1,8 +1,4 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateOwnershipInfo } from '../store/form/formSlice';
-import { usStates } from '../utils/usStates';
+import React from 'react';
 
 const businessTypes = [
   'Sole proprietorship',
@@ -14,7 +10,12 @@ const businessTypes = [
 
 
 const LegalInfoStep: React.FC = () => {
-  const dispatch = useDispatch();
+  return (
+    <div>
+      <h1>Legal Info Step</h1>
+    </div>
+  );
+ /** const dispatch = useDispatch();
   const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -22,11 +23,11 @@ const LegalInfoStep: React.FC = () => {
     dispatch(updateOwnershipInfo({ [name]: value }));
   };
 
-  const [ein, setEin] = useState(ownershipInfo.ein);
+  //const [ein, setEin] = useState(companyInfo.ein);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatEIN(e.target.value);
-    setEin(formatted);
+   // setEin(formatted);
     dispatch(updateOwnershipInfo({ ownershipInfo: { ...ownershipInfo, ein: formatted } }));
   };
 
@@ -184,7 +185,7 @@ const LegalInfoStep: React.FC = () => {
 
 
   );
-
+ */
 };
 
 export default LegalInfoStep;   
