@@ -4,7 +4,7 @@ import { RootState } from '../store';
 import {updateOwnershipInfo} from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
-import AddressAutocomplete from './customComponents/AddressAutocomplete';
+import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
 import NumberInput from './customComponents/NumberField';
 
 interface Owner {
@@ -34,71 +34,13 @@ const OwnershipStep: React.FC = () => {
   const dispatch = useDispatch();
   const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
   const [owners, setOwners] = useState<Owner[]>(ownershipInfo.owners || []);
-  const addressInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (owners.length === 0) {
       addOwner();
     }
   }, []);
-  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
 
-  // Load Google Maps script
-  useEffect(() => {
-    if (window.google && window.google.maps && window.google.maps.places) {
-      setIsGoogleLoaded(true);
-      return;
-    }
-
-    const existing = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existing) return;
-
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyA7_2peM-CW7KqJzdHEAmL2PYK-DEnjX0A&libraries=places&v=beta&loading=async`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      console.log('Google Maps loaded successfully');
-      setIsGoogleLoaded(true);
-    };
-    script.onerror = () => console.error('Google Maps failed to load');
-    document.head.appendChild(script);
-  }, []);
-
-
-  useEffect(() => {
-    if (!isGoogleLoaded || !addressInputRef.current) return;
-
-    const autocomplete = new window.google.maps.places.Autocomplete(
-      addressInputRef.current,
-      {
-        componentRestrictions: { country: 'US' },
-        fields: ['address_components', 'formatted_address', 'geometry'],
-        types: ['address'],
-      }
-    );
-
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (!place.address_components) return;
-
-      let streetNumber = '', route = '', city = '', state = '', zipCode = '';
-      place.address_components.forEach((c: any) => {
-        if (c.types.includes('street_number')) streetNumber = c.long_name;
-        if (c.types.includes('route')) route = c.long_name;
-        if (c.types.includes('locality')) city = c.long_name;
-        if (c.types.includes('administrative_area_level_1')) state = c.short_name;
-        if (c.types.includes('postal_code')) zipCode = c.long_name;
-      });
-
-      dispatch(updateOwnershipInfo({ owners: owners.map(owner => ({
-        ...owner,
-        ownerAddress: `${streetNumber} ${route}`.trim(),
-        ownerCity: city,
-        ownerState: state,
-        ownerZipCode: zipCode,
-      })) }));
-    });
-  }, [isGoogleLoaded, dispatch]);
+ 
   const handleOwnerChange = (id: string, field: keyof Owner, value: string | boolean) => {
     const updatedOwners = owners.map(owner => {
       if(field === 'ownershipPercentage' && Number(value) > 100) {
@@ -108,7 +50,7 @@ const OwnershipStep: React.FC = () => {
       }
     });
     setOwners(updatedOwners);
-    // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+     dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
 
   const addOwner = () => {
@@ -124,14 +66,14 @@ const OwnershipStep: React.FC = () => {
     };
     const updatedOwners = [...owners, newOwner];
     setOwners(updatedOwners);
-    // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+     dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
 
   const removeOwner = (id: string) => {
     if (owners.length > 1) {
       const updatedOwners = owners.filter(owner => owner.id !== id);
       setOwners(updatedOwners);
-      // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+       dispatch(updateOwnershipInfo({ owners: updatedOwners }));
     }
   };
 
@@ -171,7 +113,7 @@ const OwnershipStep: React.FC = () => {
             <NumberInput showPercent={true} label="Ownership Percentage"   value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} />
 
           </div>
-
+{/* 
           <div className="flex flex-row justify-between w-full">
             <div className="flex flex-row  w-full gap-4">
               <p className="text-sm text-gray-700  w-full">Same address as company?</p>
@@ -196,9 +138,9 @@ const OwnershipStep: React.FC = () => {
                 </label>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          {!owner.sameAddress && (
+          {/* {!owner.sameAddress && (
         
             <div className="owner-address-fields mt-8">
               <AddressAutocomplete
@@ -216,7 +158,7 @@ const OwnershipStep: React.FC = () => {
               <TextField type="text" label="Legal Entity City" name="companyCity" value={owner.ownerCity} onChange={(e) => handleOwnerChange(owner.id, 'ownerCity', e.target.value)} error='' onBlur={() => { }} />
               <TextField type="text" label="Legal Entity State" name="companyState" value={owner.ownerState} onChange={(e) => handleOwnerChange(owner.id, 'ownerState', e.target.value)} error='' onBlur={() => { }} />
             </div>
-          )}
+          )} */}
           {owners.length > 1 && (
               <div className='w-full border-b border-amber-200 my-8'></div>
             )}

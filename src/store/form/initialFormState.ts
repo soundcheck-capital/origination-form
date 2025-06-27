@@ -26,7 +26,7 @@ export const initialState: FormState = {
     }
   },
   financesInfo: {
-    singleEntity: false, assetsTransferred: false, filedLastYearTaxes: false, lastYearTaxes: [], hasBusinessDebt: false,   
+    singleEntity: true, assetsTransferred: false, filedLastYearTaxes: false, lastYearTaxes: [], hasBusinessDebt: false,   
     debts: [], hasOverdueLiabilities: false, isLeasingLocation: false,
     leaseEndDate: '', hasTaxLiens: false, hasJudgments: false,
     hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false

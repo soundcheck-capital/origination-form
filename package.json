@@ -5,6 +5,7 @@
   "homepage": "https://guittoncandice.github.io/soundcheck-origination-form/",
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.10",
+    "@react-google-maps/api": "^2.20.7",
     "@reduxjs/toolkit": "^2.7.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@testing-library/dom": "^10.4.0",

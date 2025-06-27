@@ -5,7 +5,7 @@ import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice'
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import DropdownField from './customComponents/DropdownField';
-import AddressAutocomplete from './customComponents/AddressAutocomplete';
+import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
 import { usStates } from '../utils/usStates'; // Import the usStates array
 
 // Google Maps Autocomplete types
@@ -55,65 +55,9 @@ const CompanyInfoStep: React.FC = () => {
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   
-  const addressInputRef = useRef<HTMLInputElement>(null);
-  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
 
-  // Load Google Maps script
-  useEffect(() => {
-    if (window.google && window.google.maps && window.google.maps.places) {
-      setIsGoogleLoaded(true);
-      return;
-    }
-
-    const existing = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existing) return;
-
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyA7_2peM-CW7KqJzdHEAmL2PYK-DEnjX0A&libraries=places&v=beta&loading=async`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      console.log('Google Maps loaded successfully');
-      setIsGoogleLoaded(true);
-    };
-    script.onerror = () => console.error('Google Maps failed to load');
-    document.head.appendChild(script);
-  }, []);
-
+ 
   
-  useEffect(() => {
-    if (!isGoogleLoaded || !addressInputRef.current) return;
-  
-    const autocomplete = new window.google.maps.places.Autocomplete(
-      addressInputRef.current,
-      {
-        componentRestrictions: { country: 'US' },
-        fields: ['address_components', 'formatted_address', 'geometry'],
-        types: ['address'],
-      }
-    );
-  
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (!place.address_components) return;
-  
-      let streetNumber = '', route = '', city = '', state = '', zipCode = '';
-      place.address_components.forEach((c: any) => {
-        if (c.types.includes('street_number')) streetNumber = c.long_name;
-        if (c.types.includes('route'))           route        = c.long_name;
-        if (c.types.includes('locality'))        city         = c.long_name;
-        if (c.types.includes('administrative_area_level_1')) state = c.short_name;
-        if (c.types.includes('postal_code'))     zipCode      = c.long_name;
-      });
-  
-      dispatch(updateCompanyInfo({
-        companyAddress: `${streetNumber} ${route}`.trim(),
-        companyCity: city,
-        companyState: state,
-        companyZipCode: zipCode,
-      }));
-    });
-  }, [isGoogleLoaded, dispatch]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -178,13 +122,13 @@ const CompanyInfoStep: React.FC = () => {
         error=''
         onBlur={()=>{}}
         type="text"
-        ref={addressInputRef as React.RefObject<HTMLInputElement>}
         id="companyAddress"
       />
-      <TextField type="text" label="Legal Entity ZIP code" name="companyZipCode" value={companyInfo.companyZipCode} onChange={handleChange} error='' onBlur={()=>{}}  />
+      {/*  <TextField type="text" label="Legal Entity ZIP code" name="companyZipCode" value={companyInfo.companyZipCode} onChange={handleChange} error='' onBlur={()=>{}}  />
       <TextField type="text" label="Legal Entity City" name="companyCity" value={companyInfo.companyCity} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <TextField type="text" label="Legal Entity State" name="companyState" value={companyInfo.companyState} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={()=>{}}  />
+      <TextField type="text" label="Legal Entity State" name="companyState" value={companyInfo.companyState} onChange={handleChange} error='' onBlur={()=>{}}  /> */}
+      
+    <TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={()=>{}}  />
     </div>
   );
 };

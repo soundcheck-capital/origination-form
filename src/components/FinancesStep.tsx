@@ -344,7 +344,7 @@ const FinancesStep: React.FC = () => {
                 type="radio"
                 name="singleEntity"
                 value="yes"
-                checked={financesInfo.singleEntity}
+                checked={financesInfo['singleEntity']}
                 onChange={handleRadioChange}
                 className="mr-2 accent-rose-500 size-4"
               />
@@ -355,7 +355,7 @@ const FinancesStep: React.FC = () => {
                 type="radio"
                 name="singleEntity"
                 value="no"
-                checked={financesInfo.singleEntity}
+                checked={!financesInfo['singleEntity']}
                 onChange={handleRadioChange}
                 className="mr-2 accent-rose-500 size-4"
               />
