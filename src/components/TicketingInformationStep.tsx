@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateDiligenceInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
+import FileUploadField from './customComponents/FileUploadField';
 
 const TicketingInformationStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,29 +21,19 @@ const TicketingInformationStep: React.FC = () => {
       <StepTitle title="Ticketing Information" />
       
       <div className="w-[40%] mb-8">
-        <div className=" flex flex-col  w-full mb-8">
-          <p className="upload-description text-sm font-300 text-gray-700 mb-2">
-            Reports from ticketing company (last 3 years), not just Excel summary, including # events, $ gross ticket sales, # tickets sold per month
-          </p>
-          <input
-            type="file"
-            accept=".xlsx,.pdf,.csv,.jpg,.png"
-            onChange={handleFileChange('ticketingCompanyReport')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+        <FileUploadField
+          field="ticketingCompanyReport"
+          description="Reports from ticketing company (last 3 years), not just Excel summary, including # events, $ gross ticket sales, # tickets sold per month"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
+          multiple={true}
+        />
 
-        <div className=" flex flex-col  w-full mb-8">
-          <p className="upload-description text-sm font-300 text-gray-700 mb-2">
-            Copy of Ticketing Service Agreement
-          </p>
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={handleFileChange('ticketingServiceAgreement')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+        <FileUploadField
+          field="ticketingServiceAgreement"
+          description="Copy of Ticketing Service Agreement"
+          accept=".pdf"
+          multiple={false}
+        />
       </div>
     </div>
   );
