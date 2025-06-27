@@ -145,7 +145,7 @@ const TicketingStep: React.FC = () => {
         We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility in minutes. We only collect the information we need to provide you the best possible offer.
       </p>
 
-      <DropdownField label="Current Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} />
+      <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} />
       {/* {isTicketonConnected && ticketingInfo.currentPartner === 'Ticketon' && (
           <span className="check-icon">✓</span>
         )} */}

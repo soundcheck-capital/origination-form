@@ -73,8 +73,11 @@ export interface Address {
       };
     };
     financesInfo: {
+      singleEntity: boolean;
+      assetsTransferred: boolean;
       filedLastYearTaxes: boolean;
       lastYearTaxes: File[];
+      hasTicketingDebt: boolean;
       hasBusinessDebt: boolean;
       debts: Array<{
         type: string;

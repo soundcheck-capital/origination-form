@@ -21,20 +21,31 @@ const FinancesStep: React.FC = () => {
   const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [visibleQuestions, setVisibleQuestions] = useState<number[]>([0]);
+  const [hasBeenVisited, setHasBeenVisited] = useState(false);
 
   interface Question {
     id: string;
     text: string;
-    name: keyof Pick<typeof financesInfo, 'filedLastYearTaxes' | 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasJudgments' | 'hasBankruptcy' | 'ownershipChanged'>;
+    name: keyof Pick<typeof financesInfo, 'assetsTransferred'| 'filedLastYearTaxes' | 'hasTicketingDebt'| 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasJudgments' | 'hasBankruptcy' | 'ownershipChanged'>;
     showDateInput?: boolean;
     condition?: (financesInfo: any) => boolean;
   }
 
   const questions: Question[] = [
     {
+      id: 'assetsTransferred',
+      text: "Is there more than ~$50,000 in cash, assets, or liabilities transferred to other entities, in a given month? This could include intercompany AR, intercompany AP, and intercompany loans*",
+      name: 'assetsTransferred'
+    },
+    {
       id: 'taxes',
-      text: "Have you filed last year's business taxes?",
+      text: "Have you filed your business taxes for last year?",
       name: 'filedLastYearTaxes'
+    },
+    {
+      id: 'ticketing',
+      text: "Do you have any debt or liability to any existing or former ticketing agents?",
+      name: 'hasTicketingDebt'
     },
     {
       id: 'debt',
@@ -55,12 +66,12 @@ const FinancesStep: React.FC = () => {
     },
     {
       id: 'taxLiens',
-      text: "Does this legal entity have any outstanding tax liens?",
+      text: "Does this legal entity have any outstanding tax arrears and/or liens?",
       name: 'hasTaxLiens'
     },
     {
       id: 'judgments',
-      text: "Does this business that you're currently applying or if you are a sole proprietor, do you have any judgments or lawsuits?",
+      text: "Does this business that you're currently applying for (or, if you are a sole proprietor, do you) have any other material liabilities?",
       name: 'hasJudgments'
     },
     {
@@ -83,6 +94,21 @@ const FinancesStep: React.FC = () => {
     return true;
   });
 
+  // Check if user has already visited this step
+  useEffect(() => {
+    const hasAnsweredAnyQuestion = Object.values(financesInfo).some(value => 
+      typeof value === 'boolean' && value !== undefined
+    );
+    
+    if (hasAnsweredAnyQuestion && !hasBeenVisited) {
+      setHasBeenVisited(true);
+      // Show all questions that should be visible based on current answers
+      const allVisibleIndices = filteredQuestions.map((_, index) => index);
+      setVisibleQuestions(allVisibleIndices);
+      setCurrentQuestionIndex(allVisibleIndices.length - 1);
+    }
+  }, [financesInfo, hasBeenVisited, filteredQuestions]);
+
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const isYes = value === 'yes';
@@ -102,16 +128,17 @@ const FinancesStep: React.FC = () => {
       }));
     }
 
-    // Show next question after a short delay
-    setTimeout(() => {
-      const currentQuestion = filteredQuestions[currentQuestionIndex];
-      const nextIndex = currentQuestionIndex + 1;
-      
-      if (nextIndex < filteredQuestions.length) {
-        setCurrentQuestionIndex(nextIndex);
-        setVisibleQuestions(prev => [...prev, nextIndex]);
-      }
-    }, 300);
+    // Only show next question if this is the first visit
+    if (!hasBeenVisited) {
+      setTimeout(() => {
+        const nextIndex = currentQuestionIndex + 1;
+        
+        if (nextIndex < filteredQuestions.length) {
+          setCurrentQuestionIndex(nextIndex);
+          setVisibleQuestions(prev => [...prev, nextIndex]);
+        }
+      }, 300);
+    }
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,7 +182,7 @@ const FinancesStep: React.FC = () => {
   };
 
   const renderQuestion = (question: Question, index: number) => {
-    const isVisible = visibleQuestions.includes(index);
+    const isVisible = hasBeenVisited || visibleQuestions.includes(index);
     const isCurrent = currentQuestionIndex === index;
     
     return (
@@ -165,13 +192,14 @@ const FinancesStep: React.FC = () => {
           isVisible 
             ? 'opacity-100 transform translate-y-0' 
             : 'opacity-0 transform translate-y-4 pointer-events-none'
-        } ${isCurrent ? 'scale-100' : 'scale-95'}`}
+        } ${isCurrent && !hasBeenVisited ? 'scale-100' : 'scale-95'}`}
         style={{ 
           display: isVisible ? 'block' : 'none',
-          animation: isVisible && isCurrent ? 'slideIn 0.5s ease-out' : 'none'
+          animation: isVisible && isCurrent && !hasBeenVisited ? 'slideIn 0.5s ease-out' : 'none'
         }}
       >
-        <div className="flex flex-row justify-between gap-6 mb-8">
+        
+        <div className="flex flex-row justify-between gap-4 mb-4">
           <label className='text-sm font-300 text-gray-700'>{question.text}</label>
           <div className="flex items-center space-x-8">
             <label className="flex items-center space-x-2">
@@ -181,7 +209,7 @@ const FinancesStep: React.FC = () => {
                 value="yes"
                 checked={financesInfo[question.name]}
                 onChange={handleRadioChange}
-                className="mr-2 accent-rose-500 size-6"
+                className="mr-2 accent-rose-500 size-4"
               />
               Yes
             </label>
@@ -192,7 +220,7 @@ const FinancesStep: React.FC = () => {
                 value="no"
                 checked={!financesInfo[question.name]}
                 onChange={handleRadioChange}
-                className="mr-2 accent-rose-500 size-6"
+                className="mr-2 accent-rose-500 size-4"   
               />
               No
             </label>
@@ -205,7 +233,7 @@ const FinancesStep: React.FC = () => {
             <div className="debts-container flex flex-col gap-4 w-full">
               {financesInfo.debts.map((debt, debtIndex) => (
                 <div key={debtIndex} className="debt-row">
-                 
+                  
                   <div className="flex flex-row gap-4">
                   <select
                     value={debt.type}
@@ -226,23 +254,23 @@ const FinancesStep: React.FC = () => {
                     placeholder="outstanding balance"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                 {financesInfo.debts.length > 1 && (
-                   <button
-                    className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
-                    onClick={() => removeDebt(debtIndex)}
-                    title="Remove debt"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 6h18"></path>
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                    </svg>
-                  </button>
+                  {financesInfo.debts.length > 1 && (
+                    <button
+                      className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
+                      onClick={() => removeDebt(debtIndex)}
+                      title="Remove debt"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                    </button>
                   )}
                   </div>
                   {financesInfo.debts.length > 1 && (
-              <div className="border-b border-amber-300 w-[50%] mx-auto my-4 mt-8"></div>
-            )}
+                <div className="border-b border-amber-300 w-[50%] mx-auto my-4 mt-8"></div>
+              )}
                 </div>
               ))}
             </div>
@@ -307,7 +335,37 @@ const FinancesStep: React.FC = () => {
           }
         `
       }} />
-      
+      <StepTitle title="Single vs Multi-entity" />
+      <div className="flex flex-col justify-between gap-4  justify-center items-center w-[40%] space-x-4">
+          <p className='text-sm font-300 text-gray-700 text-left mx-4'>Is the Company a single entity or part of a multi-entity group structure? This includes a group of affiliates that share ownership</p>
+          <div className="flex items-center space-x-8">
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="singleEntity"
+                value="yes"
+                checked={financesInfo.singleEntity}
+                onChange={handleRadioChange}
+                className="mr-2 accent-rose-500 size-4"
+              />
+              Single entity
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="singleEntity"
+                value="no"
+                checked={financesInfo.singleEntity}
+                onChange={handleRadioChange}
+                className="mr-2 accent-rose-500 size-4"
+              />
+              Multi-entity
+            </label>
+          </div>
+        </div>
+        <div className="border-b border-amber-300 w-[30%] mx-auto  my-8"></div>
+        <StepTitle title="Finances" />
+
       {filteredQuestions.map((question, index) => renderQuestion(question, index))}
     </div>
   );
