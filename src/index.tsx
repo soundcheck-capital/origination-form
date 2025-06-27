@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import MultiStepForm from './components/MultiStepForm';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -17,7 +17,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter basename={ process.env.NODE_ENV === 'development' ? "/" :"/soundcheck-origination-form"}>
+      <HashRouter>
         <Routes>
           {/* Direct access to form - bypassing login and dashboard */}
           <Route path="/" element={<MultiStepForm />} />
@@ -35,7 +35,7 @@ root.render(
           </Route>
           */}
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </Provider>
   </React.StrictMode>
 );
