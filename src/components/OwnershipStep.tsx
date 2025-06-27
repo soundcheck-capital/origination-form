@@ -146,9 +146,9 @@ const OwnershipStep: React.FC = () => {
       <p className="text-gray-400 mb-16 text-center px-20 w-[40%]">Please carefully complete the information below and make sure that it is accurate including a complete address with city/state/zip and information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
 
       {owners.map((owner) => (
-        <div key={owner.id} className="flex flex-col bg-white p-8">
+        <div key={owner.id} className="flex flex-col bg-white">
           <div className="flex flex-col justify-between">
-            <label className='block text-sm font-medium text-gray-700'>Owner {owners.indexOf(owner) + 1}</label>
+            <p className='block text-sm font-medium text-gray-700'>Owner {owners.indexOf(owner) + 1}</p>
             {owners.length > 1 && (
               <button
                 className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end mb-4"
@@ -170,11 +170,12 @@ const OwnershipStep: React.FC = () => {
 
           <div className="flex flex-row justify-between w-full">
             <div className="flex flex-row  w-full gap-4">
-              <label className="text-sm text-gray-700  w-full">Same address as company?</label>
+              <p className="text-sm text-gray-700  w-full">Same address as company?</p>
               <div className="flex flex-row justify-end w-full gap-4">
                 <label>
                   <input className='mr-2'
                     type="radio"
+                    name={`sameAddress-${owner.id}-yes`}
                     checked={owner.sameAddress}
                     onChange={(e) => handleOwnerChange(owner.id, 'sameAddress', e.target.checked)}
                   />
@@ -183,6 +184,7 @@ const OwnershipStep: React.FC = () => {
                 <label >
                   <input className='mr-2'
                     type="radio"
+                    name={`sameAddress-${owner.id}-no`}
                     checked={!owner.sameAddress}
                     onChange={(e) => handleOwnerChange(owner.id, 'sameAddress', !e.target.checked)}
                   />
@@ -204,13 +206,16 @@ const OwnershipStep: React.FC = () => {
                 onBlur={() => { }}
                 type="text"
                 ref={addressInputRef as React.RefObject<HTMLInputElement>}
-                id="companyAddress"
+                id="ownerAddress"
               />
               <TextField type="text" label="Legal Entity ZIP code" name="companyZipCode" value={owner.ownerZipCode} onChange={(e) => handleOwnerChange(owner.id, 'ownerZipCode', e.target.value)} error='' onBlur={() => { }} />
               <TextField type="text" label="Legal Entity City" name="companyCity" value={owner.ownerCity} onChange={(e) => handleOwnerChange(owner.id, 'ownerCity', e.target.value)} error='' onBlur={() => { }} />
               <TextField type="text" label="Legal Entity State" name="companyState" value={owner.ownerState} onChange={(e) => handleOwnerChange(owner.id, 'ownerState', e.target.value)} error='' onBlur={() => { }} />
             </div>
           )}
+          {owners.length > 1 && (
+              <div className='w-full border-b border-amber-200 my-8'></div>
+            )}
         </div>
       ))}
       <button

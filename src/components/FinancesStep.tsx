@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateFinancesInfo } from '../store/form/formSlice';
+import StepTitle from './customComponents/StepTitle';
 const debtTypes = [
   'Credit card debt',
   'Account payables',
@@ -79,9 +80,9 @@ const FinancesStep: React.FC = () => {
   };
 
   const renderQuestion = (question: string, name: keyof Pick<typeof financesInfo, 'filedLastYearTaxes' | 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasJudgments' | 'hasBankruptcy' | 'ownershipChanged'>, showDateInput = false) => (
-    <div className="space-y-6">
-          <div className="flex flex-col gap-6 mb-8">
-        <label>{question}</label>
+    <div className=" w-[40%]">
+          <div className="flex flex-row justify-between gap-6 mb-8">
+        <label className='text-sm font-300 text-gray-700'>{question}</label>
         <div className="flex items-center space-x-8">
           <label className="flex items-center space-x-2">
             <input
@@ -181,10 +182,7 @@ const FinancesStep: React.FC = () => {
 
   return (
 
-    <div className="w-full flex flex-col p-4 justify-center items-center">
-          
-      <p className="text-gray-600 mb-8 text-2xl font-bold ">Tell us about your finances</p>
-  
+    <div className="flex flex-col items-center justify-center w-full pt-10">
       {renderQuestion("Have you filed last year's business taxes?", 'filedLastYearTaxes')}
       {renderQuestion("Do you have any business debt or material liabilities?", 'hasBusinessDebt')}
       {financesInfo.hasBusinessDebt && financesInfo.debts.length > 0 && renderQuestion("Are any of these liabilities not within terms and/or overdue?", 'hasOverdueLiabilities')}

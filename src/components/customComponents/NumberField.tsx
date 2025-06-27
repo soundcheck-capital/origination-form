@@ -5,9 +5,10 @@ import TextField from "./TextField";
     onChange: (value: string) => void;
     placeholder?: string;
     label?: string;
+    id?: string;
   }
   
-  const NumberInput: React.FC<NumberInputProps> = ({ value, onChange, placeholder, label }) => {
+  const NumberInput: React.FC<NumberInputProps> = ({ value, onChange, placeholder, label, id }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const input = e.target.value;
       const numericValue = input.replace(/[^0-9.]/g, '');
@@ -24,7 +25,7 @@ import TextField from "./TextField";
   
     return (
 
-        <TextField type="number"    name={label || ''} value={value} onChange={handleChange} error='' onBlur={()=>{}} label={label || ''} />
+        <TextField id={id} type="number"    name={label || ''} value={value} onChange={handleChange} error='' onBlur={()=>{}} label={label || ''} />
      
   
     )

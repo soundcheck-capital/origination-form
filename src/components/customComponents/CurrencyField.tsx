@@ -5,9 +5,10 @@ import TextField from "./TextField";
     onChange: (value: string) => void;
     placeholder?: string;
     label?: string;
+    id?: string;
   }
   
-  const CurrencyField: React.FC<CurrencyFieldProps> = ({ value, onChange, placeholder, label }) => {
+  const CurrencyField: React.FC<CurrencyFieldProps> = ({ value, onChange, placeholder, label, id }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const input = e.target.value;
       const numericValue = input.replace(/[^0-9.]/g, '');
@@ -23,7 +24,7 @@ import TextField from "./TextField";
   
   
     return (
-        <TextField type="number" label={label || ''} name={label || ''} value={formatCurrencyValue(value)} onChange={handleChange} error='' onBlur={()=>{}} />
+        <TextField id={id} type="number" label={label || ''} name={label || ''} value={formatCurrencyValue(value)} onChange={handleChange} error='' onBlur={()=>{}} />
     //   <div className="relative w-full max-w-md mb-10">
     //   <input type="text" id="floating_outlined"       value={formatCurrencyValue(value)}
   
