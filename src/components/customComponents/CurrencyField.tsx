@@ -1,45 +1,71 @@
 import TextField from "./TextField";
 
-    interface CurrencyFieldProps {
-    value: string;
-    onChange: (value: string) => void;
-    placeholder?: string;
-    label?: string;
-    id?: string;
-  }
-  
-  const CurrencyField: React.FC<CurrencyFieldProps> = ({ value, onChange, placeholder, label, id }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const input = e.target.value;
-      const numericValue = input.replace(/[^0-9.]/g, '');
-      onChange(numericValue);
-    };
-  
-    const formatCurrencyValue = (value: string) => {
-      if (!value) return '';
-  
-      return new Intl.NumberFormat('en-US', {
-      }).format(Number(value));
-    };
-  
-  
-    return (
-        <TextField id={id} type="number" label={label || ''} name={label || ''} value={formatCurrencyValue(value)} onChange={handleChange} error='' onBlur={()=>{}} />
-    //   <div className="relative w-full max-w-md mb-10">
-    //   <input type="text" id="floating_outlined"       value={formatCurrencyValue(value)}
-  
-    //     className="block w-full p-4 text-sm text-gray-900 rounded-2xl text-gray-500 border-2 border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-500 focus:outline-none" placeholder=" " required
-    //     onChange={handleChange}
-    //   />
-    //   <label htmlFor="floating_outlined"
-    //     className="absolute text-sm text-gray-500 bg-white rounded-t-md  focus:border-rose-300 text-gray-500 duration-300 transform -translate-y-4 scale-75 top-1 z-10 origin-[0] 
-    //          px-2 peer-focus:px-2 peer-focus:text-gray-500 peer-focus:text-rose-500 peer-placeholder-shown:scale-100 
-    //         peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-3">{label}</label>
-    // </div>
-  
-     
-  
-    );
+interface CurrencyFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  label?: string;
+  id?: string;
+}
+
+const CurrencyField: React.FC<CurrencyFieldProps> = ({
+  value,
+  onChange,
+  placeholder,
+  label,
+  id,
+}) => {
+  const prefix = "$";
+
+  // Formatte la partie entière avec séparateur de milliers ; ajoute les décimales seulement si l'utilisateur en a tapé
+  const formatCurrency = (val: string) => {
+    if (!val) return "";
+    const [intPart, decPart] = val.split(".");
+    const formattedInt = new Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 0,
+    }).format(Number(intPart));
+    return decPart !== undefined ? `${formattedInt}.${decPart}` : formattedInt;
   };
 
-  export default CurrencyField;
+  // Au changement : ne garder que chiffres et point, un seul point, max 2 décimales
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Retirer le préfixe s'il est présent
+    let input = e.target.value.replace(prefix, "").replace(/[^0-9.]/g, "");
+    const parts = input.split(".");
+    if (parts.length > 1) {
+      const [intP, ...rest] = parts;
+      let dec = rest.join("");
+      dec = dec.slice(0, 2);
+      input = `${intP}.${dec}`;
+    }
+    onChange(input);
+  };
+
+  // Au focus : affiche la valeur brute sans préfixe
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.value = value;
+  };
+
+  // Au blur : applique le formatage avec séparateurs et préfixe
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const formatted = formatCurrency(value);
+    e.target.value = formatted ? `${prefix}${formatted}` : "";
+  };
+
+  return (
+    <TextField
+      id={id}
+      type="text"
+      name={label || ""}
+      placeholder={placeholder}
+      label={label || ''}
+      value={value ? `${prefix}${formatCurrency(value)}` : ""}
+      onChange={handleChange}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      error=""
+    />
+  );
+};
+
+export default CurrencyField;

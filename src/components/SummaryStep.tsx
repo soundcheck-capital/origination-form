@@ -21,12 +21,12 @@ const SummaryStep: React.FC = () => {
   };
 
   return (
-    <div className="form-step">
-      <h2 className="step-title">Summary</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Review Your Informations</h3>
+    <div className="flex flex-col items-center justify-center w-full">
+      {/* <h2 className="step-title">Summary</h2>
+      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Review Your Informations</h3> */}
 
-      <div className="summary-container">
-        {/* Company Information */}
+     {/*  <div className="summary-container">
+        {/* Company Information 
         <div className="summary-section">
           <h4 className="summary-section-title">Company Information</h4>
           <div className="summary-grid">
@@ -75,7 +75,7 @@ const SummaryStep: React.FC = () => {
 
        
 
-        {/* Ticketing Information */}
+        {/* Ticketing Information 
           <h4 className="summary-section-title">Ticketing Information</h4>
           <div className="summary-grid">
             <div className="summary-item">
@@ -93,7 +93,7 @@ const SummaryStep: React.FC = () => {
           </div>
        
 
-        {/* Volume Information */}
+        {/* Volume Information
           <h4 className="summary-section-title">Volume Information</h4>
           <div className="summary-grid">
             <div className="summary-item">
@@ -122,7 +122,7 @@ const SummaryStep: React.FC = () => {
             </div>
           </div>
 
-        {/* Funds Information */}
+        {/* Funds Information 
           <h4 className="summary-section-title">Funds Information</h4>
           <div className="summary-grid">
             <div className="summary-item">
@@ -144,7 +144,7 @@ const SummaryStep: React.FC = () => {
             </div>
           </div>
 
-        {/* Ownership Information */}
+        {/* Ownership Information 
           <h4 className="summary-section-title">Ownership Information</h4>
           <div className="summary-grid">
         
@@ -195,7 +195,7 @@ const SummaryStep: React.FC = () => {
           ))}
         </div>
 
-        {/* Financial Information */}
+        {/* Financial Information 
           <h4 className="summary-section-title">Financial Information</h4>
           <div className="summary-grid">
             <div className="summary-item">
@@ -250,7 +250,7 @@ const SummaryStep: React.FC = () => {
             </div>
           </div>
 
-        {/* Documents Uploaded */}
+        {/* Documents Uploaded 
         
           <h4 className="summary-section-title">Documents Uploaded</h4>
           <div className="summary-grid">
@@ -296,8 +296,16 @@ const SummaryStep: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-      </div>
+        
+        
+        </div>  */}
+
+        <div className="w-[40%] mb-8">
+          <p className="text-gray-600 my-8 text-sm font-300 text-center">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" className="text-blue-500">Privacy Policy</a>
+          </p>
+          </div>
+        </div>
+      
   );
 };
 

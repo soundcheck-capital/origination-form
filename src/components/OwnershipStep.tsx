@@ -5,6 +5,7 @@ import {updateOwnershipInfo} from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import AddressAutocomplete from './customComponents/AddressAutocomplete';
+import NumberInput from './customComponents/NumberField';
 
 interface Owner {
   id: string;
@@ -99,9 +100,13 @@ const OwnershipStep: React.FC = () => {
     });
   }, [isGoogleLoaded, dispatch]);
   const handleOwnerChange = (id: string, field: keyof Owner, value: string | boolean) => {
-    const updatedOwners = owners.map(owner =>
-      owner.id === id ? { ...owner, [field]: value } : owner
-    );
+    const updatedOwners = owners.map(owner => {
+      if(field === 'ownershipPercentage' && Number(value) > 100) {
+        return owner.id === id ? { ...owner, [field]: '100' } : owner;
+      } else {
+        return owner.id === id ? { ...owner, [field]: value } : owner;
+      }
+    });
     setOwners(updatedOwners);
     // dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
@@ -163,7 +168,7 @@ const OwnershipStep: React.FC = () => {
           <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
             <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} />
            
-            <TextField type="number" label="Ownership Percentage" name="ownershipPercentage" value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e.target.value)} error='' onBlur={() => { }} />
+            <NumberInput showPercent={true} label="Ownership Percentage"   value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} />
 
           </div>
 

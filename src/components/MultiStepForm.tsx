@@ -12,7 +12,6 @@ import TicketingVolumeStep from './TicketingVolumeStep';
 import OwnershipStep from './OwnershipStep';
 import FinancesStep from './FinancesStep';
 import FundsStep from './AdvanceSliderStep';
-import DiligenceStep from './DiligenceStep';
 import SummaryStep from './SummaryStep';
 import logo from '../assets/logo_black_name.svg';
 import LegalInfoStep from './LegalInfoStep';
@@ -20,6 +19,9 @@ import Sidebar from './Sidebar';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
 import YourFundingStep from './YourFundsStep';
+import LegalInformationStep from './LegalInformationStep';
+import TicketingInformationStep from './TicketingInformationStep';
+import FinancialInformationStep from './FinancialInformationStep';
 
 const MultiStepForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -86,9 +88,13 @@ const MultiStepForm: React.FC = () => {
       case 6:
         return 'Finances';
       case 7:
-        return 'Diligence';
+        return 'Ticketing Information';
       case 8:
-        return 'Summary';
+        return 'Financial Information';
+      case 9:
+        return 'Legal Information';
+      case 10:
+        return 'Thank you';
       default:
         return 'SoundCheck';
     }
@@ -113,8 +119,13 @@ const MultiStepForm: React.FC = () => {
       case 6:
         return <FinancesStep />;
       case 7:
-        return <DiligenceStep />;
+        return <TicketingInformationStep />;
       case 8:
+        return <FinancialInformationStep />;
+      case 9:
+        return <LegalInformationStep />;
+     
+      case 10:
         return <SummaryStep />;
       default:
         return null;
@@ -141,7 +152,7 @@ const MultiStepForm: React.FC = () => {
               <div className="rounded-xl absolute top-0 left-0 h-2 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
                   className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-2 transition-all duration-300"
-                style={{ width: `${((currentStep) / 8) * 100}%` }}
+                style={{ width: `${((currentStep) / 10) * 100}%` }}
               ></div>
             </div>
           </div>
@@ -159,7 +170,7 @@ const MultiStepForm: React.FC = () => {
             
             )}
 
-            {currentStep < 9 ? (
+            {currentStep < 10 ? (
               <ButtonPrimary onClick={() => {
                 setCurrentStep(currentStep + 1);
                 window.scrollTo(0, 0);
