@@ -82,7 +82,7 @@ const MultiStepForm: React.FC = () => {
       case 4:
         return 'Business & Ownership';
       case 5:
-        return 'Ownership Information';
+        return 'Beneficial ownership & control person';
       case 6:
         return 'Finances';
       case 7:

@@ -142,8 +142,7 @@ const OwnershipStep: React.FC = () => {
   return (
 
     <div className="flex flex-col items-center justify-center w-full">
-      <StepTitle title="Beneficial ownership & control person" />
-      <p className="text-gray-400 mb-16 text-center px-20 w-[40%]">Please carefully complete the information below and make sure that it is accurate including a complete address with city/state/zip and information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
+      <p className="text-gray-400 mb-8 text-center px-20 w-[40%] mt-8">Please carefully complete the information below and make sure that it is accurate including a complete address with city/state/zip and information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
 
       {owners.map((owner) => (
         <div key={owner.id} className="flex flex-col bg-white">
