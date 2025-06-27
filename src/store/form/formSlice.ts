@@ -22,7 +22,7 @@ const formSlice = createSlice({
     updateVolumeInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
       state.formData.volumeInfo = { ...state.formData.volumeInfo, ...action.payload };
     },
-    updateFundsInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
+    updateFundsInfo: (state, action: PayloadAction<Partial<FormState['formData']['fundsInfo']>>) => {
       state.formData.fundsInfo = { ...state.formData.fundsInfo, ...action.payload };
     },
     updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['formData']['ownershipInfo']>>) => {

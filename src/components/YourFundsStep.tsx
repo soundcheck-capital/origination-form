@@ -38,7 +38,7 @@ const YourFundingStep: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    dispatch(updateTicketingInfo({ [name]: value }));
+    dispatch(updateFundsInfo({ [name]: value }));
 
   };
   const handleCurrencyChange = (name: string, value: string) => {
@@ -51,7 +51,7 @@ const YourFundingStep: React.FC = () => {
 
       <CurrencyField label="Your funds"  value={fundsInfo.yourFunds} onChange={(value) => handleCurrencyChange('yourFunds', value)}  />
       <DropdownField label="Time for Funding" name="timeForFunding" value={fundsInfo.timeForFunding} onChange={handleChange} error='' onBlur={() => { }} options={timeForFunding} />
-      <DropdownField label="How do you plan to use your advance?" name="advanceUse" value={fundsInfo.fundUse} onChange={handleChange} error='' onBlur={() => { }} options={fundUses} />
+      <DropdownField label="How do you plan to use your advance?" name="fundUse" value={fundsInfo.fundUse} onChange={handleChange} error='' onBlur={() => { }} options={fundUses} />
       <DropdownField label="Advance Recoupable Against" name="recoupableAgainst" value={fundsInfo.recoupableAgainst} onChange={handleChange} error='' onBlur={() => { }} options={recoupableAgainst} /> 
 
 
