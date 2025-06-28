@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import MultiStepForm from './components/MultiStepForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import reportWebVitals from './reportWebVitals';
+import SubmitSuccess from './components/SubmitSuccess';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,7 +24,7 @@ root.render(
           <Route path="/" element={<MultiStepForm />} />
           <Route path="/new-application" element={<MultiStepForm />} />
           <Route path="/application/:id" element={<MultiStepForm />} />
-          
+          <Route path="/submit-success" element={<SubmitSuccess />} />
           {/* OLD CODE - KEPT FOR LATER USE */}
           {/* 
           <Route path="/" element={<App />} />

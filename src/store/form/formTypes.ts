@@ -17,6 +17,14 @@ export interface Address {
     ownerZipCode: string;
   }
   
+  export interface FileInfo {
+    id: string;
+    name: string;
+    size: number;
+    type: string;
+    uploadedAt: string;
+  }
+  
   export interface FormState {
     currentStep: number;
     email: string;
@@ -76,7 +84,7 @@ export interface Address {
       singleEntity: boolean;
       assetsTransferred: boolean;
       filedLastYearTaxes: boolean;
-      lastYearTaxes: File[];
+      lastYearTaxes: FileInfo[];
       hasTicketingDebt: boolean;
       hasBusinessDebt: boolean;
       debts: Array<{
@@ -93,15 +101,15 @@ export interface Address {
     };
     diligenceInfo: {
       bankAccountLinked: boolean;
-      ticketingCompanyReport: File[];
-      ticketingServiceAgreement: File[];
-      ticketingProjections: File[];
-      incorporationCertificate: File[];
-      legalEntityChart: File[];
-      governmentId: File[];
-      einAuthentication: File[];
-      financialStatements: File[];
-      bankStatement: File[];
+      ticketingCompanyReport: FileInfo[];
+      ticketingServiceAgreement: FileInfo[];
+      ticketingProjections: FileInfo[];
+      incorporationCertificate: FileInfo[];
+      legalEntityChart: FileInfo[];
+      governmentId: FileInfo[];
+      einAuthentication: FileInfo[];
+      financialStatements: FileInfo[];
+      bankStatement: FileInfo[];
     };
   }
   

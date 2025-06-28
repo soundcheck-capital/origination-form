@@ -1,7 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { updateDiligenceInfo } from '../../store/form/formSlice';
+import { useFileUpload } from '../../hooks/useFileUpload';
 
 interface FileUploadFieldProps {
   field: string;
@@ -9,6 +7,7 @@ interface FileUploadFieldProps {
   accept?: string;
   multiple?: boolean;
   className?: string;
+  onFilesChange?: (fileInfos: any[]) => void;
 }
 
 const FileUploadField: React.FC<FileUploadFieldProps> = ({
@@ -16,27 +15,34 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   description,
   accept = ".pdf,.xlsx,.csv,.jpg,.png",
   multiple = true,
-  className = ""
+  className = "",
+  onFilesChange
 }) => {
-  const dispatch = useDispatch();
-  const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Récupérer les fichiers actuels depuis le store
-  const currentFiles = diligenceInfo[field as keyof typeof diligenceInfo] as File[] || [];
+  const { files, fileInfos, addFiles, removeFile, clearFiles } = useFileUpload();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const fileArray = Array.from(files);
+    const selectedFiles = event.target.files;
+    if (selectedFiles && selectedFiles.length > 0) {
+      const fileArray = Array.from(selectedFiles);
       if (multiple) {
-        // Ajouter aux fichiers existants
-        const allFiles = [...currentFiles, ...fileArray];
-        dispatch(updateDiligenceInfo({ [field]: allFiles }));
+        addFiles(fileArray);
       } else {
-        // Remplacer les fichiers existants
-        dispatch(updateDiligenceInfo({ [field]: fileArray }));
+        clearFiles();
+        addFiles(fileArray);
+      }
+      
+      // Notify parent component about file changes
+      if (onFilesChange) {
+        const newFileInfos = fileArray.map((file, index) => ({
+          id: `file-${Date.now()}-${index}`,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          uploadedAt: new Date().toISOString(),
+        }));
+        onFilesChange(multiple ? [...fileInfos, ...newFileInfos] : newFileInfos);
       }
     }
   };
@@ -59,21 +65,43 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const fileArray = Array.from(e.dataTransfer.files);
       if (multiple) {
-        const allFiles = [...currentFiles, ...fileArray];
-        dispatch(updateDiligenceInfo({ [field]: allFiles }));
+        addFiles(fileArray);
       } else {
-        dispatch(updateDiligenceInfo({ [field]: fileArray }));
+        clearFiles();
+        addFiles(fileArray);
+      }
+      
+      // Notify parent component about file changes
+      if (onFilesChange) {
+        const newFileInfos = fileArray.map((file, index) => ({
+          id: `file-${Date.now()}-${index}`,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          uploadedAt: new Date().toISOString(),
+        }));
+        onFilesChange(multiple ? [...fileInfos, ...newFileInfos] : newFileInfos);
       }
     }
   };
 
-  const removeFile = (index: number) => {
-    const newFiles = currentFiles.filter((_, i) => i !== index);
-    dispatch(updateDiligenceInfo({ [field]: newFiles }));
+  const handleRemoveFile = (index: number) => {
+    removeFile(index);
+    
+    // Notify parent component about file changes
+    if (onFilesChange) {
+      const newFileInfos = fileInfos.filter((_, i) => i !== index);
+      onFilesChange(newFileInfos);
+    }
   };
 
-  const clearAllFiles = () => {
-    dispatch(updateDiligenceInfo({ [field]: [] }));
+  const handleClearAllFiles = () => {
+    clearFiles();
+    
+    // Notify parent component about file changes
+    if (onFilesChange) {
+      onFilesChange([]);
+    }
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -141,15 +169,15 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       </div>
       
       {/* Zone d'affichage des fichiers sélectionnés */}
-      {currentFiles.length > 0 && (
+      {files.length > 0 && (
         <div className="mt-4 space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-sm font-medium text-gray-700">
-              Fichiers sélectionnés ({currentFiles.length})
+              Fichiers sélectionnés ({files.length})
             </h4>
-            {currentFiles.length > 1 && (
+            {files.length > 1 && (
               <button
-                onClick={clearAllFiles}
+                onClick={handleClearAllFiles}
                 className="text-sm text-red-500 hover:text-red-700"
               >
                 Tout supprimer
@@ -158,7 +186,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </div>
           
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {currentFiles.map((file, index) => (
+            {files.map((file, index) => (
               <div 
                 key={`${file.name}-${index}`}
                 className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
@@ -179,7 +207,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
                 </div>
                 
                 <button
-                  onClick={() => removeFile(index)}
+                  onClick={() => handleRemoveFile(index)}
                   className="text-red-500 hover:text-red-700 p-1 ml-2 flex-shrink-0"
                   title="Supprimer le fichier"
                 >

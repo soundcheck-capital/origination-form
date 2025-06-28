@@ -5,6 +5,7 @@ import { RootState, AppDispatch } from '../store';
 import { saveApplication } from '../store/form/formThunks';
 import { fetchApplicationById } from '../store/auth/authThunks';
 import { setCurrentStep } from '../store/form/formSlice';
+import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
 import PersonalInfoStep from './PersonalInfoStep';
 import CompanyInfoStep from './CompanyInfoStep';
 import TicketingStep from './TicketingStep';
@@ -23,7 +24,7 @@ import LegalInformationStep from './LegalInformationStep';
 import TicketingInformationStep from './TicketingInformationStep';
 import FinancialInformationStep from './FinancialInformationStep';
 
-const MultiStepForm: React.FC = () => {
+const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -33,6 +34,8 @@ const MultiStepForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
   const [activeMenuItem, setActiveMenuItem] = useState('applications');
+  const { getAllFiles, getAllFileInfos } = useDiligenceFiles();
+  
   // Load application data if ID is provided
   useEffect(() => {
     if (id) {
@@ -58,6 +61,99 @@ const MultiStepForm: React.FC = () => {
     }
   };
 
+  // NEW: Function to send data to webhook with FormData
+  const sendToWebhook = async (formDataObj: FormData) => {
+    const webhookUrl = 'https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm';
+    
+    try {
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        body: formDataObj,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      if(response.status === 200) {
+        setSaveMessage('Application submitted successfully!');
+        return true;
+      }
+          return false; 
+    } catch (error) {
+      console.error('Error sending data to webhook:', error);
+      throw error;
+    }
+  };
+
+  // NEW: Function to prepare form data for webhook with files
+  const prepareFormDataForWebhook = () => {
+    const formDataObj = new FormData();
+    const allFiles = getAllFiles();
+    const allFileInfos = getAllFileInfos();
+
+    // Add application metadata
+    formDataObj.append('applicationId', id || 'new');
+    formDataObj.append('submittedAt', new Date().toISOString());
+    formDataObj.append('userAgent', navigator.userAgent);
+
+    // Add form data as JSON
+    const formDataJson = {
+      personalInfo: formData.formData.personalInfo,
+      companyInfo: formData.formData.companyInfo,
+      ticketingInfo: formData.formData.ticketingInfo,
+      volumeInfo: formData.formData.volumeInfo,
+      ownershipInfo: formData.formData.ownershipInfo,
+      financesInfo: formData.financesInfo,
+      fundsInfo: formData.formData.fundsInfo,
+      user: user ? { id: user.id, email: user.email } : null,
+    };
+
+    formDataObj.append('formData', JSON.stringify(formDataJson));
+
+    // Add file metadata as JSON
+    formDataObj.append('fileMetadata', JSON.stringify(allFileInfos));
+
+    // Add actual files
+    Object.keys(allFiles).forEach(fieldName => {
+      const files = allFiles[fieldName];
+      files.forEach((file, index) => {
+        formDataObj.append(`${fieldName}_${index}`, file);
+      });
+    });
+
+    return formDataObj;
+  };
+
+  const handleSubmit = async () => {
+    setIsSaving(true);
+    setSaveMessage('');
+    
+    try {
+      // Prepare FormData with files
+      const formDataObj = prepareFormDataForWebhook();
+      
+      // Send to webhook
+      await sendToWebhook(formDataObj);
+      
+      // Show success message
+      setSaveMessage('Application submitted successfully!');
+      
+      // Navigate to success page or dashboard after a delay
+      setTimeout(() => {
+        // You can change this to navigate to a success page
+        navigate('/submit-success');
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSaveMessage('Failed to submit application. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // OLD CODE - KEPT FOR LATER USE
+  /*
   const handleSubmit = async () => {
     try {
       await dispatch(saveApplication());
@@ -66,6 +162,7 @@ const MultiStepForm: React.FC = () => {
       setSaveMessage('Failed to submit application. Please try again.');
     }
   };
+  */
 
   const handleBackToDashboard = () => {
     navigate('/dashboard');
@@ -100,9 +197,6 @@ const MultiStepForm: React.FC = () => {
     }
   };
 
-
-
-
   const renderStep = () => {
     switch (currentStep) {
       case 1:
@@ -136,14 +230,24 @@ const MultiStepForm: React.FC = () => {
     <div className="flex flex-row">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
-
       <main className="w-full h-full flex flex-col bg-white p-6">
         <div className="flex justify-center items-center mt-8">
             <div className="flex flex-col items-center gap-4">
             <img src={logo} alt="Logo" className="w-24 " />
             </div>
-        
         </div>
+        
+        {/* Success/Error Message */}
+        {saveMessage && (
+          <div className={`w-[30%] mx-auto mb-4 p-3 rounded-lg text-center ${
+            saveMessage.includes('successfully') 
+              ? 'bg-green-100 text-green-700 border border-green-300' 
+              : 'bg-red-100 text-red-700 border border-red-300'
+          }`}>
+            {saveMessage}
+          </div>
+        )}
+        
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
           <div className="w-[30%] mx-auto ">
@@ -162,12 +266,12 @@ const MultiStepForm: React.FC = () => {
           <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8">{stepTitles()}</h1>
             {renderStep()}
           </div>
-{/* Navigation Buttons */}
+          
+          {/* Navigation Buttons */}
           <div className="flex justify-center gap-4 w-[30%] mx-auto ">
             
             {currentStep > 1 && (
               <ButtonSecondary onClick={() => {setCurrentStep(currentStep - 1);window.scrollTo(0, 0);}} disabled={false}>Previous</ButtonSecondary>
-            
             )}
 
             {currentStep < 10 ? (
@@ -177,7 +281,9 @@ const MultiStepForm: React.FC = () => {
               }} disabled={false}>Next</ButtonPrimary>
              
             ) : (
-              <ButtonPrimary onClick={handleSubmit} disabled={isSaving}>Submit Application</ButtonPrimary>
+              <ButtonPrimary onClick={handleSubmit} disabled={isSaving}>
+                {isSaving ? 'Submitting...' : 'Submit Application'}
+              </ButtonPrimary>
             )}
           </div>
 
@@ -185,6 +291,14 @@ const MultiStepForm: React.FC = () => {
       </main>
     </div>
 
+  );
+};
+
+const MultiStepForm: React.FC = () => {
+  return (
+    <DiligenceFilesProvider>
+      <MultiStepFormContent />
+    </DiligenceFilesProvider>
   );
 };
 

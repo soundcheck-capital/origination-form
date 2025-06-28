@@ -1,19 +1,14 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateDiligenceInfo } from '../store/form/formSlice';
+import { useDiligenceFiles } from '../contexts/DiligenceFilesContext';
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
 
 const FinancialInformationStep: React.FC = () => {
-  const dispatch = useDispatch();
-  const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
+  const { addFiles } = useDiligenceFiles();
 
-  const handleFileChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      dispatch(updateDiligenceInfo({ [field]: Array.from(files) }));
-    }
+  const handleFilesChange = (field: string, fileInfos: any[]) => {
+    // This will be called when files are added/removed
+    // The actual files are managed by the FileUploadField component
   };
 
   return (
@@ -26,6 +21,7 @@ const FinancialInformationStep: React.FC = () => {
           description="Last 2 years and YTD detailed financial statements (P&L, B/S, Cash Flow) per month"
           accept=".pdf"
           multiple={true}
+          onFilesChange={(fileInfos) => handleFilesChange('financialStatements', fileInfos)}
         />
 
         <FileUploadField
@@ -33,6 +29,7 @@ const FinancialInformationStep: React.FC = () => {
           description="Last 6 months of bank statements"
           accept=".pdf"
           multiple={true}
+          onFilesChange={(fileInfos) => handleFilesChange('bankStatement', fileInfos)}
         />
       </div>
     </div>
