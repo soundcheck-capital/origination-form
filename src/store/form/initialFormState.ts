@@ -6,10 +6,10 @@ export const initialState: FormState = {
   emailError: '',
   formData: {
     personalInfo: { email: '', firstname: '', lastname: '', phone: '', role: '' },
-    companyInfo: {
+    companyInfo: {  
       employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
-      taxId: '', legalEntityType: '', companyAddress: '',
-      companyCity: '', companyState: '', companyZipCode: '', companyType: '',
+      legalEntityType: '', companyAddress: '',
+      companyCity: '', companyState: '', companyZipCode: '',
        ein: '', stateOfIncorporation: ''
     },
     ticketingInfo: { currentPartner: '', settlementPolicy: '', membership: '' },
@@ -17,9 +17,8 @@ export const initialState: FormState = {
       lastYearEvents: 0, lastYearTickets: 0, lastYearSales: 0,
       nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0
     },
-    fundsInfo: {
-      yourFunds: '0', otherFunds: '0', recoupmentPeriod: '0',
-      recoupmentPercentage: '0', fundUse: '', timeForFunding: '', recoupableAgainst: ''
+    fundsInfo: {  
+        yourFunds: '0', fundUse: '', timeForFunding: '', recoupableAgainst: ''
     },
     ownershipInfo: {
      owners: [],
@@ -32,10 +31,13 @@ export const initialState: FormState = {
     hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false
   },
   diligenceInfo: {
-    bankAccountLinked: false, ticketingCompanyReport: [],
-    ticketingServiceAgreement: [], ticketingProjections: [],
-    incorporationCertificate: [], legalEntityChart: [],
-    governmentId: [], einAuthentication: [],
-    financialStatements: [], bankStatement: []
+    ticketingCompanyReport: { files: [], fileInfos: [] },
+    ticketingServiceAgreement: { files: [], fileInfos: [] },
+    financialStatements: { files: [], fileInfos: [] },
+    bankStatement: { files: [], fileInfos: [] },    
+    incorporationCertificate: { files: [], fileInfos: [] },
+    legalEntityChart: { files: [], fileInfos: [] },
+    governmentId: { files: [], fileInfos: [] },
+    w9form: { files: [], fileInfos: [] },
   }
 };

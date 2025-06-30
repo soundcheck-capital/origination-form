@@ -65,24 +65,24 @@ const FundsStep: React.FC = () => {
   };
 
 
-  const calculateSoundCheckFees = () => {
-    const totalFunds = Number(fundsInfo.yourFunds) + Number(fundsInfo.otherFunds);
-    const recoupmentPeriod = Number(fundsInfo.recoupmentPeriod);
-    const recoupmentPercentage = Number(fundsInfo.recoupmentPercentage);
+  // const calculateSoundCheckFees = () => {
+  //     const totalFunds = Number(fundsInfo.yourFunds) + Number(fundsInfo.otherFunds);
+  //     const recoupmentPeriod = Number(fundsInfo.recoupmentPeriod);
+  //     const recoupmentPercentage = Number(fundsInfo.recoupmentPercentage);
 
-    // Calculate monthly payment
-    const monthlyPayment = (totalFunds * (recoupmentPercentage / 100)) / recoupmentPeriod;
+  //   // Calculate monthly payment
+  //   const monthlyPayment = (totalFunds * (recoupmentPercentage / 100)) / recoupmentPeriod;
 
-    // Calculate SoundCheck fees (2% of total funds)
-    const soundCheckFees = totalFunds * 0.02;
+  //   // Calculate SoundCheck fees (2% of total funds)
+  //   const soundCheckFees = totalFunds * 0.02;
 
-    return {
-      monthlyPayment,
-      soundCheckFees
-    };
-  };
+  //   return {
+  //     monthlyPayment,
+  //     soundCheckFees
+  //   };
+  // };
 
-  const { monthlyPayment, soundCheckFees } = calculateSoundCheckFees();
+  //const { monthlyPayment, soundCheckFees } = calculateSoundCheckFees();
 
   return (
     <div className="flex flex-col items-center justify-center w-full bg-white rounded-2xl shadow-sm ">
@@ -96,7 +96,7 @@ const FundsStep: React.FC = () => {
           <div className="">
             <div className="flex justify-between">
               <label className="">Purchase Price</label>
-              <span className="">{formatCurrency(fundsInfo.yourFunds.toString())}</span>
+              {/* <span className="">{formatCurrency(fundsInfo.yourFunds.toString())}</span> */}
             </div>
             {/* <span className="min-value">$0</span> */}
 
@@ -124,26 +124,26 @@ const FundsStep: React.FC = () => {
           <div className="">
             <div className="flex justify-between">
               <label className="">% Remittance from Ticket Sales</label>
-              <span className="">{parseFloat(fundsInfo.recoupmentPercentage).toFixed(2)}%</span>
+              {/* <span className="">{parseFloat(fundsInfo.recoupmentPercentage).toFixed(2)}%</span> */}
             </div>
             {/* <span className="min-value">{minRecoupmentPercentage.toFixed(2)}%</span> */}
 
             {/* <span className="max-value">{maxRecoupmentPercentage.toFixed(2)}%</span> */}
             <div className="">
-              <input
+             {/*  <input
                 type="range"
                 name="recoupmentPercentage"
                 min={minRecoupmentPercentage}
                 max={maxRecoupmentPercentage}
                 step="0.01"
-                value={fundsInfo.recoupmentPercentage}
+                //value={fundsInfo.recoupmentPercentage}
                 onChange={handleSliderChange}
                 className="w-full slider "
                 style={{
                   background: `linear-gradient(to right, #F99927 0%, #F99927 ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd ${((parseFloat(fundsInfo.recoupmentPercentage) - minRecoupmentPercentage) / (maxRecoupmentPercentage - minRecoupmentPercentage)) * 100}%, #ddd 100%)`
                 }}
               />
-
+ */}
             </div>
           </div>
 
@@ -169,11 +169,11 @@ const FundsStep: React.FC = () => {
           <div className="space-y-4">
             <h4 className="text-gray-600 mb-8 text-2xl font-bold text-center">Your pre-qualified offer</h4>
             <div className="">
-              <span className="">We are buying <b>$amount</b> of Future Ticket Receivables from you at <b>amount% discount</b> and you receive <b>{formatCurrency(fundsInfo.yourFunds.toString())}</b>  </span>
+              {/* <span className="">We are buying <b>$amount</b> of Future Ticket Receivables from you at <b>amount% discount</b> and you receive <b>{formatCurrency(fundsInfo.yourFunds.toString())}</b>  </span> */}
             </div>
 
             <div className="">
-              <span className="">You repay us <b>$amount</b> by remitting <b>{fundsInfo.recoupmentPercentage}% of your Tickets Sales</b> (5% to recoup the advance and {formatCurrency(soundCheckFees.toString())}% for our fees) </span>
+             {/* <span className="">You repay us <b>$amount</b> by remitting <b>{fundsInfo.recoupmentPercentage}% of your Tickets Sales</b> (5% to recoup the advance and {formatCurrency(soundCheckFees.toString())}% for our fees) </span> */}
             </div>
             <div className="">
               <span className="">Timing to pay the full Total Value is determined by the <b>pace of Ticket Sales</b></span>

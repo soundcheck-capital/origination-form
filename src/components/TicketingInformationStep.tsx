@@ -27,7 +27,7 @@ const TicketingInformationStep: React.FC = () => {
         <FileUploadField
           field="ticketingServiceAgreement"
           description="Copy of Ticketing Service Agreement"
-          accept=".pdf"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('ticketingServiceAgreement', fileInfos)}
         />

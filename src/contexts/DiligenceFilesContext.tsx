@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { FileInfo } from '../store/form/formTypes';
+import { useDispatch } from 'react-redux';
+import { FileInfo, DiligenceFileData } from '../store/form/formTypes';
+import { updateDiligenceInfo } from '../store/form/formSlice';
 
 interface DiligenceFiles {
   ticketingCompanyReport: { files: File[]; fileInfos: FileInfo[] };
@@ -9,7 +11,7 @@ interface DiligenceFiles {
   incorporationCertificate: { files: File[]; fileInfos: FileInfo[] };
   legalEntityChart: { files: File[]; fileInfos: FileInfo[] };
   governmentId: { files: File[]; fileInfos: FileInfo[] };
-  einAuthentication: { files: File[]; fileInfos: FileInfo[] };
+  w9form: { files: File[]; fileInfos: FileInfo[] };
 }
 
 interface DiligenceFilesContextType {
@@ -31,7 +33,7 @@ const initialDiligenceFiles: DiligenceFiles = {
   incorporationCertificate: { files: [], fileInfos: [] },
   legalEntityChart: { files: [], fileInfos: [] },
   governmentId: { files: [], fileInfos: [] },
-  einAuthentication: { files: [], fileInfos: [] },
+  w9form: { files: [], fileInfos: [] },
 };
 
 interface DiligenceFilesProviderProps {
@@ -40,6 +42,7 @@ interface DiligenceFilesProviderProps {
 
 export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ children }) => {
   const [diligenceFiles, setDiligenceFiles] = useState<DiligenceFiles>(initialDiligenceFiles);
+  const dispatch = useDispatch();
 
   const createFileInfo = (file: File, index: number): FileInfo => ({
     id: `file-${Date.now()}-${index}`,
@@ -49,20 +52,39 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
     uploadedAt: new Date().toISOString(),
   });
 
+  const updateReduxStore = useCallback((updatedFiles: DiligenceFiles) => {
+    const diligenceInfo: { [key: string]: DiligenceFileData } = {};
+    
+    Object.keys(updatedFiles).forEach(key => {
+      const fieldKey = key as keyof DiligenceFiles;
+      diligenceInfo[fieldKey] = {
+        files: updatedFiles[fieldKey].files,
+        fileInfos: updatedFiles[fieldKey].fileInfos,
+      };
+    });
+
+    dispatch(updateDiligenceInfo(diligenceInfo));
+  }, [dispatch]);
+
   const addFiles = useCallback((field: keyof DiligenceFiles, newFiles: File[]) => {
     setDiligenceFiles(prev => {
       const currentField = prev[field];
       const newFileInfos = newFiles.map((file, index) => createFileInfo(file, currentField.files.length + index));
       
-      return {
+      const updatedFiles = {
         ...prev,
         [field]: {
           files: [...currentField.files, ...newFiles],
           fileInfos: [...currentField.fileInfos, ...newFileInfos],
         },
       };
+
+      // Mettre à jour Redux
+      updateReduxStore(updatedFiles);
+      
+      return updatedFiles;
     });
-  }, []);
+  }, [updateReduxStore]);
 
   const removeFile = useCallback((field: keyof DiligenceFiles, index: number) => {
     setDiligenceFiles(prev => {
@@ -70,22 +92,34 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
       const newFiles = currentField.files.filter((_, i) => i !== index);
       const newFileInfos = currentField.fileInfos.filter((_, i) => i !== index);
       
-      return {
+      const updatedFiles = {
         ...prev,
         [field]: {
           files: newFiles,
           fileInfos: newFileInfos,
         },
       };
+
+      // Mettre à jour Redux
+      updateReduxStore(updatedFiles);
+      
+      return updatedFiles;
     });
-  }, []);
+  }, [updateReduxStore]);
 
   const clearFiles = useCallback((field: keyof DiligenceFiles) => {
-    setDiligenceFiles(prev => ({
-      ...prev,
-      [field]: { files: [], fileInfos: [] },
-    }));
-  }, []);
+    setDiligenceFiles(prev => {
+      const updatedFiles = {
+        ...prev,
+        [field]: { files: [], fileInfos: [] },
+      };
+
+      // Mettre à jour Redux
+      updateReduxStore(updatedFiles);
+      
+      return updatedFiles;
+    });
+  }, [updateReduxStore]);
 
   const getAllFiles = useCallback(() => {
     const allFiles: { [key: string]: File[] } = {};

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useFileUpload } from '../../hooks/useFileUpload';
+import { useDiligenceFiles } from '../../contexts/DiligenceFilesContext';
 
 interface FileUploadFieldProps {
   field: string;
@@ -20,17 +20,22 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { files, fileInfos, addFiles, removeFile, clearFiles } = useFileUpload();
+  const { diligenceFiles, addFiles, removeFile, clearFiles } = useDiligenceFiles(); 
+
+  // Récupérer les fichiers et infos pour ce champ spécifique
+  const fieldData = diligenceFiles[field as keyof typeof diligenceFiles];
+  const files = fieldData?.files || [];
+  const fileInfos = fieldData?.fileInfos || [];
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (selectedFiles && selectedFiles.length > 0) {
       const fileArray = Array.from(selectedFiles);
       if (multiple) {
-        addFiles(fileArray);
+        addFiles(field as keyof typeof diligenceFiles, fileArray);
       } else {
-        clearFiles();
-        addFiles(fileArray);
+        clearFiles(field as keyof typeof diligenceFiles);
+        addFiles(field as keyof typeof diligenceFiles, fileArray);
       }
       
       // Notify parent component about file changes
@@ -42,7 +47,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           type: file.type,
           uploadedAt: new Date().toISOString(),
         }));
-        onFilesChange(multiple ? [...fileInfos, ...newFileInfos] : newFileInfos);
+        const updatedFileInfos = multiple ? [...fileInfos, ...newFileInfos] : newFileInfos;
+        onFilesChange(updatedFileInfos);
       }
     }
   };
@@ -65,10 +71,10 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const fileArray = Array.from(e.dataTransfer.files);
       if (multiple) {
-        addFiles(fileArray);
+        addFiles(field as keyof typeof diligenceFiles, fileArray);
       } else {
-        clearFiles();
-        addFiles(fileArray);
+        clearFiles(field as keyof typeof diligenceFiles);
+        addFiles(field as keyof typeof diligenceFiles, fileArray);
       }
       
       // Notify parent component about file changes
@@ -80,23 +86,24 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           type: file.type,
           uploadedAt: new Date().toISOString(),
         }));
-        onFilesChange(multiple ? [...fileInfos, ...newFileInfos] : newFileInfos);
+        const updatedFileInfos = multiple ? [...fileInfos, ...newFileInfos] : newFileInfos;
+        onFilesChange(updatedFileInfos);
       }
     }
   };
 
   const handleRemoveFile = (index: number) => {
-    removeFile(index);
+    removeFile(field as keyof typeof diligenceFiles, index);
     
     // Notify parent component about file changes
     if (onFilesChange) {
-      const newFileInfos = fileInfos.filter((_, i) => i !== index);
+      const newFileInfos = fileInfos.filter((_: any, i: number) => i !== index);
       onFilesChange(newFileInfos);
     }
   };
 
   const handleClearAllFiles = () => {
-    clearFiles();
+    clearFiles(field as keyof typeof diligenceFiles);
     
     // Notify parent component about file changes
     if (onFilesChange) {

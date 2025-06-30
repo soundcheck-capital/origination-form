@@ -24,6 +24,11 @@ export interface Address {
     type: string;
     uploadedAt: string;
   }
+
+  export interface DiligenceFileData {
+    files: File[];
+    fileInfos: FileInfo[];
+  }
   
   export interface FormState {
     currentStep: number;
@@ -44,13 +49,11 @@ export interface Address {
         yearsInBusiness: string;
         socials: string;
         clientType: string;
-        taxId: string;
         legalEntityType: string;
         companyAddress: string;
         companyCity: string;
         companyState: string;
         companyZipCode: string;
-        companyType: string;
         ein: string;
         stateOfIncorporation: string;
       };
@@ -69,9 +72,6 @@ export interface Address {
       };
       fundsInfo: {
         yourFunds: string;
-        otherFunds: string;
-        recoupmentPeriod: string;
-        recoupmentPercentage: string;
         fundUse: string;
         timeForFunding: string;
         recoupableAgainst: string;
@@ -100,16 +100,14 @@ export interface Address {
       ownershipChanged: boolean;
     };
     diligenceInfo: {
-      bankAccountLinked: boolean;
-      ticketingCompanyReport: FileInfo[];
-      ticketingServiceAgreement: FileInfo[];
-      ticketingProjections: FileInfo[];
-      incorporationCertificate: FileInfo[];
-      legalEntityChart: FileInfo[];
-      governmentId: FileInfo[];
-      einAuthentication: FileInfo[];
-      financialStatements: FileInfo[];
-      bankStatement: FileInfo[];
+      ticketingCompanyReport: DiligenceFileData;
+      ticketingServiceAgreement: DiligenceFileData;
+      financialStatements: DiligenceFileData;
+      bankStatement: DiligenceFileData;
+      incorporationCertificate: DiligenceFileData;
+      legalEntityChart: DiligenceFileData;
+      governmentId: DiligenceFileData;
+      w9form: DiligenceFileData;
     };
   }
   

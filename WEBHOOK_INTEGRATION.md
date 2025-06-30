@@ -1,394 +1,242 @@
-# Intégration Webhook avec Gestion des Fichiers
+# Intégration Webhook Make.com (Approche Simple)
 
-## Architecture de gestion des fichiers
+## 🎯 **Solution simplifiée**
 
-### Pourquoi cette approche ?
+Nous avons simplifié l'approche pour envoyer directement les fichiers à Make.com sans passer par Google Drive. Cette solution est :
 
-Les objets `File` ne doivent pas être stockés dans Redux car ils contiennent :
-- Des références internes non sérialisables
-- Des méthodes et propriétés complexes
-- Des données binaires volumineuses
+- ✅ **Plus simple** : Pas de configuration Google Drive complexe
+- ✅ **Plus rapide** : Upload direct vers Make.com
+- ✅ **Plus fiable** : Moins de points de défaillance
+- ✅ **Transparente** : L'utilisateur ne voit que "Envoi en cours..."
 
-### Solution implémentée
+## 📋 **Configuration requise**
 
-1. **Gestion locale des fichiers** : Les fichiers sont stockés localement dans le contexte React
-2. **FormData pour l'envoi** : Utilisation de `FormData` pour envoyer les fichiers au webhook
-3. **Métadonnées dans Redux** : Seules les métadonnées des fichiers sont stockées dans Redux
+### 1. Créer un webhook dans Make.com
 
-## Structure technique
+1. Allez sur [Make.com](https://www.make.com/)
+2. Créez un nouveau scénario
+3. Ajoutez un module "Webhook" comme déclencheur
+4. Copiez l'URL du webhook
 
-### 1. Contexte DiligenceFilesContext
+### 2. Configurer les variables d'environnement
 
-```typescript
-// src/contexts/DiligenceFilesContext.tsx
-interface DiligenceFiles {
-  ticketingCompanyReport: { files: File[]; fileInfos: FileInfo[] };
-  ticketingServiceAgreement: { files: File[]; fileInfos: FileInfo[] };
-  financialStatements: { files: File[]; fileInfos: FileInfo[] };
-  bankStatement: { files: File[]; fileInfos: FileInfo[] };
-  incorporationCertificate: { files: File[]; fileInfos: FileInfo[] };
-  legalEntityChart: { files: File[]; fileInfos: FileInfo[] };
-  governmentId: { files: File[]; fileInfos: FileInfo[] };
-  einAuthentication: { files: File[]; fileInfos: FileInfo[] };
-}
+Créez un fichier `.env` à la racine du projet :
+
+```env
+REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm
 ```
 
-### 2. Types mis à jour
+### 3. Redémarrer le serveur
 
-```typescript
-// src/store/form/formTypes.ts
-export interface FileInfo {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-  uploadedAt: string;
-}
-
-// Remplacement de File[] par FileInfo[] dans diligenceInfo
-diligenceInfo: {
-  ticketingCompanyReport: FileInfo[];
-  ticketingServiceAgreement: FileInfo[];
-  // ... autres champs
-}
+```bash
+npm start
 ```
 
-### 3. Composant FileUploadField
+## 🔄 **Flux de données**
 
-```typescript
-// src/components/customComponents/FileUploadField.tsx
-interface FileUploadFieldProps {
-  field: string;
-  description: string;
-  accept?: string;
-  multiple?: boolean;
-  className?: string;
-  onFilesChange?: (fileInfos: FileInfo[]) => void;
-}
-```
+### Avant (avec Google Drive) :
+1. Upload fichiers → Google Drive
+2. Récupérer liens → Envoyer à Make.com
+3. Make.com traite les liens
 
-## Envoi des données
+### Maintenant (direct) :
+1. Upload fichiers → Make.com directement
+2. Make.com reçoit les fichiers
+3. Make.com peut les traiter et les stocker
 
-### Structure FormData envoyée
+## 📊 **Structure des données reçues**
 
-```typescript
-const formDataObj = new FormData();
+Make.com recevra un `FormData` avec :
 
-// Métadonnées de l'application
-formDataObj.append('applicationId', 'new');
-formDataObj.append('submittedAt', '2024-01-01T12:00:00.000Z');
-formDataObj.append('userAgent', 'Mozilla/5.0...');
-
-// Données du formulaire (JSON)
-formDataObj.append('formData', JSON.stringify({
-  personalInfo: { ... },
-  companyInfo: { ... },
-  // ... autres données
-}));
-
-// Métadonnées des fichiers (JSON)
-formDataObj.append('fileMetadata', JSON.stringify({
-  ticketingCompanyReport: [
-    {
-      id: 'file-1234567890-0',
-      name: 'report.pdf',
-      size: 1024000,
-      type: 'application/pdf',
-      uploadedAt: '2024-01-01T12:00:00.000Z'
-    }
-  ],
-  // ... autres fichiers
-}));
-
-// Fichiers réels
-formDataObj.append('ticketingCompanyReport_0', fileObject);
-formDataObj.append('financialStatements_0', fileObject);
-formDataObj.append('financialStatements_1', fileObject);
-// ... etc
-```
-
-### URL du webhook
-
-```
-https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm
-```
-
-## Avantages de cette approche
-
-### ✅ **Performance**
-- Pas de stockage de fichiers volumineux dans Redux
-- Pas de re-renders inutiles lors de l'upload
-- Gestion locale efficace
-
-### ✅ **Sécurité**
-- Fichiers envoyés directement au webhook
-- Pas de stockage temporaire côté client
-- Contrôle total sur les données envoyées
-
-### ✅ **Maintenabilité**
-- Séparation claire des responsabilités
-- Code modulaire et réutilisable
-- Types TypeScript stricts
-
-### ✅ **Flexibilité**
-- Possibilité d'ajouter des validations côté client
-- Gestion d'erreurs granulaire
-- Extension facile pour de nouveaux types de fichiers
-
-## Configuration Make.com
-
-### Structure des données reçues
-
-Le webhook Make.com recevra :
-
-1. **applicationId** : Identifiant de l'application
-2. **submittedAt** : Timestamp de soumission
-3. **userAgent** : Navigateur de l'utilisateur
-4. **formData** : Toutes les données du formulaire (JSON)
-5. **fileMetadata** : Métadonnées de tous les fichiers (JSON)
-6. **Fichiers individuels** : Chaque fichier avec un nom unique
-
-### Exemple de traitement dans Make.com
-
-```javascript
-// Récupération des données
-const applicationId = data.applicationId;
-const formData = JSON.parse(data.formData);
-const fileMetadata = JSON.parse(data.fileMetadata);
-
-// Traitement des fichiers
-const files = [];
-for (const [key, value] of Object.entries(data)) {
-  if (key.includes('_') && value instanceof File) {
-    files.push({
-      field: key.split('_')[0],
-      index: key.split('_')[1],
-      file: value
-    });
-  }
-}
-```
-
-## Gestion des erreurs
-
-- **Upload de fichiers** : Validation côté client avant envoi
-- **Envoi webhook** : Retry automatique en cas d'échec
-- **Feedback utilisateur** : Messages d'erreur clairs et informatifs
-
-## Code conservé
-
-L'ancien code d'API est conservé en commentaires pour une utilisation future :
-
-```typescript
-// OLD CODE - KEPT FOR LATER USE
-/*
-const handleSubmit = async () => {
-  try {
-    await dispatch(saveApplication());
-    navigate('/dashboard');
-  } catch (error) {
-    setSaveMessage('Failed to submit application. Please try again.');
-  }
-};
-*/
-```
-
-## Configuration actuelle
-
-Le formulaire envoie maintenant toutes les données vers le webhook Make.com au lieu d'utiliser l'API existante.
-
-### URL du webhook
-```
-https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm
-```
-
-## Structure des données envoyées
-
-### Métadonnées de l'application
+### Données du formulaire :
 ```json
 {
-  "applicationId": "new" | "existing-id",
-  "submittedAt": "2024-01-01T12:00:00.000Z",
-  "userAgent": "Mozilla/5.0..."
-}
-```
-
-### Informations personnelles
-```json
-{
-  "personalInfo": {
-    "email": "user@example.com",
-    "firstname": "John",
-    "lastname": "Doe",
-    "phone": "+1234567890",
-    "role": "Owner"
-  }
-}
-```
-
-### Informations de l'entreprise
-```json
-{
-  "companyInfo": {
-    "employees": 10,
-    "name": "Company Name",
-    "dba": "DBA Name",
-    "yearsInBusiness": "5-10",
-    "socials": "Social media links",
-    "clientType": "Venue",
-    "taxId": "123456789",
-    "legalEntityType": "LLC",
-    "companyAddress": "123 Main St",
-    "companyCity": "New York",
-    "companyState": "NY",
-    "companyZipCode": "10001",
-    "companyType": "Venue",
-    "ein": "12-3456789",
-    "stateOfIncorporation": "NY"
-  }
-}
-```
-
-### Informations de ticketing
-```json
-{
-  "ticketingInfo": {
-    "currentPartner": "Partner Name",
-    "settlementPolicy": "Policy details",
-    "membership": "Membership type"
-  }
-}
-```
-
-### Informations de volume
-```json
-{
-  "volumeInfo": {
-    "lastYearEvents": 50,
-    "lastYearTickets": 10000,
-    "lastYearSales": 500000,
-    "nextYearEvents": 60,
-    "nextYearTickets": 12000,
-    "nextYearSales": 600000
-  }
-}
-```
-
-### Informations de propriété
-```json
-{
-  "ownershipInfo": {
-    "owners": [
-      {
-        "id": "1",
-        "name": "Owner Name",
-        "ownershipPercentage": "100",
-        "sameAddress": true,
-        "ownerAddress": "123 Main St",
-        "ownerCity": "New York",
-        "ownerState": "NY",
-        "ownerZipCode": "10001"
-      }
-    ]
-  }
-}
-```
-
-### Informations financières
-```json
-{
-  "financesInfo": {
-    "singleEntity": true,
-    "assetsTransferred": false,
-    "filedLastYearTaxes": true,
-    "lastYearTaxes": [],
-    "hasTicketingDebt": false,
-    "hasBusinessDebt": true,
-    "debts": [
-      {
-        "type": "Credit card debt",
-        "balance": "50000"
-      }
-    ],
-    "hasOverdueLiabilities": false,
-    "isLeasingLocation": true,
-    "leaseEndDate": "2025-12-31",
-    "hasTaxLiens": false,
-    "hasJudgments": false,
-    "hasBankruptcy": false,
-    "ownershipChanged": false
-  }
-}
-```
-
-### Informations de diligence (fichiers)
-```json
-{
+  "applicationId": "new",
+  "userAgent": "Mozilla/5.0...",
+  "personalInfo": { ... },
+  "companyInfo": { ... },
+  "ticketingInfo": { ... },
+  "volumeInfo": { ... },
+  "ownershipInfo": { ... },
+  "financesInfo": { ... },
+  "fundsInfo": { ... },
   "diligenceInfo": {
-    "ticketingCompanyReport": [
-      {
-        "name": "report.pdf",
-        "size": 1024000,
-        "type": "application/pdf",
-        "lastModified": 1704067200000
-      }
-    ],
-    "ticketingServiceAgreement": [],
-    "financialStatements": [],
-    "bankStatement": [],
-    "incorporationCertificate": [],
-    "legalEntityChart": [],
-    "governmentId": [],
-    "einAuthentication": []
-  }
+    "ticketingCompanyReport": {
+      "files": [],
+      "fileInfos": [
+        {
+          "id": "file-1234567890-0",
+          "name": "report.pdf",
+          "size": 1024000,
+          "type": "application/pdf",
+          "uploadedAt": "2024-01-01T12:00:00.000Z"
+        }
+      ]
+    },
+    "financialStatements": {
+      "files": [],
+      "fileInfos": [
+        {
+          "id": "file-1234567890-1",
+          "name": "statements.xlsx",
+          "size": 2048000,
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "uploadedAt": "2024-01-01T12:00:00.000Z"
+        }
+      ]
+    }
+  },
+  "user": { "id": "123", "email": "user@example.com" }
 }
 ```
 
-### Informations de financement
-```json
-{
-  "fundsInfo": {
-    "yourFunds": "100000",
-    "otherFunds": "50000",
-    "recoupmentPeriod": "12 months",
-    "recoupmentPercentage": "10%",
-    "fundUse": "Working capital",
-    "timeForFunding": "30 days",
-    "recoupableAgainst": "Ticket sales"
-  }
-}
+### Fichiers :
+- `ticketingCompanyReport[0]` : Fichier 1
+- `ticketingCompanyReport[1]` : Fichier 2
+- `financialStatements[0]` : Fichier 1
+- `legalDocuments[0]` : Fichier 1
+- etc.
+
+## 🛠 **Configuration Make.com**
+
+### Module Webhook (Déclencheur)
+- **Type** : Webhook
+- **Méthode** : POST
+- **Content-Type** : `multipart/form-data`
+
+### Traitement des fichiers
+Vous pouvez ajouter des modules pour :
+
+1. **Stocker les fichiers** :
+   - Google Drive
+   - Dropbox
+   - OneDrive
+   - FTP
+   - etc.
+
+2. **Traiter les données** :
+   - Envoyer un email de confirmation
+   - Créer une entrée dans une base de données
+   - Notifier une équipe
+   - etc.
+
+### Exemple de scénario Make.com avec boucle
+
+```
+Webhook → Parse JSON → Iterator (diligenceInfo) → Google Drive → Email → Database
 ```
 
-### Informations utilisateur (si disponible)
-```json
-{
-  "user": {
-    "id": "user-id",
-    "email": "user@example.com"
-  }
-}
+#### Configuration détaillée :
+
+**1. Webhook (Déclencheur)**
+```
+URL: https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm
+Méthode: POST
+Content-Type: multipart/form-data
 ```
 
-## Gestion des fichiers
+**2. Parse JSON**
+```
+Parse: {{formData}}
+```
 
-Les fichiers sont convertis en métadonnées pour le webhook :
-- **Nom du fichier**
-- **Taille** (en bytes)
-- **Type MIME**
-- **Date de dernière modification**
+**3. Iterator (Boucle sur diligenceInfo)**
+```
+Collection: {{diligenceInfo}}
+```
 
-Les fichiers eux-mêmes ne sont pas envoyés via le webhook pour des raisons de sécurité et de performance.
+**4. Google Drive (Stockage)**
+```
+Action: Upload a file
+Folder: SoundCheck Applications/{{item.key}}
+File: {{item.value.files[0]}}
+```
 
-## Gestion des erreurs
+**5. Email (Notification)**
+```
+To: admin@soundcheck.com
+Subject: Nouvelle demande SoundCheck - {{personalInfo.firstname}} {{personalInfo.lastname}}
+Body: |
+  Une nouvelle demande a été soumise :
+  
+  Nom: {{personalInfo.firstname}} {{personalInfo.lastname}}
+  Email: {{personalInfo.email}}
+  Entreprise: {{companyInfo.name}}
+  
+  Fichiers uploadés:
+  {{#each diligenceInfo}}
+  - {{@key}}: {{fileInfos.length}} fichier(s)
+  {{/each}}
+```
 
-- **Succès** : Message de confirmation et redirection après 2 secondes
-- **Erreur** : Message d'erreur affiché à l'utilisateur
-- **Logs** : Erreurs détaillées dans la console du navigateur
+## 🎨 **Expérience utilisateur**
 
-## Configuration Make.com
+1. **Upload des fichiers** : Normal
+2. **Soumission** : "Submit Application"
+3. **Progression** : "Envoi en cours..." (barre de progression)
+4. **Succès** : "Application submitted successfully!"
+5. **Redirection** : Page de succès
 
-Pour configurer le webhook dans Make.com :
-1. Créer un nouveau scénario
-2. Ajouter un webhook HTTP
-3. Utiliser l'URL fournie
-4. Configurer les actions suivantes selon vos besoins (email, base de données, etc.) 
+## 🔧 **Avantages de cette approche**
+
+✅ **Simplicité** : Une seule configuration (webhook URL)
+✅ **Fiabilité** : Moins de dépendances externes
+✅ **Flexibilité** : Make.com peut traiter les fichiers comme vous voulez
+✅ **Performance** : Upload direct, pas d'intermédiaire
+✅ **Maintenance** : Moins de code à maintenir
+
+## 🚨 **Limitations**
+
+⚠️ **Taille des fichiers** : Limite de Make.com (généralement 100MB par fichier)
+⚠️ **Timeout** : Limite de temps pour l'upload (généralement 30 secondes)
+⚠️ **Dépendance** : Nécessite que Make.com soit disponible
+
+## 🛠 **Dépannage**
+
+### Erreur "Failed to submit application"
+- Vérifiez l'URL du webhook
+- Assurez-vous que Make.com est accessible
+- Vérifiez les logs de Make.com
+
+### Fichiers manquants
+- Vérifiez que les fichiers ne dépassent pas la limite de taille
+- Assurez-vous que le webhook accepte `multipart/form-data`
+
+### Timeout
+- Réduisez la taille des fichiers
+- Optimisez le scénario Make.com
+
+## 📝 **Exemple de configuration Make.com**
+
+### 1. Webhook (Déclencheur)
+```
+URL: https://hook.us1.make.com/votre-id
+Méthode: POST
+Content-Type: multipart/form-data
+```
+
+### 2. Parse JSON (Optionnel)
+```
+Parse: {{formData}}
+```
+
+### 3. Iterator (Boucle sur diligenceInfo)
+```
+Collection: {{diligenceInfo}}
+```
+
+### 4. Google Drive (Stockage)
+```
+Action: Upload a file
+Folder: SoundCheck Applications/{{item.key}}
+File: {{item.value.files[0]}}
+```
+
+### 5. Email (Notification)
+```
+To: admin@soundcheck.com
+Subject: Nouvelle demande SoundCheck
+Body: Une nouvelle demande a été soumise...
+```
+
+Cette approche est beaucoup plus simple et vous donne le contrôle total sur le traitement des fichiers dans Make.com ! 

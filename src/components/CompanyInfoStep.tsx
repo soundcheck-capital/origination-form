@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice';
+import { updateCompanyInfo, updateOwnershipInfo, updateTicketingInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import DropdownField from './customComponents/DropdownField';
@@ -57,7 +57,12 @@ const CompanyInfoStep: React.FC = () => {
   
 
  
-  
+  const handleTicketingInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+      dispatch(updateTicketingInfo({ [name]: value }));
+    
+  };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -68,10 +73,7 @@ const CompanyInfoStep: React.FC = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    dispatch(updateOwnershipInfo({ [name]: value }));
-  };
+
 
   const [ein, setEin] = useState(companyInfo.ein);
 
@@ -110,7 +112,7 @@ const CompanyInfoStep: React.FC = () => {
       <DropdownField label="Years in Business" name="yearsInBusiness" value={companyInfo.yearsInBusiness} onChange={handleChange} error='' onBlur={()=>{}} options={yearsInBusiness} />
       <TextField type="number" label="Number of Employees" name="employees" value={companyInfo.employees.toString()} onChange={handleChange} error='' onBlur={()=>{}}  />
       <TextField type="text" label="Website - Socials" name="socials" value={companyInfo.socials} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <DropdownField label="Are you a member of?" name="membership" value={ticketingInfo.membership} onChange={handleChange} error='' onBlur={()=>{}} options={memberships} />
+      <DropdownField label="Are you a member of?" name="membership" value={ticketingInfo.membership} onChange={handleTicketingInfoChange} error='' onBlur={()=>{}} options={memberships} />
       <DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={()=>{}} options={usStates} />
 
      

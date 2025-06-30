@@ -6,13 +6,13 @@ import { saveApplication } from '../store/form/formThunks';
 import { fetchApplicationById } from '../store/auth/authThunks';
 import { setCurrentStep } from '../store/form/formSlice';
 import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
+import { useFileUpload } from '../hooks/useFileUpload';
 import PersonalInfoStep from './PersonalInfoStep';
 import CompanyInfoStep from './CompanyInfoStep';
 import TicketingStep from './TicketingStep';
 import TicketingVolumeStep from './TicketingVolumeStep';
 import OwnershipStep from './OwnershipStep';
 import FinancesStep from './FinancesStep';
-import FundsStep from './AdvanceSliderStep';
 import SummaryStep from './SummaryStep';
 import logo from '../assets/logo_black_name.svg';
 import LegalInfoStep from './LegalInfoStep';
@@ -34,7 +34,8 @@ const MultiStepFormContent: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
   const [activeMenuItem, setActiveMenuItem] = useState('applications');
-  const { getAllFiles, getAllFileInfos } = useDiligenceFiles();
+  const { getAllFiles } = useDiligenceFiles();
+  const { isUploading, uploadToMake } = useFileUpload();
   
   // Load application data if ID is provided
   useEffect(() => {
@@ -61,108 +62,56 @@ const MultiStepFormContent: React.FC = () => {
     }
   };
 
-  // NEW: Function to send data to webhook with FormData
-  const sendToWebhook = async (formDataObj: FormData) => {
-    const webhookUrl = 'https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm';
-    
-    try {
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        body: formDataObj,
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      if(response.status === 200) {
-        setSaveMessage('Application submitted successfully!');
-        return true;
-      }
-          return false; 
-    } catch (error) {
-      console.error('Error sending data to webhook:', error);
-      throw error;
-    }
-  };
-
-  // NEW: Function to prepare form data for webhook with files
-  const prepareFormDataForWebhook = () => {
-    const formDataObj = new FormData();
-    const allFiles = getAllFiles();
-    const allFileInfos = getAllFileInfos();
-
-    // Add application metadata
-    formDataObj.append('applicationId', id || 'new');
-    formDataObj.append('submittedAt', new Date().toISOString());
-    formDataObj.append('userAgent', navigator.userAgent);
-
-    // Add form data as JSON
-    const formDataJson = {
-      personalInfo: formData.formData.personalInfo,
-      companyInfo: formData.formData.companyInfo,
-      ticketingInfo: formData.formData.ticketingInfo,
-      volumeInfo: formData.formData.volumeInfo,
-      ownershipInfo: formData.formData.ownershipInfo,
-      financesInfo: formData.financesInfo,
-      fundsInfo: formData.formData.fundsInfo,
-      user: user ? { id: user.id, email: user.email } : null,
-    };
-
-    formDataObj.append('formData', JSON.stringify(formDataJson));
-
-    // Add file metadata as JSON
-    formDataObj.append('fileMetadata', JSON.stringify(allFileInfos));
-
-    // Add actual files
-    Object.keys(allFiles).forEach(fieldName => {
-      const files = allFiles[fieldName];
-      files.forEach((file, index) => {
-        formDataObj.append(`${fieldName}_${index}`, file);
-      });
-    });
-
-    return formDataObj;
-  };
-
   const handleSubmit = async () => {
     setIsSaving(true);
     setSaveMessage('');
     
     try {
-      // Prepare FormData with files
-      const formDataObj = prepareFormDataForWebhook();
+      // Préparer les données du formulaire avec diligenceInfo déjà inclus
+      const formDataToSend = {
+        // Application metadata
+        applicationId: id || 'new',
+        submittedAt: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        
+        // Form data (incluant diligenceInfo)
+        personalInfo: formData.formData.personalInfo,
+        companyInfo: formData.formData.companyInfo,
+        ticketingInfo: formData.formData.ticketingInfo,
+        volumeInfo: formData.formData.volumeInfo,
+        ownershipInfo: formData.formData.ownershipInfo,
+        financesInfo: formData.financesInfo,
+        fundsInfo: formData.formData.fundsInfo,
+        diligenceInfo: formData.diligenceInfo,
+        user: user ? { id: user.id, email: user.email } : null,
+      };
       
-      // Send to webhook
-      await sendToWebhook(formDataObj);
+      console.log("formDataToSend => ", formDataToSend);
       
-      // Show success message
-      setSaveMessage('Application submitted successfully!');
+      // Récupérer tous les fichiers pour l'upload
+      const allFiles = getAllFiles();
       
-      // Navigate to success page or dashboard after a delay
-      setTimeout(() => {
-        // You can change this to navigate to a success page
-        navigate('/submit-success');
-      }, 2000);
+      // Upload direct vers Make.com avec les fichiers
+      const result = await uploadToMake(formDataToSend, allFiles);
+      
+      if (result.success) {
+        setSaveMessage('Application submitted successfully!');
+        
+        // Navigate to success page after a delay
+        setTimeout(() => {
+          navigate('/submit-success');
+        }, 2000);
+      } else {
+        throw new Error(result.error || 'Failed to submit application');
+      }
       
     } catch (error) {
       console.error('Submission error:', error);
-      setSaveMessage('Failed to submit application. Please try again.');
+      setSaveMessage(error instanceof Error ? error.message : 'Failed to submit application. Please try again.');
     } finally {
       setIsSaving(false);
     }
   };
-
-  // OLD CODE - KEPT FOR LATER USE
-  /*
-  const handleSubmit = async () => {
-    try {
-      await dispatch(saveApplication());
-      navigate('/dashboard');
-    } catch (error) {
-      setSaveMessage('Failed to submit application. Please try again.');
-    }
-  };
-  */
 
   const handleBackToDashboard = () => {
     navigate('/dashboard');
@@ -179,7 +128,7 @@ const MultiStepFormContent: React.FC = () => {
       // case 4:
       //   return 'Customize your funding';
       case 4:
-        return 'Your Funding';
+        return 'Customize your funding';
       case 5:
         return 'Beneficial ownership & control person';
       case 6:
@@ -250,7 +199,7 @@ const MultiStepFormContent: React.FC = () => {
         
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
-          <div className="w-full md:w-[30%] mx-auto ">
+          <div className="w-[30%] mx-auto ">
 
             <div className="relative ">
               <div className="rounded-xl absolute top-0 left-0 h-2 bg-gray-200 w-full"></div>
@@ -263,12 +212,12 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white w-full mx-auto">
-          <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8  w-full md:w-[30%] mx-auto justify-center">{stepTitles()}</h1>
+          <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8">{stepTitles()}</h1>
             {renderStep()}
           </div>
           
           {/* Navigation Buttons */}
-          <div className="flex justify-center gap-4 w-full md:w-[30%] mx-auto ">
+          <div className="flex justify-center gap-4 w-[30%] mx-auto ">
           {currentStep === 1 && (<ButtonPrimary className='first:w-[40%]' onClick={() => {
                 setCurrentStep(currentStep + 1);
                 window.scrollTo(0, 0);

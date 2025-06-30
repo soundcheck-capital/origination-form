@@ -19,7 +19,7 @@ const LegalInformationStep: React.FC = () => {
         <FileUploadField
           field="incorporationCertificate"
           description="Certificate of Incorporation of contracting entity"
-          accept=".pdf"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('incorporationCertificate', fileInfos)}
         />
@@ -27,7 +27,7 @@ const LegalInformationStep: React.FC = () => {
         <FileUploadField
           field="legalEntityChart"
           description="Legal entity chart if more than one entity exists OR there have been distributions to other entities in the past"
-          accept=".pdf"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('legalEntityChart', fileInfos)}
         />
@@ -35,7 +35,7 @@ const LegalInformationStep: React.FC = () => {
         <FileUploadField
           field="governmentId"
           description="Scanned copy of government issued ID of the signatory of the Agreement with SoundCheck"
-          accept=".pdf"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('governmentId', fileInfos)}
         />
@@ -43,7 +43,7 @@ const LegalInformationStep: React.FC = () => {
         <FileUploadField
           field="einAuthentication"
           description="Completed Form W-9"
-          accept=".pdf"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('einAuthentication', fileInfos)}
         />
