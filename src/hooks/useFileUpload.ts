@@ -23,12 +23,57 @@ export const useFileUpload = () => {
       };
 
       formDataToSend.append('formData', JSON.stringify(formDataWithFiles));
-
+      console.log("formDataToSend => ", formDataToSend);
+      console.log("files => ", files);
       // Ajouter les fichiers individuellement
       Object.entries(files).forEach(([fieldName, fileList]) => {
-        fileList.forEach((file, index) => {
-          formDataToSend.append(`${fieldName}[${index}]`, file);
-        });
+        switch(fieldName){
+          case 'ticketingCompanyReport':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+            case 'ticketingServiceAgreement':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+            case 'financialStatements':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+            case 'bankStatement':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+            case 'incorporationCertificate':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+            case 'legalEntityChart':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+            case 'governmentId':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+            case 'w9form':
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+          default:
+            fileList.forEach((file, index) => {
+              formDataToSend.append(`${fieldName}`, file);
+            });
+            break;
+        }
       });
 
       // Envoyer à Make.com

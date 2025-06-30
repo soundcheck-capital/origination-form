@@ -46,6 +46,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           size: file.size,
           type: file.type,
           uploadedAt: new Date().toISOString(),
+          data: file.arrayBuffer, 
         }));
         const updatedFileInfos = multiple ? [...fileInfos, ...newFileInfos] : newFileInfos;
         onFilesChange(updatedFileInfos);

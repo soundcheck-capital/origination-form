@@ -30,7 +30,7 @@ export const initialState: FormState = {
     leaseEndDate: '', hasTaxLiens: false, hasJudgments: false,
     hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false
   },
-  diligenceInfo: {
+  diligenceInfo: {    
     ticketingCompanyReport: { files: [], fileInfos: [] },
     ticketingServiceAgreement: { files: [], fileInfos: [] },
     financialStatements: { files: [], fileInfos: [] },
@@ -39,5 +39,5 @@ export const initialState: FormState = {
     legalEntityChart: { files: [], fileInfos: [] },
     governmentId: { files: [], fileInfos: [] },
     w9form: { files: [], fileInfos: [] },
-  }
+  } 
 };
