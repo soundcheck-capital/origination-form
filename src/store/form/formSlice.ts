@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from './initialFormState';
 import { loadApplication, saveApplication, submitApplication } from './formThunks';
-import { FormState, DiligenceFileData } from './formTypes';
+import { FormState } from './formTypes';
 
 const formSlice = createSlice({
   name: 'form',
@@ -31,7 +31,7 @@ const formSlice = createSlice({
     updateFinancesInfo: (state, action: PayloadAction<Partial<FormState['financesInfo']>>) => {
       state.financesInfo = { ...state.financesInfo, ...action.payload };
     },
-    updateDiligenceInfo: (state, action: PayloadAction<{ [key: string]: DiligenceFileData }>) => {
+    updateDiligenceInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
       state.diligenceInfo = { ...state.diligenceInfo, ...action.payload };
     },
     loadSavedApplication: (state, action) => {
