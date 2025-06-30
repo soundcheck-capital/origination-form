@@ -300,7 +300,7 @@ const SummaryStep: React.FC = () => {
         
         </div>  */}
 
-        <div className="w-[40%] mb-8">
+        <div className="w-full md:w-[40%] mb-8 ">
           <p className="text-gray-600 my-8 text-sm font-300 text-center">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" className="text-blue-500">Privacy Policy</a>
           </p>
           </div>

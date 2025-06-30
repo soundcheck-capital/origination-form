@@ -188,7 +188,7 @@ const FinancesStep: React.FC = () => {
     return (
       <div 
         key={question.id}
-        className={`w-[40%] mb-10 transition-all duration-500 ease-in-out ${
+        className={`w-full md:w-[40%] mb-10 transition-all duration-500 ease-in-out ${
           isVisible 
             ? 'opacity-100 transform translate-y-0' 
             : 'opacity-0 transform translate-y-4 pointer-events-none'
@@ -336,7 +336,7 @@ const FinancesStep: React.FC = () => {
         `
       }} />
       <StepTitle title="Single vs Multi-entity" />
-      <div className="flex flex-col justify-between gap-4  justify-center items-center w-[40%] space-x-4">
+      <div className="flex flex-col justify-between gap-4  justify-center items-center w-full md:w-[40%] space-x-4">
           <p className='text-sm font-300 text-gray-700 text-left mx-4'>Is the Company a single entity or part of a multi-entity group structure? This includes a group of affiliates that share ownership</p>
           <div className="flex items-center space-x-8">
             <label className="flex items-center space-x-2">

@@ -46,8 +46,7 @@ const YourFundingStep: React.FC = () => {
   };
  
   return (
-    <div className="flex flex-col items-center justify-center w-full">
-      <p className="text-gray-600 my-8 text-2xl font-bold w-[40%] text-center">Your funding</p>
+    <div className="flex flex-col items-center justify-center w-full mt-16">
 
       <CurrencyField label="Your funds"  value={fundsInfo.yourFunds} onChange={(value) => handleCurrencyChange('yourFunds', value)}  />
       <DropdownField label="Time for Funding" name="timeForFunding" value={fundsInfo.timeForFunding} onChange={handleChange} error='' onBlur={() => { }} options={timeForFunding} />

@@ -139,9 +139,9 @@ const TicketingStep: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <p className="text-gray-600 my-8 text-2xl font-bold w-[40%] text-center">Annual ticketing volume</p>
+      <p className="text-gray-600 my-8 text-2xl font-bold w-full md:w-[40%] text-center">Annual ticketing volume</p>
 
-      <p className="text-gray-400 mb-16 text-xs px-20 w-[40%] text-justify">
+      <p className="text-gray-400 mb-16 text-xs  w-full md:w-[30%] text-justify">
         We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility in minutes. We only collect the information we need to provide you the best possible offer.
       </p>
 

@@ -179,7 +179,7 @@ const MultiStepFormContent: React.FC = () => {
       // case 4:
       //   return 'Customize your funding';
       case 4:
-        return 'Business & Ownership';
+        return 'Your Funding';
       case 5:
         return 'Beneficial ownership & control person';
       case 6:
@@ -250,7 +250,7 @@ const MultiStepFormContent: React.FC = () => {
         
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
-          <div className="w-[30%] mx-auto ">
+          <div className="w-full md:w-[30%] mx-auto ">
 
             <div className="relative ">
               <div className="rounded-xl absolute top-0 left-0 h-2 bg-gray-200 w-full"></div>
@@ -263,12 +263,12 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white w-full mx-auto">
-          <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8  w-[30%] mx-auto justify-center">{stepTitles()}</h1>
+          <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8  w-full md:w-[30%] mx-auto justify-center">{stepTitles()}</h1>
             {renderStep()}
           </div>
           
           {/* Navigation Buttons */}
-          <div className="flex justify-center gap-4 w-[30%] mx-auto ">
+          <div className="flex justify-center gap-4 w-full md:w-[30%] mx-auto ">
           {currentStep === 1 && (<ButtonPrimary className='first:w-[40%]' onClick={() => {
                 setCurrentStep(currentStep + 1);
                 window.scrollTo(0, 0);

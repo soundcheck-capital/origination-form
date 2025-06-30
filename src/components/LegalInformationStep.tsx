@@ -15,7 +15,7 @@ const LegalInformationStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full pt-10">
       <StepTitle title="Contractual and Legal Information" />
       
-      <div className="w-[40%] mb-8">
+      <div className="w-full md:w-[40%] mb-8">
         <FileUploadField
           field="incorporationCertificate"
           description="Certificate of Incorporation of contracting entity"
