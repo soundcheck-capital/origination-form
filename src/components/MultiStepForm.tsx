@@ -269,18 +269,24 @@ const MultiStepFormContent: React.FC = () => {
           
           {/* Navigation Buttons */}
           <div className="flex justify-center gap-4 w-[30%] mx-auto ">
-            
+          {currentStep === 1 && (<ButtonPrimary className='first:w-[40%]' onClick={() => {
+                setCurrentStep(currentStep + 1);
+                window.scrollTo(0, 0);
+              }} disabled={false}>
+    Next
+  </ButtonPrimary>)}
             {currentStep > 1 && (
               <ButtonSecondary onClick={() => {setCurrentStep(currentStep - 1);window.scrollTo(0, 0);}} disabled={false}>Previous</ButtonSecondary>
             )}
 
-            {currentStep < 10 ? (
+            {(currentStep < 10 && currentStep > 1) && (
               <ButtonPrimary onClick={() => {
                 setCurrentStep(currentStep + 1);
                 window.scrollTo(0, 0);
               }} disabled={false}>Next</ButtonPrimary>
              
-            ) : (
+            )} 
+            {(currentStep === 10) && (
               <ButtonPrimary onClick={handleSubmit} disabled={isSaving}>
                 {isSaving ? 'Submitting...' : 'Submit Application'}
               </ButtonPrimary>

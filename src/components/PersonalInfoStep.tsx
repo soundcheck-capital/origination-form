@@ -25,13 +25,13 @@ const PersonalInfoStep: React.FC = () => {
   const formatPhoneNumber = (value: string) => {
     let digits;
     // Remove all non-digits
-    if(value.includes('+1')){
-       digits = value.replace(/\D/g, '');
-       digits = digits.substring(1);
-    }else if(value.includes('1')){
+    if (value.includes('+1')) {
       digits = value.replace(/\D/g, '');
       digits = digits.substring(1);
-    }else{
+    } else if (value.includes('1')) {
+      digits = value.replace(/\D/g, '');
+      digits = digits.substring(1);
+    } else {
       digits = value;
     }
     // If it starts with 1, treat as US number
@@ -54,7 +54,7 @@ const PersonalInfoStep: React.FC = () => {
         return `+1-${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6, 10)}`;
       }
     }
-    
+
     return value;
   };
 
@@ -99,28 +99,30 @@ const PersonalInfoStep: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
+      <p className='text-xs text-gray-500 w-[30%] justify-center text-justify my-8'><b>Notes and Disclosures: </b>The information appearing in this form (the “Form”) is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>
+
       <StepTitle title="Contact Information" />
 
-      <TextField type="text" label="First Name" name="firstname" value={personalInfo.firstname} onChange={handleInputChange}    error='' onBlur={()=>{}}  /> 
-      <TextField type="text" label="Last Name" name="lastname" value={personalInfo.lastname} onChange={handleInputChange}    error='' onBlur={()=>{}}  /> 
+      <TextField type="text" label="First Name" name="firstname" value={personalInfo.firstname} onChange={handleInputChange} error='' onBlur={() => { }} />
+      <TextField type="text" label="Last Name" name="lastname" value={personalInfo.lastname} onChange={handleInputChange} error='' onBlur={() => { }} />
 
-      <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange}    error='' onBlur={handleEmailBlur}  /> 
+      <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange} error='' onBlur={handleEmailBlur} />
       {emailError && (
-          <div className="w-full max-w-md  mt-2 ml-2">
-            <p className="text-red-500 text-xs">{emailError}</p>
-          </div>
-        )}
-        
-       <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange}    error='' onBlur={handlePhoneBlur}  /> 
-         {/* {phoneError && (
+        <div className="w-full max-w-md  mt-2 ml-2">
+          <p className="text-red-500 text-xs">{emailError}</p>
+        </div>
+      )}
+
+      <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={handlePhoneBlur} />
+      {/* {phoneError && (
           <div className="w-full max-w-md  mt-2 ml-2">
             <p className="text-red-500 text-xs">{phoneError}</p>
           </div>
         )} */}
 
-      <TextField type="text" label="Role" name="role" value={personalInfo.role} onChange={handleInputChange}    error='' onBlur={()=>{}}  /> 
+      <TextField type="text" label="Role" name="role" value={personalInfo.role} onChange={handleInputChange} error='' onBlur={() => { }} />
 
-        
+
     </div>
   );
 };

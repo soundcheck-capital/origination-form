@@ -109,7 +109,7 @@ const CompanyInfoStep: React.FC = () => {
       <DropdownField label="Legal Entity Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={()=>{}} options={businessTypes} />
       <DropdownField label="Years in Business" name="yearsInBusiness" value={companyInfo.yearsInBusiness} onChange={handleChange} error='' onBlur={()=>{}} options={yearsInBusiness} />
       <TextField type="number" label="Number of Employees" name="employees" value={companyInfo.employees.toString()} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <TextField type="text" label="Social Media" name="socials" value={companyInfo.socials} onChange={handleChange} error='' onBlur={()=>{}}  />
+      <TextField type="text" label="Website - Socials" name="socials" value={companyInfo.socials} onChange={handleChange} error='' onBlur={()=>{}}  />
       <DropdownField label="Are you a member of?" name="membership" value={ticketingInfo.membership} onChange={handleChange} error='' onBlur={()=>{}} options={memberships} />
       <DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={()=>{}} options={usStates} />
 
