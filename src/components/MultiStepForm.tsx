@@ -263,7 +263,7 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white w-full mx-auto">
-          <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8">{stepTitles()}</h1>
+          <h1 className="text-3xl text-center font-bold text-neutral-600 mt-8  w-[30%] mx-auto justify-center">{stepTitles()}</h1>
             {renderStep()}
           </div>
           
