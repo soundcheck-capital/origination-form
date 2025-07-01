@@ -84,19 +84,26 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, onSuccess }) =
 
 const ticketingPartners = [
   'AXS',
-  'Shotgun',
   'Dice',
   'Etix',
   'Eventbrite',
+  'EventLive',
   'Fever',
   'Leap Event Technology',
+  'PreKindle',
   'See Tickets',
+  'Shotgun',
+  'Showpass',
   'SquadUp',
+  'TicketFairy',
+  'Ticketfly',
   'TicketMaster',
   'Ticketon',
+  'TicketTailor',
   'Tixr',
-  'Venue Pilot',
-  'Other'
+  'Venue Pilot',  
+  'Other',
+
 ];
 
 const settlementPolicies = [
