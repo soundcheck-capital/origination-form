@@ -59,6 +59,7 @@ export interface Address {
       };
       ticketingInfo: {
         currentPartner: string;
+        otherPartner: string;
         settlementPolicy: string;
         membership: string;
       };
@@ -98,6 +99,8 @@ export interface Address {
       hasJudgments: boolean;
       hasBankruptcy: boolean;
       ownershipChanged: boolean;
+      industryReferences: string;
+      additionalComments: string;
     };
     diligenceInfo: {
       ticketingCompanyReport: DiligenceFileData;
@@ -108,6 +111,7 @@ export interface Address {
       legalEntityChart: DiligenceFileData;
       governmentId: DiligenceFileData;
       w9form: DiligenceFileData;
+      
     };
   }
   

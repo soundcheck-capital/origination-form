@@ -14,11 +14,11 @@ const LegalInformationStep: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full pt-10">
       <StepTitle title="Contractual and Legal Information" />
-      
+
       <div className="w-full md:w-[40%] mb-8">
         <FileUploadField
           field="incorporationCertificate"
-          description="Certificate of Incorporation of contracting entity"
+          title="Certificate of Incorporation of contracting entity"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('incorporationCertificate', fileInfos)}
@@ -26,7 +26,7 @@ const LegalInformationStep: React.FC = () => {
 
         <FileUploadField
           field="legalEntityChart"
-          description="Legal entity chart if more than one entity exists OR there have been distributions to other entities in the past"
+          title="Legal entity chart if more than one entity exists OR there have been distributions to other entities in the past"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('legalEntityChart', fileInfos)}
@@ -34,18 +34,30 @@ const LegalInformationStep: React.FC = () => {
 
         <FileUploadField
           field="governmentId"
-          description="Scanned copy of government issued ID of the signatory of the Agreement with SoundCheck"
+          title="Scanned copy of government issued ID of the signatory of the Agreement with SoundCheck"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('governmentId', fileInfos)}
         />
 
         <FileUploadField
-          field="einAuthentication"
-          description="Completed Form W-9"
+          field="w9form"
+          title="Completed Form W-9"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
-          onFilesChange={(fileInfos) => handleFilesChange('einAuthentication', fileInfos)}
+          onFilesChange={(fileInfos) => handleFilesChange('w9form', fileInfos)}
+        />
+
+        <FileUploadField
+          field="other"
+          title="Other"
+          description="Venue/Movie Theater/Performing Arts Center: copy of the lease or property deed <br>
+          Promoter: copy of the venue/rental agreement <br>
+          Outdoor event: copy of the event cancellation insurance <br>
+          Other: business plan, budget, insurance certificate, bank letter, investor deck, etc."
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
+          multiple={false}
+          onFilesChange={(fileInfos) => handleFilesChange('other', fileInfos)}
         />
       </div>
     </div>

@@ -84,7 +84,6 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, onSuccess }) =
 
 const ticketingPartners = [
   'AXS',
-  'Dice',
   'Etix',
   'Eventbrite',
   'EventLive',
@@ -96,10 +95,10 @@ const ticketingPartners = [
   'Showpass',
   'SquadUp',
   'TicketFairy',
-  'Ticketfly',
-  'TicketMaster',
+  'Ticketmaster',
   'Ticketon',
   'TicketTailor',
+  'Ticketspice',
   'Tixr',
   'Venue Pilot',  
   'Other',
@@ -125,7 +124,10 @@ const TicketingStep: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    dispatch(updateTicketingInfo({ [name]: value }));
+
+      dispatch(updateTicketingInfo({ [name]: value }));
+    
+
     // Reset connection status if partner changes
     if (name === 'currentPartner' && value !== 'Ticketon') {
       setIsTicketonConnected(false);
@@ -144,30 +146,21 @@ const TicketingStep: React.FC = () => {
     setIsTicketonConnected(true);
   };
 
+  let otherPartner = '';
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <p className="text-gray-600 my-8 text-2xl font-bold w-full md:w-[40%] text-center">Annual ticketing volume</p>
+      <p className="text-gray-600 my-8 text-2xl font-bold w-full md:w-[40%] text-center">Ticketing information</p>
 
       <p className="text-gray-400 mb-16 text-xs  w-full md:w-[30%] text-justify">
-        We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility in minutes. We only collect the information we need to provide you the best possible offer.
+        We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility. We only collect the information we need to provide you the best possible offer.
       </p>
 
       <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} />
-      {/* {isTicketonConnected && ticketingInfo.currentPartner === 'Ticketon' && (
-          <span className="check-icon">✓</span>
-        )} */}
-
-
-      {/* {ticketingInfo.currentPartner === 'Ticketon' && !isTicketonConnected && (
-        <div className="space-y-6 mb-10">
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowLoginPopup(true)}
-          >
-            Connect to Ticketon
-          </button>
-        </div>
-      )} */}
+     
+     {ticketingInfo.currentPartner === 'Other' && (
+      <TextField label="Other Ticketing Partner" name="otherPartner" value={ticketingInfo.otherPartner} onChange={handleChange} error='' onBlur={() => { }} type='text' />
+     )}
 
       <DropdownField label="What is your ticketing partner settlement/payout policy?" name="settlementPolicy" value={ticketingInfo.settlementPolicy} onChange={handleChange} error='' onBlur={() => { }} options={settlementPolicies} />
 

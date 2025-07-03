@@ -3,11 +3,12 @@ import { useDiligenceFiles } from '../../contexts/DiligenceFilesContext';
 
 interface FileUploadFieldProps {
   field: string;
-  description: string;
+  description?: string;
   accept?: string;
   multiple?: boolean;
   className?: string;
   onFilesChange?: (fileInfos: any[]) => void;
+  title?: string;
 }
 
 const FileUploadField: React.FC<FileUploadFieldProps> = ({
@@ -16,7 +17,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   accept = ".pdf,.xlsx,.csv,.jpg,.png",
   multiple = true,
   className = "",
-  onFilesChange
+  onFilesChange,
+  title = ""
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,13 +123,12 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   };
 
   return (
-    <div className={`flex flex-col w-full mb-8 ${className}`}>
-      <p className="upload-description text-sm font-300 text-gray-700 mb-2">
-        {description}
-      </p>
+    <div className={`flex flex-col w-full mb-16 ${className}`}>
+      <h4 className=" text-xl font-medium text-neutral-900 ">{title}</h4>
+      {description && <p className=" text-xs font-300 text-gray-500" dangerouslySetInnerHTML={{ __html: description }} />}
       
       <div
-        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+        className={`relative border-2 border-dashed rounded-lg p-6 mt-4 text-center transition-colors ${
           dragActive 
             ? 'border-blue-500 bg-blue-50' 
             : 'border-gray-300 hover:border-gray-400'
@@ -164,14 +165,14 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           
           <div className="text-sm text-gray-600">
             <span className="font-medium text-blue-600 hover:text-blue-500">
-              Cliquez pour sélectionner
+              Click to select
             </span>
-            {' '}ou glissez-déposez vos fichiers ici
+            {' '}or drag and drop your files here
           </div>
           
           <p className="text-xs text-gray-500">
-            {accept.split(',').map(ext => ext.trim()).join(', ')} acceptés
-            {multiple && ' (plusieurs fichiers possibles)'}
+            {accept.split(',').map(ext => ext.trim()).join(', ')} accepted
+            {multiple && ' (multiple files accepted)'}
           </p>
         </div>
       </div>
@@ -181,14 +182,14 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         <div className="mt-4 space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-sm font-medium text-gray-700">
-              Fichiers sélectionnés ({files.length})
+              Selected files ({files.length})
             </h4>
             {files.length > 1 && (
               <button
                 onClick={handleClearAllFiles}
                 className="text-sm text-red-500 hover:text-red-700"
               >
-                Tout supprimer
+                Remove all
               </button>
             )}
           </div>
@@ -209,7 +210,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
                       {file.name}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {formatFileSize(file.size)} • {file.type || 'Type inconnu'}
+                      {formatFileSize(file.size)} • {file.type || 'Unknown type'}
                     </p>
                   </div>
                 </div>
@@ -217,7 +218,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
                 <button
                   onClick={() => handleRemoveFile(index)}
                   className="text-red-500 hover:text-red-700 p-1 ml-2 flex-shrink-0"
-                  title="Supprimer le fichier"
+                  title="Remove file"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -228,6 +229,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </div>
         </div>
       )}
+      <div className='w-full border-b border-amber-300 mt-8'></div>
     </div>
   );
 };

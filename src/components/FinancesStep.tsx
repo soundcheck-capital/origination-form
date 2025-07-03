@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateFinancesInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
+import FileUploadField from './customComponents/FileUploadField';
 
 const debtTypes = [
   'Credit card debt',
@@ -57,12 +58,6 @@ const FinancesStep: React.FC = () => {
       text: "Are any of these liabilities not within terms and/or overdue?",
       name: 'hasOverdueLiabilities',
       condition: (financesInfo) => financesInfo.hasBusinessDebt && financesInfo.debts.length > 0
-    },
-    {
-      id: 'leasing',
-      text: "Are you currently leasing your business location?",
-      name: 'isLeasingLocation',
-      showDateInput: true
     },
     {
       id: 'taxLiens',
@@ -297,15 +292,14 @@ const FinancesStep: React.FC = () => {
         
         {question.name === 'filedLastYearTaxes' && financesInfo[question.name] && (
           <div className="conditional-content animate-fadeIn">
-            <div className="space-y-2">
-              <p className="upload-description">Last year tax file</p>
-              <input
-                type="file"
-                accept=".pdf"
-                onChange={handleFileChange('lastYearTaxes')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+            
+            <FileUploadField
+              field="lastYearTaxes"
+              title="Last year tax file"
+              accept=".pdf,.xlsx,.csv,.jpg,.png"
+              multiple={false}
+              onFilesChange={() => handleFileChange('lastYearTaxes')}
+            />
           </div>
         )}
       </div>

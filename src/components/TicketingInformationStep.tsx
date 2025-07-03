@@ -18,7 +18,8 @@ const TicketingInformationStep: React.FC = () => {
       <div className="w-full md:w-[40%] mb-8">
         <FileUploadField
           field="ticketingCompanyReport"
-          description="Reports from ticketing company (last 3 years), not just Excel summary, including # events, $ gross ticket sales, # tickets sold per month"
+          title="Reports from ticketing company (last 3 years)"
+          description="Not just Excel summary, including # events, $ gross ticket sales, # tickets sold per month"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={true}
           onFilesChange={(fileInfos) => handleFilesChange('ticketingCompanyReport', fileInfos)}
@@ -26,7 +27,7 @@ const TicketingInformationStep: React.FC = () => {
 
         <FileUploadField
           field="ticketingServiceAgreement"
-          description="Copy of Ticketing Service Agreement"
+          title="Copy of Ticketing Service Agreement"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('ticketingServiceAgreement', fileInfos)}
