@@ -237,8 +237,10 @@ const MultiStepFormContent: React.FC = () => {
 
             )}
           </div>
-
-        </div>
+          {(currentStep === 1) && (
+            <p className="text-xs text-gray-500 w-[30%] mx-auto mt-4 text-center text-justify"><span className="font-bold">Notes and Disclosures:</span> The information appearing in this form (the “Form”) is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>
+          )}
+            </div>
       </main>
     </div>
 
