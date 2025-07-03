@@ -111,7 +111,8 @@ export interface Address {
       legalEntityChart: DiligenceFileData;
       governmentId: DiligenceFileData;
       w9form: DiligenceFileData;
-      
+      lastYearTaxes: DiligenceFileData;
+      otherFiles: DiligenceFileData;
     };
   }
   

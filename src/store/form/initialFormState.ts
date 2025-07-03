@@ -41,6 +41,7 @@ export const initialState: FormState = {
     legalEntityChart: { files: [], fileInfos: [] },
     governmentId: { files: [], fileInfos: [] },
     w9form: { files: [], fileInfos: [] },
-   
+    lastYearTaxes: { files: [], fileInfos: [] },
+    otherFiles: { files: [], fileInfos: [] },
   } 
 };

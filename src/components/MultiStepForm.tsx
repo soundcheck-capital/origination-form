@@ -171,7 +171,7 @@ const MultiStepFormContent: React.FC = () => {
       case 10:
         return <OtherStep />;
       case 11:
-        return <SummaryStep />;
+        return <SummaryStep onSubmit={handleSubmit} />;
       default:
         return null;
     }
@@ -235,11 +235,6 @@ const MultiStepFormContent: React.FC = () => {
                 window.scrollTo(0, 0);
               }} disabled={false}>Next</ButtonPrimary>
 
-            )}
-            {(currentStep === 11) && (
-              <ButtonPrimary onClick={handleSubmit} disabled={isSaving}>
-                {isSaving ? 'Submitting...' : 'Submit Application'}
-              </ButtonPrimary>
             )}
           </div>
 

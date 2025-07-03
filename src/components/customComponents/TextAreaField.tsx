@@ -25,7 +25,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
 }) => {
   return (
     <div className="relative w-full max-w-md mb-4">
-           <h4 className=" text-lg font-medium text-neutral-900 mb-2  ">{label}</h4>
+      <h4 className=" text-lg font-medium text-neutral-900 mb-2  ">{label}</h4>
 
       <textarea
         id={name}
@@ -38,7 +38,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
         required={required}
         className={`block w-full p-4 text-sm text-gray-900 rounded-2xl border border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-rose-300 focus:outline-none resize-vertical`}
       />
-      
+
       {error && (
         <div className="mt-2 ml-2">
           <p className="text-red-500 text-xs">{error}</p>

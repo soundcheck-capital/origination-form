@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import { useFormValidation } from '../hooks/useFormValidation';
+import StepTitle from './customComponents/StepTitle';
+import ButtonPrimary from './customComponents/ButtonPrimary';
 
-const SummaryStep: React.FC = () => {
+interface SummaryStepProps {
+  onSubmit?: () => void;
+}
+
+const SummaryStep: React.FC<SummaryStepProps> = ({ onSubmit }) => {
   const formData = useSelector((state: RootState) => state.form.formData);
   const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
   const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
+  const { validateAllSteps } = useFormValidation();
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -20,292 +29,226 @@ const SummaryStep: React.FC = () => {
     return `${value}%`;
   };
 
+  const handleSubmit = () => {
+    const validation = validateAllSteps();
+    
+    if (!validation.isValid) {
+      setValidationErrors(validation.errors);
+      return;
+    }
+
+    setValidationErrors(null);
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
+
+  const renderValidationErrors = () => {
+    if (!validationErrors) return null;
+
+    const hasErrors = Object.values(validationErrors).some(errors => errors.length > 0);
+    if (!hasErrors) return null;
+
+    return (
+      <div className="w-full max-w-2xl mb-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-red-800 mb-4">
+            Please complete the following required fields before submitting:
+          </h3>
+          <div className="space-y-4">
+            {Object.entries(validationErrors).map(([section, errors]) => {
+              if (errors.length === 0) return null;
+              
+              return (
+                <div key={section} className="border-l-4 border-red-400 pl-4">
+                  <h4 className="font-medium text-red-700 mb-2">{section}</h4>
+                  <ul className="list-disc list-inside space-y-1">
+                    {errors.map((error, index) => (
+                      <li key={index} className="text-sm text-red-600">{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      {/* <h2 className="step-title">Summary</h2>
-      <h3 className="step-subtitle" style={{ color: '#F99927' }}>Review Your Informations</h3> */}
+      <StepTitle title="Summary" />
+      
+      <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] text-justify">
+        Please review all your information before submitting. All required fields must be completed.
+      </p>
 
-     {/*  <div className="summary-container">
-        {/* Company Information 
-        <div className="summary-section">
-          <h4 className="summary-section-title">Company Information</h4>
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">Company Name:</span>
-              <span className="summary-value">{formData.companyInfo.name}</span>
+      {renderValidationErrors()}
+
+      {/* <div className="w-full max-w-2xl space-y-6">
+        {/* Personal Information
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal Information</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="font-medium text-gray-600">Name:</span>
+              <span className="ml-2 text-gray-800">{formData.personalInfo.firstname} {formData.personalInfo.lastname}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Company Type:</span>
-              <span className="summary-value">{formData.companyInfo.clientType}</span>
+            <div>
+              <span className="font-medium text-gray-600">Email:</span>
+              <span className="ml-2 text-gray-800">{formData.personalInfo.email}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Legal Entity Type:</span>
-              <span className="summary-value">{formData.companyInfo.legalEntityType}</span>
+            <div>
+              <span className="font-medium text-gray-600">Phone:</span>
+              <span className="ml-2 text-gray-800">{formData.personalInfo.phone}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Years in Business:</span>
-              <span className="summary-value">{formData.companyInfo.yearsInBusiness}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Number of Employees:</span>
-              <span className="summary-value">{formData.companyInfo.employees}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Tax ID:</span>
-              <span className="summary-value">{formData.companyInfo.taxId}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Street:</span>
-              <span className="summary-value">{formData.companyInfo.companyAddress}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">City:</span>
-              <span className="summary-value">{formData.companyInfo.companyCity}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">State:</span>
-              <span className="summary-value">{formData.companyInfo.companyState}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">ZIP Code:</span>
-              <span className="summary-value">{formData.companyInfo.companyZipCode}</span>
+            <div>
+              <span className="font-medium text-gray-600">Role:</span>
+              <span className="ml-2 text-gray-800">{formData.personalInfo.role}</span>
             </div>
           </div>
-       
+        </div>
 
-       
+        {/* Company Information 
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Company Information</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="font-medium text-gray-600">Company Name:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.name}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">DBA:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.dba}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Client Type:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.clientType}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Legal Entity Type:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.legalEntityType}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Years in Business:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.yearsInBusiness}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">EIN:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.ein}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Address:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.companyAddress}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">State of Incorporation:</span>
+              <span className="ml-2 text-gray-800">{formData.companyInfo.stateOfIncorporation}</span>
+            </div>
+          </div>
+        </div>
 
         {/* Ticketing Information 
-          <h4 className="summary-section-title">Ticketing Information</h4>
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">Current Partner:</span>
-              <span className="summary-value">{formData.ticketingInfo.currentPartner}</span>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Ticketing Information</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="font-medium text-gray-600">Ticketing Partner:</span>
+              <span className="ml-2 text-gray-800">{formData.ticketingInfo.currentPartner}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Settlement Policy:</span>
-              <span className="summary-value">{formData.ticketingInfo.settlementPolicy}</span>
+            <div>
+              <span className="font-medium text-gray-600">Settlement Policy:</span>
+              <span className="ml-2 text-gray-800">{formData.ticketingInfo.settlementPolicy}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Membership:</span>
-              <span className="summary-value">{formData.ticketingInfo.membership}</span>
+            <div>
+              <span className="font-medium text-gray-600">Membership:</span>
+              <span className="ml-2 text-gray-800">{formData.ticketingInfo.membership}</span>
             </div>
           </div>
-       
+        </div>
 
-        {/* Volume Information
-          <h4 className="summary-section-title">Volume Information</h4>
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">Last Year Events:</span>
-              <span className="summary-value">{formData.volumeInfo.lastYearEvents}</span>
+        {/* Volume Information 
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Volume Information</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="font-medium text-gray-600">Last Year Events:</span>
+              <span className="ml-2 text-gray-800">{formData.volumeInfo.lastYearEvents}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Last Year Tickets:</span>
-              <span className="summary-value">{formData.volumeInfo.lastYearTickets}</span>
+            <div>
+              <span className="font-medium text-gray-600">Last Year Tickets:</span>
+              <span className="ml-2 text-gray-800">{formData.volumeInfo.lastYearTickets}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Last Year Sales:</span>
-              <span className="summary-value">{formatCurrency(formData.volumeInfo.lastYearSales)}</span>
+            <div>
+              <span className="font-medium text-gray-600">Last Year Sales:</span>
+              <span className="ml-2 text-gray-800">{formatCurrency(formData.volumeInfo.lastYearSales)}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Next Year Events:</span>
-              <span className="summary-value">{formData.volumeInfo.nextYearEvents}</span>
+            <div>
+              <span className="font-medium text-gray-600">Next Year Events:</span>
+              <span className="ml-2 text-gray-800">{formData.volumeInfo.nextYearEvents}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Next Year Tickets:</span>
-              <span className="summary-value">{formData.volumeInfo.nextYearTickets}</span>
+            <div>
+              <span className="font-medium text-gray-600">Next Year Tickets:</span>
+              <span className="ml-2 text-gray-800">{formData.volumeInfo.nextYearTickets}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Next Year Sales:</span>
-              <span className="summary-value">{formatCurrency(formData.volumeInfo.nextYearSales)}</span>
+            <div>
+              <span className="font-medium text-gray-600">Next Year Sales:</span>
+              <span className="ml-2 text-gray-800">{formatCurrency(formData.volumeInfo.nextYearSales)}</span>
             </div>
           </div>
+        </div>
 
-        {/* Funds Information 
-          <h4 className="summary-section-title">Funds Information</h4>
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">Your Funds:</span>
-              <span className="summary-value">{formatCurrency(parseFloat(formData.fundsInfo.yourFunds))}</span>
+        {/* Funding Information 
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Funding Information</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="font-medium text-gray-600">Funding Needs:</span>
+              <span className="ml-2 text-gray-800">{formatCurrency(parseFloat(formData.fundsInfo.yourFunds) || 0)}</span>
             </div>
-           
-            <div className="summary-item">
-              <span className="summary-label">Recoupment Period:</span>
-              <span className="summary-value">{formData.fundsInfo.recoupmentPeriod} months</span>
+            <div>
+              <span className="font-medium text-gray-600">Time for Funding:</span>
+              <span className="ml-2 text-gray-800">{formData.fundsInfo.timeForFunding}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Recoupment Percentage:</span>
-              <span className="summary-value">{formatPercentage(formData.fundsInfo.recoupmentPercentage)}</span>
+            <div>
+              <span className="font-medium text-gray-600">Fund Use:</span>
+              <span className="ml-2 text-gray-800">{formData.fundsInfo.fundUse}</span>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Fund Use:</span>
-              <span className="summary-value">{formData.fundsInfo.fundUse}</span>
+            <div>
+              <span className="font-medium text-gray-600">Recoupable Against:</span>
+              <span className="ml-2 text-gray-800">{formData.fundsInfo.recoupableAgainst}</span>
             </div>
           </div>
+        </div>
 
         {/* Ownership Information 
-          <h4 className="summary-section-title">Ownership Information</h4>
-          <div className="summary-grid">
-        
-            <div className="summary-item">
-              <span className="summary-label">Company Type:</span>
-              <span className="summary-value">{formData.companyInfo.companyType}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">EIN:</span>
-              <span className="summary-value">{formData.companyInfo.ein}</span>
-            </div>
-
-          <h5 className="summary-subsection-title">Owners</h5>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Ownership Information</h3>
           {formData.ownershipInfo.owners.map((owner, index) => (
-            <div key={owner.id} className="owner-summary">
-              <h6 className="owner-title">Owner {index + 1}</h6>
-              <div className="summary-grid">
-                <div className="summary-item">
-                  <span className="summary-label">Name:</span>
-                  <span className="summary-value">{owner.name}</span>
+            <div key={owner.id} className="mb-4 last:mb-0">
+              <h4 className="font-medium text-gray-700 mb-2">Owner {index + 1}</h4>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium text-gray-600">Name:</span>
+                  <span className="ml-2 text-gray-800">{owner.name}</span>
                 </div>
-                <div className="summary-item">
-                  <span className="summary-label">Ownership Percentage:</span>
-                  <span className="summary-value">{formatPercentage(owner.ownershipPercentage)}</span>
+                <div>
+                  <span className="font-medium text-gray-600">Ownership Percentage:</span>
+                  <span className="ml-2 text-gray-800">{formatPercentage(owner.ownershipPercentage)}</span>
                 </div>
-                {!owner.sameAddress && (
-                  <>
-                    <div className="summary-item">
-                      <span className="summary-label">Address:</span>
-                      <span className="summary-value">{owner.ownerAddress}</span>
-                    </div>
-                    <div className="summary-item">
-                      <span className="summary-label">City:</span>
-                      <span className="summary-value">{owner.ownerCity}</span>
-                    </div>
-                    <div className="summary-item">
-                      <span className="summary-label">State:</span>
-                      <span className="summary-value">{owner.ownerState}</span>
-                    </div>
-                    <div className="summary-item">
-                      <span className="summary-label">ZIP Code:</span>
-                      <span className="summary-value">{owner.ownerZipCode}</span>
-                    </div>
-                  </>
-                )}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Financial Information 
-          <h4 className="summary-section-title">Financial Information</h4>
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">Filed Last Year Taxes:</span>
-              <span className="summary-value">{financesInfo.filedLastYearTaxes ? 'Yes' : 'No'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Has Business Debt:</span>
-              <span className="summary-value">{financesInfo.hasBusinessDebt ? 'Yes' : 'No'}</span>
-            </div>
-            {financesInfo.hasBusinessDebt && financesInfo.debts.length > 0 && (
-              <div className="summary-item debts-list">
-                <span className="summary-label">Debts:</span>
-                <div className="summary-value">
-                  {financesInfo.debts.map((debt, index) => (
-                    <div key={index}>
-                      {debt.type}: {formatCurrency(parseFloat(debt.balance))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div className="summary-item">
-              <span className="summary-label">Has Overdue Liabilities:</span>
-              <span className="summary-value">{financesInfo.hasOverdueLiabilities ? 'Yes' : 'No'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Is Leasing Location:</span>
-              <span className="summary-value">{financesInfo.isLeasingLocation ? 'Yes' : 'No'}</span>
-            </div>
-            {financesInfo.isLeasingLocation && (
-              <div className="summary-item">
-                <span className="summary-label">Lease End Date:</span>
-                <span className="summary-value">{financesInfo.leaseEndDate}</span>
-              </div>
-            )}
-            <div className="summary-item">
-              <span className="summary-label">Has Tax Liens:</span>
-              <span className="summary-value">{financesInfo.hasTaxLiens ? 'Yes' : 'No'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Has Judgments:</span>
-              <span className="summary-value">{financesInfo.hasJudgments ? 'Yes' : 'No'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Has Bankruptcy:</span>
-              <span className="summary-value">{financesInfo.hasBankruptcy ? 'Yes' : 'No'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Ownership Changed:</span>
-              <span className="summary-value">{financesInfo.ownershipChanged ? 'Yes' : 'No'}</span>
-            </div>
-          </div>
-
-        {/* Documents Uploaded 
-        
-          <h4 className="summary-section-title">Documents Uploaded</h4>
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">Ticketing Company Report:</span>
-              <span className="summary-value">{diligenceInfo.ticketingCompanyReport.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Ticketing Service Agreement:</span>
-              <span className="summary-value">{diligenceInfo.ticketingServiceAgreement.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Ticketing Projections:</span>
-              <span className="summary-value">{diligenceInfo.ticketingProjections.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Incorporation Certificate:</span>
-              <span className="summary-value">{diligenceInfo.incorporationCertificate.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Legal Entity Chart:</span>
-              <span className="summary-value">{diligenceInfo.legalEntityChart.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Government ID:</span>
-              <span className="summary-value">{diligenceInfo.governmentId.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">EIN Authentication:</span>
-              <span className="summary-value">{diligenceInfo.einAuthentication.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Financial Statements:</span>
-              <span className="summary-value">{diligenceInfo.financialStatements.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Bank Statement:</span>
-              <span className="summary-value">{diligenceInfo.bankStatement.length > 0 ? 'Uploaded' : 'Not Uploaded'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Bank Account Linked:</span>
-              <span className="summary-value">{diligenceInfo.bankAccountLinked ? 'Yes' : 'No'}</span>
-            </div>
-          </div>
+       
+      </div> */}
+     {/* Submit Button */}
+     <div className="flex justify-center pt-6 w-[30%] mx-auto mb-4">
+          <ButtonPrimary onClick={handleSubmit} disabled={false}  >Submit Application</ButtonPrimary>
         </div>
-        
-        
-        </div>  */}
-
-        <div className="w-full md:w-[40%] mb-8 ">
-          <p className="text-gray-600 my-8 text-sm font-300 text-center">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" className="text-blue-500">Privacy Policy</a>
-          </p>
-          </div>
-        </div>
-      
+    </div>
   );
 };
 
