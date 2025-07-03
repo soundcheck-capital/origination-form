@@ -92,12 +92,12 @@ const OwnershipStep: React.FC = () => {
       <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] mt-8 text-justify">Please carefully complete the information below and make sure that it is accurate including informations about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
 
       {owners.map((owner) => (
-        <div key={owner.id} className="flex flex-col bg-white">
-          <div className="flex flex-col justify-between">
-            <p className='block text-sm font-medium text-gray-700'>Owner {owners.indexOf(owner) + 1}</p>
+        <div key={owner.id} className="flex flex-col bg-white w-full">
+          <div className="flex flex-col justify-between ">
+            <p className='block text-sm font-medium text-gray-700 w-[30%] mx-auto'>Owner {owners.indexOf(owner) + 1}</p>
             {owners.length > 1 && (
               <button
-                className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end mb-4"
+                className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end mb-4 w-[30%] mx-auto"
                 onClick={() => removeOwner(owner.id)}
                 type="button"
               >
@@ -107,7 +107,7 @@ const OwnershipStep: React.FC = () => {
           </div>
 
 
-          <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
+          <div className="flex flex-row justify-between w-[30%] mx-auto gap-x-4 mt-8">
             <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} />
            
             <NumberInput showPercent={true} label="Ownership Percentage"   value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} />
@@ -160,7 +160,7 @@ const OwnershipStep: React.FC = () => {
             </div>
           )} */}
           {owners.length > 1 && (
-              <div className='w-full border-b border-amber-200 my-8'></div>
+              <div className='w-[30%] mx-auto border-b border-amber-200 my-8 '></div>
             )}
         </div>
       ))}
