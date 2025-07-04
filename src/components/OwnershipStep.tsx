@@ -6,6 +6,7 @@ import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
 import NumberInput from './customComponents/NumberField';
+import DatePickerField from './customComponents/DatePickerField';
 
 interface Owner {
   id: string;
@@ -13,9 +14,7 @@ interface Owner {
   ownershipPercentage: string;
   sameAddress: boolean;
   ownerAddress: string;
-  ownerCity: string;
-  ownerState: string;
-  ownerZipCode: string;
+  ownerBirthDate: string;
 }
 
 const usStates = [
@@ -60,9 +59,7 @@ const OwnershipStep: React.FC = () => {
       ownershipPercentage: '',
       sameAddress: true,
       ownerAddress: '',
-      ownerCity: '',
-      ownerState: '',
-      ownerZipCode: ''
+      ownerBirthDate: ''
     };
     const updatedOwners = [...owners, newOwner];
     setOwners(updatedOwners);
@@ -75,6 +72,17 @@ const OwnershipStep: React.FC = () => {
       setOwners(updatedOwners);
        dispatch(updateOwnershipInfo({ owners: updatedOwners }));
     }
+  };
+
+  const updateOwnerAddress = (id: string, address: string) => {
+    const updatedOwners = owners.map(owner => {
+      if(owner.id === id) {
+        return { ...owner, ownerAddress: address };
+      }
+      return owner;
+    });
+    setOwners(updatedOwners);
+    dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   };
 
   const calculateTotalOwnership = () => {
@@ -111,8 +119,12 @@ const OwnershipStep: React.FC = () => {
             <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} />
            
             <NumberInput showPercent={true} label="Ownership Percentage"   value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} />
-
           </div>
+          <div className="flex flex-row justify-between w-[30%] mx-auto gap-x-4 ">
+            <AddressAutocomplete label="Address" name="ownerAddress" value={owner.ownerAddress} dispatch={(address: string) => updateOwnerAddress(owner.id, address)} onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} error='' onBlur={() => { } } type={''} id={''} />
+            <DatePickerField label="Date of Birth" name="ownerBirthDate" value={owner.ownerBirthDate} onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} />
+          </div>
+
 {/* 
           <div className="flex flex-row justify-between w-full">
             <div className="flex flex-row  w-full gap-4">

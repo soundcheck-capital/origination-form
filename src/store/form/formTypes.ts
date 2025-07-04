@@ -12,9 +12,7 @@ export interface Address {
     ownershipPercentage: string;
     sameAddress: boolean;
     ownerAddress: string;
-    ownerCity: string;
-    ownerState: string;
-    ownerZipCode: string;
+    ownerBirthDate: string;
   }
   
   export interface FileInfo {
@@ -51,9 +49,7 @@ export interface Address {
         clientType: string;
         legalEntityType: string;
         companyAddress: string;
-        companyCity: string;
-        companyState: string;
-        companyZipCode: string;
+       
         ein: string;
         stateOfIncorporation: string;
       };
@@ -62,6 +58,7 @@ export interface Address {
         otherPartner: string;
         settlementPolicy: string;
         membership: string;
+        ticketingPayout: string;
       };
       volumeInfo: {
         lastYearEvents: number;
@@ -75,7 +72,6 @@ export interface Address {
         yourFunds: string;
         fundUse: string;
         timeForFunding: string;
-        recoupableAgainst: string;
       };
       ownershipInfo: {
         owners: Owner[];

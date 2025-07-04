@@ -9,16 +9,15 @@ export const initialState: FormState = {
     companyInfo: {  
       employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
       legalEntityType: '', companyAddress: '',
-      companyCity: '', companyState: '', companyZipCode: '',
        ein: '', stateOfIncorporation: ''
     },
-    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', membership: '' },
+    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', membership: '', ticketingPayout: '' },
     volumeInfo: {
       lastYearEvents: 0, lastYearTickets: 0, lastYearSales: 0,
       nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0
     },
     fundsInfo: {  
-        yourFunds: '0', fundUse: '', timeForFunding: '', recoupableAgainst: ''
+        yourFunds: '0', fundUse: '', timeForFunding: ''
     },
     ownershipInfo: {
      owners: [],

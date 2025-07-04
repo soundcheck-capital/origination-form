@@ -58,7 +58,6 @@ export const useFormValidation = () => {
     if (!fundsInfo.yourFunds.trim()) errors.push('Funding needs amount is required');
     if (!fundsInfo.timeForFunding.trim()) errors.push('Time for funding is required');
     if (!fundsInfo.fundUse.trim()) errors.push('Fund use is required');
-    if (!fundsInfo.recoupableAgainst.trim()) errors.push('Recoupable against is required');
 
     return { isValid: errors.length === 0, errors };
   };

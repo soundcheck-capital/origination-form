@@ -51,7 +51,6 @@ const YourFundingStep: React.FC = () => {
       <CurrencyField label="Funding Needs ($)"  value={fundsInfo.yourFunds} onChange={(value) => handleCurrencyChange('yourFunds', value)}  />
       <DropdownField label="Timing for Funding" name="timeForFunding" value={fundsInfo.timeForFunding} onChange={handleChange} error='' onBlur={() => { }} options={timeForFunding} />
       <DropdownField label="How do you plan to use your advance?" name="fundUse" value={fundsInfo.fundUse} onChange={handleChange} error='' onBlur={() => { }} options={fundUses} />
-      <DropdownField label="Advance Recoupable Against" name="recoupableAgainst" value={fundsInfo.recoupableAgainst} onChange={handleChange} error='' onBlur={() => { }} options={recoupableAgainst} /> 
 
 
 

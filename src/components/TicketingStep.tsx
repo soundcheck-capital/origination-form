@@ -113,7 +113,12 @@ const settlementPolicies = [
   'Payout after the event'
 ];
 
-
+const ticketingPayouts = [
+  'Ticketing Partner',
+  'Venue',
+  'Payment Processor (e.g. Stripe)',
+  'Other'
+];
 
 const TicketingStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -155,6 +160,7 @@ const TicketingStep: React.FC = () => {
       <p className="text-gray-400 mb-16 text-xs  w-full md:w-[30%] text-justify">
         We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility. We only collect the information we need to provide you the best possible offer.
       </p>
+      <DropdownField label="What partner do you receive ticketing payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
 
       <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} />
      

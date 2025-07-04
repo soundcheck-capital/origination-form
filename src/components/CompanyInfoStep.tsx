@@ -73,7 +73,9 @@ const CompanyInfoStep: React.FC = () => {
     }
   };
 
-
+  const updateCompanyAddress = (address: string) => {
+    dispatch(updateCompanyInfo({ companyAddress: address }));
+  };
 
   const [ein, setEin] = useState(companyInfo.ein);
 
@@ -121,15 +123,13 @@ const CompanyInfoStep: React.FC = () => {
         name="companyAddress"
         value={companyInfo.companyAddress}
         onChange={handleChange}
+        dispatch={(address: string) => updateCompanyAddress(address)}
         error=''
         onBlur={()=>{}}
         type="text"
         id="companyAddress"
       />
-      {/*  <TextField type="text" label="Legal Entity ZIP code" name="companyZipCode" value={companyInfo.companyZipCode} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <TextField type="text" label="Legal Entity City" name="companyCity" value={companyInfo.companyCity} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <TextField type="text" label="Legal Entity State" name="companyState" value={companyInfo.companyState} onChange={handleChange} error='' onBlur={()=>{}}  /> */}
-      
+     
     <TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={()=>{}}  />
     </div>
   );
