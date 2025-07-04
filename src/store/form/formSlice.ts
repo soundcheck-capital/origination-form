@@ -16,7 +16,7 @@ const formSlice = createSlice({
     updateCompanyInfo: (state, action: PayloadAction<Partial<FormState['formData']['companyInfo']>>) => {
       state.formData.companyInfo = { ...state.formData.companyInfo, ...action.payload };
     },
-    updateTicketingInfo: (state, action: PayloadAction<Partial<FormState['formData']['ticketingInfo']>>) => {
+    updateTicketingInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
       state.formData.ticketingInfo = { ...state.formData.ticketingInfo, ...action.payload };
     },
     updateVolumeInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {

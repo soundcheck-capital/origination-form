@@ -77,7 +77,7 @@ export const useFileUpload = () => {
       });
 
       // Envoyer à Make.com
-      const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || 'https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm', {
+      const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
         method: 'POST',
         body: formDataToSend,
       });
