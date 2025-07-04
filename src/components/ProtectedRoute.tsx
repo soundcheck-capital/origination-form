@@ -1,21 +1,37 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { RootState } from '../store';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import PasswordProtection from './PasswordProtection';
 
-const ProtectedRoute: React.FC = () => {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const location = useLocation();
-  const auth = useSelector((state: RootState) => state.auth);
-  const isAuthenticated = auth?.isAuthenticated || false;
-  const token = localStorage.getItem('token');
 
-  // If not authenticated and no token, redirect to login
-  if (!isAuthenticated && !token) {
-    return <Navigate to="/" state={{ from: location.pathname }} replace />;
+  useEffect(() => {
+    // Vérifier si l'utilisateur est authentifié
+    const authenticated = localStorage.getItem('formAuthenticated') === 'true';
+    setIsAuthenticated(authenticated);
+  }, [location]);
+
+  // Afficher un loader pendant la vérification
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-rose-500"></div>
+      </div>
+    );
   }
 
-  // Otherwise, render the protected route
-  return <Outlet />;
+  // Si authentifié, afficher le contenu protégé
+  if (isAuthenticated) {
+    return <>{children}</>;
+  }
+
+  // Sinon, afficher la page de protection par mot de passe
+  return <PasswordProtection />;
 };
 
 export default ProtectedRoute; 

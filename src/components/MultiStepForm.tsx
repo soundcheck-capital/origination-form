@@ -118,6 +118,11 @@ const MultiStepFormContent: React.FC = () => {
     navigate('/dashboard');
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('formAuthenticated');
+    navigate('/');
+  };
+
   const stepTitles = () => {
     switch (currentStep) {
       case 1:
@@ -186,6 +191,12 @@ const MultiStepFormContent: React.FC = () => {
           <div className="flex flex-col items-center gap-4">
             <img src={logo} alt="Logo" className="w-24 " />
           </div>
+          <button
+            onClick={handleLogout}
+            className="absolute top-8 right-8 text-sm text-gray-500 hover:text-gray-700 underline"
+          >
+            Logout
+          </button>
         </div>
 
         {/* Success/Error Message */}
@@ -238,7 +249,7 @@ const MultiStepFormContent: React.FC = () => {
             )}
           </div>
           {(currentStep === 1) && (
-            <p className="text-xs text-gray-500 w-[30%] mx-auto mt-4 text-center text-justify"><span className="font-bold">Notes and Disclosures:</span> The information appearing in this form (the “Form”) is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>
+            <p className="text-xs text-gray-500 w-[30%] mx-auto mt-4 text-center text-justify"><span className="font-bold">Notes and Disclosures:</span> The information appearing in this form (the "Form") is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>
           )}
             </div>
       </main>
