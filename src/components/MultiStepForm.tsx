@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
 import { saveApplication } from '../store/form/formThunks';
 import { fetchApplicationById } from '../store/auth/authThunks';
-import { setCurrentStep } from '../store/form/formSlice';
+import { setCurrentStep, clearFormData } from '../store/form/formSlice';
 import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
 import { useFileUpload } from '../hooks/useFileUpload';
 import PersonalInfoStep from './PersonalInfoStep';
@@ -114,13 +114,21 @@ const MultiStepFormContent: React.FC = () => {
     }
   };
 
-  const handleBackToDashboard = () => {
-    navigate('/dashboard');
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('formAuthenticated');
     navigate('/');
+  };
+
+  const handleClearFormData = () => {
+    if (window.confirm('Are you sure you want to clear all form data? This action cannot be undone.')) {
+      dispatch(clearFormData());
+      setCurrentStep(1);
+      setSaveMessage('Form data cleared successfully!');
+      setTimeout(() => {
+        setSaveMessage('');
+      }, 3000);
+    }
   };
 
   const stepTitles = () => {
@@ -191,12 +199,20 @@ const MultiStepFormContent: React.FC = () => {
           <div className="flex flex-col items-center gap-4">
             <img src={logo} alt="Logo" className="w-24 " />
           </div>
-          <button
-            onClick={handleLogout}
-            className="absolute top-8 right-8 text-sm text-gray-500 hover:text-gray-700 underline"
-          >
-            Logout
-          </button>
+          {/* <div className="absolute top-8 right-8 flex gap-4">
+            <button
+              onClick={handleClearFormData}
+              className="text-sm text-gray-500 hover:text-gray-700 underline"
+            >
+              Clear Form
+            </button>
+            <button
+              onClick={handleLogout}
+              className="text-sm text-gray-500 hover:text-gray-700 underline"
+            >
+              Logout
+            </button>
+          </div> */}
         </div>
 
         {/* Success/Error Message */}

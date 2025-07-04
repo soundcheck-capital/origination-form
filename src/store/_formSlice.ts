@@ -99,7 +99,7 @@ interface FormState {
   };
 }
 
-const initialState: FormState = {
+let initialState: FormState = {
   currentStep: 1,
   email: '',
   emailError: '',
@@ -176,6 +176,13 @@ const initialState: FormState = {
     bankStatement: []
   },
 };
+
+if(localStorage.getItem('form')) {    
+  initialState = {
+    ...initialState,
+    ...JSON.parse(localStorage.getItem('form') || '{}')
+  };
+}
 
 export const formSlice = createSlice({
   name: 'form',
