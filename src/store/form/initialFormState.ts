@@ -11,7 +11,7 @@ export const initialState: FormState = {
       legalEntityType: '', companyAddress: '',
        ein: '', stateOfIncorporation: ''
     },
-    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', membership: '', ticketingPayout: '' },
+    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', membership: '', ticketingPayout: '', otherTicketingPayout: '' },
     volumeInfo: {
       lastYearEvents: 0, lastYearTickets: 0, lastYearSales: 0,
       nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0

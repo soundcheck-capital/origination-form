@@ -44,10 +44,19 @@ const YourFundingStep: React.FC = () => {
   const handleCurrencyChange = (name: string, value: string) => {
     dispatch(updateFundsInfo({ [name]: value }));
   };
- 
+  let capitalAmount = 0;
+  if(ticketingVolume.lastYearSales > 0 && ticketingVolume.nextYearSales > 0 && ticketingVolume.lastYearTickets > 0 && ticketingVolume.nextYearTickets > 0 && ticketingVolume.lastYearEvents > 0 && ticketingVolume.nextYearEvents > 0) {
+    const maxAmount = ticketingVolume.lastYearSales * 0.15;
+    capitalAmount = maxAmount > 1000000 ? 1000000 : maxAmount;
+  }
   return (
     <div className="flex flex-col items-center justify-center w-full mt-16">
 
+      {capitalAmount != 0 && <div className='flex flex-col items-center justify-center w-full mb-4'>
+        <p className='text-sm text-neutral-900 w-[30%] mx-auto mb-4'>Based on your ticketing sales volume, in capital you could qualify for up to:</p>
+        <h3 className='font-bold bg-gradient-to-r from-amber-500 to-rose-500 text-5xl text-center mb-4 text-transparent bg-clip-text'>${capitalAmount.toLocaleString('en-US')} </h3>
+        <p className='text-xs italic text-gray-500 w-[30%] mx-auto mb-4'>*The capital amount stated is non-binding and is merely an indication of what you could be approved for after you've completed the due diligence process. Terms will be subject to a thorough review of the business.</p>
+      </div>}
       <CurrencyField label="Funding Needs ($)"  value={fundsInfo.yourFunds} onChange={(value) => handleCurrencyChange('yourFunds', value)}  />
       <DropdownField label="Timing for Funding" name="timeForFunding" value={fundsInfo.timeForFunding} onChange={handleChange} error='' onBlur={() => { }} options={timeForFunding} />
       <DropdownField label="How do you plan to use your advance?" name="fundUse" value={fundsInfo.fundUse} onChange={handleChange} error='' onBlur={() => { }} options={fundUses} />

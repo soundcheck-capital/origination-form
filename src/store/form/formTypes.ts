@@ -59,6 +59,7 @@ export interface Address {
         settlementPolicy: string;
         membership: string;
         ticketingPayout: string;
+        otherTicketingPayout: string;
       };
       volumeInfo: {
         lastYearEvents: number;

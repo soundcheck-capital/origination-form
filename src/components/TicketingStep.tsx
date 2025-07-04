@@ -101,6 +101,7 @@ const ticketingPartners = [
   'Ticketspice',
   'Tixr',
   'Venue Pilot',  
+  'Various',
   'Other',
 
 ];
@@ -115,7 +116,7 @@ const settlementPolicies = [
 
 const ticketingPayouts = [
   'Ticketing Partner',
-  'Venue',
+  'Venue (i.e. post show settlement)',
   'Payment Processor (e.g. Stripe)',
   'Other'
 ];
@@ -154,14 +155,13 @@ const TicketingStep: React.FC = () => {
   let otherPartner = '';
 
   return (
-    <div className="flex flex-col items-center justify-center w-full">
-      <p className="text-gray-600 my-8 text-2xl font-bold w-full md:w-[40%] text-center">Ticketing information</p>
+    <div className="flex flex-col items-center justify-center w-full mt-16">
 
-      <p className="text-gray-400 mb-16 text-xs  w-full md:w-[30%] text-justify">
-        We use your historical ticket sales, 3rd party and proprietary data to determine your advance eligibility. We only collect the information we need to provide you the best possible offer.
-      </p>
-      <DropdownField label="What partner do you receive ticketing payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
-
+    
+      <DropdownField label="Who do you receive the Ticket Sales payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
+      {ticketingInfo.ticketingPayout === 'Other' && (
+      <TextField label="Other Ticketing Payout" name="otherTicketingPayout" value={ticketingInfo.otherTicketingPayout} onChange={handleChange} error='' onBlur={() => { }} type='text' />
+     )}
       <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} />
      
      {ticketingInfo.currentPartner === 'Other' && (

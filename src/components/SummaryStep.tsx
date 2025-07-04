@@ -77,8 +77,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full">
-      <StepTitle title="Summary" />
+    <div className="flex flex-col items-center justify-center w-full mt-16">
       
       <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] text-justify">
         Please review all your information before submitting. All required fields must be completed.
