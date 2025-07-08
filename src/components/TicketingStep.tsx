@@ -115,7 +115,7 @@ const settlementPolicies = [
 ];
 
 const ticketingPayouts = [
-  'Ticketing Partner',
+  'Ticketing Company',
   'Venue (i.e. post show settlement)',
   'Payment Processor (e.g. Stripe)',
   'Other'
@@ -158,7 +158,7 @@ const TicketingStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full mt-16">
 
     
-      <DropdownField label="Who do you receive the Ticket Sales payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
+      <DropdownField label="What partner do you receive ticketing payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
       {ticketingInfo.ticketingPayout === 'Other' && (
       <TextField label="Other Ticketing Payout" name="otherTicketingPayout" value={ticketingInfo.otherTicketingPayout} onChange={handleChange} error='' onBlur={() => { }} type='text' />
      )}

@@ -244,7 +244,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ onSubmit }) => {
        
       </div> */}
      {/* Submit Button */}
-     <div className="flex justify-center pt-6 w-[30%] mx-auto mb-4">
+     <div className="flex justify-center pt-6 w-[30%] mx-auto  lg:w-[20%]">
           <ButtonPrimary onClick={handleSubmit} disabled={false}  >Submit Application</ButtonPrimary>
         </div>
     </div>

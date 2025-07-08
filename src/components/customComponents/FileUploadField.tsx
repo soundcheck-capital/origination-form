@@ -146,7 +146,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           onChange={handleFileChange}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           id={`file-upload-${field}`}
-          title='Click to select or drag and drop your files here'
         />
         
         <div className="flex flex-col items-center justify-center space-y-2">
@@ -230,7 +229,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </div>
         </div>
       )}
-      <div className='w-full border-b border-amber-300 mt-8'></div>
+      {/* <div className='w-full border-b border-gray-200 mt-8'></div> */}
     </div>
   );
 };

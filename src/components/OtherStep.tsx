@@ -18,7 +18,7 @@ const OtherStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full">
       <StepTitle title="Additional Information" />
       
-      <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] text-justify">
+      <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] text-center mx-auto items-center">
         Please provide any additional information that might be helpful for our review process.
       </p>
 
