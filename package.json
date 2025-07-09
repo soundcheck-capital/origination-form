@@ -6,6 +6,7 @@
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",
     "@googlemaps/js-api-loader": "^1.16.10",
+    "@material-tailwind/react": "^2.1.10",
     "@react-google-maps/api": "^2.20.7",
     "@reduxjs/toolkit": "^2.7.0",
     "@tailwindcss/postcss": "^4.1.11",

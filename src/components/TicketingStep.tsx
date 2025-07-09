@@ -155,8 +155,8 @@ const TicketingStep: React.FC = () => {
   let otherPartner = '';
 
   return (
-    <div className="flex flex-col items-center justify-center w-full mt-16">
-
+    <div className="flex flex-col items-center justify-center w-full">
+      <StepTitle title="Ticketing Information" />
     
       <DropdownField label="What partner do you receive ticketing payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
       {ticketingInfo.ticketingPayout === 'Other' && (

@@ -6,10 +6,10 @@ import StepTitle from './customComponents/StepTitle';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 
 interface SummaryStepProps {
-  onSubmit?: () => void;
+  renderValidationErrors?: React.ReactNode;
 }
 
-const SummaryStep: React.FC<SummaryStepProps> = ({ onSubmit }) => {
+const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors }) => {
   const formData = useSelector((state: RootState) => state.form.formData);
   const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
   const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
@@ -29,61 +29,19 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ onSubmit }) => {
     return `${value}%`;
   };
 
-  const handleSubmit = () => {
-    const validation = validateAllSteps();
-    
-    if (!validation.isValid) {
-      setValidationErrors(validation.errors);
-      return;
-    }
+  
 
-    setValidationErrors(null);
-    if (onSubmit) {
-      onSubmit();
-    }
-  };
-
-  const renderValidationErrors = () => {
-    if (!validationErrors) return null;
-
-    const hasErrors = Object.values(validationErrors).some(errors => errors.length > 0);
-    if (!hasErrors) return null;
-
-    return (
-      <div className="w-full max-w-2xl mb-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-red-800 mb-4">
-            Please complete the following required fields before submitting:
-          </h3>
-          <div className="space-y-4">
-            {Object.entries(validationErrors).map(([section, errors]) => {
-              if (errors.length === 0) return null;
-              
-              return (
-                <div key={section} className="border-l-4 border-red-400 pl-4">
-                  <h4 className="font-medium text-red-700 mb-2">{section}</h4>
-                  <ul className="list-disc list-inside space-y-1">
-                    {errors.map((error, index) => (
-                      <li key={index} className="text-sm text-red-600">{error}</li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  };
+  
 
   return (
     <div className="flex flex-col items-center justify-center w-full mt-16">
       
-      <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] text-justify">
+      <p className="text-neutral-800 mb-8 text-md w-full md:w-[30%] text-center">
         Please review all your information before submitting. All required fields must be completed.
       </p>
+      <p className="text-gray-500 w-[30%] mx-auto mb-8 text-center text-justify"><span className="font-bold text-neutral-800 text-md">Notes and Disclosures:</span> The information appearing in this form (the "Form") is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>
 
-      {renderValidationErrors()}
+      {renderValidationErrors}
 
       {/* <div className="w-full max-w-2xl space-y-6">
         {/* Personal Information
@@ -243,10 +201,8 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ onSubmit }) => {
 
        
       </div> */}
-     {/* Submit Button */}
-     <div className="flex justify-center pt-6 w-[30%] mx-auto  lg:w-[20%]">
-          <ButtonPrimary onClick={handleSubmit} disabled={false}  >Submit Application</ButtonPrimary>
-        </div>
+
+     
     </div>
   );
 };

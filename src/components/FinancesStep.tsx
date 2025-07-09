@@ -4,16 +4,17 @@ import { RootState } from '../store';
 import { updateFinancesInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
+import { Switch } from "@material-tailwind/react";
 
 const debtTypes = [
   'Credit card debt',
   'Account payables',
   'Terms loans',
-  'Merchant Cash Advance', 
+  'Merchant Cash Advance',
   'Line of Credit', 'Term Loan',
-   'Equipment Loan',
-    'SBA Loan',
-     'Bank Note', 'Shareholder Loan', 'Convertible Note',
+  'Equipment Loan',
+  'SBA Loan',
+  'Bank Note', 'Shareholder Loan', 'Convertible Note',
   'Other'
 ];
 
@@ -27,7 +28,7 @@ const FinancesStep: React.FC = () => {
   interface Question {
     id: string;
     text: string;
-    name: keyof Pick<typeof financesInfo, 'assetsTransferred'| 'filedLastYearTaxes' | 'hasTicketingDebt'| 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasJudgments' | 'hasBankruptcy' | 'ownershipChanged'>;
+    name: keyof Pick<typeof financesInfo, 'assetsTransferred' | 'filedLastYearTaxes' | 'hasTicketingDebt' | 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasJudgments' | 'hasBankruptcy' | 'ownershipChanged'>;
     showDateInput?: boolean;
     condition?: (financesInfo: any) => boolean;
   }
@@ -91,10 +92,10 @@ const FinancesStep: React.FC = () => {
 
   // Check if user has already visited this step
   useEffect(() => {
-    const hasAnsweredAnyQuestion = Object.values(financesInfo).some(value => 
+    const hasAnsweredAnyQuestion = Object.values(financesInfo).some(value =>
       typeof value === 'boolean' && value !== undefined
     );
-    
+
     if (hasAnsweredAnyQuestion && !hasBeenVisited) {
       setHasBeenVisited(true);
       // Show all questions that should be visible based on current answers
@@ -105,21 +106,20 @@ const FinancesStep: React.FC = () => {
   }, [financesInfo, hasBeenVisited, filteredQuestions]);
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const isYes = value === 'yes';
-    dispatch(updateFinancesInfo({ [name]: isYes }));
-    
+    const { name } = e.target;
+    dispatch(updateFinancesInfo({ [name]: e.target.checked }));
+
     // Automatically add a debt row when answering Yes
-    if (name === 'hasBusinessDebt' && isYes && financesInfo.debts.length === 0) {
+    if (name === 'hasBusinessDebt' && e.target.checked && financesInfo.debts.length === 0) {
       dispatch(updateFinancesInfo({
         debts: [{ type: '', balance: '' }]
       }));
     }
 
-    if (name === 'filedLastYearTaxes' && isYes) {
+    if (name === 'filedLastYearTaxes' && e.target.checked) {
       dispatch(updateFinancesInfo({
         filedLastYearTaxes: true,
-        lastYearTaxes:[]
+        lastYearTaxes: []
       }));
     }
 
@@ -127,13 +127,19 @@ const FinancesStep: React.FC = () => {
     if (!hasBeenVisited) {
       setTimeout(() => {
         const nextIndex = currentQuestionIndex + 1;
-        
+
         if (nextIndex < filteredQuestions.length) {
           setCurrentQuestionIndex(nextIndex);
           setVisibleQuestions(prev => [...prev, nextIndex]);
         }
       }, 300);
     }
+
+  };
+
+  const handleSingleEntityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target; 
+    dispatch(updateFinancesInfo({ [name]: checked }));
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +170,7 @@ const FinancesStep: React.FC = () => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   const addDebt = () => {
     dispatch(updateFinancesInfo({
       debts: [...financesInfo.debts, { type: '', balance: '' }]
@@ -179,105 +185,111 @@ const FinancesStep: React.FC = () => {
   const renderQuestion = (question: Question, index: number) => {
     const isVisible = hasBeenVisited || visibleQuestions.includes(index);
     const isCurrent = currentQuestionIndex === index;
-    
+
     return (
-      <div 
+      <div
         key={question.id}
-        className={`w-full md:w-[40%] mb-10 transition-all duration-500 ease-in-out ${
-          isVisible 
-            ? 'opacity-100 transform translate-y-0' 
-            : 'opacity-0 transform translate-y-4 pointer-events-none'
-        } ${isCurrent && !hasBeenVisited ? 'scale-100' : 'scale-95'}`}
-        style={{ 
+        className={`transition-all duration-500 ease-in-out`}
+        style={{
           display: isVisible ? 'block' : 'none',
           animation: isVisible && isCurrent && !hasBeenVisited ? 'slideIn 0.5s ease-out' : 'none'
         }}
       >
-        
-        <div className="flex flex-row justify-between gap-4 mb-4">
-          <label className='text-sm font-300 text-gray-700'>{question.text}</label>
-          <div className="flex items-center space-x-8">
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name={question.name}
-                value="yes"
-                checked={financesInfo[question.name]}
-                onChange={handleRadioChange}
-                className="mr-2 accent-rose-500 size-4"
-              />
-              Yes
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name={question.name}
-                value="no"
-                checked={!financesInfo[question.name]}
-                onChange={handleRadioChange}
-                className="mr-2 accent-rose-500 size-4"   
-              />
-              No
-            </label>
+
+        <div className="mb-8 w-full flex flex-row space-between items-center">
+          <p className='text-md font-400 text-gray-700 w-full justify-start w-[75%]'>{question.text}</p>
+
+          <div className='w-full flex flex-row gap-2 justify-end w-[25%]'>
+            <label
+              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-400 ' : 'text-gray-700 '}`}
+              htmlFor={question.name}
+            > Yes</label>
+            <input
+              className="mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-rose-300 accent-rose-500
+                before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full
+                 before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem]
+                  after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)]
+                   after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] 
+                   checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none
+                    checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)]
+                     checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 
+                     focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)]
+                      focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block
+                       focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary 
+                       checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]
+                        checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-rose-200 dark:after:bg-rose-500 dark:checked:bg-primary
+                         dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+              type="checkbox"
+              role="switch"
+              name={question.name}
+              id={question.name}
+              checked={financesInfo[question.name]}
+              onChange={handleRadioChange}
+            />
+            <label
+              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-700 ' : 'text-gray-400 '}`}
+              htmlFor={question.name}
+            > No</label>
           </div>
+
         </div>
-        
+
         {question.name === 'hasBusinessDebt' && financesInfo[question.name] && (
           <div className="conditional-content animate-fadeIn w-full flex flex-col gap-4">
-            
+
             <div className="debts-container flex flex-col gap-4 w-full">
               {financesInfo.debts.map((debt, debtIndex) => (
                 <div key={debtIndex} className="debt-row">
-                  
+
                   <div className="flex flex-row gap-4">
-                  <select
-                    value={debt.type}
-                    onChange={(e) => handleDebtTypeChange(debtIndex, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select type of debt</option>
-                    {debtTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    value={debt.balance}
-                    onChange={(e) => handleDebtBalanceChange(debtIndex, e.target.value)}
-                    placeholder="outstanding balance"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {financesInfo.debts.length > 1 && (
-                    <button
-                      className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
-                      onClick={() => removeDebt(debtIndex)}
-                      title="Remove debt"
+                    <select
+                      value={debt.type}
+                      onChange={(e) => handleDebtTypeChange(debtIndex, e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                      </svg>
-                    </button>
-                  )}
+                      <option value="">Select type of debt</option>
+                      {debtTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="text"
+                      value={debt.balance}
+                      onChange={(e) => handleDebtBalanceChange(debtIndex, e.target.value)}
+                      placeholder="outstanding balance"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
+                    />
+                    {financesInfo.debts.length > 1 && (
+                      <button
+                        className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
+                        onClick={() => removeDebt(debtIndex)}
+                        title="Remove debt"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 6h18"></path>
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                      </button>
+                    )}
                   </div>
-                  {financesInfo.debts.length > 1 && (
-                <div className="border-b border-amber-300 w-[50%] mx-auto my-4 mt-8"></div>
-              )}
+                  {/* {financesInfo.debts.length > 1 && (
+                    <div className="border-b border-rose-300 w-[50%] mx-auto my-4 mt-8"></div>
+                  )} */}
                 </div>
               ))}
             </div>
-            
-            <div className="add-debt-container flex flex-row justify-center text-amber-500 hover:text-amber-700 hover:cursor-pointer" onClick={addDebt}>
+
+            <div className="add-debt-container flex flex-row justify-center text-rose-500 hover:text-rose-700 hover:cursor-pointer" onClick={addDebt}>
               <span className="add-debt-link">
                 + Add Debt
               </span>
             </div>
           </div>
         )}
-        
+
         {question.showDateInput && financesInfo[question.name] && (
           <div className="conditional-content animate-fadeIn">
             <label className="radio-label">If so, what is the lease end date?</label>
@@ -289,10 +301,10 @@ const FinancesStep: React.FC = () => {
             />
           </div>
         )}
-        
+
         {question.name === 'filedLastYearTaxes' && financesInfo[question.name] && (
           <div className="conditional-content animate-fadeIn">
-            
+
             <FileUploadField
               field="lastYearTaxes"
               title="Last year tax file"
@@ -307,7 +319,7 @@ const FinancesStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full pt-10">
+    <div className=" w-full lg:w-[30%] mx-auto">
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes slideIn {
@@ -330,34 +342,67 @@ const FinancesStep: React.FC = () => {
         `
       }} />
       <StepTitle title="Single vs Multi-entity" />
-      <div className="flex flex-col justify-between gap-4  justify-center items-center w-full md:w-[40%] space-x-4 mb-4">
-          <p className='text-sm font-300 text-gray-700 text-left mx-4'>Is the Company a single entity or part of a multi-entity group structure? This includes a group of affiliates that share ownership</p>
-          <div className="flex items-center space-x-8">
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="singleEntity"
-                value="yes"
-                checked={financesInfo['singleEntity']}
-                onChange={handleRadioChange}
-                className="mr-2 accent-rose-500 size-4"
-              />
-              Single entity
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="singleEntity"
-                value="no"
-                checked={!financesInfo['singleEntity']}
-                onChange={handleRadioChange}
-                className="mr-2 accent-rose-500 size-4"
-              />
-              Multi-entity
-            </label>
+      <div className="flex flex-col space-between gap-4 mx-auto items-center w-full   mb-4" >
+        <p className='text-sm font-300 text-gray-700'>Is the Company a single entity or part of a multi-entity group structure? <br />This includes a group of affiliates that share ownership</p>
+        <div className="flex items-center gap-4">
+        <div className='w-full flex flex-row gap-2 justify-end'>
+            <label
+              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-400 ' : 'text-gray-700 '}`}
+              htmlFor="singleEntity"
+            > Single entity</label>
+            <input
+              className="mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-rose-300 accent-rose-500
+                before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full
+                 before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem]
+                  after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)]
+                   after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] 
+                   checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none
+                    checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)]
+                     checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 
+                     focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)]
+                      focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block
+                       focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary 
+                       checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]
+                        checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-rose-200 dark:after:bg-rose-500 dark:checked:bg-primary
+                         dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+              type="checkbox"
+              role="switch"
+              name="singleEntity"
+              id="singleEntity"
+              checked={financesInfo['singleEntity']}
+              onChange={handleRadioChange}
+            />
+            <label
+              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-700 ' : 'text-gray-400 '}`}
+              htmlFor="singleEntity"
+            > Multi-entity</label>
           </div>
+          {/* <label className="flex items-center">
+            <input
+              type="radio"
+              name="singleEntity"
+              value="yes"
+              checked={financesInfo['singleEntity']}
+              onChange={handleSingleEntityChange}
+              className="mr-2 accent-rose-500 size-4"
+            />
+            Single entity
+          </label>
+          <label className="flex items-center">
+            <input
+              type="radio"
+              name="singleEntity"
+              value="no"
+              checked={!financesInfo['singleEntity']}
+              onChange={handleSingleEntityChange}
+              className="mr-2 accent-rose-500 size-4"
+            />
+            Multi-entity
+          </label> */}
+
         </div>
-        <StepTitle title="Finances" />
+      </div>
+      <StepTitle title="Finances" />
 
       {filteredQuestions.map((question, index) => renderQuestion(question, index))}
     </div>

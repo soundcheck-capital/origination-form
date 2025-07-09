@@ -15,7 +15,7 @@ const TicketingInformationStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full pt-10">
       <StepTitle title="Ticketing Information" />
       
-      <div className="w-full md:w-[40%] mb-8">
+      <div className="w-full lg:w-[30%] mx-auto">  
         <FileUploadField
           field="ticketingCompanyReport"
           title="Reports from ticketing company (last 3 years)"

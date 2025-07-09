@@ -24,6 +24,7 @@ import LegalInformationStep from './LegalInformationStep';
 import TicketingInformationStep from './TicketingInformationStep';
 import FinancialInformationStep from './FinancialInformationStep';
 import OtherStep from './OtherStep';
+import { useFormValidation } from '../hooks/useFormValidation';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,6 +38,8 @@ const MultiStepFormContent: React.FC = () => {
   const [activeMenuItem, setActiveMenuItem] = useState('applications');
   const { getAllFiles } = useDiligenceFiles();
   const { isUploading, uploadToMake } = useFileUpload();
+  const { validateAllSteps } = useFormValidation();
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
 
   // Load application data if ID is provided
   useEffect(() => {
@@ -113,7 +116,18 @@ const MultiStepFormContent: React.FC = () => {
       setIsSaving(false);
     }
   };
+  const handleSubmit2 = () => {
+    console.log("handleSubmit2");
+    const validation = validateAllSteps();
+    
+    if (!validation.isValid) {
+      setValidationErrors(validation.errors);
+      return;
+    }
 
+    setValidationErrors(null);
+    handleSubmit();
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('formAuthenticated');
@@ -130,7 +144,38 @@ const MultiStepFormContent: React.FC = () => {
       }, 3000);
     }
   };
+  const renderValidationErrors = () => {
+    if (!validationErrors) return null;
 
+    const hasErrors = Object.values(validationErrors).some(errors => errors.length > 0);
+    if (!hasErrors) return null;
+
+    return (
+      <div className="w-full lg:w-[30%] mx-auto mb-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-red-800 mb-4">
+            Please complete the following required fields before submitting:
+          </h3>
+          <div className="space-y-4">
+            {Object.entries(validationErrors).map(([section, errors]) => {
+              if (errors.length === 0) return null;
+              
+              return (
+                <div key={section} className="border-l-4 border-red-400 pl-4">
+                  <h4 className="font-medium text-red-700 mb-2">{section}</h4>
+                  <ul className="list-disc list-inside space-y-1">
+                    {errors.map((error, index) => (
+                      <li key={index} className="text-sm text-red-600">{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
   const stepTitles = () => {
     switch (currentStep) {
       case 1:
@@ -184,7 +229,7 @@ const MultiStepFormContent: React.FC = () => {
       case 10:
         return <OtherStep />;
       case 11:
-        return <SummaryStep onSubmit={handleSubmit} />;
+        return <SummaryStep renderValidationErrors={renderValidationErrors()} />;
       default:
         return null;
     }
@@ -195,10 +240,8 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
       <main className="w-full h-full flex flex-col bg-white p-6">
-        <div className="flex justify-center items-center mt-8">
-          <div className="flex flex-col items-center gap-4">
-            <img src={logo} alt="Logo" className="w-24 " />
-          </div>
+        <div className="flex justify-center items-center">
+          <img src={logo} alt="Logo" className="w-32 " />
           {/* <div className="absolute top-8 right-8 flex gap-4">
             <button
               onClick={handleClearFormData}
@@ -218,8 +261,8 @@ const MultiStepFormContent: React.FC = () => {
         {/* Success/Error Message */}
         {saveMessage && (
           <div className={`w-[30%] mx-auto mb-4 p-3 rounded-lg text-center ${saveMessage.includes('successfully')
-              ? 'bg-green-100 text-green-700 border border-green-300'
-              : 'bg-red-100 text-red-700 border border-red-300'
+            ? 'bg-green-100 text-green-700 border border-green-300'
+            : 'bg-red-100 text-red-700 border border-red-300'
             }`}>
             {saveMessage}
           </div>
@@ -239,8 +282,8 @@ const MultiStepFormContent: React.FC = () => {
           </div>
 
           {/* Form Content */}
-          <div className="bg-white w-full mx-auto">
-              <h1 className="text-4xl text-center font-bold text-neutral-900 mt-8 w-[30%] mx-auto">{stepTitles()}</h1>
+          <div className="bg-white w-full mx-auto mt-8">
+            <h1 className="text-4xl text-center font-bold text-neutral-900 w-[30%] mx-auto">{stepTitles()}</h1>
             {renderStep()}
           </div>
 
@@ -263,11 +306,15 @@ const MultiStepFormContent: React.FC = () => {
               }} disabled={false}>Next</ButtonPrimary>
 
             )}
+            {currentStep === 11 && (
+              <ButtonPrimary onClick={() => {
+                console.log("onSubmit");
+                handleSubmit2();
+              }} disabled={false}>Submit</ButtonPrimary>
+            )}
           </div>
-          {(currentStep === 1) && (
-            <p className="text-xs text-gray-500 w-[30%] mx-auto mt-8 text-center text-justify"><span className="font-bold">Notes and Disclosures:</span> The information appearing in this form (the "Form") is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>
-          )}
-            </div>
+
+        </div>
       </main>
     </div>
 

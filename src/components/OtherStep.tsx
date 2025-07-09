@@ -15,10 +15,10 @@ const OtherStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full">
+      <div className="w-full lg:w-[30%] mb-8 mx-auto">  
       <StepTitle title="Additional Information" />
       
-      <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] text-center mx-auto items-center">
+      <p className="text-gray-400 mb-8 text-xs w-full text-center mx-auto items-center">
         Please provide any additional information that might be helpful for our review process.
       </p>
 
@@ -28,7 +28,7 @@ const OtherStep: React.FC = () => {
         value={financesInfo.industryReferences}
         onChange={handleChange}
         placeholder="Please provide name/contact of industry references (promoters, venues, agents, vendors, partners) we can reach out to"
-        rows={8}
+        rows={4}
       />
 
       <TextAreaField
@@ -37,7 +37,7 @@ const OtherStep: React.FC = () => {
         value={financesInfo.additionalComments}
         onChange={handleChange}
         placeholder="Any additional comments or information you'd like to share"
-        rows={8}
+        rows={4}
       />
     </div>
   );
