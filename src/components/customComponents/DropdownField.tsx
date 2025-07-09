@@ -3,7 +3,9 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options }:
     return (
         <div className="relative w-full max-w-md mb-4">  
           <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
-            <select id={id} name={name} value={value} onChange={onChange} className="block w-full p-2 text-sm text-gray-900 rounded-xl text-gray-900 border border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-amber-500 focus:outline-none first:text-gray-300" onBlur={onBlur}>
+            <select id={id} name={name} value={value} onChange={onChange} className="block w-full p-2 text-sm text-gray-900 
+            rounded-xl border border-gray-300 
+            focus:border-rose-300 peer focus:ring-1 focus:ring-amber-500 focus:outline-none" onBlur={onBlur}>
                 <option value="" className="text-gray-300">Select an option</option>
                 {options.map((option) => (
                     <option key={option} value={option}>{option}</option>

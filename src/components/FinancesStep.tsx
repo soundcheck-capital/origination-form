@@ -197,7 +197,7 @@ const FinancesStep: React.FC = () => {
       >
 
         <div className="mb-8 w-full flex flex-row space-between items-center">
-          <p className='text-md font-400 text-gray-700 w-full justify-start w-[75%]'>{question.text}</p>
+          <p className='text-sm font-400 text-gray-700 w-full justify-start w-[75%]'>{question.text}</p>
 
           <div className='w-full flex flex-row gap-2 justify-end w-[25%]'>
             <label
@@ -342,7 +342,7 @@ const FinancesStep: React.FC = () => {
         `
       }} />
       <StepTitle title="Single vs Multi-entity" />
-      <div className="flex flex-col space-between gap-4 mx-auto items-center w-full   mb-4" >
+      <div className="flex flex-col space-between gap-4 mx-auto items-center w-full mb-4" >
         <p className='text-sm font-300 text-gray-700'>Is the Company a single entity or part of a multi-entity group structure? <br />This includes a group of affiliates that share ownership</p>
         <div className="flex items-center gap-4">
         <div className='w-full flex flex-row gap-2 justify-end'>
