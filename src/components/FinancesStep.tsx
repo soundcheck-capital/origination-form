@@ -108,7 +108,7 @@ const FinancesStep: React.FC = () => {
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
     dispatch(updateFinancesInfo({ [name]: e.target.checked }));
-
+    console.log(name, e.target.checked);
     // Automatically add a debt row when answering Yes
     if (name === 'hasBusinessDebt' && e.target.checked && financesInfo.debts.length === 0) {
       dispatch(updateFinancesInfo({
@@ -197,13 +197,13 @@ const FinancesStep: React.FC = () => {
       >
 
         <div className="mb-8 w-full flex flex-row space-between items-center">
-          <p className='text-sm font-400 text-gray-700 w-full justify-start w-[75%]'>{question.text}</p>
+          <p className='text-sm font-400 text-gray-700 w-full justify-start lg:w-[75%] xs:w-[50%]'>{question.text}</p>
 
-          <div className='w-full flex flex-row gap-2 justify-end w-[25%]'>
+          <div className='w-full flex flex-row  justify-end lg:w-[25%] xs:w-[50%] gap-x-2'>
             <label
-              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-400 ' : 'text-gray-700 '}`}
+              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-400 ' : 'text-gray-700 font-bold '}`}
               htmlFor={question.name}
-            > Yes</label>
+            > No</label>
             <input
               className="mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-rose-300 accent-rose-500
                 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full
@@ -227,21 +227,21 @@ const FinancesStep: React.FC = () => {
               onChange={handleRadioChange}
             />
             <label
-              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-700 ' : 'text-gray-400 '}`}
+              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-700 font-bold ' : 'text-gray-400 '}`}
               htmlFor={question.name}
-            > No</label>
+            > Yes</label>
           </div>
 
         </div>
 
         {question.name === 'hasBusinessDebt' && financesInfo[question.name] && (
-          <div className="conditional-content animate-fadeIn w-full flex flex-col gap-4">
+          <div className="conditional-content animate-fadeIn w-full flex flex-col gap-4 mb-4">
 
-            <div className="debts-container flex flex-col gap-4 w-full">
+            <div className="debts-container flex flex-col gap-4 w-full ">
               {financesInfo.debts.map((debt, debtIndex) => (
                 <div key={debtIndex} className="debt-row">
 
-                  <div className="flex flex-row gap-4">
+                  <div className="flex flex-row gap-4 ">
                     <select
                       value={debt.type}
                       onChange={(e) => handleDebtTypeChange(debtIndex, e.target.value)}
@@ -259,9 +259,9 @@ const FinancesStep: React.FC = () => {
                       value={debt.balance}
                       onChange={(e) => handleDebtBalanceChange(debtIndex, e.target.value)}
                       placeholder="outstanding balance"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500 "
                     />
-                    {financesInfo.debts.length > 1 && (
+                    {financesInfo.debts.length > 1 && ( 
                       <button
                         className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
                         onClick={() => removeDebt(debtIndex)}
@@ -282,7 +282,7 @@ const FinancesStep: React.FC = () => {
               ))}
             </div>
 
-            <div className="add-debt-container flex flex-row justify-center text-rose-500 hover:text-rose-700 hover:cursor-pointer" onClick={addDebt}>
+            <div className="add-debt-container flex flex-row justify-center text-rose-500 hover:text-rose-700 hover:cursor-pointer lg:w-[75%] xs:w-[50%]" onClick={addDebt}>
               <span className="add-debt-link">
                 + Add Debt
               </span>
@@ -319,7 +319,7 @@ const FinancesStep: React.FC = () => {
   };
 
   return (
-    <div className=" w-full lg:w-[30%] mx-auto">
+    <div className=" w-full lg:w-[30%] mx-auto animate-fade-in-right duration-1000">
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes slideIn {
@@ -345,11 +345,11 @@ const FinancesStep: React.FC = () => {
       <div className="flex flex-col space-between gap-4 mx-auto items-center w-full mb-4" >
         <p className='text-sm font-300 text-gray-700'>Is the Company a single entity or part of a multi-entity group structure? <br />This includes a group of affiliates that share ownership</p>
         <div className="flex items-center gap-4">
-        <div className='w-full flex flex-row gap-2 justify-end'>
+        <div className='w-full flex flex-row gap-x-4 justify-end lg:w-full'>
             <label
-              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-400 ' : 'text-gray-700 '}`}
+              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-400 ' : 'text-gray-700 font-bold '}`}
               htmlFor="singleEntity"
-            > Single entity</label>
+            > Multi-entity</label>
             <input
               className="mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-rose-300 accent-rose-500
                 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full
@@ -373,9 +373,9 @@ const FinancesStep: React.FC = () => {
               onChange={handleRadioChange}
             />
             <label
-              className={`inline-block pl-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-700 ' : 'text-gray-400 '}`}
+              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-700 font-bold ' : 'text-gray-400 '}`}
               htmlFor="singleEntity"
-            > Multi-entity</label>
+            > Single entity</label>  
           </div>
           {/* <label className="flex items-center">
             <input

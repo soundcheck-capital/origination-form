@@ -236,7 +236,7 @@ const MultiStepFormContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row ">
+    <div className="flex flex-row  animate-fade-in-right duration-1000">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
       <main className="w-full h-full flex flex-col bg-white p-6">
@@ -270,7 +270,7 @@ const MultiStepFormContent: React.FC = () => {
 
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
-          <div className="w-[30%] mx-auto">
+          <div className="lg:w-[30%] mx-auto">
 
             <div className="relative ">
               <div className="rounded-xl absolute top-0 left-0 h-2 bg-gray-200 w-full"></div>
@@ -283,13 +283,13 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white w-full mx-auto mt-8">
-            <h1 className="text-4xl text-center font-bold text-neutral-900 w-[30%] mx-auto">{stepTitles()}</h1>
+            <h1 className="text-4xl text-center font-bold text-neutral-900 lg:w-[30%] mx-auto xs:w-[100%]">{stepTitles()}</h1>
             {renderStep()}
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-center gap-4 w-[30%] mx-auto mt-4 lg:w-[20%]">
-            {currentStep === 1 && (<ButtonPrimary className='first:w-[40%]' onClick={() => {
+          <div className="flex gap-4 w-[30%] mx-auto mt-4 lg:w-[20%] justify-center">
+            {currentStep === 1 && (<ButtonPrimary className='lg:first:w-[40%] ' onClick={() => {
               setCurrentStep(currentStep + 1);
               window.scrollTo(0, 0);
             }} disabled={false}>

@@ -10,7 +10,7 @@ import CurrencyField from './customComponents/CurrencyField';
 
 
 const timeForFunding = [
-    'In the next week',
+    'In the next 2 weeks',
     'In the next month',
     'In the next 3 months',
   ];
@@ -21,14 +21,10 @@ const recoupableAgainst = [
 ];
 
 const fundUses = [
-    'Artist deposit',
-    'Show marketing',
-    'Other show expenses',
-    'Operational expenses',
-    'Existing location improvement',
-    'Opening a new location',
-    'Short term cash flow needs',
-    'Refinance my debt'
+  'Artist Deposit',
+  'Show Marketing',
+  'Operational / Show Expenses',
+  'General Working Capital Needs',
   ];
 
 const YourFundingStep: React.FC = () => {
@@ -50,7 +46,7 @@ const YourFundingStep: React.FC = () => {
     capitalAmount = maxAmount > 1000000 ? 1000000 : maxAmount;
   }
   return (
-    <div className="flex flex-col items-center justify-center w-full mt-16">
+    <div className="flex flex-col items-center justify-center w-full mt-16 animate-fade-in-right duration-1000">
 
       {capitalAmount != 0 && <div className='flex flex-col items-center justify-center w-full mb-4'>
         <p className='text-sm text-neutral-900 w-[30%] mx-auto mb-4 text-center'>Based on your ticketing sales volume, you could qualify for an Advance up to:</p>

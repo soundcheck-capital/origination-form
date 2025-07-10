@@ -12,7 +12,7 @@ const LegalInformationStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full pt-10">
+    <div className="flex flex-col items-center justify-center w-full pt-8 animate-fade-in-right duration-1000">
       <StepTitle title="Contractual and Legal Information" />
 
       <div className="w-full lg:w-[30%] mx-auto">  

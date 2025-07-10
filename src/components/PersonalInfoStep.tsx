@@ -98,7 +98,7 @@ const PersonalInfoStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full">
+    <div className="flex flex-col items-center justify-center w-full animate-fadeIn">
 
       <StepTitle title="Contact Information" />
 

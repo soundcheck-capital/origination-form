@@ -5,7 +5,35 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script> 
-    
+    <script>
+      window.tailwind = {
+        config: {
+          theme: {
+            extend: {
+              keyframes: {
+                fadeInUp: {
+                  '0%':   { opacity: 0, transform: 'translateY(10px)' },
+                  '100%': { opacity: 1, transform: 'translateY(0)' },
+                },
+                fadeInLeft: {
+                  '0%':   { opacity: 0, transform: 'translateX(-100px)' },
+                  '100%': { opacity: 1, transform: 'translateX(0)' },
+                },
+                fadeInRight: {
+                  '0%':   { opacity: 0, transform: 'translateX(100px)' },
+                  '100%': { opacity: 1, transform: 'translateX(0)' },
+                },
+              },
+              animation: {
+                'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                'fade-in-left': 'fadeInLeft 0.5s ease-out forwards',
+                'fade-in-right': 'fadeInRight 0.5s ease-out forwards',
+              },
+            }
+          }
+        }
+      }
+    </script>
     <!-- Redirect script for GitHub Pages -->
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
