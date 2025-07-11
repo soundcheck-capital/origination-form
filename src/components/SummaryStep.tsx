@@ -34,7 +34,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors }) => 
   
 
   return (
-    <div className="flex flex-col items-center justify-center w-full mt-16">
+    <div className="flex flex-col items-center justify-center w-full mt-16 animate-fade-in-right duration-1000">
       
       <p className="text-neutral-800 mb-8 text-md w-full md:w-[30%] text-center">
         Please review all your information before submitting. All required fields must be completed.

@@ -17,7 +17,7 @@ export const initialState: FormState = {
       nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0
     },
     fundsInfo: {  
-        yourFunds: '0', fundUse: '', timeForFunding: ''
+        yourFunds: '', fundUse: '', timeForFunding: ''
     },
     ownershipInfo: {
      owners: [],
