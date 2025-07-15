@@ -54,7 +54,7 @@ const CompanyInfoStep: React.FC = () => {
   const dispatch = useDispatch();
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
-  
+  const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
 
  
   const handleTicketingInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -106,34 +106,17 @@ const CompanyInfoStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Company Information" />
 
-      <TextField type="text" label="Legal Entity Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <TextField type="text" label="DBA" name="dba" value={companyInfo.dba} onChange={handleChange} error='' onBlur={()=>{}}  />
+      <TextField type="text" label="Company Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}}  />
+      <TextField type="text" label="Your Role" name="role" value={personalInfo.role} onChange={handleChange} error='' onBlur={()=>{}}  />
 
-      <DropdownField label="Business Type" name="clientType" value={companyInfo.clientType} onChange={handleChange} error='' onBlur={()=>{}} options={companyTypes} />
+      <DropdownField label="Company Type" name="clientType" value={companyInfo.clientType} onChange={handleChange} error='' onBlur={()=>{}} options={companyTypes} />
+
       <DropdownField label="Years in Business" name="yearsInBusiness" value={companyInfo.yearsInBusiness} onChange={handleChange} error='' onBlur={()=>{}} options={yearsInBusiness} />
 
       <TextField type="number" label="Number of Employees" name="employees" value={companyInfo.employees.toString()} onChange={handleChange} error='' onBlur={()=>{}}  />
       <TextField type="text" label="Website - Socials" name="socials" value={companyInfo.socials} onChange={handleChange} error='' onBlur={()=>{}}  />
       <DropdownField label="Are you a member of?" name="membership" value={ticketingInfo.membership} onChange={handleTicketingInfoChange} error='' onBlur={()=>{}} options={memberships} />
-      <DropdownField label="Legal Entity Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={()=>{}} options={businessTypes} />
-
-      <DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={()=>{}} options={usStates} />
-
-     
-      <AddressAutocomplete
-        label="Address"
-        name="companyAddress"
-        value={companyInfo.companyAddress}
-        onChange={handleChange}
-        dispatch={(address: string) => updateCompanyAddress(address)}
-        error=''
-        onBlur={()=>{}}
-        type="text"
-        id="companyAddress"
-      />
-     
-    <TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={()=>{}}  />
-    </div>
+   </div>
   );
 };
 

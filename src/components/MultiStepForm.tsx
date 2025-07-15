@@ -14,7 +14,7 @@ import TicketingVolumeStep from './TicketingVolumeStep';
 import OwnershipStep from './OwnershipStep';
 import FinancesStep from './FinancesStep';
 import SummaryStep from './SummaryStep';
-import logo from '../assets/logo_black_name.svg';
+import logo from '../assets/logo_black_bold.svg';
 import LegalInfoStep from './LegalInfoStep';
 import Sidebar from './Sidebar';
 import ButtonPrimary from './customComponents/ButtonPrimary';
@@ -187,7 +187,7 @@ const MultiStepFormContent: React.FC = () => {
       case 4:
         return 'Customize your funding';
       case 5:
-        return 'Beneficial ownership & control person';
+        return 'Business & Ownership';
       case 6:
         return 'Finances';
       case 7:

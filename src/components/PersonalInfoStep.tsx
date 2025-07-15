@@ -10,10 +10,18 @@ const PersonalInfoStep: React.FC = () => {
   const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
   const [emailError, setEmailError] = useState<string>('');
   const [phoneError, setPhoneError] = useState<string>('');
+  const [emailConfirmError, setEmailConfirmError] = useState<string>('');
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const validateEmailConfirm = (emailConfirm: string) => {
+    if (personalInfo.email !== emailConfirm) {
+      return 'Emails do not match';
+    }
+    return '';
   };
 
   const validatePhone = (phone: string) => {
@@ -88,6 +96,15 @@ const PersonalInfoStep: React.FC = () => {
     }
   };
 
+  const handleEmailConfirmBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const emailConfirm = e.target.value;
+    if (emailConfirm && validateEmailConfirm(emailConfirm) !== '') {
+      setEmailConfirmError('Emails do not match');
+    } else {
+      setEmailConfirmError('');
+    }
+  };
+
   const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const phone = e.target.value;
     if (phone && !validatePhone(phone)) {
@@ -111,7 +128,14 @@ const PersonalInfoStep: React.FC = () => {
           <p className="text-red-500 text-xs">{emailError}</p>
         </div>
       )}
+      <TextField type="email" label="Confirm Email" name="emailConfirm" value={personalInfo.emailConfirm} onChange={handleInputChange} error='' onBlur={handleEmailConfirmBlur} />
 
+      {emailConfirmError && (
+        <div className="w-full max-w-md ml-2 mb-2">
+          <p className="text-red-500 text-xs">{emailConfirmError}</p>
+        </div>
+      )}
+      
       <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={handlePhoneBlur} />
       {/* {phoneError && (
           <div className="w-full max-w-md  mt-2 ml-2">
@@ -119,9 +143,8 @@ const PersonalInfoStep: React.FC = () => {
           </div>
         )} */}
 
-      <TextField type="text" label="Role" name="role" value={personalInfo.role} onChange={handleInputChange} error='' onBlur={() => { }} />
 
-
+      <p className="text-sm text-gray-500 my-4 text-center lg:w-[30%] mx-auto">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-500">Privacy Policy</a></p>
     </div>
   );
 };

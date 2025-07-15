@@ -5,7 +5,7 @@ export const initialState: FormState = {
   email: '',
   emailError: '',
   formData: {
-    personalInfo: { email: '', firstname: '', lastname: '', phone: '', role: '' },
+    personalInfo: { email: '', emailConfirm: '', firstname: '', lastname: '', phone: '', role: '' },
     companyInfo: {  
       employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
       legalEntityType: '', companyAddress: '',

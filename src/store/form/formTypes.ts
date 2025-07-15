@@ -35,6 +35,7 @@ export interface Address {
     formData: {
       personalInfo: {
         email: string;
+        emailConfirm: string;
         firstname: string;
         lastname: string;
         phone: string;

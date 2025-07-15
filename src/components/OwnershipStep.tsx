@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import {updateOwnershipInfo} from '../store/form/formSlice';
+import {updateCompanyInfo, updateOwnershipInfo} from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
 import NumberInput from './customComponents/NumberField';
 import DatePickerField from './customComponents/DatePickerField';
+import DropdownField from './customComponents/DropdownField';
 
 interface Owner {
   id: string;
@@ -25,13 +26,14 @@ const usStates = [
   'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
 ];
 
-const companyTypes = [
+const businessTypes = [
   'Limited Liability Company (LLC)', 'Partnership', 'Corporation', 'Sole Proprietorship',
 ];
 
 const OwnershipStep: React.FC = () => {
   const dispatch = useDispatch();
   const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
+  const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const [owners, setOwners] = useState<Owner[]>(ownershipInfo.owners || []);
   useEffect(() => {
     if (owners.length === 0) {
@@ -39,7 +41,43 @@ const OwnershipStep: React.FC = () => {
     }
   }, []);
 
- 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if(name === "legalEntityName"){
+      dispatch(updateCompanyInfo({ name: value, dba: value  }));
+    } else {
+      dispatch(updateCompanyInfo({ [name]: value }));
+    }
+  };
+
+  const updateCompanyAddress = (address: string) => {
+    dispatch(updateCompanyInfo({ companyAddress: address }));
+  };
+
+  const [ein, setEin] = useState(companyInfo.ein);
+
+  const handleChangeEIN = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatEIN(e.target.value);
+    setEin(formatted);
+    dispatch(updateCompanyInfo({ ein: formatted }));
+  };
+
+  const formatEIN = (value: string): string => {
+    // Supprime tout ce qui n'est pas chiffre
+    const digitsOnly = value.replace(/\D/g, '');
+
+    // Tronque à 9 chiffres max
+    const truncated = digitsOnly.slice(0, 9);
+
+    // Formate en XX-XXXXXXX
+    if (truncated.length <= 2) {
+      return truncated;
+    } else if (truncated.length <= 9) {
+      return `${truncated.slice(0, 2)}-${truncated.slice(2)}`;
+    }
+
+    return truncated;
+  };
   const handleOwnerChange = (id: string, field: keyof Owner, value: string | boolean) => {
     const updatedOwners = owners.map(owner => {
       if(field === 'ownershipPercentage' && Number(value) > 100) {
@@ -98,6 +136,31 @@ const OwnershipStep: React.FC = () => {
 
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
       <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] mt-8 text-center">Please carefully complete the information below and make sure that it is accurate including informations about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
+
+<StepTitle title="Business Legal Information" />
+<TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}}  /> 
+<TextField type="text" label="DBA" name="dba" value={companyInfo.dba} onChange={handleChange} error='' onBlur={()=>{}}  />
+      <DropdownField label="Business Type" name="clientType" value={companyInfo.clientType} onChange={handleChange} error='' onBlur={()=>{}} options={businessTypes} />
+
+<DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={()=>{}} options={usStates} />
+
+
+<AddressAutocomplete
+  label="Address"
+  name="companyAddress"
+  value={companyInfo.companyAddress}
+  onChange={handleChange}
+  dispatch={(address: string) => updateCompanyAddress(address)}
+  error=''
+  onBlur={()=>{}}
+  type="text"
+  id="companyAddress"
+/>
+
+<TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={()=>{}}  />
+
+<StepTitle title="Beneficial ownership & control person" />
+
 
       {owners.map((owner) => (
         <div key={owner.id} className="flex flex-col bg-white w-full">

@@ -158,7 +158,7 @@ const TicketingStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Ticketing Information" />
     
-      <DropdownField label="What partner do you receive ticketing payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
+      <DropdownField label="Who do you receive ticketing payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} />
       {ticketingInfo.ticketingPayout === 'Other' && (
       <TextField label="Other Ticketing Payout" name="otherTicketingPayout" value={ticketingInfo.otherTicketingPayout} onChange={handleChange} error='' onBlur={() => { }} type='text' />
      )}
@@ -172,14 +172,15 @@ const TicketingStep: React.FC = () => {
 
       {/* <TicketingVolumeStep /> */}
 
+      <StepTitle title="Ticketing Volume" />
 
-      <StepTitle title="Last 12 Months" />
+      <p className='text-sm text-amber-500 my-4 text-center lg:w-[30%] mx-auto'>Last 12 Months</p>
       <NumberInput label="Number of Events" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" />
       <NumberInput label="Number of Tickets sold online" value={ticketingVolume.lastYearTickets.toString()} onChange={(value) => handleNumberChange('lastYearTickets', value)} placeholder="Fill in" id="lastYearTickets" />
       <CurrencyField label="Online Gross Tickets Sales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" id="lastYearSales" />
 
       {/* Colonne 3 : Next 12 Months */}
-      <StepTitle title="Next 12 Months" />
+      <p className='text-sm text-amber-500 my-4 text-center lg:w-[30%] mx-auto'>Next 12 Months</p>
           <NumberInput label="Number of Events" value={ticketingVolume.nextYearEvents.toString()} onChange={(value) => handleNumberChange('nextYearEvents', value)} placeholder="Fill in" id="nextYearEvents" />
       <NumberInput label="Number of Tickets sold online" value={ticketingVolume.nextYearTickets.toString()} onChange={(value) => handleNumberChange('nextYearTickets', value)} placeholder="Fill in" id="nextYearTickets" />
       <CurrencyField label="Online Gross Tickets Sales" value={ticketingVolume.nextYearSales.toString()} onChange={(value) => handleCurrencyChange('nextYearSales', value)} placeholder="Fill in" id="nextYearSales" />
