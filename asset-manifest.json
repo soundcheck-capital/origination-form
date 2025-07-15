@@ -1,18 +1,19 @@
 {
   "files": {
     "main.css": "/soundcheck-origination-form/static/css/main.f696856d.css",
-    "main.js": "/soundcheck-origination-form/static/js/main.e5d63f47.js",
+    "main.js": "/soundcheck-origination-form/static/js/main.4f4eb55f.js",
     "static/js/453.0f85d08b.chunk.js": "/soundcheck-origination-form/static/js/453.0f85d08b.chunk.js",
     "static/media/background.jpeg": "/soundcheck-origination-form/static/media/background.eb63b48ad0ca044b607a.jpeg",
     "static/media/logo_black_name.svg": "/soundcheck-origination-form/static/media/logo_black_name.8f48ceb24dbcd1aebc6c62a22e78b983.svg",
     "static/media/logo_white_name.svg": "/soundcheck-origination-form/static/media/logo_white_name.dc4885455f4194e38477395f707a8329.svg",
+    "static/media/logo_black_bold.svg": "/soundcheck-origination-form/static/media/logo_black_bold.f8372eed681dfe8a0ceed3670193e373.svg",
     "index.html": "/soundcheck-origination-form/index.html",
     "main.f696856d.css.map": "/soundcheck-origination-form/static/css/main.f696856d.css.map",
-    "main.e5d63f47.js.map": "/soundcheck-origination-form/static/js/main.e5d63f47.js.map",
+    "main.4f4eb55f.js.map": "/soundcheck-origination-form/static/js/main.4f4eb55f.js.map",
     "453.0f85d08b.chunk.js.map": "/soundcheck-origination-form/static/js/453.0f85d08b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f696856d.css",
-    "static/js/main.e5d63f47.js"
+    "static/js/main.4f4eb55f.js"
   ]
 }
