@@ -36,7 +36,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors }) => 
   return (
     <div className="flex flex-col items-center justify-center w-full mt-16 animate-fade-in-right duration-1000">
       
-      <p className="text-neutral-800 mb-8 text-md w-full md:w-[30%] text-center">
+      <p className="text-neutral-800 mb-8 text-md w-full text-center">
         Please review all your information before submitting. All required fields must be completed.
       </p>
       {/* <p className="text-gray-500 w-[30%] mx-auto mb-8 text-center text-justify"><span className="font-bold text-neutral-800 text-md">Notes and Disclosures:</span> The information appearing in this form (the "Form") is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>

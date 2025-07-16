@@ -15,7 +15,7 @@ const FinancialInformationStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full pt-8 animate-fade-in-right duration-1000">
       <StepTitle title="Financial Information" />
       
-      <div className="w-full lg:w-[30%] mx-auto">  
+      <div className="w-full">  
         <FileUploadField
           field="financialStatements"
           title="Last 2 years and YTD detailed financial statements (P&L, B/S, Cash Flow) per month"

@@ -115,7 +115,7 @@ const PersonalInfoStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full animate-fadeIn">
+    <div className="animate-fadeIn w-full ">
 
       <StepTitle title="Contact Information" />
 
@@ -144,7 +144,7 @@ const PersonalInfoStep: React.FC = () => {
         )} */}
 
 
-      <p className="text-sm text-gray-500 my-4 text-center lg:w-[30%] mx-auto">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-500">Privacy Policy</a></p>
+      <p className="text-sm text-gray-500 my-4 text-center ">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-500">Privacy Policy</a></p>
     </div>
   );
 };

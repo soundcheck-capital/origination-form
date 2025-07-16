@@ -15,7 +15,7 @@ const OtherStep: React.FC = () => {
   };
 
   return (
-      <div className="w-full lg:w-[30%] mb-8 mx-auto animate-fade-in-right duration-1000">  
+      <div className="w-full mb-8 animate-fade-in-right duration-1000">  
       <StepTitle title="Additional Information" />
       
       <p className="text-gray-400 mb-8 text-xs w-full text-center mx-auto items-center">

@@ -135,7 +135,7 @@ const OwnershipStep: React.FC = () => {
   return (
 
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
-      <p className="text-gray-400 mb-8 text-xs w-full md:w-[30%] mt-8 text-center">Please carefully complete the information below and make sure that it is accurate including informations about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
+      <p className="text-gray-400 mb-8 text-xs mt-8 text-center">Please carefully complete the information below and make sure that it is accurate including informations about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
 
 <StepTitle title="Business Legal Information" />
 <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}}  /> 
@@ -164,11 +164,11 @@ const OwnershipStep: React.FC = () => {
 
       {owners.map((owner) => (
         <div key={owner.id} className="flex flex-col bg-white w-full">
-          <div className="flex flex-col justify-between ">
-            <p className='block text-sm font-medium text-gray-700 lg:w-[30%] mx-auto'>Owner {owners.indexOf(owner) + 1}</p>
+          <div className="flex flex-row justify-between w-full">
+            <p className='block text-sm font-medium text-gray-700  '>Owner {owners.indexOf(owner) + 1}</p>
             {owners.length > 1 && (
               <button
-                className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end mb-4 lg:w-[30%] mx-auto"
+                className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end "
                 onClick={() => removeOwner(owner.id)}
                 type="button"
               >
@@ -178,12 +178,12 @@ const OwnershipStep: React.FC = () => {
           </div>
 
 
-          <div className="flex flex-row justify-between lg:w-[30%] mx-auto gap-x-4 mt-8">
+          <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
             <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} />
            
             <NumberInput showPercent={true} label="Ownership Percentage"   value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} />
           </div>
-          <div className="flex flex-row justify-between lg:w-[30%] mx-auto gap-x-4 ">
+          <div className="flex flex-row justify-between  gap-x-4 ">
             <AddressAutocomplete label="Address" name="ownerAddress" value={owner.ownerAddress} dispatch={(address: string) => updateOwnerAddress(owner.id, address)} onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} error='' onBlur={() => { } } type={''} id={''} />
             <DatePickerField label="Date of Birth" name="ownerBirthDate" value={owner.ownerBirthDate} onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} />
           </div>

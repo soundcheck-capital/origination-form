@@ -197,9 +197,9 @@ const FinancesStep: React.FC = () => {
       >
 
         <div className="mb-8 w-full flex flex-row space-between items-center">
-          <p className='text-sm font-400 text-gray-700 w-full justify-start lg:w-[75%] xs:w-[50%]'>{question.text}</p>
+          <p className='text-sm font-400 text-gray-700 w-full justify-start '>{question.text}</p>
 
-          <div className='w-full flex flex-row  justify-end lg:w-[25%] xs:w-[50%] gap-x-2'>
+          <div className='w-full flex flex-row  justify-end  gap-x-2'>
             <label
               className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-400 ' : 'text-gray-700 font-bold '}`}
               htmlFor={question.name}
@@ -319,7 +319,7 @@ const FinancesStep: React.FC = () => {
   };
 
   return (
-    <div className=" w-full lg:w-[30%] mx-auto animate-fade-in-right duration-1000">
+    <div className="w-full animate-fade-in-right duration-1000">
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes slideIn {

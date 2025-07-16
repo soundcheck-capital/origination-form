@@ -151,7 +151,7 @@ const MultiStepFormContent: React.FC = () => {
     if (!hasErrors) return null;
 
     return (
-      <div className="w-full lg:w-[30%] mx-auto mb-8">
+      <div className="w-full mb-8">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-red-800 mb-4">
             Please complete the following required fields before submitting:
@@ -236,7 +236,7 @@ const MultiStepFormContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row  animate-fade-in-right duration-1000">
+    <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
       <main className="w-full h-full flex flex-col bg-white p-6">
@@ -260,7 +260,7 @@ const MultiStepFormContent: React.FC = () => {
 
         {/* Success/Error Message */}
         {saveMessage && (
-          <div className={`w-[30%] mx-auto mb-4 p-3 rounded-lg text-center ${saveMessage.includes('successfully')
+          <div className={`w-full mx-auto mb-4 p-3 rounded-lg text-center ${saveMessage.includes('successfully')
             ? 'bg-green-100 text-green-700 border border-green-300'
             : 'bg-red-100 text-red-700 border border-red-300'
             }`}>
@@ -270,9 +270,9 @@ const MultiStepFormContent: React.FC = () => {
 
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
-          <div className="lg:w-[30%] mx-auto">
+          <div className="w-full mx-auto">
 
-            <div className="relative ">
+            <div className="relative w-full">
               <div className="rounded-xl absolute top-0 left-0 h-2 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
                 className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-2 transition-all duration-300"
@@ -282,14 +282,14 @@ const MultiStepFormContent: React.FC = () => {
           </div>
 
           {/* Form Content */}
-          <div className="bg-white w-full mx-auto mt-8">
-            <h1 className="text-4xl text-center font-bold text-neutral-900 lg:w-[30%] mx-auto xs:w-[100%]">{stepTitles()}</h1>
+          <div className="bg-white mx-auto mt-8 w-full">
+            <h1 className="text-4xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex gap-4 w-[30%] mx-auto mt-4 lg:w-[20%] justify-center">
-            {currentStep === 1 && (<ButtonPrimary className='lg:first:w-[40%] ' onClick={() => {
+          <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
+            {currentStep === 1 && (<ButtonPrimary className='lg:first:w-[30%] ' onClick={() => {
               setCurrentStep(currentStep + 1);
               window.scrollTo(0, 0);
             }} disabled={false}>
