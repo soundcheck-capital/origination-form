@@ -363,7 +363,7 @@ const MultiStepFormContent: React.FC = () => {
                   }}
                   className="mr-2"
                 />
-                Disable validation (dev mode)
+                Disable step validation (dev mode only)
               </label>
             </div>
           )}

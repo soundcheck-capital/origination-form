@@ -159,10 +159,10 @@ export const useFormValidation = () => {
   };
   // New function to validate current step only
   const validateCurrentStep = (step: number): { isValid: boolean; errors: string[] } => {
-    // Skip validation in development mode if DISABLE_VALIDATION is set
-    if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') {
-      return { isValid: true, errors: [] };
-    }
+    // Skip validation only if explicitly disabled in development mode
+    // if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') {
+    //   return { isValid: true, errors: [] };
+    // }
 
     switch (step) {
       case 1:
