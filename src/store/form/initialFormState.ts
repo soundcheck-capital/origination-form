@@ -5,10 +5,10 @@ export const initialState: FormState = {
   email: '',
   emailError: '',
   formData: {
-    personalInfo: { email: '', emailConfirm: '', firstname: '', lastname: '', phone: '', role: '' },
+    personalInfo: { email: '', emailConfirm: '', firstname: '', lastname: '', phone: '' },
     companyInfo: {  
-      employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
-      legalEntityType: '', companyAddress: '',
+      employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', companyType: '',
+      legalEntityType: '', companyAddress: '', role: '',
        ein: '', stateOfIncorporation: ''
     },
     ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', membership: '', ticketingPayout: '', otherTicketingPayout: '' },

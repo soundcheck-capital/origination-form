@@ -6,6 +6,7 @@ interface CurrencyFieldProps {
   placeholder?: string;
   label?: string;
   id?: string;
+  name?: string;
 }
 
 const CurrencyField: React.FC<CurrencyFieldProps> = ({
@@ -14,6 +15,7 @@ const CurrencyField: React.FC<CurrencyFieldProps> = ({
   placeholder,
   label,
   id,
+  name,
 }) => {
   const prefix = "$";
 
@@ -56,7 +58,7 @@ const CurrencyField: React.FC<CurrencyFieldProps> = ({
     <TextField
       id={id}
       type="text"
-      name={label || ""}
+      name={name || ""}
       placeholder={placeholder}
       label={label || ''}
       value={value ? `${prefix}${formatCurrency(value)}` : ""}

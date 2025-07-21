@@ -39,7 +39,6 @@ export interface Address {
         firstname: string;
         lastname: string;
         phone: string;
-        role: string;
       };
       companyInfo: {
         employees: number;
@@ -47,10 +46,10 @@ export interface Address {
         dba: string;
         yearsInBusiness: string;
         socials: string;
-        clientType: string;
+        companyType: string;
         legalEntityType: string;
         companyAddress: string;
-       
+        role: string;
         ein: string;
         stateOfIncorporation: string;
       };

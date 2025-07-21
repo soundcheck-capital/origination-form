@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateDiligenceInfo } from '../store/form/formSlice';
+import { updateFinancesInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextAreaField from './customComponents/TextAreaField';
 
@@ -11,7 +11,7 @@ const OtherStep: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    dispatch(updateDiligenceInfo({ [name]: value }));
+    dispatch(updateFinancesInfo({ [name]: value }));
   };
 
   return (

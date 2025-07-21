@@ -6,17 +6,15 @@ import { saveApplication } from '../store/form/formThunks';
 import { fetchApplicationById } from '../store/auth/authThunks';
 import { setCurrentStep, clearFormData } from '../store/form/formSlice';
 import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
+import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
 import PersonalInfoStep from './PersonalInfoStep';
 import CompanyInfoStep from './CompanyInfoStep';
 import TicketingStep from './TicketingStep';
-import TicketingVolumeStep from './TicketingVolumeStep';
 import OwnershipStep from './OwnershipStep';
 import FinancesStep from './FinancesStep';
 import SummaryStep from './SummaryStep';
 import logo from '../assets/logo_black_bold.svg';
-import LegalInfoStep from './LegalInfoStep';
-import Sidebar from './Sidebar';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
 import YourFundingStep from './YourFundsStep';
@@ -38,8 +36,9 @@ const MultiStepFormContent: React.FC = () => {
   const [activeMenuItem, setActiveMenuItem] = useState('applications');
   const { getAllFiles } = useDiligenceFiles();
   const { isUploading, uploadToMake } = useFileUpload();
-  const { validateAllSteps } = useFormValidation();
+  const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
+  const { currentStepErrors, setCurrentStepErrors } = useValidation();
 
   // Load application data if ID is provided
   useEffect(() => {
@@ -129,6 +128,25 @@ const MultiStepFormContent: React.FC = () => {
     handleSubmit();
   };
 
+  const handleNextStep = () => {
+    const validation = validateCurrentStep(currentStep);
+    
+    if (!validation.isValid) {
+      setCurrentStepErrors(validation.errors);
+      return;
+    }
+
+    setCurrentStepErrors(null);
+    setCurrentStep(currentStep + 1);
+    window.scrollTo(0, 0);
+  };
+
+  const handlePreviousStep = () => {
+    setCurrentStepErrors(null);
+    setCurrentStep(currentStep - 1);
+    window.scrollTo(0, 0);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('formAuthenticated');
     navigate('/');
@@ -172,6 +190,25 @@ const MultiStepFormContent: React.FC = () => {
               );
             })}
           </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderCurrentStepErrors = () => {
+    if (!currentStepErrors || currentStepErrors.length === 0) return null;
+
+    return (
+      <div className="w-full mb-4">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h3 className="text-md font-semibold text-red-800 mb-2">
+            Please complete the following required fields:
+          </h3>
+          <ul className="list-disc list-inside space-y-1">
+            {currentStepErrors.map((error, index) => (
+              <li key={index} className="text-sm text-red-600">{error}</li>
+            ))}
+          </ul>
         </div>
       </div>
     );
@@ -285,26 +322,22 @@ const MultiStepFormContent: React.FC = () => {
           <div className="bg-white mx-auto mt-8 w-full">
             <h1 className="text-4xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
+            {renderCurrentStepErrors()}
           </div>
 
           {/* Navigation Buttons */}
           <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
-            {currentStep === 1 && (<ButtonPrimary className='lg:first:w-[30%] ' onClick={() => {
-              setCurrentStep(currentStep + 1);
-              window.scrollTo(0, 0);
-            }} disabled={false}>
-              Next
-            </ButtonPrimary>)}
+            {currentStep === 1 && (
+              <ButtonPrimary className='lg:first:w-[30%] ' onClick={handleNextStep} disabled={false}>
+                Next
+              </ButtonPrimary>
+            )}
             {currentStep > 1 && (
-              <ButtonSecondary onClick={() => { setCurrentStep(currentStep - 1); window.scrollTo(0, 0); }} disabled={false}>Previous</ButtonSecondary>
+              <ButtonSecondary onClick={handlePreviousStep} disabled={false}>Previous</ButtonSecondary>
             )}
 
             {(currentStep < 11 && currentStep > 1) && (
-              <ButtonPrimary onClick={() => {
-                setCurrentStep(currentStep + 1);
-                window.scrollTo(0, 0);
-              }} disabled={false}>Next</ButtonPrimary>
-
+              <ButtonPrimary onClick={handleNextStep} disabled={false}>Next</ButtonPrimary>
             )}
             {currentStep === 11 && (
               <ButtonPrimary onClick={() => {
@@ -312,10 +345,31 @@ const MultiStepFormContent: React.FC = () => {
                 handleSubmit2();
               }} disabled={false}>Submit</ButtonPrimary>
             )}
-          </div>
+                    </div>
 
-        </div>
-      </main>
+          {/* Development Mode Toggle */}
+          {isDevelopment && (
+            <div className="flex justify-center mt-4">
+              <label className="flex items-center text-sm text-gray-600">
+                <input
+                  type="checkbox"
+                  checked={localStorage.getItem('DISABLE_VALIDATION') === 'true'}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      localStorage.setItem('DISABLE_VALIDATION', 'true');
+                    } else {
+                      localStorage.removeItem('DISABLE_VALIDATION');
+                    }
+                  }}
+                  className="mr-2"
+                />
+                Disable validation (dev mode)
+              </label>
+            </div>
+          )}
+
+          </div>
+        </main>
     </div>
 
   );
@@ -323,9 +377,11 @@ const MultiStepFormContent: React.FC = () => {
 
 const MultiStepForm: React.FC = () => {
   return (
-    <DiligenceFilesProvider>
-      <MultiStepFormContent />
-    </DiligenceFilesProvider>
+    <ValidationProvider>
+      <DiligenceFilesProvider>
+        <MultiStepFormContent />
+      </DiligenceFilesProvider>
+    </ValidationProvider>
   );
 };
 

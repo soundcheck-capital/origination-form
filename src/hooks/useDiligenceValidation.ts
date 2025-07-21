@@ -62,9 +62,7 @@ export const useDiligenceValidation = () => {
     if (!singleEntity && diligenceInfo.legalEntityChart.fileInfos.length === 0) {
       errors.push('Legal entity chart is required when multiple entities exist');
     }
-    if (diligenceInfo.governmentId.fileInfos.length === 0) {
-      errors.push('Government ID is required');
-    }
+   
     if (diligenceInfo.w9form.fileInfos.length === 0) {
       errors.push('Form W-9 is required');
     }

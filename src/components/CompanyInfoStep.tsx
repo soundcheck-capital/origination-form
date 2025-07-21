@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState  } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateCompanyInfo, updateOwnershipInfo, updateTicketingInfo } from '../store/form/formSlice';
+import { updateCompanyInfo, updateTicketingInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import DropdownField from './customComponents/DropdownField';
-import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
-import { usStates } from '../utils/usStates'; // Import the usStates array
 
 // Google Maps Autocomplete types
 declare global {
@@ -14,13 +12,6 @@ declare global {
     google: any;
   }
 }
-
-const businessTypes = [
-  'Sole proprietorship',
-  'Partnership',
-  'Limited liability company (LLC)',
-  'Corporation'
-];
 
 const companyTypes = [
   'Promoter',
@@ -54,7 +45,6 @@ const CompanyInfoStep: React.FC = () => {
   const dispatch = useDispatch();
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
-  const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
 
  
   const handleTicketingInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -107,9 +97,9 @@ const CompanyInfoStep: React.FC = () => {
       <StepTitle title="Company Information" />
 
       <TextField type="text" label="Company Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}}  />
-      <TextField type="text" label="Your Role" name="role" value={personalInfo.role} onChange={handleChange} error='' onBlur={()=>{}}  />
+      <TextField type="text" label="Your Role" name="role" value={companyInfo.role} onChange={handleChange} error='' onBlur={()=>{}}  />
 
-      <DropdownField label="Company Type" name="clientType" value={companyInfo.clientType} onChange={handleChange} error='' onBlur={()=>{}} options={companyTypes} />
+      <DropdownField label="Company Type" name="companyType" value={companyInfo.companyType} onChange={handleChange} error='' onBlur={()=>{}} options={companyTypes} />
 
       <DropdownField label="Years in Business" name="yearsInBusiness" value={companyInfo.yearsInBusiness} onChange={handleChange} error='' onBlur={()=>{}} options={yearsInBusiness} />
 
