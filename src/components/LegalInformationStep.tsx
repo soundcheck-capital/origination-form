@@ -26,7 +26,7 @@ const LegalInformationStep: React.FC = () => {
 
         <FileUploadField
           field="legalEntityChart"
-          title="Legal entity chart if more than one entity exists OR there have been distributions to other entities in the past"
+          title="Legal entity chart if more than one entity exists OR if there have been distributions to other entities in the past"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('legalEntityChart', fileInfos)}
@@ -51,10 +51,9 @@ const LegalInformationStep: React.FC = () => {
         <FileUploadField
           field="other"
           title="Other"
-          description="Venue/Movie Theater/Performing Arts Center: copy of the lease or property deed <br>
-          Promoter: copy of the venue/rental agreement <br>
+          description="Copy of the lease, rental agreement or property deed of the location where the event(s) take place <br>
           Outdoor event: copy of the event cancellation insurance <br>
-          Other: business plan, budget, insurance certificate, bank letter, investor deck, etc."
+          Other: business plan, budget, insurance certificate, bank letter, investor deck, etc"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('other', fileInfos)}

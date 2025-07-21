@@ -135,7 +135,7 @@ const OwnershipStep: React.FC = () => {
   return (
 
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
-      <p className="text-gray-400 mb-8 text-xs mt-8 text-center">Please carefully complete the information below and make sure that it is accurate including informations about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
+      <p className="text-gray-400 mb-8 text-xs mt-8 text-center">Please carefully complete the information below and make sure that it is accurate including information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
 
 <StepTitle title="Business Legal Information" />
 <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}}  /> 
