@@ -18,7 +18,7 @@ const FinancialInformationStep: React.FC = () => {
       <div className="w-full">  
         <FileUploadField
           field="financialStatements"
-          title="Last 2 years and YTD detailed financial statements (P&L, B/S, Cash Flow) per month"
+          title="Last 2 years and YTD detailed financial statements (P&L, B/S) per month"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={true}
           onFilesChange={(fileInfos) => handleFilesChange('financialStatements', fileInfos)}
