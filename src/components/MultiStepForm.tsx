@@ -272,6 +272,38 @@ const MultiStepFormContent: React.FC = () => {
     }
   };
 
+  function DevToggle({ isDevelopment }: { isDevelopment: boolean }) {
+    // 1. initialiser le state depuis localStorage (vaut true/false selon la chaîne stockée)
+    const [disableValidation, setDisableValidation] = useState(() => {
+      return localStorage.getItem('DISABLE_VALIDATION') === 'true' ? true : false;
+    });
+  
+    // 2. synchroniser localStorage si le state change (optionnel, car on l'écrit déjà dans onChange)
+    useEffect(() => {
+      localStorage.setItem('DISABLE_VALIDATION', disableValidation.toString());
+    }, [disableValidation]);
+  
+    if (!isDevelopment) return null;
+  
+    return (
+      <div className="flex justify-center mt-4">
+        <label className="flex items-center text-sm text-gray-600">
+          <input
+            type="checkbox"
+            checked={disableValidation}
+            onChange={(e) => {
+              // 3. mettre à jour le state (ce qui force le re-render)
+              setDisableValidation(e.target.checked);
+              console.log("DISABLE_VALIDATION", e.target.checked);
+            }}
+            className="mr-2"
+          />
+          Disable step validation (dev mode only)
+        </label>
+      </div>
+    );
+  }
+  
   return (
     <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
@@ -348,25 +380,7 @@ const MultiStepFormContent: React.FC = () => {
                     </div>
 
           {/* Development Mode Toggle */}
-          {isDevelopment && (
-            <div className="flex justify-center mt-4">
-              <label className="flex items-center text-sm text-gray-600">
-                <input
-                  type="checkbox"
-                  checked={localStorage.getItem('DISABLE_VALIDATION') === 'true'}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      localStorage.setItem('DISABLE_VALIDATION', 'true');
-                    } else {
-                      localStorage.removeItem('DISABLE_VALIDATION');
-                    }
-                  }}
-                  className="mr-2"
-                />
-                Disable step validation (dev mode only)
-              </label>
-            </div>
-          )}
+           {isDevelopment && <DevToggle isDevelopment={isDevelopment} />}
 
           </div>
         </main>

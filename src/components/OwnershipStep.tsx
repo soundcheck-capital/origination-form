@@ -150,7 +150,7 @@ const OwnershipStep: React.FC = () => {
       <p className="text-gray-400 mb-8 text-xs mt-8 text-center">Please carefully complete the information below and make sure that it is accurate including information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
 
       <StepTitle title="Business Legal Information" />
-      <TextField type="text" label="Company Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={() => { }} />
+      <TextField type="text" label="Legal Business Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={() => { }} />
       <TextField type="text" label="DBA" name="dba" value={companyInfo.dba} onChange={handleChange} error='' onBlur={() => { }} />
       <DropdownField label="Business Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={() => { }} options={businessTypes} />
 

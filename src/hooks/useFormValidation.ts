@@ -112,7 +112,7 @@ export const useFormValidation = () => {
       errors.push('Ticketing company report is required');
     }
     if (diligenceInfo.ticketingServiceAgreement.files.length === 0) {
-      errors.push('Ticketing service agreement is required');
+      //errors.push('Ticketing service agreement is required');
     }
 
     return { isValid: errors.length === 0, errors };
@@ -127,7 +127,7 @@ export const useFormValidation = () => {
       errors.push('Financial statements are required');
     }
     if (diligenceInfo.bankStatement.files.length === 0) {
-      errors.push('Bank statement is required');
+      //errors.push('Bank statement is required');
     }
 
    
@@ -148,11 +148,11 @@ export const useFormValidation = () => {
       errors.push('Legal entity chart is required');
     }
     if (diligenceInfo.governmentId.files.length === 0) {
-      errors.push('Government ID is required');
+      //errors.push('Government ID is required');
     }
 
     if (diligenceInfo.w9form.files.length === 0) {
-      errors.push('W9 form is required');
+      //errors.push('W9 form is required');
     }
   
     return { isValid: errors.length === 0, errors };
@@ -160,9 +160,10 @@ export const useFormValidation = () => {
   // New function to validate current step only
   const validateCurrentStep = (step: number): { isValid: boolean; errors: string[] } => {
     // Skip validation only if explicitly disabled in development mode
-    // if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') {
-    //   return { isValid: true, errors: [] };
-    // }
+    if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') { 
+      console.log("DISABLE_VALIDATION", localStorage.getItem('DISABLE_VALIDATION'));
+      return { isValid: true, errors: [] };
+    }
 
     switch (step) {
       case 1:
