@@ -111,8 +111,8 @@ export const useFormValidation = () => {
     if (diligenceInfo.ticketingCompanyReport.files.length === 0) {
       errors.push('Ticketing company report is required');
     }
-    if (diligenceInfo.ticketingServiceAgreement.files.length === 0) {
-      //errors.push('Ticketing service agreement is required');
+    if (formData.formData.ticketingInfo.ticketingPayout === 'Venue (i.e. post show settlement)' && diligenceInfo.ticketingServiceAgreement.files.length === 0) {
+      errors.push('Ticketing service agreement is required');
     }
 
     return { isValid: errors.length === 0, errors };

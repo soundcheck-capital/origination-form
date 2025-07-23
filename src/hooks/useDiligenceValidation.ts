@@ -4,7 +4,7 @@ import { RootState } from '../store';
 export const useDiligenceValidation = () => {
   const { diligenceInfo } = useSelector((state: RootState) => state.form);
   const { singleEntity } = useSelector((state: RootState) => state.form.financesInfo);
-
+  const { ticketingInfo } = useSelector((state: RootState) => state.form.formData);
   const validateTicketingInformation = (): boolean => {
     return (
       diligenceInfo.ticketingCompanyReport.fileInfos.length > 0 &&
@@ -41,9 +41,10 @@ export const useDiligenceValidation = () => {
 
     // Validation Ticketing Information
     if (diligenceInfo.ticketingCompanyReport.fileInfos.length === 0) {
+      console.log("ticketingInfo.ticketingPayout", ticketingInfo.ticketingPayout);
       errors.push('Reports from ticketing company is required');
     }
-    if (diligenceInfo.ticketingServiceAgreement.fileInfos.length === 0) {
+    if (ticketingInfo.ticketingPayout === 'Venue (i.e. post show settlement)' && diligenceInfo.ticketingServiceAgreement.fileInfos.length === 0) {
       errors.push('Ticketing Service Agreement is required');
     }
 

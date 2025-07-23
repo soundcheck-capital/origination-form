@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
 import { FileInfo, DiligenceFileData } from '../store/form/formTypes';
 import { updateDiligenceInfo } from '../store/form/formSlice';
 
@@ -43,6 +44,53 @@ interface DiligenceFilesProviderProps {
 export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ children }) => {
   const [diligenceFiles, setDiligenceFiles] = useState<DiligenceFiles>(initialDiligenceFiles);
   const dispatch = useDispatch();
+  const reduxDiligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
+
+  // Synchroniser l'état local avec le store Redux au chargement
+  useEffect(() => {
+    if (reduxDiligenceInfo) {
+      const syncedFiles: DiligenceFiles = {
+        ticketingCompanyReport: { 
+          files: reduxDiligenceInfo.ticketingCompanyReport?.files || [], 
+          fileInfos: reduxDiligenceInfo.ticketingCompanyReport?.fileInfos || [] 
+        },
+        ticketingServiceAgreement: { 
+          files: reduxDiligenceInfo.ticketingServiceAgreement?.files || [], 
+          fileInfos: reduxDiligenceInfo.ticketingServiceAgreement?.fileInfos || [] 
+        },
+        financialStatements: { 
+          files: reduxDiligenceInfo.financialStatements?.files || [], 
+          fileInfos: reduxDiligenceInfo.financialStatements?.fileInfos || [] 
+        },
+        bankStatement: { 
+          files: reduxDiligenceInfo.bankStatement?.files || [], 
+          fileInfos: reduxDiligenceInfo.bankStatement?.fileInfos || [] 
+        },
+        incorporationCertificate: { 
+          files: reduxDiligenceInfo.incorporationCertificate?.files || [], 
+          fileInfos: reduxDiligenceInfo.incorporationCertificate?.fileInfos || [] 
+        },
+        legalEntityChart: { 
+          files: reduxDiligenceInfo.legalEntityChart?.files || [], 
+          fileInfos: reduxDiligenceInfo.legalEntityChart?.fileInfos || [] 
+        },
+        governmentId: { 
+          files: reduxDiligenceInfo.governmentId?.files || [], 
+          fileInfos: reduxDiligenceInfo.governmentId?.fileInfos || [] 
+        },
+        w9form: { 
+          files: reduxDiligenceInfo.w9form?.files || [], 
+          fileInfos: reduxDiligenceInfo.w9form?.fileInfos || [] 
+        },
+      };
+      
+      // Vérifier si les données ont changé pour éviter les re-renders inutiles
+      const hasChanged = JSON.stringify(syncedFiles) !== JSON.stringify(diligenceFiles);
+      if (hasChanged) {
+        setDiligenceFiles(syncedFiles);
+      }
+    }
+  }, [reduxDiligenceInfo, diligenceFiles]);
 
   const createFileInfo = (file: File, index: number): FileInfo => ({
     id: `file-${Date.now()}-${index}`,
