@@ -3,14 +3,15 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import { resetSubmitted } from '../store/form/formSlice';
 import logo from '../assets/logo_black_name.svg';
+import { useNavigate } from 'react-router-dom';
 
 const SubmitSuccess: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isDevelopment = process.env.NODE_ENV === 'development';
-
+  const navigate = useNavigate();
   const handleReset = () => {
     dispatch(resetSubmitted());
-    window.location.href = '/form';
+      navigate('/form');
   };
 
   return (
@@ -28,7 +29,7 @@ const SubmitSuccess: React.FC = () => {
           <p className='text-sm text-gray-500'>You will receive an email with your application details.</p>
           
           {/* Development Mode Reset Button */}
-          {isDevelopment && (
+          {(
             <button
               onClick={handleReset}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
