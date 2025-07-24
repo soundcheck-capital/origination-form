@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
 import { saveApplication } from '../store/form/formThunks';
 import { fetchApplicationById } from '../store/auth/authThunks';
-import { setCurrentStep, clearFormData } from '../store/form/formSlice';
+import { setCurrentStep, clearFormData, setSubmitted } from '../store/form/formSlice';
 import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
@@ -39,6 +39,15 @@ const MultiStepFormContent: React.FC = () => {
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
   const { currentStepErrors, setCurrentStepErrors } = useValidation();
+
+  // Vérifier si le formulaire a été soumis avec succès
+  useEffect(() => {
+    const disableSubmissionBlock = localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true';
+    if (formData.isSubmitted && !isDevelopment && !disableSubmissionBlock) {
+      // Rediriger vers la page de succès si le formulaire a été soumis
+      navigate('/submit-success');
+    }
+  }, [formData.isSubmitted, navigate, isDevelopment]);
 
   // Load application data if ID is provided
   useEffect(() => {
@@ -99,6 +108,9 @@ const MultiStepFormContent: React.FC = () => {
 
       if (result.success) {
         setSaveMessage('Application submitted successfully!');
+        
+        // Marquer comme soumis
+        dispatch(setSubmitted());
 
         // Navigate to success page after a delay
         setTimeout(() => {

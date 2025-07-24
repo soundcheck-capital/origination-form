@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { useFormValidation } from '../hooks/useFormValidation';
@@ -15,6 +15,16 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors }) => 
   const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
   const { validateAllSteps } = useFormValidation();
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
+  
+  // Check if we're in development mode
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const [disableSubmissionBlock, setDisableSubmissionBlock] = useState(() => {
+    return localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('DISABLE_SUBMISSION_BLOCK', disableSubmissionBlock.toString());
+  }, [disableSubmissionBlock]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -42,6 +52,21 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors }) => 
       {/* <p className="text-gray-500 w-[30%] mx-auto mb-8 text-center text-justify"><span className="font-bold text-neutral-800 text-md">Notes and Disclosures:</span> The information appearing in this form (the "Form") is confidential and is being delivered and requested to clients and prospective clients of SoundCheck Capital to assess their eligibility to SoundCheck's Capital Advance program. This Form is not to be reproduced or distributed and is intended solely for the use of the person to whom it has been delivered. Unauthorized reproduction or distribution of all or any of this material or the information contained herein is strictly prohibited. Each prospective client agrees to the foregoing.</p>
  */}
       {renderValidationErrors}
+
+      {/* Development Mode Toggle for Submission Block */}
+      {isDevelopment && (
+        <div className="flex justify-center mb-4">
+          <label className="flex items-center text-sm text-gray-600">
+            <input
+              type="checkbox"
+              checked={disableSubmissionBlock}
+              onChange={(e) => setDisableSubmissionBlock(e.target.checked)}
+              className="mr-2"
+            />
+            Disable submission block (dev mode only)
+          </label>
+        </div>
+      )}
 
       {/* <div className="w-full max-w-2xl space-y-6">
         {/* Personal Information

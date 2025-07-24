@@ -4,6 +4,7 @@ export const initialState: FormState = {
   currentStep: 1,
   email: '',
   emailError: '',
+  isSubmitted: true,
   formData: {
     personalInfo: { email: '', emailConfirm: '', firstname: '', lastname: '', phone: '' },
     companyInfo: {  

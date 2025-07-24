@@ -92,6 +92,14 @@ const formSlice = createSlice({
     clearFormData: (state) => {
       localStorage.removeItem('soundcheckFormData');
       return initialState;
+    },
+    setSubmitted: (state) => {
+      state.isSubmitted = true;
+      saveToLocalStorage(state);
+    },
+    resetSubmitted: (state) => {
+      state.isSubmitted = false;
+      saveToLocalStorage(state);
     }
   },
   extraReducers: (builder) => {
@@ -130,6 +138,8 @@ export const {
   updateFinancesInfo, 
   updateDiligenceInfo, 
   loadSavedApplication,
-  clearFormData
+  clearFormData,
+  setSubmitted,
+  resetSubmitted
 } = formSlice.actions;
 export default formSlice.reducer;

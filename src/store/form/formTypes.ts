@@ -32,6 +32,7 @@ export interface Address {
     currentStep: number;
     email: string;
     emailError: string;
+    isSubmitted: boolean;
     formData: {
       personalInfo: {
         email: string;
