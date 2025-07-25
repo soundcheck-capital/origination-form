@@ -322,7 +322,7 @@ const MultiStepFormContent: React.FC = () => {
 
       <main className="w-full h-full flex flex-col bg-white p-6">
         <div className="flex justify-center items-center">
-          <img src={logo} alt="Logo" className="w-32 " />
+          <img src={logo} alt="Logo" className="w-24 " />
           {/* <div className="absolute top-8 right-8 flex gap-4">
             <button
               onClick={handleClearFormData}
@@ -354,9 +354,9 @@ const MultiStepFormContent: React.FC = () => {
           <div className="w-full mx-auto">
 
             <div className="relative w-full">
-              <div className="rounded-xl absolute top-0 left-0 h-2 bg-gray-200 w-full"></div>
+              <div className="rounded-xl absolute top-0 left-0 h-1 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
-                className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-2 transition-all duration-300"
+                className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-1 transition-all duration-300"
                 style={{ width: `${((currentStep) / 11) * 100}%` }}
               ></div>
             </div>
@@ -364,10 +364,13 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
-            <h1 className="text-4xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
+            <h1 className="text-3xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
             {renderCurrentStepErrors()}
           </div>
+          {(currentStep < 11 && currentStep > 0 && currentStep !== 6) && (
+             <p className='text-xs text-gray-500 text-center'><span className='text-red-500'>*</span> Required fields</p>
+            )}
 
           {/* Navigation Buttons */}
           <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
@@ -390,6 +393,8 @@ const MultiStepFormContent: React.FC = () => {
               }} disabled={false}>Submit</ButtonPrimary>
             )}
                     </div>
+
+           
 
           {/* Development Mode Toggle */}
            {isDevelopment && <DevToggle isDevelopment={isDevelopment} />}

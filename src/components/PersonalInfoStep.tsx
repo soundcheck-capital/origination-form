@@ -33,6 +33,8 @@ const PersonalInfoStep: React.FC = () => {
   const formatPhoneNumber = (value: string) => {
     let digits;
     // Remove all non-digits
+    value = value.trim();
+    value = value.replace(/[^0-9]/g, '');
     if (value.includes('+1')) {
       digits = value.replace(/\D/g, '');
       digits = digits.substring(1);
@@ -119,24 +121,24 @@ const PersonalInfoStep: React.FC = () => {
 
       <StepTitle title="Contact Information" />
 
-      <TextField type="text" label="First Name" name="firstname" value={personalInfo.firstname} onChange={handleInputChange} error='' onBlur={() => { }} />
-      <TextField type="text" label="Last Name" name="lastname" value={personalInfo.lastname} onChange={handleInputChange} error='' onBlur={() => { }} />
+      <TextField type="text" label="First Name" name="firstname" value={personalInfo.firstname} onChange={handleInputChange} error='' onBlur={() => { }} required />
+      <TextField type="text" label="Last Name" name="lastname" value={personalInfo.lastname} onChange={handleInputChange} error='' onBlur={() => { }} required />
 
-      <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange} error='' onBlur={handleEmailBlur} />
+      <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange} error='' onBlur={handleEmailBlur} required />
       {emailError && (
-        <div className="w-full max-w-md  mt-2 ml-2">
+        <div className="w-full max-w-md  ml-2 mb-2">
           <p className="text-red-500 text-xs">{emailError}</p>
         </div>
       )}
-      <TextField type="email" label="Confirm Email" name="emailConfirm" value={personalInfo.emailConfirm} onChange={handleInputChange} error='' onBlur={handleEmailConfirmBlur} />
+      <TextField type="email" label="Confirm Email" name="emailConfirm" value={personalInfo.emailConfirm} onChange={handleInputChange} error='' onBlur={handleEmailConfirmBlur} required />
 
       {emailConfirmError && (
-        <div className="w-full max-w-md ml-2 mb-2">
+        <div className="w-full max-w-md ml-2 mb-2 ">
           <p className="text-red-500 text-xs">{emailConfirmError}</p>
         </div>
       )}
       
-      <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={handlePhoneBlur} />
+      <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={handlePhoneBlur} required />
       {/* {phoneError && (
           <div className="w-full max-w-md  mt-2 ml-2">
             <p className="text-red-500 text-xs">{phoneError}</p>

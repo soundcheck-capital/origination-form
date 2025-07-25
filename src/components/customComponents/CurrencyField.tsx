@@ -7,6 +7,7 @@ interface CurrencyFieldProps {
   label?: string;
   id?: string;
   name?: string;
+  required?: boolean;
 }
 
 const CurrencyField: React.FC<CurrencyFieldProps> = ({
@@ -16,6 +17,7 @@ const CurrencyField: React.FC<CurrencyFieldProps> = ({
   label,
   id,
   name,
+  required = false,
 }) => {
   const prefix = "$";
 
@@ -66,6 +68,7 @@ const CurrencyField: React.FC<CurrencyFieldProps> = ({
       onFocus={handleFocus}
       onBlur={handleBlur}
       error=""
+      required={required}
     />
   );
 };

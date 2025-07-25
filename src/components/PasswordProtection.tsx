@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo_white_name.svg';
+import logo from '../assets/logo_white_bold.svg';
 import background from '../assets/background.jpeg';
 const PasswordProtection: React.FC = () => {
   const [password, setPassword] = useState('');
@@ -8,13 +8,33 @@ const PasswordProtection: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+
+
+const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if(e.target.value.length > 0){
+  if (e.target.value.trim() === '') {
+    setError('Password cannot be empty or contain only spaces');
+  } else if(e.target.value.length < 6){
+    setError('Password must be at least 8 characters long');
+  } else if(e.target.value.length > 16){
+    setError('Password must be less than 16 characters long');
+  } else {
+    setError('');
+  }
+} else {
+  setError('');
+}
+setPassword(e.target.value);
+
+}
+
+
+
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!password.trim()) {
-      setError('Please enter the password');
-      return;
-    }
+   
 
     setLoading(true);
     setError('');
@@ -23,8 +43,6 @@ const PasswordProtection: React.FC = () => {
       // Récupérer le mot de passe depuis les variables d'environnement
       const correctPassword = process.env.REACT_APP_FORM_PASSWORD;
     
-      console.log(correctPassword);
-      console.log(password);
       if (password === correctPassword) {
         // Stocker l'authentification dans le localStorage
         localStorage.setItem('formAuthenticated', 'true');
@@ -60,19 +78,15 @@ const PasswordProtection: React.FC = () => {
           Access Required
         </h2>
         <p className="mt-2 text-center text-sm text-white">
-          Please enter the password to access the application form
+          Please enter your given password to access the application form
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-md p-4">
-              <div className="text-sm text-red-600">{error}</div>
-            </div>
-          )}
+          
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={ error ? () => {} : handleSubmit}>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -88,11 +102,16 @@ const PasswordProtection: React.FC = () => {
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
                   placeholder="Enter password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={onChangePassword}
                 />
               </div>
+              
             </div>
-
+            {error && (
+            <div className="">
+              <div className="text-xs text-red-600">{error}</div>
+            </div>
+          )}
             <div>
               <button
                 type="submit"

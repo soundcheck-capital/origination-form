@@ -21,7 +21,8 @@ const LegalInformationStep: React.FC = () => {
           title="Certificate of Incorporation of contracting entity"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
-          onFilesChange={(fileInfos) => handleFilesChange('incorporationCertificate', fileInfos)}
+          onFilesChange={(fileInfos) => handleFilesChange('incorporationCertificate', fileInfos)} 
+          required={true}
         />
 
         <FileUploadField

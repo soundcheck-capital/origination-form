@@ -9,6 +9,7 @@ interface FileUploadFieldProps {
   className?: string;
   onFilesChange?: (fileInfos: any[]) => void;
   title?: string;
+  required?: boolean;
 }
 
 const FileUploadField: React.FC<FileUploadFieldProps> = ({
@@ -18,7 +19,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   multiple = true,
   className = "",
   onFilesChange,
-  title = ""
+  title = "",
+  required = false
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -124,7 +126,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
 
   return (  
     <div className={`flex flex-col w-full mb-16 ${className}`}>
-      <h4 className=" text-xl font-medium text-neutral-900 ">{title}</h4>
+      <h4 className=" text-md font-medium text-neutral-900 leading-tight ">{title} {required && <span className="text-red-500">*</span>}</h4>
       {description && <p className=" text-xs font-300 text-gray-500" dangerouslySetInnerHTML={{ __html: description }} />}
       
       <div

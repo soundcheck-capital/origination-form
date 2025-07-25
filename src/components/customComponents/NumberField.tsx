@@ -9,6 +9,7 @@ interface NumberInputProps {
   id?: string;
   name?: string;
   showPercent?: boolean; // Si true, affiche '%' comme suffixe après blur
+  required?: boolean;
 }
 
 const NumberInput: React.FC<NumberInputProps> = ({
@@ -19,6 +20,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   id,
   showPercent = false,
   name,
+  required = false,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const suffix = showPercent ? "%" : "";
@@ -75,6 +77,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
       onFocus={handleFocus}
       onBlur={handleBlur}
       error=""
+      required={required}
     />
   );
 };

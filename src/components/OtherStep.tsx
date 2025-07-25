@@ -29,6 +29,7 @@ const OtherStep: React.FC = () => {
         onChange={handleChange}
         placeholder="Please provide name/contact of industry references (promoters, venues, agents, vendors, partners) we can reach out to"
         rows={4}
+        required={true}
       />
 
       <TextAreaField
@@ -38,6 +39,7 @@ const OtherStep: React.FC = () => {
         onChange={handleChange}
         placeholder="Any additional comments or information you'd like to share"
         rows={4}
+        required={true}
       />
     </div>
   );

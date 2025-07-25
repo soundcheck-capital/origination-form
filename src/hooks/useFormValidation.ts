@@ -15,7 +15,7 @@ export const useFormValidation = () => {
     if(!personalInfo.emailConfirm.trim()) errors.push('Email confirmation is required');
     if (!personalInfo.firstname.trim()) errors.push('First name is required');
     if (!personalInfo.lastname.trim()) errors.push('Last name is required');
-    if (!personalInfo.phone.trim()) errors.push('Phone number is required');
+    if (!personalInfo.phone.trim() || personalInfo.phone.length < 15 ) errors.push('Phone number is required')  ;
 
     return { isValid: errors.length === 0, errors };
   };

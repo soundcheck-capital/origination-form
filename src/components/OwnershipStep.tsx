@@ -150,11 +150,11 @@ const OwnershipStep: React.FC = () => {
       <p className="text-gray-400 mb-8 text-xs mt-8 text-center">Please carefully complete the information below and make sure that it is accurate including information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.</p>
 
       <StepTitle title="Business Legal Information" />
-      <TextField type="text" label="Legal Business Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={() => { }} />
-      <TextField type="text" label="DBA" name="dba" value={companyInfo.dba} onChange={handleChange} error='' onBlur={() => { }} />
-      <DropdownField label="Business Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={() => { }} options={businessTypes} />
+      <TextField type="text" label="Legal Business Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={() => { }} required />
+      <TextField type="text" label="DBA" name="dba" value={companyInfo.dba} onChange={handleChange} error='' onBlur={() => { }} required />
+      <DropdownField label="Business Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={() => { }} options={businessTypes} required />
 
-      <DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={() => { }} options={usStates} />
+      <DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={() => { }} options={usStates} required />
 
 
       <AddressAutocomplete
@@ -169,7 +169,7 @@ const OwnershipStep: React.FC = () => {
         id="companyAddress"
       />
 
-      <TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={() => { }} />
+      <TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={() => { }} required />
 
       <StepTitle title="Beneficial ownership & control person" />
 
@@ -191,13 +191,13 @@ const OwnershipStep: React.FC = () => {
 
 
           <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
-            <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} />
+            <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} required />
 
-            <NumberInput showPercent={true} label="Ownership Percentage" name="ownershipPercentage" value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} />
+            <NumberInput showPercent={true} label="Ownership Percentage" name="ownershipPercentage" value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} required />
           </div>
           <div className="flex flex-row justify-between  gap-x-4 ">
-            <AddressAutocomplete label="Address" name="ownerAddress" value={owner.ownerAddress} dispatch={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)} onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} error='' onBlur={() => { }} type={''} id={''} />
-            <DatePickerField label="Date of Birth" name="ownerBirthDate" value={owner.ownerBirthDate} onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} />
+            <AddressAutocomplete label="Address" name="ownerAddress" value={owner.ownerAddress} dispatch={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)} onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} error='' onBlur={() => { }} type={''} id={''} required />
+            <DatePickerField label="Date of Birth" name="ownerBirthDate" value={owner.ownerBirthDate} onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} required />
           </div>
 
           {/* 

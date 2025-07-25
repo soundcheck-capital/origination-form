@@ -22,6 +22,7 @@ const FinancialInformationStep: React.FC = () => {
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={true}
           onFilesChange={(fileInfos) => handleFilesChange('financialStatements', fileInfos)}
+          required={true}
         />
 
         <FileUploadField

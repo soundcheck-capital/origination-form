@@ -25,7 +25,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
 }) => {
   return (
     <div className="w-full mb-4">
-      <h4 className=" text-lg font-medium text-neutral-900 mb-2  ">{label}</h4>
+      <h4 className=" text-md font-medium text-neutral-900 mb-2 leading-tight ">{label} {required && <span className="text-red-500">*</span>}</h4>
 
       <textarea
         id={name}

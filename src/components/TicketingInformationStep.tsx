@@ -2,10 +2,12 @@ import React from 'react';
 import { useDiligenceFiles } from '../contexts/DiligenceFilesContext';
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const TicketingInformationStep: React.FC = () => {
   const { addFiles } = useDiligenceFiles();
-
+  const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const handleFilesChange = (field: string, fileInfos: any[]) => {
     // This will be called when files are added/removed
     // The actual files are managed by the FileUploadField component
@@ -23,6 +25,7 @@ const TicketingInformationStep: React.FC = () => {
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={true}
           onFilesChange={(fileInfos) => handleFilesChange('ticketingCompanyReport', fileInfos)}
+          required={true}
         />
 
         <FileUploadField
@@ -31,7 +34,9 @@ const TicketingInformationStep: React.FC = () => {
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('ticketingServiceAgreement', fileInfos)}
+          required={ticketingInfo.ticketingPayout === 'Venue (i.e. post show settlement)' ? true : false}
         />
+
       </div>
     </div>
   );

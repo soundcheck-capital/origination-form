@@ -1,14 +1,14 @@
 
 import { useValidation } from '../../contexts/ValidationContext';
 
-const DropdownField = ({ label, name, value, onChange, error, onBlur, options }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: string[] }) => {
+const DropdownField = ({ label, name, value, onChange, error, onBlur, options, required = false }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: string[], required?: boolean }) => {
   const id = name.replace(/\s+/g, '_').toLowerCase();
   const { hasError } = useValidation();
   const hasFieldError = hasError(name);
   
     return (
         <div className="relative w-full mb-4">  
-          <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
+          <label className="text-xs text-gray-500 px-2 top-2 start-1">{label} {required && <span className="text-red-500">*</span>}</label>
             <select 
               id={id} 
               name={name} 
