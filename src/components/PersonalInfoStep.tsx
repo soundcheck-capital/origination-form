@@ -9,7 +9,7 @@ import { useValidation } from '../contexts/ValidationContext';
 const PersonalInfoStep: React.FC = () => {
   const dispatch = useDispatch();
   const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
-   const { setCurrentStepErrors } = useValidation();
+  const { setFieldError } = useValidation();
   const validateEmail = (email: string) => {
     email = email.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,11 +24,7 @@ const PersonalInfoStep: React.FC = () => {
     return '';
   };
 
-  const validatePhone = (phone: string) => {
-    // US phone format with country code: +1 (XXX) XXX-XXXX or +1-XXX-XXX-XXXX
-    const phoneRegex = /^\+1\s?\(?[0-9]{3}\)?[\s.-]?[0-9]{3}[\s.-]?[0-9]{4}$/;
-    return phoneRegex.test(phone);
-  };
+ 
 
   const formatPhoneNumber = (value: string) => {
     let digits;
@@ -87,6 +83,7 @@ const PersonalInfoStep: React.FC = () => {
           [name]: formattedValue
         }
       }));
+      setFieldError(name, null);
     } else {
       dispatch(updatePersonalInfo({
         personalInfo: {
@@ -94,6 +91,23 @@ const PersonalInfoStep: React.FC = () => {
           [name]: value
         }
       }));
+
+      // Real-time validation for emails
+      if (name === 'email' && value) {
+        if (!validateEmail(value)) {
+          setFieldError('email', 'Please enter a valid email address');
+        } else {
+          setFieldError('email', null);
+        }
+      }
+
+      if (name === 'emailConfirm' && value) {
+        if (validateEmailConfirm(value) !== '') {
+          setFieldError('emailConfirm', 'Emails do not match');
+        } else {
+          setFieldError('emailConfirm', null);
+        }
+      }
     }
   };
 
@@ -101,35 +115,22 @@ const PersonalInfoStep: React.FC = () => {
     const email = e.target.value;
     
     if (email && !validateEmail(email)) {
-      setCurrentStepErrors({
-        email: 'Please enter a valid email address'
-      });
+      setFieldError('email', 'Please enter a valid email address');
     } else {
-      setCurrentStepErrors(null);
+      setFieldError('email', null);
     }
   };
 
   const handleEmailConfirmBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const emailConfirm = e.target.value;
     if (emailConfirm && validateEmailConfirm(emailConfirm) !== '') {
-      setCurrentStepErrors({
-        emailConfirm: 'Emails do not match'
-      });
+      setFieldError('emailConfirm', 'Emails do not match');
     } else {
-      setCurrentStepErrors(null);
+      setFieldError('emailConfirm', null);
     }
   };
 
-  const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const phone = e.target.value;
-    if (phone && validatePhone(phone)) {
-      setCurrentStepErrors({
-        phone: 'Please enter a valid US phone number with country code (+1)'
-      });
-    } else {
-      setCurrentStepErrors(null);
-    }
-  };
+  
 
   return (
     <div className="animate-fadeIn w-full ">
@@ -145,7 +146,7 @@ const PersonalInfoStep: React.FC = () => {
 
       
       
-      <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={handlePhoneBlur} required />
+      <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={() => { }} required />
       
 
 

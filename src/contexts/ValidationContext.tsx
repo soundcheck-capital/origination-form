@@ -5,6 +5,8 @@ interface ValidationContextType {
   setCurrentStepErrors: (errors: { [key: string]: string } | null) => void;
   hasError: (fieldName: string) => boolean;
   getFieldError: (fieldName: string) => string | null;
+  setFieldError: (fieldName: string, error: string | null) => void;
+  clearFieldError: (fieldName: string) => void;
 }
 
 const ValidationContext = createContext<ValidationContextType | undefined>(undefined);
@@ -34,11 +36,32 @@ export const ValidationProvider: React.FC<ValidationProviderProps> = ({ children
     return currentStepErrors[fieldName] || null;
   };
 
+  const setFieldError = (fieldName: string, error: string | null) => {
+    setCurrentStepErrors(prev => {
+      if (!prev) {
+        return error ? { [fieldName]: error } : null;
+      }
+      if (error) {
+        return { ...prev, [fieldName]: error };
+      } else {
+        const newErrors = { ...prev };
+        delete newErrors[fieldName];
+        return Object.keys(newErrors).length === 0 ? null : newErrors;
+      }
+    });
+  };
+
+  const clearFieldError = (fieldName: string) => {
+    setFieldError(fieldName, null);
+  };
+
   const value = {
     currentStepErrors,
     setCurrentStepErrors,
     hasError,
     getFieldError,
+    setFieldError,
+    clearFieldError,
   };
 
   return (

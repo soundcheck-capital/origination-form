@@ -36,7 +36,7 @@ export const useFormValidation = () => {
     if (!companyInfo.yearsInBusiness.trim()) errors.yearsInBusiness = 'Years in business is required';
     if (!companyInfo.employees) errors.employees = 'Number of employees is required';
     if (!companyInfo.companyType) errors.companyType = 'Company type is required';
-    if (!ticketingInfo.membership.trim()) errors.membership = 'Membership is required';
+      if (!companyInfo.membership) errors.membership = 'Membership is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };

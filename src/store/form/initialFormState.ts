@@ -10,9 +10,9 @@ export const initialState: FormState = {
     companyInfo: {  
       employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', companyType: '',
       legalEntityType: '', companyAddress: '', role: '',
-       ein: '', stateOfIncorporation: ''
+       ein: '', stateOfIncorporation: '', membership: ''
     },
-    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', membership: '', ticketingPayout: '', otherTicketingPayout: '' },
+    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', ticketingPayout: '', otherTicketingPayout: '' },
     volumeInfo: {
       lastYearEvents: 0, lastYearTickets: 0, lastYearSales: 0,
       nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0

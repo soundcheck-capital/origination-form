@@ -149,10 +149,14 @@ const MultiStepFormContent: React.FC = () => {
     const validation = validateCurrentStep(currentStep);
     
     if (!validation.isValid) {
-      setCurrentStepErrors(validation.errors);
+      // Merge validation errors with existing field errors
+      const currentErrors = currentStepErrors || {};
+      const merged = { ...currentErrors, ...validation.errors };
+      setCurrentStepErrors(merged);
       return;
     }
 
+    // Only clear errors if validation passes
     setCurrentStepErrors(null);
     setCurrentStep(currentStep + 1);
     window.scrollTo(0, 0);

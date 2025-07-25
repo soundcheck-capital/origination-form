@@ -5,6 +5,7 @@ import { updateCompanyInfo, updateTicketingInfo } from '../store/form/formSlice'
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import DropdownField from './customComponents/DropdownField';
+import { useValidation } from '../contexts/ValidationContext';
 
 // Google Maps Autocomplete types
 declare global {
@@ -45,7 +46,7 @@ const CompanyInfoStep: React.FC = () => {
   const dispatch = useDispatch();
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
-
+  const { setFieldError } = useValidation();
  
   const handleTicketingInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -60,6 +61,7 @@ const CompanyInfoStep: React.FC = () => {
       dispatch(updateCompanyInfo({ name: value, dba: value  }));
     } else {
       dispatch(updateCompanyInfo({ [name]: value }));
+      setFieldError(name, null);
     }
   };
 
@@ -105,7 +107,7 @@ const CompanyInfoStep: React.FC = () => {
 
       <TextField type="number" label="Number of Employees" name="employees" value={companyInfo.employees.toString()} onChange={handleChange} error='' onBlur={()=>{}} required />
       <TextField type="text" label="Website - Socials" name="socials" value={companyInfo.socials} onChange={handleChange} error='' onBlur={()=>{}} required />
-      <DropdownField label="Are you a member of?" name="membership" value={ticketingInfo.membership} onChange={handleTicketingInfoChange} error='' onBlur={()=>{}} options={memberships} required />
+      <DropdownField label="Are you a member of?" name="membership" value={companyInfo.membership} onChange={handleChange} error='' onBlur={()=>{}} options={memberships} required />
    </div>
   );
 };

@@ -53,12 +53,13 @@ export interface Address {
         role: string;
         ein: string;
         stateOfIncorporation: string;
+        membership: string;
+
       };
       ticketingInfo: {
         currentPartner: string;
         otherPartner: string;
         settlementPolicy: string;
-        membership: string;
         ticketingPayout: string;
         otherTicketingPayout: string;
       };
