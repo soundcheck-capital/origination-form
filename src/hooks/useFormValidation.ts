@@ -7,162 +7,163 @@ export const useFormValidation = () => {
   // Check if we're in development mode
   const isDevelopment = process.env.NODE_ENV === 'development';
 
-  const validatePersonalInfo = (): { isValid: boolean; errors: string[] } => {
+  const validatePersonalInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { personalInfo } = formData.formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
-    if (!personalInfo.email.trim()) errors.push('Email is required');
-    if(!personalInfo.emailConfirm.trim()) errors.push('Email confirmation is required');
-    if (!personalInfo.firstname.trim()) errors.push('First name is required');
-    if (!personalInfo.lastname.trim()) errors.push('Last name is required');
-    if (!personalInfo.phone.trim() || personalInfo.phone.length < 15 ) errors.push('Phone number is required')  ;
+    if (!personalInfo.email.trim()) errors.email = 'Email is required';
+    if(!personalInfo.emailConfirm.trim()) errors.emailConfirm = 'Email confirmation is required';
+    if (!personalInfo.firstname.trim() ) errors.firstname = 'First name is required';
+    if (personalInfo.firstname.length > 25 ) errors.firstname = 'First name is too long';
+    if (personalInfo.firstname.length < 2 ) errors.firstname = 'First name is too short';
 
-    return { isValid: errors.length === 0, errors };
+    if (!personalInfo.lastname.trim()) errors.lastname = 'Last name is required';
+    if (personalInfo.lastname.length > 25 ) errors.lastname = 'Last name is too long';
+    if (personalInfo.lastname.length < 2 ) errors.lastname = 'Last name is too short';
+    if (!personalInfo.phone.trim() || personalInfo.phone.length < 15) errors.phone = 'Phone number is required';
+
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateCompanyInfo = (): { isValid: boolean; errors: string[] } => {
+  const validateCompanyInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { companyInfo } = formData.formData;
     const { ticketingInfo } = formData.formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
-    if (!companyInfo.name.trim()) errors.push('Company name is required');
-    if (!companyInfo.role) errors.push('Role is required');
-    if (!companyInfo.socials) errors.push('Socials are required');
-    if (!companyInfo.yearsInBusiness.trim()) errors.push('Years in business is required');
-    if (!companyInfo.employees) errors.push('Number of employees is required');
-    if (!companyInfo.companyType) errors.push('Company type is required');
-    if (!ticketingInfo.membership.trim()) errors.push('Membership is required');
+    if (!companyInfo.name.trim()) errors.name = 'Company name is required';
+    if (!companyInfo.role) errors.role = 'Role is required';
+    if (!companyInfo.socials) errors.socials = 'Socials are required';
+    if (!companyInfo.yearsInBusiness.trim()) errors.yearsInBusiness = 'Years in business is required';
+    if (!companyInfo.employees) errors.employees = 'Number of employees is required';
+    if (!companyInfo.companyType) errors.companyType = 'Company type is required';
+    if (!ticketingInfo.membership.trim()) errors.membership = 'Membership is required';
 
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateTicketingInfo = (): { isValid: boolean; errors: string[] } => {
+  const validateTicketingInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { ticketingInfo, volumeInfo } = formData.formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
-    if (!ticketingInfo.ticketingPayout.trim()) errors.push('Ticketing payout is required');
-    if (ticketingInfo.ticketingPayout === 'Other' && !ticketingInfo.otherTicketingPayout.trim()) errors.push('Other ticketing payout is required');
+    if (!ticketingInfo.ticketingPayout.trim()) errors.ticketingPayout = 'Ticketing payout is required';
+    if (ticketingInfo.ticketingPayout === 'Other' && !ticketingInfo.otherTicketingPayout.trim()) errors.otherTicketingPayout = 'Other ticketing payout is required';
 
-    if (!ticketingInfo.currentPartner.trim()) errors.push('Ticketing partner is required');
-    if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) errors.push('Other ticketing partner is required');
-    if (!ticketingInfo.settlementPolicy.trim()) errors.push('Settlement policy is required');
-    if (volumeInfo.lastYearEvents <= 0) errors.push('Last year events must be greater than 0');
-    if (volumeInfo.lastYearTickets <= 0) errors.push('Last year tickets must be greater than 0');
-    if (volumeInfo.lastYearSales <= 0) errors.push('Last year sales must be greater than 0');
-    if (volumeInfo.nextYearEvents <= 0) errors.push('Next year events must be greater than 0');
-    if (volumeInfo.nextYearTickets <= 0) errors.push('Next year tickets must be greater than 0');
-    if (volumeInfo.nextYearSales <= 0) errors.push('Next year sales must be greater than 0');
+    if (!ticketingInfo.currentPartner.trim()) errors.currentPartner = 'Ticketing partner is required';
+    if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) errors.otherPartner = 'Other ticketing partner is required';
+    if (!ticketingInfo.settlementPolicy.trim()) errors.settlementPolicy = 'Settlement policy is required';
+    if (volumeInfo.lastYearEvents <= 0) errors.lastYearEvents = 'Last year events must be greater than 0';
+    if (volumeInfo.lastYearTickets <= 0) errors.lastYearTickets = 'Last year tickets must be greater than 0';
+    if (volumeInfo.lastYearSales <= 0) errors.lastYearSales = 'Last year sales must be greater than 0';
+    if (volumeInfo.nextYearEvents <= 0) errors.nextYearEvents = 'Next year events must be greater than 0';
+    if (volumeInfo.nextYearTickets <= 0) errors.nextYearTickets = 'Next year tickets must be greater than 0';
+    if (volumeInfo.nextYearSales <= 0) errors.nextYearSales = 'Next year sales must be greater than 0';
 
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateFundsInfo = (): { isValid: boolean; errors: string[] } => {
+  const validateFundsInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { fundsInfo } = formData.formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
-    if (!fundsInfo.yourFunds.trim()) errors.push('Funding needs amount is required');
-    if (!fundsInfo.timeForFunding.trim()) errors.push('Timing for funding is required');
-    if (!fundsInfo.fundUse.trim()) errors.push('Fund use is required');
+    if (!fundsInfo.yourFunds.trim()) errors.yourFunds = 'Funding needs amount is required';
+    if (!fundsInfo.timeForFunding.trim()) errors.timeForFunding = 'Timing for funding is required';
+    if (!fundsInfo.fundUse.trim()) errors.fundUse = 'Fund use is required';
 
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateOwnershipInfo = (): { isValid: boolean; errors: string[] } => {
+  const validateOwnershipInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { ownershipInfo } = formData.formData;
     const { companyInfo } = formData.formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
-    if (!companyInfo.name.trim()) errors.push('Company name is required');
-    if (!companyInfo.ein.trim()) errors.push('EIN is required');
-    if (!companyInfo.dba.trim()) errors.push('DBA name is required');
-    if (!companyInfo.companyAddress.trim()) errors.push('Company address is required');
-    if (!companyInfo.stateOfIncorporation.trim()) errors.push('State of incorporation is required');
-    if (!companyInfo.legalEntityType.trim()) errors.push('Legal entity type is required');
+    if (!companyInfo.name.trim()) errors.name = 'Company name is required';
+    if (!companyInfo.ein.trim()) errors.ein = 'EIN is required';
+    if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
+    if (!companyInfo.companyAddress.trim()) errors.companyAddress = 'Company address is required';
+    if (!companyInfo.stateOfIncorporation.trim()) errors.stateOfIncorporation = 'State of incorporation is required';
+    if (!companyInfo.legalEntityType.trim()) errors.legalEntityType = 'Legal entity type is required';
     if (ownershipInfo.owners.length === 0) {
-      errors.push('At least one owner is required');
+      errors.owners = 'At least one owner is required';
     } else {
       ownershipInfo.owners.forEach((owner, index) => {
-        if (!owner.name.trim()) errors.push(`Owner ${index + 1}: Name is required`);
-        if (!owner.ownershipPercentage.trim()) errors.push(`Owner ${index + 1}: Ownership percentage is required`);
-        if (!owner.ownerAddress.trim()) errors.push(`Owner ${index + 1}: Address is required`);
-        if (!owner.ownerBirthDate.trim()) errors.push(`Owner ${index + 1}: Birth date is required`);
-
-      
+        if (!owner.name.trim()) errors[`owner${index}Name`] = `Owner ${index + 1}: Name is required`;
+        if (!owner.ownershipPercentage.trim()) errors[`owner${index}Percentage`] = `Owner ${index + 1}: Ownership percentage is required`;
+        if (!owner.ownerAddress.trim()) errors[`owner${index}Address`] = `Owner ${index + 1}: Address is required`;
+        if (!owner.ownerBirthDate.trim()) errors[`owner${index}BirthDate`] = `Owner ${index + 1}: Birth date is required`;
       });
     }
 
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateFinancesInfo = (): { isValid: boolean; errors: string[] } => {
+  const validateFinancesInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { financesInfo, diligenceInfo } = formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
-  
+    // Validate based on singleEntity condition
+    if (!financesInfo.singleEntity && diligenceInfo.legalEntityChart.files.length === 0) {
+      errors.legalEntityChart = 'Legal entity chart is required when not a single entity';
+    }
 
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateTicketingDiligenceFiles = (): { isValid: boolean; errors: string[] } => {
+  const validateTicketingDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { diligenceInfo } = formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
     // Ticketing Information
     if (diligenceInfo.ticketingCompanyReport.files.length === 0) {
-      errors.push('Ticketing company report is required');
+      errors.ticketingCompanyReport = 'Ticketing company report is required';
     }
     if (formData.formData.ticketingInfo.ticketingPayout === 'Venue (i.e. post show settlement)' && diligenceInfo.ticketingServiceAgreement.files.length === 0) {
-      errors.push('Ticketing service agreement is required');
+      errors.ticketingServiceAgreement = 'Ticketing service agreement is required';
     }
 
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
-  const validateFinancialDiligenceFiles = (): { isValid: boolean; errors: string[] } => {
+  const validateFinancialDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { diligenceInfo } = formData;
-    const errors: string[] = [];
+    const errors: { [key: string]: string } = {};
 
-  
     // Financial Information
     if (diligenceInfo.financialStatements.files.length === 0) {
-      errors.push('Financial statements are required');
+      errors.financialStatements = 'Financial statements are required';
     }
     if (diligenceInfo.bankStatement.files.length === 0) {
-      //errors.push('Bank statement is required');
+      //errors.bankStatement = 'Bank statement is required';
     }
 
-   
-
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
-  const validateLegalDiligenceFiles = (): { isValid: boolean; errors: string[] } => {
+  const validateLegalDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { diligenceInfo, financesInfo } = formData;
-    const errors: string[] = [];
-
-   
+    const errors: { [key: string]: string } = {};
 
     // Legal Information
     if (diligenceInfo.incorporationCertificate.files.length === 0) {
-      errors.push('Incorporation certificate is required');
+      errors.incorporationCertificate = 'Incorporation certificate is required';
     }
     if (!financesInfo.singleEntity && diligenceInfo.legalEntityChart.files.length === 0) {
-      errors.push('Legal entity chart is required');
+      errors.legalEntityChart = 'Legal entity chart is required';
     }
     if (diligenceInfo.governmentId.files.length === 0) {
-      //errors.push('Government ID is required');
+      //errors.governmentId = 'Government ID is required';
     }
 
     if (diligenceInfo.w9form.files.length === 0) {
-      //errors.push('W9 form is required');
+      //errors.w9form = 'W9 form is required';
     }
   
-    return { isValid: errors.length === 0, errors };
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
   // New function to validate current step only
-  const validateCurrentStep = (step: number): { isValid: boolean; errors: string[] } => {
+  const validateCurrentStep = (step: number): { isValid: boolean; errors: { [key: string]: string } } => {
     // Skip validation only if explicitly disabled in development mode
     if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') { 
       console.log("DISABLE_VALIDATION", localStorage.getItem('DISABLE_VALIDATION'));
-      return { isValid: true, errors: [] };
+      return { isValid: true, errors: {} };
     }
 
     switch (step) {
@@ -185,15 +186,15 @@ export const useFormValidation = () => {
       case 9:
         return validateLegalDiligenceFiles();
       case 10:
-        return { isValid: true, errors: [] }; // Other step - no validation needed
+        return { isValid: true, errors: {} }; // Other step - no validation needed
       case 11:
-        return { isValid: true, errors: [] }; // Summary step - no validation needed
+        return { isValid: true, errors: {} }; // Summary step - no validation needed
       default:
-        return { isValid: true, errors: [] };
+        return { isValid: true, errors: {} };
     }
   };
 
-  const validateAllSteps = (): { isValid: boolean; errors: { [key: string]: string[] } } => {
+  const validateAllSteps = (): { isValid: boolean; errors: { [key: string]: { [key: string]: string } } } => {
     const personalInfo = validatePersonalInfo();
     const companyInfo = validateCompanyInfo();
     const ticketingInfo = validateTicketingInfo();

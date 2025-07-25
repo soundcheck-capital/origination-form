@@ -132,7 +132,12 @@ const MultiStepFormContent: React.FC = () => {
     const validation = validateAllSteps();
     
     if (!validation.isValid) {
-      setValidationErrors(validation.errors);
+      // Convert the new error format to the old format for backward compatibility
+      const oldFormatErrors: { [key: string]: string[] } = {};
+      Object.entries(validation.errors).forEach(([section, fieldErrors]) => {
+        oldFormatErrors[section] = Object.values(fieldErrors);
+      });
+      setValidationErrors(oldFormatErrors);
       return;
     }
 
@@ -208,7 +213,7 @@ const MultiStepFormContent: React.FC = () => {
   };
 
   const renderCurrentStepErrors = () => {
-    if (!currentStepErrors || currentStepErrors.length === 0) return null;
+    if (!currentStepErrors || Object.keys(currentStepErrors).length === 0) return null;
 
     return (
       <div className="w-full mb-4">
@@ -217,7 +222,7 @@ const MultiStepFormContent: React.FC = () => {
             Please complete the following required fields:
           </h3>
           <ul className="list-disc list-inside space-y-1">
-            {currentStepErrors.map((error, index) => (
+            {Object.values(currentStepErrors).map((error, index) => (
               <li key={index} className="text-sm text-red-600">{error}</li>
             ))}
           </ul>
@@ -366,7 +371,7 @@ const MultiStepFormContent: React.FC = () => {
           <div className="bg-white mx-auto mt-8 w-full">
             <h1 className="text-3xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
-            {renderCurrentStepErrors()}
+            {/* {renderCurrentStepErrors()} */}
           </div>
           {(currentStep < 11 && currentStep > 0 && currentStep !== 6) && (
              <p className='text-xs text-gray-500 text-center'><span className='text-red-500'>*</span> Required fields</p>

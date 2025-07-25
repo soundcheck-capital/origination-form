@@ -4,20 +4,20 @@ import { RootState } from '../store';
 import { updatePersonalInfo } from '../store/form/formSlice';
 import TextField from './customComponents/TextField';
 import StepTitle from './customComponents/StepTitle';
+import { useValidation } from '../contexts/ValidationContext';
 
 const PersonalInfoStep: React.FC = () => {
   const dispatch = useDispatch();
   const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
-  const [emailError, setEmailError] = useState<string>('');
-  const [phoneError, setPhoneError] = useState<string>('');
-  const [emailConfirmError, setEmailConfirmError] = useState<string>('');
-
+   const { setCurrentStepErrors } = useValidation();
   const validateEmail = (email: string) => {
+    email = email.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const validateEmailConfirm = (emailConfirm: string) => {
+    emailConfirm = emailConfirm.trim();
     if (personalInfo.email !== emailConfirm) {
       return 'Emails do not match';
     }
@@ -79,6 +79,14 @@ const PersonalInfoStep: React.FC = () => {
           [name]: formattedValue
         }
       }));
+    } else if (name === 'firstname' || name === 'lastname') {
+      const formattedValue = value.trim().replace(/[^a-zA-Z\s]/g, '');
+      dispatch(updatePersonalInfo({
+        personalInfo: {
+          ...personalInfo,
+          [name]: formattedValue
+        }
+      }));
     } else {
       dispatch(updatePersonalInfo({
         personalInfo: {
@@ -91,28 +99,35 @@ const PersonalInfoStep: React.FC = () => {
 
   const handleEmailBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const email = e.target.value;
+    
     if (email && !validateEmail(email)) {
-      setEmailError('Please enter a valid email address');
+      setCurrentStepErrors({
+        email: 'Please enter a valid email address'
+      });
     } else {
-      setEmailError('');
+      setCurrentStepErrors(null);
     }
   };
 
   const handleEmailConfirmBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const emailConfirm = e.target.value;
     if (emailConfirm && validateEmailConfirm(emailConfirm) !== '') {
-      setEmailConfirmError('Emails do not match');
+      setCurrentStepErrors({
+        emailConfirm: 'Emails do not match'
+      });
     } else {
-      setEmailConfirmError('');
+      setCurrentStepErrors(null);
     }
   };
 
   const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const phone = e.target.value;
-    if (phone && !validatePhone(phone)) {
-      setPhoneError('Please enter a valid US phone number with country code (+1)');
+    if (phone && validatePhone(phone)) {
+      setCurrentStepErrors({
+        phone: 'Please enter a valid US phone number with country code (+1)'
+      });
     } else {
-      setPhoneError('');
+      setCurrentStepErrors(null);
     }
   };
 
@@ -125,25 +140,13 @@ const PersonalInfoStep: React.FC = () => {
       <TextField type="text" label="Last Name" name="lastname" value={personalInfo.lastname} onChange={handleInputChange} error='' onBlur={() => { }} required />
 
       <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange} error='' onBlur={handleEmailBlur} required />
-      {emailError && (
-        <div className="w-full max-w-md  ml-2 mb-2">
-          <p className="text-red-500 text-xs">{emailError}</p>
-        </div>
-      )}
+      
       <TextField type="email" label="Confirm Email" name="emailConfirm" value={personalInfo.emailConfirm} onChange={handleInputChange} error='' onBlur={handleEmailConfirmBlur} required />
 
-      {emailConfirmError && (
-        <div className="w-full max-w-md ml-2 mb-2 ">
-          <p className="text-red-500 text-xs">{emailConfirmError}</p>
-        </div>
-      )}
+      
       
       <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={handlePhoneBlur} required />
-      {/* {phoneError && (
-          <div className="w-full max-w-md  mt-2 ml-2">
-            <p className="text-red-500 text-xs">{phoneError}</p>
-          </div>
-        )} */}
+      
 
 
       <p className="text-sm text-gray-500 my-4 text-center ">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-500">Privacy Policy</a></p>
