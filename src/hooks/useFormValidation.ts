@@ -13,13 +13,10 @@ export const useFormValidation = () => {
 
     if (!personalInfo.email.trim()) errors.email = 'Email is required';
     if(!personalInfo.emailConfirm.trim()) errors.emailConfirm = 'Email confirmation is required';
-    if (!personalInfo.firstname.trim() ) errors.firstname = 'First name is required';
+    if (!personalInfo.firstname.trim() || personalInfo.firstname.length < 2 ) errors.firstname = 'First name is required';
     if (personalInfo.firstname.length > 25 ) errors.firstname = 'First name is too long';
-    if (personalInfo.firstname.length < 2 ) errors.firstname = 'First name is too short';
-
-    if (!personalInfo.lastname.trim()) errors.lastname = 'Last name is required';
+    if (!personalInfo.lastname.trim() || personalInfo.lastname.length < 2 ) errors.lastname = 'Last name is required';
     if (personalInfo.lastname.length > 25 ) errors.lastname = 'Last name is too long';
-    if (personalInfo.lastname.length < 2 ) errors.lastname = 'Last name is too short';
     if (!personalInfo.phone.trim() || personalInfo.phone.length < 15) errors.phone = 'Phone number is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };

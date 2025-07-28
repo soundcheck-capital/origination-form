@@ -15,9 +15,9 @@ const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
   if (e.target.value.trim() === '') {
     setError('Password cannot be empty or contain only spaces');
   } else if(e.target.value.length < 6){
-    setError('Password must be at least 8 characters long');
-  } else if(e.target.value.length > 16){
-    setError('Password must be less than 16 characters long');
+    setError('Password must be at least 6 characters long');
+  } else if(e.target.value.length > 12){
+    setError('Password must be less than 12 characters long');
   } else {
     setError('');
   }
