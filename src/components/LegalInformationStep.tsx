@@ -56,7 +56,7 @@ const LegalInformationStep: React.FC = () => {
           Outdoor event: copy of the event cancellation insurance <br>
           Other: business plan, budget, insurance certificate, bank letter, investor deck, etc"
           accept=".xlsx,.pdf,.csv,.jpg,.png"
-          multiple={false}
+          multiple={true}
           onFilesChange={(fileInfos) => handleFilesChange('other', fileInfos)}
         />
       </div>

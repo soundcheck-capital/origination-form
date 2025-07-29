@@ -10,23 +10,30 @@
   export default AddressAutocomplete; */
 
 // MyAddressInput.tsx
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useLoadScript } from "@react-google-maps/api";
-import { updateCompanyInfo } from '../../store/form/formSlice';
-import { useDispatch } from "react-redux";
+
 
 const libraries: ("places")[] = ["places"];
 
-export const AddressAutocomplete: React.FC<{ label: string, name: string, value: string, dispatch: any, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLInputElement>) => void, type: string, ref?: React.RefObject<HTMLInputElement>, id: string, required?: boolean }> = ({ label, name, value, dispatch, onChange, error, onBlur, type, ref, id, required = false }) => {
+export const AddressAutocomplete: React.FC<{ label: string, name: string, value: string, onSelect: any, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLInputElement>) => void, type: string, ref?: React.RefObject<HTMLInputElement>, id: string, required?: boolean }> = ({ label, name, value, onSelect, onChange, error, onBlur, type, ref, id, required = false }) => {
   //const dispatch = useDispatch();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyA7_2peM-CW7KqJzdHEAmL2PYK-DEnjX0A",
     libraries,
   });
   const inputRef = useRef<HTMLInputElement>(null);
+ const onSelectRef = useRef(onSelect);
 
-  React.useEffect(() => {
-    if (isLoaded && inputRef.current) {
+ useEffect(() => {
+  onSelectRef.current = onSelect;
+ }, [onSelect]);
+
+
+  useEffect(() => {
+    if (!isLoaded || !inputRef.current) return;
+
+    
       const autocomplete = new window.google.maps.places.Autocomplete(
         inputRef.current,
         {
@@ -55,10 +62,14 @@ export const AddressAutocomplete: React.FC<{ label: string, name: string, value:
           state = c.short_name;
         if (c.types.includes("postal_code")) zipCode = c.long_name;
       });
-        console.log(place);
-        dispatch(`${streetNumber} ${route} ${city} ${state} ${zipCode}`.trim());  
+      const formatted = `${streetNumber} ${route} ${city} ${state} ${zipCode}`.trim();
+
+      onSelectRef.current(formatted);
       });
-    }
+      return () => {
+        // important : on enlève le listener pour éviter les doublons
+        window.google.maps.event.clearListeners(autocomplete);
+      };
   }, [isLoaded]);
 
   if (loadError) return <div>Erreur de chargement Google Maps</div>;

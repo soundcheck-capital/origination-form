@@ -74,7 +74,7 @@ export const useFormValidation = () => {
     const { companyInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
-    if (!companyInfo.name.trim()) errors.name = 'Company name is required';
+    if (!companyInfo.name.trim()) errors.name = 'Legal entity name is required';
     if (!companyInfo.ein.trim()) errors.ein = 'EIN is required';
     if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
     if (!companyInfo.companyAddress.trim()) errors.companyAddress = 'Company address is required';
@@ -84,7 +84,7 @@ export const useFormValidation = () => {
       errors.owners = 'At least one owner is required';
     } else {
       ownershipInfo.owners.forEach((owner, index) => {
-        if (!owner.name.trim()) errors[`owner${index}Name`] = `Owner ${index + 1}: Name is required`;
+        if (!owner.ownerName) errors[`owner${index}Name`] = `Owner ${index + 1}: Name is required`;
         if (!owner.ownershipPercentage.trim()) errors[`owner${index}Percentage`] = `Owner ${index + 1}: Ownership percentage is required`;
         if (!owner.ownerAddress.trim()) errors[`owner${index}Address`] = `Owner ${index + 1}: Address is required`;
         if (!owner.ownerBirthDate.trim()) errors[`owner${index}BirthDate`] = `Owner ${index + 1}: Birth date is required`;

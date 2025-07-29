@@ -57,48 +57,24 @@ const CompanyInfoStep: React.FC = () => {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if(name === "legalEntityName"){
+    if(name === "name"){
       dispatch(updateCompanyInfo({ name: value, dba: value  }));
+      setFieldError('name', null);
     } else {
       dispatch(updateCompanyInfo({ [name]: value }));
       setFieldError(name, null);
     }
   };
 
-  const updateCompanyAddress = (address: string) => {
-    dispatch(updateCompanyInfo({ companyAddress: address }));
-  };
 
-  const [ein, setEin] = useState(companyInfo.ein);
 
-  const handleChangeEIN = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatEIN(e.target.value);
-    setEin(formatted);
-    dispatch(updateCompanyInfo({ ein: formatted }));
-  };
 
-  const formatEIN = (value: string): string => {
-    // Supprime tout ce qui n'est pas chiffre
-    const digitsOnly = value.replace(/\D/g, '');
-
-    // Tronque à 9 chiffres max
-    const truncated = digitsOnly.slice(0, 9);
-
-    // Formate en XX-XXXXXXX
-    if (truncated.length <= 2) {
-      return truncated;
-    } else if (truncated.length <= 9) {
-      return `${truncated.slice(0, 2)}-${truncated.slice(2)}`;
-    }
-
-    return truncated;
-  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Company Information" />
 
-      <TextField type="text" label="Company Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}} required />
+      <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}} required />
       <TextField type="text" label="Your Role" name="role" value={companyInfo.role} onChange={handleChange} error='' onBlur={()=>{}} required />
 
       <DropdownField label="Company Type" name="companyType" value={companyInfo.companyType} onChange={handleChange} error='' onBlur={()=>{}} options={companyTypes} required />

@@ -66,7 +66,7 @@ const formSlice = createSlice({
       state.formData.fundsInfo = { ...state.formData.fundsInfo, ...action.payload };
       saveToLocalStorage(state);
     },
-    updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['formData']['ownershipInfo']>>) => {
+    updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['formData']['ownershipInfo'] >>) => {
       state.formData.ownershipInfo = { ...state.formData.ownershipInfo, ...action.payload };
       saveToLocalStorage(state);
     },

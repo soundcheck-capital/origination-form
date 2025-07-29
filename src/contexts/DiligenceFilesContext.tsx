@@ -13,6 +13,7 @@ interface DiligenceFiles {
   legalEntityChart: { files: File[]; fileInfos: FileInfo[] };
   governmentId: { files: File[]; fileInfos: FileInfo[] };
   w9form: { files: File[]; fileInfos: FileInfo[] };
+  other: { files: File[]; fileInfos: FileInfo[] };
 }
 
 interface DiligenceFilesContextType {
@@ -35,6 +36,7 @@ const initialDiligenceFiles: DiligenceFiles = {
   legalEntityChart: { files: [], fileInfos: [] },
   governmentId: { files: [], fileInfos: [] },
   w9form: { files: [], fileInfos: [] },
+  other: { files: [], fileInfos: [] },
 };
 
 interface DiligenceFilesProviderProps {
@@ -81,6 +83,10 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
         w9form: { 
           files: reduxDiligenceInfo.w9form?.files || [], 
           fileInfos: reduxDiligenceInfo.w9form?.fileInfos || [] 
+        },
+        other: { 
+          files: reduxDiligenceInfo.other?.files || [], 
+          fileInfos: reduxDiligenceInfo.other?.fileInfos || [] 
         },
       };
       

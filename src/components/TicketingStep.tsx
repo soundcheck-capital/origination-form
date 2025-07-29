@@ -8,6 +8,7 @@ import DropdownField from './customComponents/DropdownField';
 import TextField from './customComponents/TextField';
 import NumberInput from './customComponents/NumberField';
 import CurrencyField from './customComponents/CurrencyField';
+import { useValidation } from '../contexts/ValidationContext';
 interface LoginPopupProps {
   isOpen: boolean;
   onClose: () => void;
@@ -129,11 +130,12 @@ const TicketingStep: React.FC = () => {
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [isTicketonConnected, setIsTicketonConnected] = useState(false);
-
+  const { setFieldError } = useValidation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
       dispatch(updateTicketingInfo({ [name]: value }));
+      setFieldError(name, null);
     
 
     // Reset connection status if partner changes
@@ -144,10 +146,12 @@ const TicketingStep: React.FC = () => {
 
   const handleNumberChange = (name: string, value: string) => {
     dispatch(updateVolumeInfo({ [name]: value }));
+    setFieldError(name, null);
   };
 
   const handleCurrencyChange = (name: string, value: string) => {
     dispatch(updateVolumeInfo({ [name]: value }));
+    setFieldError(name, null);
   };
 
   const handleLoginSuccess = () => {

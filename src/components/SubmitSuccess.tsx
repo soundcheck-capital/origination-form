@@ -32,7 +32,7 @@ const SubmitSuccess: React.FC = () => {
           <p className='text-sm text-white'>You will receive an email with your application details.</p>
           
           {/* Development Mode Reset Button */}
-          { isDevelopment && localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true' && (
+          {  localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true' && (
             <button
               onClick={handleReset}
               className="mt-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 f "

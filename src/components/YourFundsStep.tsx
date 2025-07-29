@@ -6,6 +6,7 @@ import TicketingVolumeStep from './TicketingVolumeStep';
 import StepTitle from './customComponents/StepTitle';
 import DropdownField from './customComponents/DropdownField';
 import CurrencyField from './customComponents/CurrencyField';
+import { useValidation } from '../contexts/ValidationContext';
 
 
 
@@ -31,14 +32,15 @@ const YourFundingStep: React.FC = () => {
   const dispatch = useDispatch();
   const fundsInfo = useSelector((state: RootState) => state.form.formData.fundsInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
-
+  const { setFieldError } = useValidation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     dispatch(updateFundsInfo({ [name]: value }));
-
+    setFieldError(name, null);
   };
   const handleCurrencyChange = (name: string, value: string) => {
     dispatch(updateFundsInfo({ [name]: value }));
+    setFieldError(name, null);
   };
   let capitalAmount = 0;
   if(ticketingVolume.lastYearSales > 0 && ticketingVolume.nextYearSales > 0 && ticketingVolume.lastYearTickets > 0 && ticketingVolume.nextYearTickets > 0 && ticketingVolume.lastYearEvents > 0 && ticketingVolume.nextYearEvents > 0) {

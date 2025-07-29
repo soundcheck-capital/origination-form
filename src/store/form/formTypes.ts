@@ -8,7 +8,7 @@ export interface Address {
   
   export interface Owner {
     id: string;
-    name: string;
+    ownerName: string;
     ownershipPercentage: string;
     sameAddress: boolean;
     ownerAddress: string;
@@ -111,7 +111,7 @@ export interface Address {
       governmentId: DiligenceFileData;
       w9form: DiligenceFileData;
       lastYearTaxes: DiligenceFileData;
-      otherFiles: DiligenceFileData;
+      other: DiligenceFileData;
     };
   }
   

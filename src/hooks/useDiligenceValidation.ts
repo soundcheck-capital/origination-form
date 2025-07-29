@@ -23,7 +23,8 @@ export const useDiligenceValidation = () => {
     const requiredFields = [
       'incorporationCertificate',
       'governmentId',
-      'w9form'
+      'w9form',
+      'other'
     ];
 
     // legalEntityChart n'est requis que si singleEntity est false

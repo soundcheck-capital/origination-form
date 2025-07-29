@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice';
@@ -8,10 +8,11 @@ import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
 import NumberInput from './customComponents/NumberField';
 import DatePickerField from './customComponents/DatePickerField';
 import DropdownField from './customComponents/DropdownField';
+import { useValidation } from '../contexts/ValidationContext';
 
 interface Owner {
   id: string;
-  name: string;
+  ownerName: string;
   ownershipPercentage: string;
   sameAddress: boolean;
   ownerAddress: string;
@@ -34,19 +35,13 @@ const OwnershipStep: React.FC = () => {
   const dispatch = useDispatch();
   const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
-  const [owners, setOwners] = useState<Owner[]>(ownershipInfo.owners || []);
+  const { setFieldError } = useValidation();
   useEffect(() => {
-    if (owners.length === 0) {
+    if (!ownershipInfo.owners || ownershipInfo.owners.length === 0) {
       addOwner();
     }
-  }, []);
-
-  // Sync local state with Redux store
-  useEffect(() => {
-    if (ownershipInfo.owners && ownershipInfo.owners.length > 0) {
-      setOwners(ownershipInfo.owners);
-    }
   }, [ownershipInfo.owners]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -55,6 +50,7 @@ const OwnershipStep: React.FC = () => {
     } else {
       dispatch(updateCompanyInfo({ [name]: value }));
     }
+    setFieldError(name, null);
   };
 
   const updateCompanyAddress = (address: string) => {
@@ -67,6 +63,7 @@ const OwnershipStep: React.FC = () => {
     const formatted = formatEIN(e.target.value);
     setEin(formatted);
     dispatch(updateCompanyInfo({ ein: formatted }));
+    setFieldError('ein', null);
   };
 
   const formatEIN = (value: string): string => {
@@ -85,64 +82,53 @@ const OwnershipStep: React.FC = () => {
 
     return truncated;
   };
-  const handleOwnerChange = (id: string, field: keyof Owner, value: string | boolean) => {
-    console.log('handleOwnerChange', id, field, value);
-    const updatedOwners = owners.map(owner => {
-      if (field === 'ownershipPercentage' && Number(value) > 100) {
-        return owner.id === id ? { ...owner, [field]: '100' } : owner;
-      } else {
-        return owner.id === id ? { ...owner, [field]: value } : owner;
-      }
+  const handleOwnerChange = useCallback((
+    id: string,
+    field: keyof Owner,
+    value: string | boolean
+  ) => {
+    const updatedOwners = ownershipInfo.owners.map(o => {
+      if (o.id !== id) return o;
+      const newValue = (field === 'ownershipPercentage' && Number(value) > 100)
+        ? '100'
+        : value;
+      return { ...o, [field]: newValue };
     });
-    setOwners(updatedOwners);
-    // Debounce the dispatch to avoid too many updates
-    setTimeout(() => {
-      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
-    }, 100);
-  };
+
+    
+    dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+  }, [dispatch, ownershipInfo.owners]);
 
   const addOwner = () => {
     const newOwner: Owner = {
-      id: Date.now().toString(),
-      name: '',
-      ownershipPercentage: '',
-      sameAddress: true,
-      ownerAddress: '',
-      ownerBirthDate: ''
+      id: crypto.randomUUID(),
+      ownerName: '', ownershipPercentage: '', 
+      sameAddress: false,
+       ownerAddress: '', 
+       ownerBirthDate: ''
     };
-    const updatedOwners = [...owners, newOwner];
-    setOwners(updatedOwners);
-    // Immediate dispatch for adding owner
-    dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+    dispatch(updateOwnershipInfo({
+      owners: [...ownershipInfo.owners, newOwner]
+    }));
   };
 
   const removeOwner = (id: string) => {
-    if (owners.length > 1) {
-      const updatedOwners = owners.filter(owner => owner.id !== id);
-      setOwners(updatedOwners);
-      // Immediate dispatch for removing owner
-      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+    if (ownershipInfo.owners.length > 1) {
+      dispatch(updateOwnershipInfo({
+        owners: ownershipInfo.owners.filter(o => o.id !== id)
+      }));
+      // reset validation errors…
+      setFieldError(`owner${ownershipInfo.owners.length - 1}Name`, null);
+      setFieldError(`owner${ownershipInfo.owners.length - 1}Percentage`, null);
+      setFieldError(`owner${ownershipInfo.owners.length - 1}Address`, null);
+      setFieldError(`owner${ownershipInfo.owners.length - 1}BirthDate`, null);
     }
   };
 
-  const updateOwnerAddress = (id: string, address: string) => {
-    console.log('updateOwnerAddress', id, address);
-    const updatedOwners = owners.map(owner => owner.id === id ? { ...owner, ownerAddress: address } : owner);
-    setOwners(updatedOwners);
-    // Debounce the dispatch to avoid too many updates
-    setTimeout(() => {
-      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
-    }, 100);
-  };
 
-  const calculateTotalOwnership = () => {
-    return owners.reduce((total, owner) => {
-      return total + (parseFloat(owner.ownershipPercentage) || 0);
-    }, 0);
-  };
+  
 
-  const totalOwnership = calculateTotalOwnership();
-  const hasOwnershipError = totalOwnership < 80;
+
 
   return (
 
@@ -162,7 +148,7 @@ const OwnershipStep: React.FC = () => {
         name="companyAddress"
         value={companyInfo.companyAddress}
         onChange={handleChange}
-        dispatch={(address: string) => updateCompanyAddress(address)}
+        onSelect={(address: string) => updateCompanyAddress(address)}
         error=''
         onBlur={() => { }}
         type="text"
@@ -174,11 +160,11 @@ const OwnershipStep: React.FC = () => {
       <StepTitle title="Beneficial ownership & control person" />
 
 
-      {owners.map((owner) => (
+      {ownershipInfo.owners.map((owner) => (
         <div key={owner.id} className="flex flex-col bg-white w-full">
           <div className="flex flex-row justify-between w-full">
-            <p className='block text-sm font-medium text-gray-700  '>Owner {owners.indexOf(owner) + 1}</p>
-            {owners.length > 1 && (
+            <p className='block text-sm font-medium text-gray-700  '>Owner {ownershipInfo.owners.indexOf(owner) + 1}</p>
+            {ownershipInfo.owners.length > 1 && (
               <button
                 className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end "
                 onClick={() => removeOwner(owner.id)}
@@ -191,62 +177,18 @@ const OwnershipStep: React.FC = () => {
 
 
           <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
-            <TextField type="text" label="Owner Name" name="name" value={owner.name} onChange={(e) => handleOwnerChange(owner.id, 'name', e.target.value)} error='' onBlur={() => { }} required />
+            <TextField type="text" label="Owner Name" name="ownerName" value={owner.ownerName} onChange={(e) => handleOwnerChange(owner.id, 'ownerName', e.target.value)} error='' onBlur={() => { }} required />
 
             <NumberInput showPercent={true} label="Ownership Percentage" name="ownershipPercentage" value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} required />
           </div>
           <div className="flex flex-row justify-between  gap-x-4 ">
-            <AddressAutocomplete label="Address" name="ownerAddress" value={owner.ownerAddress} dispatch={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)} onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} error='' onBlur={() => { }} type={''} id={''} required />
+            <AddressAutocomplete label="Address" name="ownerAddress" value={owner.ownerAddress}
+              onSelect={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)}
+              onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} error='' onBlur={() => { }} type={''} id={''} required />
             <DatePickerField label="Date of Birth" name="ownerBirthDate" value={owner.ownerBirthDate} onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} required />
           </div>
 
-          {/* 
-          <div className="flex flex-row justify-between w-full">
-            <div className="flex flex-row  w-full gap-4">
-              <p className="text-sm text-gray-700  w-full">Same address as company?</p>
-              <div className="flex flex-row justify-end w-full gap-4">
-                <label>
-                  <input className='mr-2'
-                    type="radio"
-                    name={`sameAddress-${owner.id}-yes`}
-                    checked={owner.sameAddress}
-                    onChange={(e) => handleOwnerChange(owner.id, 'sameAddress', e.target.checked)}
-                  />
-                  Yes
-                </label>
-                <label >
-                  <input className='mr-2'
-                    type="radio"
-                    name={`sameAddress-${owner.id}-no`}
-                    checked={!owner.sameAddress}
-                    onChange={(e) => handleOwnerChange(owner.id, 'sameAddress', !e.target.checked)}
-                  />
-                  No
-                </label>
-              </div>
-            </div>
-          </div> */}
-
-          {/* {!owner.sameAddress && (
-        
-            <div className="owner-address-fields mt-8">
-              <AddressAutocomplete
-                label="Address"
-                name="companyAddress"
-                value={owner.ownerAddress}
-                onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)}
-                error=''
-                onBlur={() => { }}
-                type="text"
-                ref={addressInputRef as React.RefObject<HTMLInputElement>}
-                id="ownerAddress"
-              />
-              <TextField type="text" label="Legal Entity ZIP code" name="companyZipCode" value={owner.ownerZipCode} onChange={(e) => handleOwnerChange(owner.id, 'ownerZipCode', e.target.value)} error='' onBlur={() => { }} />
-              <TextField type="text" label="Legal Entity City" name="companyCity" value={owner.ownerCity} onChange={(e) => handleOwnerChange(owner.id, 'ownerCity', e.target.value)} error='' onBlur={() => { }} />
-              <TextField type="text" label="Legal Entity State" name="companyState" value={owner.ownerState} onChange={(e) => handleOwnerChange(owner.id, 'ownerState', e.target.value)} error='' onBlur={() => { }} />
-            </div>
-          )} */}
-          {owners.length > 1 && (
+          {ownershipInfo.owners.length > 1 && (
             <div className='w-[30%] mx-auto border-b border-amber-200 my-8 '></div>
           )}
         </div>
@@ -263,4 +205,7 @@ const OwnershipStep: React.FC = () => {
   );
 };
 
-export default OwnershipStep; 
+export default OwnershipStep;
+
+
+
