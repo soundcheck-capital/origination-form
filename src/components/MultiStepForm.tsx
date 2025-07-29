@@ -348,15 +348,7 @@ const MultiStepFormContent: React.FC = () => {
           </div> */}
         </div>
 
-        {/* Success/Error Message */}
-        {saveMessage && (
-          <div className={`w-full mx-auto mb-4 p-3 rounded-lg text-center ${saveMessage.includes('successfully')
-            ? 'bg-green-100 text-green-700 border border-green-300'
-            : 'bg-red-100 text-red-700 border border-red-300'
-            }`}>
-            {saveMessage}
-          </div>
-        )}
+       
 
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
@@ -402,7 +394,15 @@ const MultiStepFormContent: React.FC = () => {
               }} disabled={false}>Submit</ButtonPrimary>
             )}
                     </div>
-
+ {/* Success/Error Message */}
+ {saveMessage && (
+          <div className={`w-full mx-auto my-4 p-3 rounded-lg text-center ${saveMessage.includes('successfully')
+            ? 'bg-green-100 text-green-700 border border-green-300'
+            : 'bg-red-100 text-red-700 border border-red-300'
+            }`}>
+            {saveMessage}
+          </div>
+        )}
            
 
           {/* Development Mode Toggle */}

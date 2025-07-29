@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useDiligenceFiles } from '../../contexts/DiligenceFilesContext';
-
+import { useValidation } from '../../contexts/ValidationContext';
 interface FileUploadFieldProps {
   field: string;
   description?: string;
@@ -10,6 +10,7 @@ interface FileUploadFieldProps {
   onFilesChange?: (fileInfos: any[]) => void;
   title?: string;
   required?: boolean;
+  error?: string;
 }
 
 const FileUploadField: React.FC<FileUploadFieldProps> = ({
@@ -20,11 +21,15 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   className = "",
   onFilesChange,
   title = "",
-  required = false
+  required = false,
+  error = ''
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { diligenceFiles, addFiles, removeFile, clearFiles } = useDiligenceFiles(); 
+  const { hasError, getFieldError, setFieldError } = useValidation();
+  const hasFieldError = hasError(field);
+  const fieldError = getFieldError(field);
 
   // Récupérer les fichiers et infos pour ce champ spécifique
   const fieldData = diligenceFiles[field as keyof typeof diligenceFiles];
@@ -54,6 +59,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         }));
         const updatedFileInfos = multiple ? [...fileInfos, ...newFileInfos] : newFileInfos;
         onFilesChange(updatedFileInfos);
+        setFieldError(field, null);
+
       }
     }
   };
@@ -63,6 +70,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true);
+      
     } else if (e.type === "dragleave") {
       setDragActive(false);
     }
@@ -93,23 +101,25 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         }));
         const updatedFileInfos = multiple ? [...fileInfos, ...newFileInfos] : newFileInfos;
         onFilesChange(updatedFileInfos);
+        setFieldError(field, null);
       }
     }
   };
 
   const handleRemoveFile = (index: number) => {
     removeFile(field as keyof typeof diligenceFiles, index);
-    
+    setFieldError(field, null);
     // Notify parent component about file changes
     if (onFilesChange) {
       const newFileInfos = fileInfos.filter((_: any, i: number) => i !== index);
       onFilesChange(newFileInfos);
+
     }
   };
 
   const handleClearAllFiles = () => {
     clearFiles(field as keyof typeof diligenceFiles);
-    
+    setFieldError(field, null);
     // Notify parent component about file changes
     if (onFilesChange) {
       onFilesChange([]);
@@ -178,6 +188,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </p>
         </div>
       </div>
+       {hasFieldError && <p className="text-red-500 text-xs mt-2">{fieldError}</p>} 
       
       {/* Zone d'affichage des fichiers sélectionnés */}
       {files.length > 0 && (

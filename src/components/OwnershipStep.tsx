@@ -43,18 +43,63 @@ const OwnershipStep: React.FC = () => {
   }, [ownershipInfo.owners]);
 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    if (name === "legalEntityName") {
-      dispatch(updateCompanyInfo({ name: value, dba: value }));
-    } else {
-      dispatch(updateCompanyInfo({ [name]: value }));
-    }
-    setFieldError(name, null);
-  };
+      const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
+      if (name === "legalEntityName") {
+        dispatch(updateCompanyInfo({ name: value, dba: value }));
+      } else {
+        dispatch(updateCompanyInfo({ [name]: value }));
+      }
+      
+      // Real-time validation for company fields
+      if (name === 'legalEntityName') {
+        if (!value.trim() || value.length < 2) {
+          setFieldError('name', 'Company name is required');
+        } else {
+          setFieldError('name', null);
+        }
+      } else if (name === 'dba') {
+        if (!value.trim()) {
+          setFieldError('dba', 'DBA name is required');
+        } else {
+          setFieldError('dba', null);
+        }
+      } else if (name === 'legalEntityType') {
+        if (!value) {
+          setFieldError('legalEntityType', 'Business type is required');
+        } else {
+          setFieldError('legalEntityType', null);
+        }
+      } else if (name === 'stateOfIncorporation') {
+        if (!value) {
+          setFieldError('stateOfIncorporation', 'State of incorporation is required');
+        } else {
+          setFieldError('stateOfIncorporation', null);
+        }
+      } else if (name === 'companyAddress') {
+        if (!value.trim()) {
+          setFieldError('companyAddress', 'Company address is required');
+        } else if (value.length < 5) {
+          setFieldError('companyAddress', 'Company address is too short');
+        } else {
+          setFieldError('companyAddress', null);
+        }
+      } else {
+        setFieldError(name, null);
+      }
+    };
 
   const updateCompanyAddress = (address: string) => {
     dispatch(updateCompanyInfo({ companyAddress: address }));
+    
+    // Real-time validation for company address
+    if (!address.trim()) {
+      setFieldError('companyAddress', 'Company address is required');
+    } else if (address.length < 5) {
+      setFieldError('companyAddress', 'Company address is too short');
+    } else {
+      setFieldError('companyAddress', null);
+    }
   };
 
   const [ein, setEin] = useState(companyInfo.ein);
@@ -63,7 +108,15 @@ const OwnershipStep: React.FC = () => {
     const formatted = formatEIN(e.target.value);
     setEin(formatted);
     dispatch(updateCompanyInfo({ ein: formatted }));
-    setFieldError('ein', null);
+    
+    // Real-time validation for EIN
+    if (!formatted.trim()) {
+      setFieldError('ein', 'EIN is required');
+    } else if (formatted.replace(/\D/g, '').length !== 9) {
+      setFieldError('ein', 'EIN must be 9 digits');
+    } else {
+      setFieldError('ein', null);
+    }
   };
 
   const formatEIN = (value: string): string => {
@@ -82,22 +135,41 @@ const OwnershipStep: React.FC = () => {
 
     return truncated;
   };
-  const handleOwnerChange = useCallback((
-    id: string,
-    field: keyof Owner,
-    value: string | boolean
-  ) => {
-    const updatedOwners = ownershipInfo.owners.map(o => {
-      if (o.id !== id) return o;
-      const newValue = (field === 'ownershipPercentage' && Number(value) > 100)
-        ? '100'
-        : value;
-      return { ...o, [field]: newValue };
-    });
+     const handleOwnerChange = useCallback((
+     id: string,
+     field: keyof Owner,
+     value: string | boolean
+   ) => {
+     const updatedOwners = ownershipInfo.owners.map(o => {
+       if (o.id !== id) return o;
+       const newValue = (field === 'ownershipPercentage' && Number(value) > 100)
+         ? '100'
+         : value;
+       return { ...o, [field]: newValue };
+     });
 
-    
-    dispatch(updateOwnershipInfo({ owners: updatedOwners }));
-  }, [dispatch, ownershipInfo.owners]);
+     // Real-time validation
+     const ownerIndex = updatedOwners.findIndex(o => o.id === id);
+     if (ownerIndex !== -1) {
+       const fieldName = `owner${ownerIndex}${field.charAt(0).toUpperCase() + field.slice(1)}`;
+       
+       if (field === 'ownerName') {
+         const error = validateOwnerName(value as string);
+         setFieldError(fieldName, error);
+       } else if (field === 'ownershipPercentage') {
+         const error = validateOwnershipPercentage(value as string);
+         setFieldError(fieldName, error);
+       } else if (field === 'ownerAddress') {
+         const error = validateOwnerAddress(value as string);
+         setFieldError(fieldName, error);
+       } else if (field === 'ownerBirthDate') {
+         const error = validateOwnerBirthDate(value as string);
+         setFieldError(fieldName, error);
+       }
+     }
+     
+     dispatch(updateOwnershipInfo({ owners: updatedOwners }));
+   }, [dispatch, ownershipInfo.owners, setFieldError]);
 
   const addOwner = () => {
     const newOwner: Owner = {
@@ -123,10 +195,42 @@ const OwnershipStep: React.FC = () => {
       setFieldError(`owner${ownershipInfo.owners.length - 1}Address`, null);
       setFieldError(`owner${ownershipInfo.owners.length - 1}BirthDate`, null);
     }
-  };
+     };
 
+   // Validation functions
+   const validateOwnerName = (name: string): string | null => {
+     if (!name.trim() || name.length < 2) return 'Owner name is required';
+     if (name.length > 50) return 'Owner name is too long';
+     return null;
+   };
 
-  
+   const validateOwnershipPercentage = (percentage: string): string | null => {
+     if (!percentage.trim()) return 'Ownership percentage is required';
+     const num = parseFloat(percentage);
+     if (isNaN(num)) return 'Ownership percentage must be a number';
+     if (num < 0) return 'Ownership percentage cannot be negative';
+     if (num > 100) return 'Ownership percentage cannot exceed 100%';
+     return null;
+   };
+
+   const validateOwnerAddress = (address: string): string | null => {
+     if (!address.trim() || address.length < 5) return 'Owner address is required';
+     return null;
+   };
+
+   const validateOwnerBirthDate = (birthDate: string): string | null => {
+     if (!birthDate.trim()) return 'Date of birth is required';
+     const date = new Date(birthDate);
+     if (isNaN(date.getTime())) return 'Please enter a valid date';
+     const today = new Date();
+     const age = today.getFullYear() - date.getFullYear();
+     if (age < 18) return 'Owner must be at least 18 years old';
+     if (age > 120) return 'Please enter a valid date of birth';
+     return null;
+   };
+
+ 
+     
 
 
 
@@ -176,17 +280,48 @@ const OwnershipStep: React.FC = () => {
           </div>
 
 
-          <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
-            <TextField type="text" label="Owner Name" name="ownerName" value={owner.ownerName} onChange={(e) => handleOwnerChange(owner.id, 'ownerName', e.target.value)} error='' onBlur={() => { }} required />
+                      <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
+             <TextField 
+               type="text" 
+               label="Owner Name" 
+               name={`owner${ownershipInfo.owners.indexOf(owner)}Name`} 
+               value={owner.ownerName} 
+               onChange={(e) => handleOwnerChange(owner.id, 'ownerName', e.target.value)} 
+               error='' 
+               onBlur={() => { }} 
+               required 
+             />
 
-            <NumberInput showPercent={true} label="Ownership Percentage" name="ownershipPercentage" value={owner.ownershipPercentage} onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} required />
-          </div>
-          <div className="flex flex-row justify-between  gap-x-4 ">
-            <AddressAutocomplete label="Address" name="ownerAddress" value={owner.ownerAddress}
-              onSelect={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)}
-              onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} error='' onBlur={() => { }} type={''} id={''} required />
-            <DatePickerField label="Date of Birth" name="ownerBirthDate" value={owner.ownerBirthDate} onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} required />
-          </div>
+             <NumberInput 
+               showPercent={true} 
+               label="Ownership Percentage" 
+               name={`owner${ownershipInfo.owners.indexOf(owner)}Percentage`} 
+               value={owner.ownershipPercentage} 
+               onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} 
+               required 
+             />
+            </div>
+                      <div className="flex flex-row justify-between  gap-x-4 ">
+              <AddressAutocomplete 
+                label="Address" 
+                name={`owner${ownershipInfo.owners.indexOf(owner)}Address`} 
+                value={owner.ownerAddress}
+                onSelect={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)}
+                onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} 
+                error='' 
+                onBlur={() => { }} 
+                type={''} 
+                id={''} 
+                required 
+              />
+              <DatePickerField 
+                label="Date of Birth" 
+                name={`owner${ownershipInfo.owners.indexOf(owner)}BirthDate`} 
+                value={owner.ownerBirthDate} 
+                onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} 
+                required 
+              />
+            </div>
 
           {ownershipInfo.owners.length > 1 && (
             <div className='w-[30%] mx-auto border-b border-amber-200 my-8 '></div>
