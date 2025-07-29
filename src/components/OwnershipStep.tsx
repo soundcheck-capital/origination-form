@@ -147,12 +147,10 @@ const OwnershipStep: React.FC = () => {
          : value;
        return { ...o, [field]: newValue };
      });
-
      // Real-time validation
      const ownerIndex = updatedOwners.findIndex(o => o.id === id);
      if (ownerIndex !== -1) {
        const fieldName = `owner${ownerIndex}${field.charAt(0).toUpperCase() + field.slice(1)}`;
-       
        if (field === 'ownerName') {
          const error = validateOwnerName(value as string);
          setFieldError(fieldName, error);
@@ -167,7 +165,6 @@ const OwnershipStep: React.FC = () => {
          setFieldError(fieldName, error);
        }
      }
-     
      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
    }, [dispatch, ownershipInfo.owners, setFieldError]);
 
@@ -308,7 +305,7 @@ const OwnershipStep: React.FC = () => {
                 value={owner.ownerAddress}
                 onSelect={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)}
                 onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} 
-                error='' 
+                error={''} 
                 onBlur={() => { }} 
                 type={''} 
                 id={''} 

@@ -12,11 +12,11 @@
 // MyAddressInput.tsx
 import React, { useRef, useEffect } from "react";
 import { useLoadScript } from "@react-google-maps/api";
-
+import { useValidation } from "../../contexts/ValidationContext";
 
 const libraries: ("places")[] = ["places"];
 
-export const AddressAutocomplete: React.FC<{ label: string, name: string, value: string, onSelect: any, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLInputElement>) => void, type: string, ref?: React.RefObject<HTMLInputElement>, id: string, required?: boolean }> = ({ label, name, value, onSelect, onChange, error, onBlur, type, ref, id, required = false }) => {
+export const AddressAutocomplete: React.FC<{ label: string, name: string, value: string, onSelect: any, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLInputElement>) => void, type: string, ref?: React.RefObject<HTMLInputElement>, id: string, required?: boolean }> = ({ label, name, value, onSelect, onChange, error = '', onBlur, type, ref, id, required = false }) => {
   //const dispatch = useDispatch();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyA7_2peM-CW7KqJzdHEAmL2PYK-DEnjX0A",
@@ -24,7 +24,9 @@ export const AddressAutocomplete: React.FC<{ label: string, name: string, value:
   });
   const inputRef = useRef<HTMLInputElement>(null);
  const onSelectRef = useRef(onSelect);
-
+ const { hasError, getFieldError } = useValidation();
+ const hasFieldError = hasError(name);
+ const fieldError = getFieldError(name);
  useEffect(() => {
   onSelectRef.current = onSelect;
  }, [onSelect]);
@@ -79,5 +81,7 @@ export const AddressAutocomplete: React.FC<{ label: string, name: string, value:
   return <div className="w-full mb-4">
     <label className="text-xs text-gray-500 px-2 top-2 start-1">{label} {required && <span className="text-red-500">*</span>}</label>
     <input autoComplete="on" ref={inputRef} type={type} id={id} value={value} name={name} className="block w-full p-2 text-sm text-gray-900 rounded-xl border border-gray-300 focus:border-rose-300 peer focus:ring-1 focus:ring-amber-500 focus:outline-none" placeholder=" "  onChange={onChange} onBlur={onBlur} />
-  </div>
+    {hasFieldError && (
+        <p className="mt-1 text-sm text-red-600 px-2">{fieldError}</p>
+      )}  </div>    
 };
