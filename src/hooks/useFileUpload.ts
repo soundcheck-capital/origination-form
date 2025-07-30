@@ -33,7 +33,10 @@ export const useFileUpload = () => {
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
       console.log("Sending form data to:", process.env.REACT_APP_WEBHOOK_URL);
-      
+      formData.append('HubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
+      formData.append('HubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
+      formData.append('HubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
+
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
         method: 'POST',
         headers: {
@@ -42,10 +45,9 @@ export const useFileUpload = () => {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         return {
           success: true,
-          response: await response.json()
         };
       } else {
         throw new Error(`HTTP Error: ${response.status}`);
@@ -76,6 +78,9 @@ export const useFileUpload = () => {
       formData.append('file', file);
       formData.append('fieldName', fieldName);
       formData.append('fileInfo', JSON.stringify(fileInfo));
+      formData.append('HubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
+      formData.append('HubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
+      formData.append('HubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
 
       console.log(`Sending file ${file.name} (${fieldName}) to files endpoint`);
 
@@ -84,11 +89,9 @@ export const useFileUpload = () => {
         body: formData,
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         return {
           success: true,
-          fileName: file.name,
-          fieldName
         };
       } else {
         throw new Error(`HTTP Error: ${response.status}`);
