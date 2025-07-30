@@ -33,11 +33,7 @@ export const useFileUpload = () => {
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
       console.log("Sending form data to:", process.env.REACT_APP_WEBHOOK_URL);
-      const formData = new FormData();
-      formData.append('applicationId', JSON.stringify(formData));
-      formData.append('HubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
-      formData.append('HubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
-      formData.append('HubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
+
 
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
         method: 'POST',
@@ -45,7 +41,12 @@ export const useFileUpload = () => {
           'Content-Type': 'application/json',
           "Access-Control-Allow-Origin": "*"
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          formData: formData,
+          HubspotCompanyId: process.env.REACT_APP_HUBSPOT_COMPANY_ID || '',
+          HubspotDealId: process.env.REACT_APP_HUBSPOT_DEAL_ID || '',
+          HubspotContactId: process.env.REACT_APP_HUBSPOT_CONTACT_ID || ''
+        })
       });
 
       if (response.status === 200) {
@@ -81,9 +82,6 @@ export const useFileUpload = () => {
       formData.append('file', file);
       formData.append('fieldName', fieldName);
       formData.append('fileInfo', JSON.stringify(fileInfo));
-      formData.append('HubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
-      formData.append('HubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
-      formData.append('HubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
 
       console.log(`Sending file ${file.name} (${fieldName}) to files endpoint`);
 
@@ -93,7 +91,12 @@ export const useFileUpload = () => {
           'Content-Type': 'multipart/form-data',
           "Access-Control-Allow-Origin": "*"
         },
-        body: formData,
+        body: JSON.stringify({
+          formData: formData,
+          HubspotCompanyId: process.env.REACT_APP_HUBSPOT_COMPANY_ID || '',
+          HubspotDealId: process.env.REACT_APP_HUBSPOT_DEAL_ID || '',
+          HubspotContactId: process.env.REACT_APP_HUBSPOT_CONTACT_ID || ''
+        })
       });
 
       if (response.status === 200) {
