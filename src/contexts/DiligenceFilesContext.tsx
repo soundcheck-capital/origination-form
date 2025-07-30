@@ -48,6 +48,20 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
   const dispatch = useDispatch();
   const reduxDiligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
 
+  const updateReduxStore = useCallback((updatedFiles: DiligenceFiles) => {
+    const diligenceInfo: { [key: string]: DiligenceFileData } = {};
+    
+    Object.keys(updatedFiles).forEach(key => {
+      const fieldKey = key as keyof DiligenceFiles;
+      diligenceInfo[fieldKey] = {
+        files: updatedFiles[fieldKey].files,
+        fileInfos: updatedFiles[fieldKey].fileInfos,
+      };
+    });
+
+    dispatch(updateDiligenceInfo(diligenceInfo));
+  }, [dispatch]);
+
   // Synchroniser l'état local avec le store Redux au chargement
   useEffect(() => {
     if (reduxDiligenceInfo) {
@@ -115,7 +129,7 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
         setDiligenceFiles(syncedFiles);
       }
     }
-  }, [reduxDiligenceInfo, diligenceFiles]);
+  }, [reduxDiligenceInfo, diligenceFiles, updateReduxStore]);
 
   const createFileInfo = (file: File, index: number): FileInfo => ({
     id: `file-${Date.now()}-${index}`,
@@ -124,20 +138,6 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
     type: file.type,
     uploadedAt: new Date().toISOString(),
   });
-
-  const updateReduxStore = useCallback((updatedFiles: DiligenceFiles) => {
-    const diligenceInfo: { [key: string]: DiligenceFileData } = {};
-    
-    Object.keys(updatedFiles).forEach(key => {
-      const fieldKey = key as keyof DiligenceFiles;
-      diligenceInfo[fieldKey] = {
-        files: updatedFiles[fieldKey].files,
-        fileInfos: updatedFiles[fieldKey].fileInfos,
-      };
-    });
-
-    dispatch(updateDiligenceInfo(diligenceInfo));
-  }, [dispatch]);
 
   const addFiles = useCallback((field: keyof DiligenceFiles, newFiles: File[]) => {
     setDiligenceFiles(prev => {
