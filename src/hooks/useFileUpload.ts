@@ -34,12 +34,8 @@ export const useFileUpload = () => {
     try {
       console.log("Sending form data to:", process.env.REACT_APP_WEBHOOK_URL);
 
-      const formData = new FormData();
-      formData.append('formData', JSON.stringify(formData));
     
-      console.log(process.env.HUBSPOT_COMPANY_ID);
-      console.log(process.env.HUBSPOT_DEAL_ID);
-      console.log(process.env.HUBSPOT_CONTACT_ID);
+      
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
         method: 'POST',
         headers: {
