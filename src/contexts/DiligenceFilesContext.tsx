@@ -116,6 +116,24 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
           syncedFiles[fieldKey] = { files: [], fileInfos: [] };
           hasClearedFields = true;
         }
+        
+        // Vider aussi les fichiers invalides (avec des propriétés manquantes)
+        const validFiles = field.files.filter(file => 
+          file && 
+          file.name && 
+          file.name !== 'undefined' && 
+          file.size !== undefined && 
+          file.size > 0
+        );
+        
+        if (validFiles.length !== field.files.length) {
+          console.log(`Clearing invalid files in ${fieldKey} field`);
+          syncedFiles[fieldKey] = { 
+            files: validFiles, 
+            fileInfos: field.fileInfos.slice(0, validFiles.length) 
+          };
+          hasClearedFields = true;
+        }
       });
       
       // Si on a vidé des champs, mettre à jour Redux

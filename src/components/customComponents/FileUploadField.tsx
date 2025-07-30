@@ -35,6 +35,15 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   const fieldData = diligenceFiles[field as keyof typeof diligenceFiles];
   const files = fieldData?.files || [];
   const fileInfos = fieldData?.fileInfos || [];
+  
+  // Filtrer les fichiers invalides (ceux qui ont été perdus après refresh)
+  const validFiles = files.filter(file => 
+    file && 
+    file.name && 
+    file.name !== 'undefined' && 
+    file.size !== undefined && 
+    file.size > 0
+  );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -107,13 +116,16 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   };
 
   const handleRemoveFile = (index: number) => {
-    removeFile(field as keyof typeof diligenceFiles, index);
-    setFieldError(field, null);
-    // Notify parent component about file changes
-    if (onFilesChange) {
-      const newFileInfos = fileInfos.filter((_: any, i: number) => i !== index);
-      onFilesChange(newFileInfos);
-
+    // Trouver l'index réel dans le tableau original des fichiers
+    const realIndex = files.findIndex(file => file === validFiles[index]);
+    if (realIndex !== -1) {
+      removeFile(field as keyof typeof diligenceFiles, realIndex);
+      setFieldError(field, null);
+      // Notify parent component about file changes
+      if (onFilesChange) {
+        const newFileInfos = fileInfos.filter((_: any, i: number) => i !== realIndex);
+        onFilesChange(newFileInfos);
+      }
     }
   };
 
@@ -127,7 +139,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   };
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
+    if (!bytes || bytes === 0 || isNaN(bytes)) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -191,13 +203,13 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
        {hasFieldError && <p className="text-red-500 text-xs mt-2">{fieldError}</p>} 
       
       {/* Zone d'affichage des fichiers sélectionnés */}
-      {files.length > 0 && (
+      {validFiles.length > 0 && (
         <div className="mt-4 space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-sm font-medium text-gray-700">
-              Selected files ({files.length})
+              Selected files ({validFiles.length})
             </h4>
-            {files.length > 1 && (
+            {validFiles.length > 1 && (
               <button
                 onClick={handleClearAllFiles}
                 className="text-sm text-red-500 hover:text-red-700"
@@ -208,7 +220,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </div>
           
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {files.map((file, index) => (
+            {validFiles.map((file, index) => (
               <div 
                 key={`${file.name}-${index}`}
                 className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
@@ -220,7 +232,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
                   
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-700 truncate">
-                      {file.name}
+                      {file.name || 'Unknown file'}
                     </p>
                     <p className="text-xs text-gray-500">
                       {formatFileSize(file.size)} • {file.type || 'Unknown type'}
