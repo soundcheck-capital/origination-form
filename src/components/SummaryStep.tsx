@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { useFormValidation } from '../hooks/useFormValidation';
-import StepTitle from './customComponents/StepTitle';
-import ButtonPrimary from './customComponents/ButtonPrimary';
+
 
 interface SummaryStepProps {
   renderValidationErrors?: React.ReactNode;
 }
 
 const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors }) => {
-  const formData = useSelector((state: RootState) => state.form.formData);
-  const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
-  const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
-  const { validateAllSteps } = useFormValidation();
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
   
   // Check if we're in development mode
   const isDevelopment = process.env.NODE_ENV === 'development';
@@ -26,21 +17,11 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors }) => 
     localStorage.setItem('DISABLE_SUBMISSION_BLOCK', disableSubmissionBlock.toString());
   }, [disableSubmissionBlock]);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
+ 
 
-  const formatPercentage = (value: string) => {
-    return `${value}%`;
-  };
 
   
-
+  
   
 
   return (

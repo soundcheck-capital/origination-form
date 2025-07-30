@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '..';
-import { FormState } from './formTypes';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
@@ -30,7 +29,6 @@ export const createApplication = createAsyncThunk(
       const payload = {
         currentStep: form.currentStep,
         formData: form.formData,
-        financesInfo: form.financesInfo,
         diligenceInfo: form.diligenceInfo
         
       };
@@ -53,7 +51,6 @@ export const saveApplication = createAsyncThunk(
       const payload = {
         currentStep: form.currentStep,
         formData: form.formData,
-        financesInfo: form.financesInfo,
         diligenceInfo: form.diligenceInfo
 
       };

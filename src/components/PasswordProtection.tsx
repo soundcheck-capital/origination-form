@@ -59,10 +59,7 @@ setPassword(e.target.value);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('formAuthenticated');
-    navigate('/');
-  };
+
 
   return (
     <div className="min-h-screen  flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-cover bg-center bg-black/50 bg-blend-overlay" style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', backgroundPosition: 'center', }}>

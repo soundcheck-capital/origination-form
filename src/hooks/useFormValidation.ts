@@ -24,7 +24,6 @@ export const useFormValidation = () => {
 
   const validateCompanyInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { companyInfo } = formData.formData;
-    const { ticketingInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
     if (!companyInfo.name.trim()) errors.name = 'Company name is required';
@@ -95,7 +94,8 @@ export const useFormValidation = () => {
   };
 
   const validateFinancesInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { financesInfo, diligenceInfo } = formData;
+    const { financesInfo } = formData.formData;
+    const { diligenceInfo } = formData;
     const errors: { [key: string]: string } = {};
 
     // Validate based on singleEntity condition
@@ -135,7 +135,8 @@ export const useFormValidation = () => {
     return { isValid: Object.keys(errors).length === 0, errors };
   };
   const validateLegalDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { diligenceInfo, financesInfo } = formData;
+    const { diligenceInfo } = formData;
+    const { financesInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
     // Legal Information

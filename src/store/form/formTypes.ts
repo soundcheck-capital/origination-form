@@ -79,28 +79,29 @@ export interface Address {
       ownershipInfo: {
         owners: Owner[];
       };
+      financesInfo: {
+        singleEntity: boolean;
+        assetsTransferred: boolean;
+        filedLastYearTaxes: boolean;
+        lastYearTaxes: FileInfo[];
+        hasTicketingDebt: boolean;
+        hasBusinessDebt: boolean;
+        debts: Array<{
+          type: string;
+          balance: string;
+        }>;
+        hasOverdueLiabilities: boolean;
+        isLeasingLocation: boolean;
+        leaseEndDate: string;
+        hasTaxLiens: boolean;
+        hasJudgments: boolean;
+        hasBankruptcy: boolean;
+        ownershipChanged: boolean;
+        industryReferences: string;
+        additionalComments: string;
+      };
     };
-    financesInfo: {
-      singleEntity: boolean;
-      assetsTransferred: boolean;
-      filedLastYearTaxes: boolean;
-      lastYearTaxes: FileInfo[];
-      hasTicketingDebt: boolean;
-      hasBusinessDebt: boolean;
-      debts: Array<{
-        type: string;
-        balance: string;
-      }>;
-      hasOverdueLiabilities: boolean;
-      isLeasingLocation: boolean;
-      leaseEndDate: string;
-      hasTaxLiens: boolean;
-      hasJudgments: boolean;
-      hasBankruptcy: boolean;
-      ownershipChanged: boolean;
-      industryReferences: string;
-      additionalComments: string;
-    };
+  
     diligenceInfo: {
       ticketingCompanyReport: DiligenceFileData;
       ticketingServiceAgreement: DiligenceFileData;

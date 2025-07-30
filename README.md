@@ -1,46 +1,184 @@
-# Getting Started with Create React App
+# SoundCheck Origination Form
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React application for collecting and managing SoundCheck Capital funding applications. This application allows users to submit detailed information about their company, finances, and due diligence documents.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+### 📋 Multi-Step Form
+- **Personal Information** : Applicant contact details and information
+- **Company Information** : Company and business activity details
+- **Ticketing Information** : Ticket sales data
+- **Ticketing Volume** : Performance metrics
+- **Ownership Structure** : Company ownership details
+- **Financial Information** : Financial data and projections
+- **Your Funds** : Funding requirements
+- **Legal Information** : Documents and compliance
+- **Due Diligence Documents** : File upload and management
+- **Summary** : Complete overview before submission
 
-### `npm start`
+### 🔐 Security
+- Password protection
+- User authentication
+- Real-time data validation
+- Automatic data backup
 
-Runs the app in the development mode.\
-Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
+### 📁 File Management
+- Multiple file upload
+- Support for various formats (PDF, Excel, images)
+- Google Drive integration
+- Make.com webhook for automated processing
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 🎨 User Interface
+- Modern and responsive design
+- Intuitive navigation with sidebar
+- Custom components
+- Real-time visual validation
 
-### `npm test`
+## 🛠 Technologies Used
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend** : React 19, TypeScript
+- **State Management** : Redux Toolkit
+- **Routing** : React Router DOM
+- **Styling** : Tailwind CSS, Material Tailwind
+- **Maps** : Google Maps API
+- **Upload** : Google Drive integration + Make.com webhook
+- **Tests** : Jest, React Testing Library
 
-### `npm run build`
+## 📦 Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+- Node.js (version 16 or higher)
+- npm or yarn
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installing Dependencies
+```bash
+# Clone the repository
+git clone https://github.com/soundcheck-capital/origination-form.git
+cd origination-form
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Install dependencies
+npm install
+```
 
-### `npm run eject`
+### Environment Configuration
+```bash
+# Copy the example file
+cp env.example .env
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Configure environment variables
+REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/your-webhook-id
+REACT_APP_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+REACT_APP_FORM_PASSWORD=
+HUBSPOT_COMPANY_ID=
+HUBSPOT_DEAL_ID=
+HUBSPOT_CONTACT_ID=
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Getting Started
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Development Mode
+```bash
+# Start the development server
+npm start
+```
+The application will be available at [http://localhost:3001](http://localhost:3001)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Testing
+```bash
+# Run tests
+npm test
 
-## Learn More
+# Run tests in watch mode
+npm test -- --watch
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Production Build
+```bash
+# Build the application
+npm run build
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Deploy to GitHub Pages
+npm run deploy
+```
+
+## 🌐 Deployment
+
+The application is configured to be deployed on GitHub Pages. See [DEPLOYMENT.md](./DEPLOYMENT.md) for more details.
+
+### Production URL
+The application is available at : `https://soundcheck-capital.github.io/origination-form/`
+
+## 🔧 Configuration
+
+### Make.com Webhook
+The application uses a Make.com webhook for automated submission processing. See [WEBHOOK_INTEGRATION.md](./WEBHOOK_INTEGRATION.md) for detailed configuration.
+
+### Google Maps API
+- Create a Google Cloud project
+- Enable Google Maps JavaScript API
+- Configure the API key in environment variables
+
+### Google Drive (Optional)
+- Configure Google Drive credentials
+- Enable Google Drive API
+- Configure appropriate permissions
+
+## 📁 Project Structure
+
+```
+src/
+├── components/           # React components
+│   ├── customComponents/ # Reusable custom components
+│   └── ...              # Form steps
+├── contexts/            # React contexts (validation, files)
+├── hooks/               # Custom hooks
+├── services/            # External services (Google Drive)
+├── store/               # Redux configuration
+│   ├── auth/           # Authentication management
+│   └── form/           # Form management
+└── utils/              # Utilities and helpers
+```
+
+## 🔄 Data Flow
+
+1. **Input** : User fills out the multi-step form
+2. **Validation** : Real-time data validation
+3. **Save** : Automatic data backup
+4. **Upload** : File upload to Google Drive or Make.com
+5. **Submission** : Data sent via webhook
+6. **Confirmation** : Success page and notification
+
+## 🧪 Testing
+
+```bash
+# Unit tests
+npm test
+
+# Tests with coverage
+npm test -- --coverage
+
+# Specific tests
+npm test -- --testNamePattern="PersonalInfoStep"
+```
+
+## 🤝 Contributing
+
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is private and proprietary to SoundCheck Capital.
+
+## 📞 Support
+
+For any questions or issues :
+- Create an issue on GitHub
+- Contact the SoundCheck Capital development team
+
+---
+
+**SoundCheck Capital** - Simplifying access to funding for ticketing companies.

@@ -68,6 +68,11 @@ export const useFileUpload = () => {
               formDataToSend.append(`${fieldName}`, file);
             });
             break;
+            case 'other':
+              fileList.forEach((file, index) => {
+                formDataToSend.append(`${fieldName}`, file);
+              });
+              break;
           default:
             fileList.forEach((file, index) => {
               formDataToSend.append(`${fieldName}`, file);

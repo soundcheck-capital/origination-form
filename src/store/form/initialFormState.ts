@@ -22,16 +22,17 @@ export const initialState: FormState = {
     },
     ownershipInfo: {
      owners: [],
-    }
+      } ,
+    financesInfo: {
+      singleEntity: true, assetsTransferred: false, filedLastYearTaxes: false, lastYearTaxes: [], hasBusinessDebt: false,   
+      debts: [], hasOverdueLiabilities: false, isLeasingLocation: false,
+      leaseEndDate: '', hasTaxLiens: false, hasJudgments: false,
+      hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false,
+      industryReferences: '',
+      additionalComments: '',
+    },
   },
-  financesInfo: {
-    singleEntity: true, assetsTransferred: false, filedLastYearTaxes: false, lastYearTaxes: [], hasBusinessDebt: false,   
-    debts: [], hasOverdueLiabilities: false, isLeasingLocation: false,
-    leaseEndDate: '', hasTaxLiens: false, hasJudgments: false,
-    hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false,
-    industryReferences: '',
-    additionalComments: '',
-  },
+  
   diligenceInfo: {    
     ticketingCompanyReport: { files: [], fileInfos: [] },
     ticketingServiceAgreement: { files: [], fileInfos: [] },

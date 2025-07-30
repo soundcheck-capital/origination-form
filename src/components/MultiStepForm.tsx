@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
-import { saveApplication } from '../store/form/formThunks';
 import { fetchApplicationById } from '../store/auth/authThunks';
-import { setCurrentStep, clearFormData, setSubmitted } from '../store/form/formSlice';
+import {   setSubmitted } from '../store/form/formSlice';
 import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
@@ -31,11 +30,9 @@ const MultiStepFormContent: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const formData = useSelector((state: RootState) => state.form);
   const { user } = useSelector((state: RootState) => state.auth);
-  const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
-  const [activeMenuItem, setActiveMenuItem] = useState('applications');
   const { getAllFiles } = useDiligenceFiles();
-  const { isUploading, uploadToMake } = useFileUpload();
+  const { uploadToMake } = useFileUpload();
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
   const { currentStepErrors, setCurrentStepErrors } = useValidation();
@@ -56,26 +53,8 @@ const MultiStepFormContent: React.FC = () => {
     }
   }, [id, dispatch]);
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    setSaveMessage('');
-    try {
-      await dispatch(saveApplication());
-      setSaveMessage('Application saved successfully!');
-
-      // Clear message after 3 seconds
-      setTimeout(() => {
-        setSaveMessage('');
-      }, 3000);
-    } catch (error) {
-      setSaveMessage('Failed to save application. Please try again.');
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleSubmit = async () => {
-    setIsSaving(true);
     setSaveMessage('');
 
     try {
@@ -92,7 +71,7 @@ const MultiStepFormContent: React.FC = () => {
         ticketingInfo: formData.formData.ticketingInfo,
         volumeInfo: formData.formData.volumeInfo,
         ownershipInfo: formData.formData.ownershipInfo,
-        financesInfo: formData.financesInfo,
+        financesInfo: formData.formData.financesInfo,  
         fundsInfo: formData.formData.fundsInfo,
         diligenceInfo: formData.diligenceInfo,
         user: user ? { id: user.id, email: user.email } : null,
@@ -123,9 +102,7 @@ const MultiStepFormContent: React.FC = () => {
     } catch (error) {
       console.error('Submission error:', error);
       setSaveMessage(error instanceof Error ? error.message : 'Failed to submit application. Please try again.');
-    } finally {
-      setIsSaving(false);
-    }
+    } 
   };
   const handleSubmit2 = () => {
     console.log("handleSubmit2");
@@ -168,21 +145,9 @@ const MultiStepFormContent: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('formAuthenticated');
-    navigate('/');
-  };
 
-  const handleClearFormData = () => {
-    if (window.confirm('Are you sure you want to clear all form data? This action cannot be undone.')) {
-      dispatch(clearFormData());
-      setCurrentStep(1);
-      setSaveMessage('Form data cleared successfully!');
-      setTimeout(() => {
-        setSaveMessage('');
-      }, 3000);
-    }
-  };
+
+
   const renderValidationErrors = () => {
     if (!validationErrors) return null;
 
@@ -216,24 +181,6 @@ const MultiStepFormContent: React.FC = () => {
     );
   };
 
-  const renderCurrentStepErrors = () => {
-    if (!currentStepErrors || Object.keys(currentStepErrors).length === 0) return null;
-
-    return (
-      <div className="w-full mb-4">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h3 className="text-md font-semibold text-red-800 mb-2">
-            Please complete the following required fields:
-          </h3>
-          <ul className="list-disc list-inside space-y-1">
-            {Object.values(currentStepErrors).map((error, index) => (
-              <li key={index} className="text-sm text-red-600">{error}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    );
-  };
   const stepTitles = () => {
     switch (currentStep) {
       case 1:

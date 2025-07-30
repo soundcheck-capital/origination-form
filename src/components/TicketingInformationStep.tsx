@@ -1,12 +1,10 @@
 import React from 'react';
-import { useDiligenceFiles } from '../contexts/DiligenceFilesContext';
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
 const TicketingInformationStep: React.FC = () => {
-  const { addFiles } = useDiligenceFiles();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const handleFilesChange = (field: string, fileInfos: any[]) => {
     // This will be called when files are added/removed

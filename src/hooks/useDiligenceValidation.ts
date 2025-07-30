@@ -3,7 +3,7 @@ import { RootState } from '../store';
 
 export const useDiligenceValidation = () => {
   const { diligenceInfo } = useSelector((state: RootState) => state.form);
-  const { singleEntity } = useSelector((state: RootState) => state.form.financesInfo);
+  const { singleEntity } = useSelector((state: RootState) => state.form.formData.financesInfo);
   const { ticketingInfo } = useSelector((state: RootState) => state.form.formData);
   const validateTicketingInformation = (): boolean => {
     return (

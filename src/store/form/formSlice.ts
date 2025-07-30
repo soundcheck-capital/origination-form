@@ -6,9 +6,9 @@ import { FormState } from './formTypes';
 // Fonction pour sauvegarder dans le localStorage
 const saveToLocalStorage = (state: FormState) => {
   try {
+    localStorage.setItem('isSubmitted', 'true');
     localStorage.setItem('soundcheckFormData', JSON.stringify({
       formData: state.formData,
-      financesInfo: state.financesInfo,
       diligenceInfo: state.diligenceInfo,
       currentStep: state.currentStep
     }));
@@ -58,7 +58,7 @@ const formSlice = createSlice({
       state.formData.ticketingInfo = { ...state.formData.ticketingInfo, ...action.payload };
       saveToLocalStorage(state);
     },
-    updateVolumeInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
+    updateVolumeInfo: (state, action: PayloadAction<Partial<FormState['formData']['volumeInfo']>>) => {
       state.formData.volumeInfo = { ...state.formData.volumeInfo, ...action.payload };
       saveToLocalStorage(state);
     },
@@ -70,11 +70,11 @@ const formSlice = createSlice({
       state.formData.ownershipInfo = { ...state.formData.ownershipInfo, ...action.payload };
       saveToLocalStorage(state);
     },
-    updateFinancesInfo: (state, action: PayloadAction<Partial<FormState['financesInfo']>>) => {
-      state.financesInfo = { ...state.financesInfo, ...action.payload };
+    updateFinancesInfo: (state, action: PayloadAction<Partial<FormState['formData']['financesInfo']>>) => {
+      state.formData.financesInfo = { ...state.formData.financesInfo, ...action.payload };
       saveToLocalStorage(state);
     },
-    updateDiligenceInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
+    updateDiligenceInfo: (state, action: PayloadAction<Partial<FormState['diligenceInfo']>>) => {
       state.diligenceInfo = { ...state.diligenceInfo, ...action.payload };
       saveToLocalStorage(state);
     },
@@ -83,7 +83,6 @@ const formSlice = createSlice({
         ...state,
         currentStep: action.payload.currentStep || 0,
         formData: action.payload.formData || initialState.formData,
-        financesInfo: action.payload.financesInfo || initialState.financesInfo,
         diligenceInfo: action.payload.diligenceInfo || initialState.diligenceInfo
       };
       saveToLocalStorage(newState);
@@ -111,7 +110,6 @@ const formSlice = createSlice({
           ...state,
           currentStep: action.payload.currentStep || 1,
           formData: action.payload.formData || initialState.formData,
-          financesInfo: action.payload.financesInfo || initialState.financesInfo,
           diligenceInfo: action.payload.diligenceInfo || initialState.diligenceInfo
         };
         saveToLocalStorage(newState);

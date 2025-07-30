@@ -7,7 +7,7 @@ import TextAreaField from './customComponents/TextAreaField';
 
 const OtherStep: React.FC = () => {
   const dispatch = useDispatch();
-  const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
+  const financesInfo = useSelector((state: RootState) => state.form.formData.financesInfo);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;

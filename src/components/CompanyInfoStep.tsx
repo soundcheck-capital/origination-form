@@ -1,7 +1,7 @@
-import React, { useState  } from 'react';
+import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateCompanyInfo, updateTicketingInfo } from '../store/form/formSlice';
+import { updateCompanyInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import DropdownField from './customComponents/DropdownField';
@@ -45,15 +45,9 @@ const memberships = [
 const CompanyInfoStep: React.FC = () => {
   const dispatch = useDispatch();
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
-  const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const { setFieldError } = useValidation();
  
-  const handleTicketingInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
 
-      dispatch(updateTicketingInfo({ [name]: value }));
-    
-  };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./initialAuthState";
-import { AuthState } from "./authTypes";
 import { loginUser, registerUser, logoutUser, fetchUserProfile, fetchApplications } from "./authThunks";
 
 // Auth slice

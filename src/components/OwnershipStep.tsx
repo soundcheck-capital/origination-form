@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice';
@@ -9,7 +9,6 @@ import NumberInput from './customComponents/NumberField';
 import DatePickerField from './customComponents/DatePickerField';
 import DropdownField from './customComponents/DropdownField';
 import { useValidation } from '../contexts/ValidationContext';
-
 interface Owner {
   id: string;
   ownerName: string;
@@ -36,12 +35,11 @@ const OwnershipStep: React.FC = () => {
   const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const { setFieldError } = useValidation();
-  useEffect(() => {
-    if (!ownershipInfo.owners || ownershipInfo.owners.length === 0) {
-      addOwner();
-    }
-  }, [ownershipInfo.owners]);
 
+
+
+
+ 
 
       const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
@@ -168,7 +166,7 @@ const OwnershipStep: React.FC = () => {
      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
    }, [dispatch, ownershipInfo.owners, setFieldError]);
 
-  const addOwner = () => {
+  const addOwner = useCallback(() => {
     const newOwner: Owner = {
       id: crypto.randomUUID(),
       ownerName: '', ownershipPercentage: '', 
@@ -179,7 +177,13 @@ const OwnershipStep: React.FC = () => {
     dispatch(updateOwnershipInfo({
       owners: [...ownershipInfo.owners, newOwner]
     }));
-  };
+  }, [dispatch, ownershipInfo.owners]);
+ 
+  useEffect(() => {
+    if (!ownershipInfo.owners || ownershipInfo.owners.length === 0) {
+   addOwner();
+    }
+  }, [ownershipInfo.owners, addOwner]);
 
   const removeOwner = (id: string) => {
     if (ownershipInfo.owners.length > 1) {

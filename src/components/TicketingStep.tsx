@@ -1,87 +1,14 @@
-import React, { useState } from 'react';
+import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateTicketingInfo, updateVolumeInfo } from '../store/form/formSlice';
-import TicketingVolumeStep from './TicketingVolumeStep';
 import StepTitle from './customComponents/StepTitle';
 import DropdownField from './customComponents/DropdownField';
 import TextField from './customComponents/TextField';
 import NumberInput from './customComponents/NumberField';
 import CurrencyField from './customComponents/CurrencyField';
 import { useValidation } from '../contexts/ValidationContext';
-interface LoginPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-}
 
-const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, onSuccess }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      const response = await fetch('https://ticketon.cloud/api/v1/ticketon-login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      const data = await response.json();
-      onSuccess();
-      onClose();
-    } catch (err) {
-      setError('Invalid email or password');
-    }
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="popup-overlay">
-      <div className="popup-content">
-        <button className="popup-close" onClick={onClose}>×</button>
-        <h3>Connect to Ticketon</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="ticketon-form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="ticketon-form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-control"
-              required
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button type="submit" className="btn btn-primary">Login</button>
-        </form>
-      </div>
-    </div>
-  );
-};
 
 const ticketingPartners = [
   'AXS',
@@ -128,8 +55,6 @@ const TicketingStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [isTicketonConnected, setIsTicketonConnected] = useState(false);
   const { setFieldError } = useValidation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -137,11 +62,6 @@ const TicketingStep: React.FC = () => {
       dispatch(updateTicketingInfo({ [name]: value }));
       setFieldError(name, null);
     
-
-    // Reset connection status if partner changes
-    if (name === 'currentPartner' && value !== 'Ticketon') {
-      setIsTicketonConnected(false);
-    }
   };
 
   const handleNumberChange = (name: string, value: string) => {
@@ -154,11 +74,8 @@ const TicketingStep: React.FC = () => {
     setFieldError(name, null);
   };
 
-  const handleLoginSuccess = () => {
-    setIsTicketonConnected(true);
-  };
 
-  let otherPartner = '';
+
 
   return (
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">

@@ -1,10 +1,9 @@
 import React from 'react';
-import { useDiligenceFiles } from '../contexts/DiligenceFilesContext';
+
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
 
 const LegalInformationStep: React.FC = () => {
-  const { addFiles } = useDiligenceFiles();
 
   const handleFilesChange = (field: string, fileInfos: any[]) => {
     // This will be called when files are added/removed

@@ -4,7 +4,6 @@ import { RootState } from '../store';
 import { updateFinancesInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
-import { Switch } from "@material-tailwind/react";
 
 const debtTypes = [
   'Credit card debt',
@@ -20,7 +19,7 @@ const debtTypes = [
 
 const FinancesStep: React.FC = () => {
   const dispatch = useDispatch();
-  const financesInfo = useSelector((state: RootState) => state.form.financesInfo);
+  const financesInfo = useSelector((state: RootState) => state.form.formData.financesInfo);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [visibleQuestions, setVisibleQuestions] = useState<number[]>([0]);
   const [hasBeenVisited, setHasBeenVisited] = useState(false);
@@ -137,10 +136,7 @@ const FinancesStep: React.FC = () => {
 
   };
 
-  const handleSingleEntityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target; 
-    dispatch(updateFinancesInfo({ [name]: checked }));
-  };
+
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
