@@ -43,8 +43,9 @@ export const useFileUpload = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Access-Control-Allow-Origin": "*"
         },
-        body: formData,
+        body: JSON.stringify(formData),
       });
 
       if (response.status === 200) {
@@ -88,6 +89,10 @@ export const useFileUpload = () => {
 
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL_FILES || '', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          "Access-Control-Allow-Origin": "*"
+        },
         body: formData,
       });
 
