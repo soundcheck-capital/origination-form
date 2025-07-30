@@ -104,10 +104,19 @@ npm run deploy
 
 ## 🌐 Deployment
 
-The application is configured to be deployed on GitHub Pages. See [DEPLOYMENT.md](./DEPLOYMENT.md) for more details.
+The application is configured to be deployed on Netlify. The configuration includes:
+
+### Netlify Configuration
+- **Build command**: `npm run build`
+- **Publish directory**: `build`
+- **Node version**: 18
+- **SPA routing**: Configured with `_redirects` and `netlify.toml`
+
+### GitHub Pages (Alternative)
+For GitHub Pages deployment, see [DEPLOYMENT.md](./DEPLOYMENT.md) for details.
 
 ### Production URL
-The application is available at : `https://soundcheck-capital.github.io/origination-form/`
+The application is available at : `https://boris-origination-form.netlify.app/origination-form/`
 
 ## 🔧 Configuration
 
