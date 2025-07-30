@@ -6,110 +6,188 @@ interface UploadResult {
   response?: any;
 }
 
+interface FileUploadResult {
+  success: boolean;
+  error?: string;
+  fileName?: string;
+  fieldName?: string;
+}
+
+// Constante pour la limite de taille (100MB)
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB en bytes
+
 export const useFileUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
 
-  const uploadToMake = async (formData: any, files: { [key: string]: File[] }): Promise<UploadResult> => {
-    setIsUploading(true);
+  // Fonction pour valider la taille des fichiers
+  const validateFileSize = (file: File): boolean => {
+    if (file.size > MAX_FILE_SIZE) {
+      console.error(`File ${file.name} is too large: ${(file.size / 1024 / 1024).toFixed(2)}MB (max: 100MB)`);
+      return false;
+    }
+    return true;
+  };
 
+  // Fonction pour envoyer les données du formulaire (sans fichiers)
+  const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
-      // Créer un FormData pour envoyer les fichiers
-      const formDataToSend = new FormData();
-
-      // Ajouter les données du formulaire avec les fichiers intégrés
-      const formDataWithFiles = {
-        ...formData,
-        files: files
-      };
-
-      formDataToSend.append('formData', JSON.stringify(formDataWithFiles));
-      console.log("formDataToSend => ", formDataToSend);
-      console.log("files => ", files);
-      // Ajouter les fichiers individuellement
-      Object.entries(files).forEach(([fieldName, fileList]) => {
-        switch(fieldName){
-          case 'ticketingCompanyReport':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'ticketingServiceAgreement':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'financialStatements':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'bankStatement':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'incorporationCertificate':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'legalEntityChart':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'governmentId':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'w9form':
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-            case 'other':
-              fileList.forEach((file, index) => {
-                formDataToSend.append(`${fieldName}`, file);
-              });
-              break;
-          default:
-            fileList.forEach((file, index) => {
-              formDataToSend.append(`${fieldName}`, file);
-            });
-            break;
-        }
-      });
-
-      // Envoyer à Make.com
+      console.log("Sending form data to:", process.env.REACT_APP_WEBHOOK_URL);
+      
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
         method: 'POST',
-        body: formDataToSend,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
 
-      if (response.status === 200) {
-        //const result = await response.json();
+      if (response.ok) {
         return {
           success: true,
-       //   response: result
+          response: await response.json()
         };
       } else {
-        throw new Error(`Erreur HTTP: ${response.status}`);
+        throw new Error(`HTTP Error: ${response.status}`);
       }
-
     } catch (error) {
-      console.error('Erreur lors de l\'upload:', error);
+      console.error('Error sending form data:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Erreur inconnue'
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  };
+
+  // Fonction pour envoyer un fichier individuel
+  const sendFile = async (file: File, fieldName: string, fileInfo: any): Promise<FileUploadResult> => {
+    try {
+      // Valider la taille du fichier
+      if (!validateFileSize(file)) {
+        return {
+          success: false,
+          error: `File ${file.name} exceeds the maximum size of 100MB`,
+          fileName: file.name,
+          fieldName
+        };
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('fieldName', fieldName);
+      formData.append('fileInfo', JSON.stringify(fileInfo));
+
+      console.log(`Sending file ${file.name} (${fieldName}) to files endpoint`);
+
+      const response = await fetch(process.env.REACT_APP_WEBHOOK_URL_FILES || '', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        return {
+          success: true,
+          fileName: file.name,
+          fieldName
+        };
+      } else {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(`Error sending file ${file.name}:`, error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        fileName: file.name,
+        fieldName
+      };
+    }
+  };
+
+  // Fonction principale pour gérer l'upload séparé
+  const uploadToMake = async (formData: any, files: { [key: string]: File[] }): Promise<UploadResult> => {
+    setIsUploading(true);
+    setUploadProgress({});
+
+    try {
+      // 1. Envoyer d'abord les données du formulaire (sans fichiers)
+      console.log("Step 1: Sending form data...");
+      const formDataResult = await sendFormData(formData);
+      
+      if (!formDataResult.success) {
+        return formDataResult;
+      }
+
+      // 2. Envoyer les fichiers individuellement
+      console.log("Step 2: Sending files...");
+      const fileResults: FileUploadResult[] = [];
+      let totalFiles = 0;
+      let processedFiles = 0;
+
+      // Compter le nombre total de fichiers
+      Object.values(files).forEach(fileList => {
+        totalFiles += fileList.length;
+      });
+
+      // Traiter chaque fichier individuellement
+      for (const [fieldName, fileList] of Object.entries(files)) {
+        for (const file of fileList) {
+          // Récupérer les informations du fichier depuis diligenceInfo
+          const fileInfo = formData.diligenceInfo?.[fieldName]?.fileInfos?.find(
+            (info: any) => info.name === file.name
+          );
+
+          const result = await sendFile(file, fieldName, fileInfo);
+          fileResults.push(result);
+          
+          processedFiles++;
+          // eslint-disable-next-line
+          setUploadProgress(prev => ({
+            ...prev,
+            [fieldName]: Math.round((processedFiles / totalFiles) * 100)
+          }));
+
+          // Si un fichier échoue, on continue mais on note l'erreur
+          if (!result.success) {
+            console.warn(`File upload failed: ${result.fileName} - ${result.error}`);
+          }
+        }
+      }
+
+      // Vérifier s'il y a eu des erreurs
+      const failedFiles = fileResults.filter(result => !result.success);
+      
+      if (failedFiles.length > 0) {
+        console.warn(`${failedFiles.length} files failed to upload:`, failedFiles);
+        return {
+          success: false,
+          error: `${failedFiles.length} files failed to upload. Check console for details.`
+        };
+      }
+
+      return {
+        success: true,
+        response: {
+          formData: formDataResult,
+          files: fileResults
+        }
+      };
+
+    } catch (error) {
+      console.error('Error during upload process:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     } finally {
       setIsUploading(false);
+      setUploadProgress({});
     }
   };
 
   return {
     isUploading,
-    uploadToMake
+    uploadToMake,
+    uploadProgress
   };
 }; 

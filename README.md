@@ -67,6 +67,7 @@ cp env.example .env
 
 # Configure environment variables
 REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/your-webhook-id
+REACT_APP_WEBHOOK_URL_FILES=https://hook.us1.make.com/your-files-webhook-id
 REACT_APP_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 REACT_APP_FORM_PASSWORD=
 HUBSPOT_COMPANY_ID=
@@ -110,8 +111,20 @@ The application is available at : `https://soundcheck-capital.github.io/originat
 
 ## 🔧 Configuration
 
-### Make.com Webhook
-The application uses a Make.com webhook for automated submission processing. See [WEBHOOK_INTEGRATION.md](./WEBHOOK_INTEGRATION.md) for detailed configuration.
+### Make.com Webhooks
+The application uses two separate Make.com webhooks for optimized processing:
+
+1. **Form Data Webhook** (`REACT_APP_WEBHOOK_URL`): Receives form data without files
+2. **Files Webhook** (`REACT_APP_WEBHOOK_URL_FILES`): Receives individual files with metadata
+
+**Features:**
+- **File size limit**: 100MB per file
+- **Separated processing**: Form data and files are sent to different endpoints
+- **Individual file uploads**: Each file is uploaded separately to prevent timeouts
+- **Progress tracking**: Real-time upload progress display
+- **Error handling**: Continues processing even if some files fail
+
+See [WEBHOOK_INTEGRATION.md](./WEBHOOK_INTEGRATION.md) for detailed configuration.
 
 ### Google Maps API
 - Create a Google Cloud project
@@ -144,8 +157,8 @@ src/
 1. **Input** : User fills out the multi-step form
 2. **Validation** : Real-time data validation
 3. **Save** : Automatic data backup
-4. **Upload** : File upload to Google Drive or Make.com
-5. **Submission** : Data sent via webhook
+4. **Form Data Submission** : Form data sent to primary webhook (without files)
+5. **File Uploads** : Individual files uploaded to separate webhook with progress tracking
 6. **Confirmation** : Success page and notification
 
 ## 🧪 Testing
