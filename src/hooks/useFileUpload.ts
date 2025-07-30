@@ -33,6 +33,8 @@ export const useFileUpload = () => {
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
       console.log("Sending form data to:", process.env.REACT_APP_WEBHOOK_URL);
+      const formData = new FormData();
+      formData.append('applicationId', JSON.stringify(formData));
       formData.append('HubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
       formData.append('HubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
       formData.append('HubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
@@ -42,7 +44,7 @@ export const useFileUpload = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: formData,
       });
 
       if (response.status === 200) {
