@@ -22,6 +22,7 @@ import TicketingInformationStep from './TicketingInformationStep';
 import FinancialInformationStep from './FinancialInformationStep';
 import OtherStep from './OtherStep';
 import { useFormValidation } from '../hooks/useFormValidation';
+import FileLossNotification from './FileLossNotification';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -313,6 +314,7 @@ const MultiStepFormContent: React.FC = () => {
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
             <h1 className="text-3xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
+            <FileLossNotification />
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>

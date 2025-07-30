@@ -90,6 +90,25 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
         },
       };
       
+      // Vider les champs qui ont des fileInfos mais pas de fichiers (après refresh)
+      let hasClearedFields = false;
+      Object.keys(syncedFiles).forEach(key => {
+        const fieldKey = key as keyof DiligenceFiles;
+        const field = syncedFiles[fieldKey];
+        
+        // Si on a des métadonnées mais pas de fichiers, c'est qu'on a refreshé
+        if (field.fileInfos.length > 0 && field.files.length === 0) {
+          console.log(`Clearing ${fieldKey} field - files lost after refresh`);
+          syncedFiles[fieldKey] = { files: [], fileInfos: [] };
+          hasClearedFields = true;
+        }
+      });
+      
+      // Si on a vidé des champs, mettre à jour Redux
+      if (hasClearedFields) {
+        updateReduxStore(syncedFiles);
+      }
+      
       // Vérifier si les données ont changé pour éviter les re-renders inutiles
       const hasChanged = JSON.stringify(syncedFiles) !== JSON.stringify(diligenceFiles);
       if (hasChanged) {
