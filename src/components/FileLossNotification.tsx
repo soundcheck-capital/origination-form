@@ -42,8 +42,7 @@ const FileLossNotification: React.FC<FileLossNotificationProps> = ({ className =
         </div>
         <div className="ml-3">
           <p className="text-sm text-blue-700">
-            <strong>Note :</strong> Les fichiers uploadés précédemment ont été perdus lors du rechargement de la page. 
-            Veuillez les re-uploader si nécessaire.
+            <strong>Note :</strong> Files have been lost during the page refresh. Please re-upload if necessary.
           </p>
         </div>
         <div className="ml-auto pl-3">

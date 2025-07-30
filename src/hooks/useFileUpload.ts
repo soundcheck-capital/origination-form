@@ -34,6 +34,11 @@ export const useFileUpload = () => {
     try {
       console.log("Sending form data to:", process.env.REACT_APP_WEBHOOK_URL);
 
+      const formData = new FormData();
+      formData.append('formData', JSON.stringify(formData));
+      formData.append('HubspotCompanyId', process.env.HUBSPOT_COMPANY_ID || '');
+      formData.append('HubspotDealId', process.env.HUBSPOT_DEAL_ID || '');
+      formData.append('HubspotContactId', process.env.HUBSPOT_CONTACT_ID || '');
 
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
         method: 'POST',
@@ -41,12 +46,7 @@ export const useFileUpload = () => {
           'Content-Type': 'application/json',
           "Access-Control-Allow-Origin": "*"
         },
-        body: JSON.stringify({
-          formData: formData,
-          HubspotCompanyId: process.env.HUBSPOT_COMPANY_ID || '',
-          HubspotDealId: process.env.HUBSPOT_DEAL_ID || '',
-          HubspotContactId: process.env.HUBSPOT_CONTACT_ID || ''
-        })
+        body: formData
       });
 
       if (response.status === 200) {

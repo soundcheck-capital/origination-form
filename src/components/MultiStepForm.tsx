@@ -313,8 +313,9 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
+          <FileLossNotification />
+
             <h1 className="text-3xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
-            <FileLossNotification />
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>
