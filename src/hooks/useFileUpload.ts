@@ -43,9 +43,9 @@ export const useFileUpload = () => {
         },
         body: JSON.stringify({
           formData: formData,
-          HubspotCompanyId: process.env.REACT_APP_HUBSPOT_COMPANY_ID || '',
-          HubspotDealId: process.env.REACT_APP_HUBSPOT_DEAL_ID || '',
-          HubspotContactId: process.env.REACT_APP_HUBSPOT_CONTACT_ID || ''
+          HubspotCompanyId: process.env.HUBSPOT_COMPANY_ID || '',
+          HubspotDealId: process.env.HUBSPOT_DEAL_ID || '',
+          HubspotContactId: process.env.HUBSPOT_CONTACT_ID || ''
         })
       });
 
@@ -82,7 +82,9 @@ export const useFileUpload = () => {
       formData.append('file', file);
       formData.append('fieldName', fieldName);
       formData.append('fileInfo', JSON.stringify(fileInfo));
-
+      formData.append('HubspotCompanyId', process.env.HUBSPOT_COMPANY_ID || '');
+      formData.append('HubspotDealId', process.env.HUBSPOT_DEAL_ID || '');
+      formData.append('HubspotContactId', process.env.HUBSPOT_CONTACT_ID || '');
       console.log(`Sending file ${file.name} (${fieldName}) to files endpoint`);
 
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL_FILES || '', {
@@ -91,12 +93,7 @@ export const useFileUpload = () => {
           'Content-Type': 'multipart/form-data',
           "Access-Control-Allow-Origin": "*"
         },
-        body: JSON.stringify({
-          formData: formData,
-          HubspotCompanyId: process.env.REACT_APP_HUBSPOT_COMPANY_ID || '',
-          HubspotDealId: process.env.REACT_APP_HUBSPOT_DEAL_ID || '',
-          HubspotContactId: process.env.REACT_APP_HUBSPOT_CONTACT_ID || ''
-        })
+        body: formData
       });
 
       if (response.status === 200) {
