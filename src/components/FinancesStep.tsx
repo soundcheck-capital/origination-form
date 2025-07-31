@@ -4,6 +4,10 @@ import { RootState } from '../store';
 import { updateFinancesInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
+import { Switch } from "@material-tailwind/react";
+import DropdownField from './customComponents/DropdownField';
+import CurrencyField from './customComponents/CurrencyField';
+
 
 const debtTypes = [
   'Credit card debt',
@@ -20,6 +24,7 @@ const debtTypes = [
 const FinancesStep: React.FC = () => {
   const dispatch = useDispatch();
   const financesInfo = useSelector((state: RootState) => state.form.formData.financesInfo);
+  console.log(financesInfo);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [visibleQuestions, setVisibleQuestions] = useState<number[]>([0]);
   const [hasBeenVisited, setHasBeenVisited] = useState(false);
@@ -51,7 +56,7 @@ const FinancesStep: React.FC = () => {
     {
       id: 'debt',
       text: "Do you have any business debt or material liabilities?",
-      name: 'hasBusinessDebt'
+      name: 'hasBusinessDebt',
     },
     {
       id: 'overdue',
@@ -136,7 +141,10 @@ const FinancesStep: React.FC = () => {
 
   };
 
-
+  const handleSingleEntityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target; 
+    dispatch(updateFinancesInfo({ [name]: checked }));
+  };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -238,25 +246,25 @@ const FinancesStep: React.FC = () => {
                 <div key={debtIndex} className="debt-row">
 
                   <div className="flex flex-row gap-4 ">
-                    <select
+                    <DropdownField
+                      options={debtTypes}
                       value={debt.type}
                       onChange={(e) => handleDebtTypeChange(debtIndex, e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
-                    >
-                      <option value="">Select type of debt</option>
-                      {debtTypes.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      value={debt.balance}
-                      onChange={(e) => handleDebtBalanceChange(debtIndex, e.target.value)}
-                      placeholder="outstanding balance"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500 "
+                      label="Select type of debt"
+                      name="debtType"
+                      error=""
+                      onBlur={() => {}}
+                      required={true}
                     />
+                      <CurrencyField 
+                      value={debt.balance}
+                      onChange={(e) => handleDebtBalanceChange(debtIndex, e.toString())}
+                      label="outstanding balance"
+                      name="debtBalance"
+                      required={true}
+                    />
+                    
+                    
                     {financesInfo.debts.length > 1 && ( 
                       <button
                         className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
@@ -278,8 +286,8 @@ const FinancesStep: React.FC = () => {
               ))}
             </div>
 
-            <div className="add-debt-container flex flex-row justify-center text-rose-500 hover:text-rose-700 hover:cursor-pointer lg:w-[75%] xs:w-[50%]" onClick={addDebt}>
-              <span className="add-debt-link">
+            <div className="w-full mb-4 flex justify-center" onClick={addDebt}>
+              <span className="text-rose-500 hover:text-rose-700 hover:cursor-pointer">
                 + Add Debt
               </span>
             </div>
