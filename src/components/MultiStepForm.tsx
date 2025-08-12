@@ -74,7 +74,7 @@ const MultiStepFormContent: React.FC = () => {
         ownershipInfo: formData.formData.ownershipInfo,
         financesInfo: formData.formData.financesInfo,  
         fundsInfo: formData.formData.fundsInfo,
-        diligenceInfo: formData.diligenceInfo,
+       // diligenceInfo: formData.diligenceInfo,
         user: user ? { id: user.id, email: user.email } : null,
       };
 

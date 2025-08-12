@@ -8,48 +8,9 @@ import TextField from './customComponents/TextField';
 import NumberInput from './customComponents/NumberField';
 import CurrencyField from './customComponents/CurrencyField';
 import { useValidation } from '../contexts/ValidationContext';
+import { ticketingPayouts, ticketingPartners, settlementPolicies } from '../store/form/hubspotLists';
 
 
-const ticketingPartners = [
-  'AXS',
-  'Etix',
-  'Eventbrite',
-  'EventLive',
-  'Fever',
-  'Frontgate',  
-  'Leap Event Technology',
-  'PreKindle',
-  'See Tickets',
-  'Shotgun',
-  'Showpass',
-  'SquadUp',
-  'TicketFairy',
-  'Ticketmaster',
-  'Ticketon',
-  'TicketTailor',
-  'Ticketspice',
-  'Ticketweb',
-  'Tixr',
-  'Venue Pilot',  
-  'Various',
-  'Other',
-
-];
-
-const settlementPolicies = [
-  'Daily payout',
-  'Weekly payout',
-  'Bi-monthly payout',
-  'Monthly payout',
-  'Payout after the event'
-];
-
-const ticketingPayouts = [
-  'Ticketing Company',
-  'Venue (i.e. post show settlement)',
-  'Payment Processor (e.g. Stripe)',
-  'Other'
-];
 
 const TicketingStep: React.FC = () => {
   const dispatch = useDispatch();

@@ -9,6 +9,7 @@ import NumberInput from './customComponents/NumberField';
 import DatePickerField from './customComponents/DatePickerField';
 import DropdownField from './customComponents/DropdownField';
 import { useValidation } from '../contexts/ValidationContext';
+import { legalEntityTypes, usStates } from '../store/form/hubspotLists';
 interface Owner {
   id: string;
   ownerName: string;
@@ -18,17 +19,7 @@ interface Owner {
   ownerBirthDate: string;
 }
 
-const usStates = [
-  'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
-  'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
-  'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
-  'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
-  'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
-];
 
-const businessTypes = [
-  'Limited Liability Company (LLC)', 'Partnership', 'Corporation', 'Sole Proprietorship',
-];
 
 const OwnershipStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -243,7 +234,7 @@ const OwnershipStep: React.FC = () => {
       <StepTitle title="Business Legal Information" />
       <TextField type="text" label="Legal Business Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={() => { }} required />
       <TextField type="text" label="DBA" name="dba" value={companyInfo.dba} onChange={handleChange} error='' onBlur={() => { }} required />
-      <DropdownField label="Business Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={() => { }} options={businessTypes} required />
+      <DropdownField label="Business Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={() => { }} options={legalEntityTypes} required />
 
       <DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={() => { }} options={usStates} required />
 

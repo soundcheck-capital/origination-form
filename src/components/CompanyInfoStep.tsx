@@ -6,6 +6,7 @@ import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import DropdownField from './customComponents/DropdownField';
 import { useValidation } from '../contexts/ValidationContext';
+import { companyTypes, yearsInBusiness, memberships } from '../store/form/hubspotLists';
 
 // Google Maps Autocomplete types
 declare global {
@@ -14,33 +15,7 @@ declare global {
   }
 }
 
-const companyTypes = [
-  'Promoter',
-  'Venue',
-  'Festival',
-  'Performing Arts Center',
-  'Theatre',
-  'Movie Theatre',
-  'Sports Team',
-  'Museum',
-  'Attraction',
-  'Other'
-];
 
-const yearsInBusiness = [
-  'Less than 1 year',
-  '1-2 years',
-  '2-5 years',
-  '5-10 years',
-  'More than 10 years',
-];
-
-const memberships = [
-  'NIVA (National Independent Venue Association)',
-  'Promotores Unidos',
-  'NATO (National Association of Theater Owners)',
-  'Other'
-];
 
 const CompanyInfoStep: React.FC = () => {
   const dispatch = useDispatch();

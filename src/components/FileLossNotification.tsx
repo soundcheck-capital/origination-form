@@ -11,7 +11,7 @@ const FileLossNotification: React.FC<FileLossNotificationProps> = ({ className =
 
   useEffect(() => {
     // Vérifier s'il y a des champs vides qui avaient des métadonnées (fichiers perdus)
-    const hasLostFiles = Object.values(diligenceFiles).some(field => 
+    const hasLostFiles = Object.values(diligenceFiles).every(field => 
       field.fileInfos.length === 0 && field.files.length === 0
     );
 

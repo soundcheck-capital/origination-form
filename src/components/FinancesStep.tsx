@@ -4,22 +4,12 @@ import { RootState } from '../store';
 import { updateFinancesInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import FileUploadField from './customComponents/FileUploadField';
-import { Switch } from "@material-tailwind/react";
 import DropdownField from './customComponents/DropdownField';
 import CurrencyField from './customComponents/CurrencyField';
+import { debtTypes } from '../store/form/hubspotLists';
 
 
-const debtTypes = [
-  'Credit card debt',
-  'Account payables',
-  'Terms loans',
-  'Merchant Cash Advance',
-  'Line of Credit', 'Term Loan',
-  'Equipment Loan',
-  'SBA Loan',
-  'Bank Note', 'Shareholder Loan', 'Convertible Note',
-  'Other'
-];
+
 
 const FinancesStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -141,10 +131,7 @@ const FinancesStep: React.FC = () => {
 
   };
 
-  const handleSingleEntityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target; 
-    dispatch(updateFinancesInfo({ [name]: checked }));
-  };
+
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

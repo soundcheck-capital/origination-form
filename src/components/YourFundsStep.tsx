@@ -5,22 +5,10 @@ import { updateFundsInfo } from '../store/form/formSlice';
 import DropdownField from './customComponents/DropdownField';
 import CurrencyField from './customComponents/CurrencyField';
 import { useValidation } from '../contexts/ValidationContext';
+import { timeForFunding, fundUses } from '../store/form/hubspotLists';
 
 
 
-const timeForFunding = [
-    'In the next 2 weeks',
-    'In the next month',
-    'In the next 3 months',
-  ];
-
-
-const fundUses = [
-  'Artist Deposit',
-  'Show Marketing',
-  'Operational / Show Expenses',
-  'General Working Capital Needs',
-  ];
 
 const YourFundingStep: React.FC = () => {
   const dispatch = useDispatch();
