@@ -49,7 +49,12 @@ export interface Address {
         socials: string;
         companyType: string;
         legalEntityType: string;
+        companyAddressDisplay: string;
         companyAddress: string;
+        companyZipcode: string;
+        companyState: string;
+        companyCountry: string;
+        companyCity: string;
         role: string;
         ein: string;
         stateOfIncorporation: string;
@@ -74,7 +79,7 @@ export interface Address {
       fundsInfo: {
         yourFunds: string;
         fundUse: string;
-        timeForFunding: string;
+        timingForFunding: string;
       };
       ownershipInfo: {
         owners: Owner[];

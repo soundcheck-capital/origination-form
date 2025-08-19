@@ -38,7 +38,7 @@ const YourFundingStep: React.FC = () => {
         <p className='text-xs italic text-gray-500 mx-auto mb-4 text-center'>*The capital amount stated is non-binding and is merely an indication of what you could be approved for after you've completed the due diligence process. Terms will be subject to a thorough review of the business.</p>
       </div>}
       <CurrencyField label="Funding Needs ($)"  name="yourFunds" value={fundsInfo.yourFunds === '0' ? '' : fundsInfo.yourFunds} onChange={(value) => handleCurrencyChange('yourFunds', value)} required />
-      <DropdownField label="Timing for Funding" name="timeForFunding" value={fundsInfo.timeForFunding} onChange={handleChange} error='' onBlur={() => { }} options={timeForFunding} required />
+      <DropdownField label="Timing for Funding" name="timingForFunding" value={fundsInfo.timingForFunding} onChange={handleChange} error='' onBlur={() => { }} options={timeForFunding} required />
       <DropdownField label="What do you plan to use the money for?" name="fundUse" value={fundsInfo.fundUse} onChange={handleChange} error='' onBlur={() => { }} options={fundUses} required />
 
 

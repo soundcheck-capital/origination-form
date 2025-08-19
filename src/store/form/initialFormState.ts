@@ -9,8 +9,8 @@ export const initialState: FormState = {
     personalInfo: { email: '', emailConfirm: '', firstname: '', lastname: '', phone: '' },
     companyInfo: {
       employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', companyType: '',
-      legalEntityType: '', companyAddress: '', role: '',
-      ein: '', stateOfIncorporation: '', membership: ''
+      legalEntityType: '', companyAddressDisplay: '', companyAddress: '', companyZipcode: '', companyState: '', companyCountry: '', companyCity: '',
+      role: '', ein: '', stateOfIncorporation: '', membership: ''
     },
     ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', ticketingPayout: '', otherTicketingPayout: '' },
     volumeInfo: {
@@ -18,7 +18,7 @@ export const initialState: FormState = {
       nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0
     },
     fundsInfo: {
-      yourFunds: '', fundUse: '', timeForFunding: ''
+      yourFunds: '', fundUse: '', timingForFunding: ''
     },
     ownershipInfo: {
       owners: [],

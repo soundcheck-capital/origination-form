@@ -37,6 +37,7 @@ const MultiStepFormContent: React.FC = () => {
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
   const { currentStepErrors, setCurrentStepErrors } = useValidation();
+  const [isSavingStep, setIsSavingStep] = useState(false);
 
   // Vérifier si le formulaire a été soumis avec succès
   useEffect(() => {
@@ -123,7 +124,7 @@ const MultiStepFormContent: React.FC = () => {
     handleSubmit();
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     const validation = validateCurrentStep(currentStep);
     
     if (!validation.isValid) {
@@ -134,10 +135,20 @@ const MultiStepFormContent: React.FC = () => {
       return;
     }
 
-    // Only clear errors if validation passes
-    setCurrentStepErrors(null);
-    setCurrentStep(currentStep + 1);
-    window.scrollTo(0, 0);
+    // Démarrer l'animation de sauvegarde
+    setIsSavingStep(true);
+
+    try {
+      // Simuler une petite pause pour l'animation (500ms)
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Only clear errors if validation passes
+      setCurrentStepErrors(null);
+      setCurrentStep(currentStep + 1);
+      window.scrollTo(0, 0);
+    } finally {
+      setIsSavingStep(false);
+    }
   };
 
   const handlePreviousStep = () => {
@@ -326,8 +337,15 @@ const MultiStepFormContent: React.FC = () => {
           {/* Navigation Buttons */}
           <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
             {currentStep === 1 && (
-              <ButtonPrimary className='lg:first:w-[30%] ' onClick={handleNextStep} disabled={false}>
-                Next
+              <ButtonPrimary className='lg:first:w-[30%] ' onClick={handleNextStep} disabled={isSavingStep}>
+                {isSavingStep ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Saving...</span>
+                  </div>
+                ) : (
+                  'Next'
+                )}
               </ButtonPrimary>
             )}
             {currentStep > 1 && (
@@ -335,7 +353,16 @@ const MultiStepFormContent: React.FC = () => {
             )}
 
             {(currentStep < 11 && currentStep > 1) && (
-              <ButtonPrimary onClick={handleNextStep} disabled={false}>Next</ButtonPrimary>
+              <ButtonPrimary onClick={handleNextStep} disabled={isSavingStep}>
+                {isSavingStep ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Saving...</span>
+                  </div>
+                ) : (
+                  'Next'
+                )}
+              </ButtonPrimary>
             )}
             {currentStep === 11 && (
               <ButtonPrimary onClick={() => {

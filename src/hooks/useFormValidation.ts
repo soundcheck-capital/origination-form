@@ -62,7 +62,7 @@ export const useFormValidation = () => {
     const errors: { [key: string]: string } = {};
 
     if (!fundsInfo.yourFunds.trim()) errors.yourFunds = 'Funding needs amount is required';
-    if (!fundsInfo.timeForFunding.trim()) errors.timeForFunding = 'Timing for funding is required';
+    if (!fundsInfo.timingForFunding) errors.timingForFunding = 'Timing for funding is required';
     if (!fundsInfo.fundUse.trim()) errors.fundUse = 'Fund use is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };

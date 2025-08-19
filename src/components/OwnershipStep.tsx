@@ -28,10 +28,6 @@ const OwnershipStep: React.FC = () => {
   const { setFieldError } = useValidation();
 
 
-
-
- 
-
       const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
       if (name === "legalEntityName") {
@@ -65,7 +61,7 @@ const OwnershipStep: React.FC = () => {
         } else {
           setFieldError('stateOfIncorporation', null);
         }
-      } else if (name === 'companyAddress') {
+      } else if (name === 'companyAddressDisplay') {
         if (!value.trim()) {
           setFieldError('companyAddress', 'Company address is required');
         } else if (value.length < 5) {
@@ -79,8 +75,13 @@ const OwnershipStep: React.FC = () => {
     };
 
   const updateCompanyAddress = (address: string) => {
-    dispatch(updateCompanyInfo({ companyAddress: address }));
-    
+    dispatch(updateCompanyInfo({ companyAddressDisplay: address,
+       companyAddress: `${address.split(',')[0]}`, 
+       companyZipcode: address.split(',')[3], 
+       companyState: address.split(',')[2], 
+       companyCountry: address.split(',')[4], 
+       companyCity: address.split(',')[1] }));
+
     // Real-time validation for company address
     if (!address.trim()) {
       setFieldError('companyAddress', 'Company address is required');
@@ -241,14 +242,14 @@ const OwnershipStep: React.FC = () => {
 
       <AddressAutocomplete
         label="Address"
-        name="companyAddress"
-        value={companyInfo.companyAddress}
+        name="companyAddressDisplay"
+        value={companyInfo.companyAddressDisplay}
         onChange={handleChange}
         onSelect={(address: string) => updateCompanyAddress(address)}
         error=''
         onBlur={() => { }}
         type="text"
-        id="companyAddress"
+        id="companyAddressDisplay"  
       />
 
       <TextField type="text" label="Tax ID (EIN)" name="ein" value={ein} onChange={handleChangeEIN} error='' onBlur={() => { }} required />

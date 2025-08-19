@@ -56,19 +56,13 @@ export const AddressAutocomplete: React.FC<{ label: string, name: string, value:
           state = "",
           zipCode = "",
           country = "";
-          place.address_components.forEach((c: any) => {
-  
-        if (c.types.includes("street_number")) streetNumber = c.long_name;
-        if (c.types.includes("route")) route = c.long_name;
-        if (c.types.includes("locality")) city = c.long_name;
-        if (c.types.includes("administrative_area_level_1"))
-          state = c.short_name;
-        if (c.types.includes("postal_code")) zipCode = c.long_name;
-        if (c.types.includes("country")) country = c.long_name;
-        if (c.types.includes("city")) city = c.long_name;
-      });
-      const formatted = `${streetNumber} ${route}, ${city}, ${state}, ${zipCode}, ${country}`.trim();
-
+          streetNumber = place.address_components[0].long_name;
+          route = place.address_components[1].long_name;
+          city = place.address_components[2].long_name;
+          state = place.address_components[5].short_name;
+          country = place.address_components[6].long_name;
+          zipCode = place.address_components[7].long_name;
+      const formatted = `${streetNumber} ${route}, ${city}, ${state}, ${zipCode}, ${country}`;
       onSelectRef.current(formatted);
       });
       return () => {
