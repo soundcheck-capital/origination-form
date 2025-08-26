@@ -82,16 +82,6 @@ export const useFileUpload = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('fieldName', fieldName);
-      // Debug: Log environment variables
-      console.log('=== Environment Variables Debug ===');
-      console.log('REACT_APP_HUBSPOT_COMPANY_ID:', process.env.REACT_APP_HUBSPOT_COMPANY_ID);
-      console.log('REACT_APP_HUBSPOT_DEAL_ID:', process.env.REACT_APP_HUBSPOT_DEAL_ID);
-      console.log('REACT_APP_HUBSPOT_CONTACT_ID:', process.env.REACT_APP_HUBSPOT_CONTACT_ID);
-      console.log('REACT_APP_HUBSPOT_DRIVE_ID:', process.env.REACT_APP_HUBSPOT_DRIVE_ID);
-      console.log('REACT_APP_WEBHOOK_URL_FILES:', process.env.REACT_APP_WEBHOOK_URL_FILES);
-      console.log('All environment variables:', Object.keys(process.env).filter(key => key.startsWith('REACT_APP_')));
-      console.log('===================================');
-      
       formData.append('hubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
       formData.append('hubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
       formData.append('hubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
