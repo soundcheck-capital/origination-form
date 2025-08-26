@@ -82,10 +82,10 @@ export const useFileUpload = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('fieldName', fieldName);
-      formData.append('hubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '37482602639');
-      formData.append('hubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '41089395317');
-      formData.append('hubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '133819925426');
-      formData.append('driveId', process.env.REACT_APP_HUBSPOT_DRIVE_ID || '1xN9uQDksHLtn7YNFxkfvICxjmZ7OVZ_v');
+      formData.append('hubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
+      formData.append('hubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
+      formData.append('hubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
+      formData.append('driveId', process.env.REACT_APP_HUBSPOT_DRIVE_ID || '');
       console.log(`Sending file ${file.name} (${fieldName}) to files endpoint`);
 
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL_FILES || '', {
