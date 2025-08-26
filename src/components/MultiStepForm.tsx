@@ -30,7 +30,6 @@ const MultiStepFormContent: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const formData = useSelector((state: RootState) => state.form);
-  const { user } = useSelector((state: RootState) => state.auth);
   const [saveMessage, setSaveMessage] = useState('');
   const { getAllFiles } = useDiligenceFiles();
   const { uploadToMake, uploadProgress, isUploading } = useFileUpload();
@@ -62,21 +61,62 @@ const MultiStepFormContent: React.FC = () => {
     try {
       // Préparer les données du formulaire avec diligenceInfo déjà inclus
       const formDataToSend = {
-        // Application metadata
-        applicationId: id || 'new',
-        submittedAt: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-
-        // Form data (incluant diligenceInfo)
-        personalInfo: formData.formData.personalInfo,
-        companyInfo: formData.formData.companyInfo,
-        ticketingInfo: formData.formData.ticketingInfo,
-        volumeInfo: formData.formData.volumeInfo,
-        ownershipInfo: formData.formData.ownershipInfo,
-        financesInfo: formData.formData.financesInfo,  
-        fundsInfo: formData.formData.fundsInfo,
-       // diligenceInfo: formData.diligenceInfo,
-        user: user ? { id: user.id, email: user.email } : null,
+        contact: formData.formData.personalInfo,
+        company: {
+          name: formData.formData.companyInfo.name,
+          address: formData.formData.companyInfo.companyAddress,
+          city: formData.formData.companyInfo.companyCity,
+          state: formData.formData.companyInfo.companyState,
+          zip: formData.formData.companyInfo.companyZipcode,
+          employees: formData.formData.companyInfo.employees,
+          dba: formData.formData.companyInfo.dba,
+          yearsInBusiness: formData.formData.companyInfo.yearsInBusiness,
+          socials: formData.formData.companyInfo.socials,
+          clientType: formData.formData.companyInfo.clientType,
+          businessType: formData.formData.companyInfo.businessType,
+          ein: formData.formData.companyInfo.ein,
+          stateOfIncorporation: formData.formData.companyInfo.stateOfIncorporation,
+          memberOf: formData.formData.companyInfo.memberOf,
+          currentPartner: formData.formData.ticketingInfo.currentPartner,
+          otherPartner: formData.formData.ticketingInfo.otherPartner,
+          paymentProcessing: formData.formData.ticketingInfo.paymentProcessing,
+          otherPaymentProcessing: formData.formData.ticketingInfo.otherPaymentProcessing,
+          settlementPayout: formData.formData.ticketingInfo.settlementPayout,
+          lastYearEvents: formData.formData.volumeInfo.lastYearEvents,
+          lastYearTickets: formData.formData.volumeInfo.lastYearTickets,
+          lastYearSales: formData.formData.volumeInfo.lastYearSales,
+          nextYearEvents: formData.formData.volumeInfo.nextYearEvents,
+          nextYearTickets: formData.formData.volumeInfo.nextYearTickets,
+          nextYearSales: formData.formData.volumeInfo.nextYearSales,
+          owners: formData.formData.ownershipInfo.owners,
+          singleEntity: formData.formData.financesInfo.singleEntity,
+          assetsTransferred: formData.formData.financesInfo.assetsTransferred ? 'Yes' : 'No',
+          filedLastYearTaxes: formData.formData.financesInfo.filedLastYearTaxes ? 'Yes' : 'No',
+          lastYearTaxes: formData.formData.financesInfo.lastYearTaxes,
+          hasTicketingDebt: formData.formData.financesInfo.hasTicketingDebt ? 'Yes' : 'No',
+          hasBusinessDebt: formData.formData.financesInfo.hasBusinessDebt ? 'Yes' : 'No',
+          hasOverdueLiabilities: formData.formData.financesInfo.hasOverdueLiabilities ? 'Yes' : 'No',
+          isLeasingLocation: formData.formData.financesInfo.isLeasingLocation ? 'Yes' : 'No',
+          hasTaxLiens: formData.formData.financesInfo.hasTaxLiens ? 'Yes' : 'No',
+          hasJudgments: formData.formData.financesInfo.hasJudgments ? 'Yes' : 'No',
+          hasBankruptcy: formData.formData.financesInfo.hasBankruptcy ? 'Yes' : 'No',
+          ownershipChanged: formData.formData.financesInfo.ownershipChanged ? 'Yes' : 'No',
+          leaseEndDate: formData.formData.financesInfo.leaseEndDate,
+          debts: formData.formData.financesInfo.debts,
+        },
+        deal: {
+          nextYearEvents: formData.formData.volumeInfo.nextYearEvents,
+          nextYearTickets: formData.formData.volumeInfo.nextYearTickets,
+          nextYearSales: formData.formData.volumeInfo.nextYearSales,
+          settlementPolicy: formData.formData.ticketingInfo.settlementPayout,
+          purchasePrice: formData.formData.fundsInfo.yourFunds,
+          useOfProceeds: formData.formData.fundsInfo.useOfProceeds,
+          timingOfFunding: formData.formData.fundsInfo.timingOfFunding,
+          additionalComments: formData.formData.financesInfo.additionalComments,
+        },
+        hubspotContact: process.env.REACT_APP_HUBSPOT_CONTACT_ID,
+        hubspotCompany: process.env.REACT_APP_HUBSPOT_COMPANY_ID,
+        hubspotDeal: process.env.REACT_APP_HUBSPOT_DEAL_ID,
       };
 
       console.log("formDataToSend => ", formDataToSend);

@@ -23,16 +23,16 @@ export const useFormValidation = () => {
   };
 
   const validateCompanyInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { companyInfo } = formData.formData;
+    const { companyInfo, personalInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
-
     if (!companyInfo.name.trim()) errors.name = 'Company name is required';
-    if (!companyInfo.role) errors.role = 'Role is required';
+    // Role field is in personalInfo but it is in the companyInfo step
+    if (!personalInfo.role) errors.role = 'Role is required';
     if (!companyInfo.socials) errors.socials = 'Socials are required';
     if (!companyInfo.yearsInBusiness.trim()) errors.yearsInBusiness = 'Years in business is required';
     if (!companyInfo.employees) errors.employees = 'Number of employees is required';
-    if (!companyInfo.companyType) errors.companyType = 'Company type is required';
-      if (!companyInfo.membership) errors.membership = 'Membership is required';
+    if (!companyInfo.clientType) errors.clientType = 'Company type is required';
+      if (!companyInfo.memberOf) errors.memberOf = 'Membership is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
@@ -41,12 +41,12 @@ export const useFormValidation = () => {
     const { ticketingInfo, volumeInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
-    if (!ticketingInfo.ticketingPayout.trim()) errors.ticketingPayout = 'Ticketing payout is required';
-    if (ticketingInfo.ticketingPayout === 'Other' && !ticketingInfo.otherTicketingPayout.trim()) errors.otherTicketingPayout = 'Other ticketing payout is required';
+    if (!ticketingInfo.paymentProcessing) errors.paymentProcessing = 'Payment processing is required';
+    if (ticketingInfo.paymentProcessing === 'Other' && !ticketingInfo.otherPaymentProcessing.trim()) errors.otherPaymentProcessing = 'Other payment processing is required';
 
     if (!ticketingInfo.currentPartner.trim()) errors.currentPartner = 'Ticketing partner is required';
     if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) errors.otherPartner = 'Other ticketing partner is required';
-    if (!ticketingInfo.settlementPolicy.trim()) errors.settlementPolicy = 'Settlement policy is required';
+    if (!ticketingInfo.settlementPayout) errors.settlementPayout = 'Settlement payout policy is required';
     if (volumeInfo.lastYearEvents <= 0) errors.lastYearEvents = 'Last year events must be greater than 0';
     if (volumeInfo.lastYearTickets <= 0) errors.lastYearTickets = 'Last year tickets must be greater than 0';
     if (volumeInfo.lastYearSales <= 0) errors.lastYearSales = 'Last year sales must be greater than 0';
@@ -62,8 +62,8 @@ export const useFormValidation = () => {
     const errors: { [key: string]: string } = {};
 
     if (!fundsInfo.yourFunds.trim()) errors.yourFunds = 'Funding needs amount is required';
-    if (!fundsInfo.timingForFunding) errors.timingForFunding = 'Timing for funding is required';
-    if (!fundsInfo.fundUse.trim()) errors.fundUse = 'Fund use is required';
+    if (!fundsInfo.timingOfFunding) errors.timingOfFunding = 'Timing for funding is required';
+    if (!fundsInfo.useOfProceeds) errors.useOfProceeds = 'Use of proceeds is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
@@ -78,7 +78,7 @@ export const useFormValidation = () => {
     if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
     if (!companyInfo.companyAddress.trim()) errors.companyAddress = 'Company address is required';
     if (!companyInfo.stateOfIncorporation.trim()) errors.stateOfIncorporation = 'State of incorporation is required';
-    if (!companyInfo.legalEntityType.trim()) errors.legalEntityType = 'Legal entity type is required';
+    if (!companyInfo.businessType) errors.businessType = 'Business type is required';
     if (ownershipInfo.owners.length === 0) {
       errors.owners = 'At least one owner is required';
     } else {
@@ -114,7 +114,7 @@ export const useFormValidation = () => {
     if (diligenceInfo.ticketingCompanyReport.files.length === 0) {
       errors.ticketingCompanyReport = 'Ticketing company report is required';
     }
-    if (formData.formData.ticketingInfo.ticketingPayout === 'Venue (i.e. post show settlement)' && diligenceInfo.ticketingServiceAgreement.files.length === 0) {
+    if (formData.formData.ticketingInfo.paymentProcessing === 'Venue' && diligenceInfo.ticketingServiceAgreement.files.length === 0) {
       errors.ticketingServiceAgreement = 'Ticketing service agreement is required';
     }
 

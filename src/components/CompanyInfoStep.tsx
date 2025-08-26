@@ -1,12 +1,12 @@
 import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateCompanyInfo } from '../store/form/formSlice';
+import { updateCompanyInfo, updatePersonalInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import DropdownField from './customComponents/DropdownField';
 import { useValidation } from '../contexts/ValidationContext';
-import { companyTypes, yearsInBusiness, memberships } from '../store/form/hubspotLists';
+import { clientType, yearsInBusiness, memberOf } from '../store/form/hubspotLists';
 
 // Google Maps Autocomplete types
 declare global {
@@ -20,6 +20,7 @@ declare global {
 const CompanyInfoStep: React.FC = () => {
   const dispatch = useDispatch();
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
+  const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
   const { setFieldError } = useValidation();
  
 
@@ -29,6 +30,9 @@ const CompanyInfoStep: React.FC = () => {
     if(name === "name"){
       dispatch(updateCompanyInfo({ name: value, dba: value  }));
       setFieldError('name', null);
+    } else if (name === "role"){
+      dispatch(updatePersonalInfo({ personalInfo: { ...personalInfo, role: value } }));
+      setFieldError( name, null);
     } else {
       dispatch(updateCompanyInfo({ [name]: value }));
       setFieldError(name, null);
@@ -44,15 +48,15 @@ const CompanyInfoStep: React.FC = () => {
       <StepTitle title="Company Information" />
 
       <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}} required />
-      <TextField type="text" label="Your Role" name="role" value={companyInfo.role} onChange={handleChange} error='' onBlur={()=>{}} required />
+      <TextField type="text" label="Your Role" name="role" value={personalInfo.role} onChange={handleChange} error='' onBlur={()=>{}} required />
 
-      <DropdownField label="Company Type" name="companyType" value={companyInfo.companyType} onChange={handleChange} error='' onBlur={()=>{}} options={companyTypes} required />
+      <DropdownField label="Company Type" name="clientType" value={companyInfo.clientType} onChange={handleChange} error='' onBlur={()=>{}} options={clientType} required />
 
       <DropdownField label="Years in Business" name="yearsInBusiness" value={companyInfo.yearsInBusiness} onChange={handleChange} error='' onBlur={()=>{}} options={yearsInBusiness} required />
 
       <TextField type="number" label="Number of Employees" name="employees" value={companyInfo.employees.toString()} onChange={handleChange} error='' onBlur={()=>{}} required />
       <TextField type="text" label="Website - Socials" name="socials" value={companyInfo.socials} onChange={handleChange} error='' onBlur={()=>{}} required />
-      <DropdownField label="Are you a member of?" name="membership" value={companyInfo.membership} onChange={handleChange} error='' onBlur={()=>{}} options={memberships} required />
+      <DropdownField label="Are you a member of?" name="memberOf" value={companyInfo.memberOf} onChange={handleChange} error='' onBlur={()=>{}} options={memberOf} required />
    </div>
   );
 };

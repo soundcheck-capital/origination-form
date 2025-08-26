@@ -40,6 +40,7 @@ export interface Address {
         firstname: string;
         lastname: string;
         phone: string;
+        role: string;
       };
       companyInfo: {
         employees: number;
@@ -47,26 +48,25 @@ export interface Address {
         dba: string;
         yearsInBusiness: string;
         socials: string;
-        companyType: string;
-        legalEntityType: string;
+        clientType: string;
+        businessType: string;
         companyAddressDisplay: string;
         companyAddress: string;
         companyZipcode: string;
         companyState: string;
         companyCountry: string;
         companyCity: string;
-        role: string;
         ein: string;
         stateOfIncorporation: string;
-        membership: string;
+        memberOf: string;
 
       };
       ticketingInfo: {
         currentPartner: string;
         otherPartner: string;
-        settlementPolicy: string;
-        ticketingPayout: string;
-        otherTicketingPayout: string;
+        settlementPayout: string;
+        paymentProcessing: string;  
+        otherPaymentProcessing: string;
       };
       volumeInfo: {
         lastYearEvents: number;
@@ -78,8 +78,8 @@ export interface Address {
       };
       fundsInfo: {
         yourFunds: string;
-        fundUse: string;
-        timingForFunding: string;
+        useOfProceeds: string;
+        timingOfFunding: string;
       };
       ownershipInfo: {
         owners: Owner[];

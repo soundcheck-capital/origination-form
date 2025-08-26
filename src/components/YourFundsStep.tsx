@@ -5,7 +5,7 @@ import { updateFundsInfo } from '../store/form/formSlice';
 import DropdownField from './customComponents/DropdownField';
 import CurrencyField from './customComponents/CurrencyField';
 import { useValidation } from '../contexts/ValidationContext';
-import { timeForFunding, fundUses } from '../store/form/hubspotLists';
+import { timingOfFunding, useOfProceeds } from '../store/form/hubspotLists';
 
 
 
@@ -38,8 +38,8 @@ const YourFundingStep: React.FC = () => {
         <p className='text-xs italic text-gray-500 mx-auto mb-4 text-center'>*The capital amount stated is non-binding and is merely an indication of what you could be approved for after you've completed the due diligence process. Terms will be subject to a thorough review of the business.</p>
       </div>}
       <CurrencyField label="Funding Needs ($)"  name="yourFunds" value={fundsInfo.yourFunds === '0' ? '' : fundsInfo.yourFunds} onChange={(value) => handleCurrencyChange('yourFunds', value)} required />
-      <DropdownField label="Timing for Funding" name="timingForFunding" value={fundsInfo.timingForFunding} onChange={handleChange} error='' onBlur={() => { }} options={timeForFunding} required />
-      <DropdownField label="What do you plan to use the money for?" name="fundUse" value={fundsInfo.fundUse} onChange={handleChange} error='' onBlur={() => { }} options={fundUses} required />
+      <DropdownField label="Timing for Funding" name="timingOfFunding" value={fundsInfo.timingOfFunding} onChange={handleChange} error='' onBlur={() => { }} options={timingOfFunding} required />
+      <DropdownField label="What do you plan to use the money for?" name="useOfProceeds" value={fundsInfo.useOfProceeds} onChange={handleChange} error='' onBlur={() => { }} options={useOfProceeds} required />
 
 
 

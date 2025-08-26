@@ -8,7 +8,7 @@ import TextField from './customComponents/TextField';
 import NumberInput from './customComponents/NumberField';
 import CurrencyField from './customComponents/CurrencyField';
 import { useValidation } from '../contexts/ValidationContext';
-import { ticketingPayouts, ticketingPartners, settlementPolicies } from '../store/form/hubspotLists';
+import { paymentProcessing, ticketingPartners, settlementPayout } from '../store/form/hubspotLists';
 
 
 
@@ -42,9 +42,9 @@ const TicketingStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Ticketing Information" />
     
-      <DropdownField label="Who do you receive ticketing payouts from?" name="ticketingPayout" value={ticketingInfo.ticketingPayout} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPayouts} required />
-      {ticketingInfo.ticketingPayout === 'Other' && (
-      <TextField label="Other Ticketing Payout" name="otherTicketingPayout" value={ticketingInfo.otherTicketingPayout} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
+      <DropdownField label="Who do you receive ticketing payouts from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required />
+      {ticketingInfo.paymentProcessing === 'Other' && (
+      <TextField label="Other Ticketing Payout" name="otherPaymentProcessing" value={ticketingInfo.otherPaymentProcessing} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
      )}
       <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required />
      
@@ -52,7 +52,7 @@ const TicketingStep: React.FC = () => {
       <TextField label="Other Ticketing Partner" name="otherPartner" value={ticketingInfo.otherPartner} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
      )}
 
-      <DropdownField label="What is your ticketing partner settlement/payout policy?" name="settlementPolicy" value={ticketingInfo.settlementPolicy} onChange={handleChange} error='' onBlur={() => { }} options={settlementPolicies} required />
+      <DropdownField label="What is your ticketing partner settlement/payout policy?" name="settlementPayout" value={ticketingInfo.settlementPayout} onChange={handleChange} error='' onBlur={() => { }} options={settlementPayout} required />
 
       {/* <TicketingVolumeStep /> */}
 

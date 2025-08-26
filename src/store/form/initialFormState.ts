@@ -6,19 +6,19 @@ export const initialState: FormState = {
   emailError: '',
   isSubmitted: false,
   formData: {
-    personalInfo: { email: '', emailConfirm: '', firstname: '', lastname: '', phone: '' },
+    personalInfo: { email: '', emailConfirm: '', firstname: '', lastname: '', phone: '', role: '' },
     companyInfo: {
-      employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', companyType: '',
-      legalEntityType: '', companyAddressDisplay: '', companyAddress: '', companyZipcode: '', companyState: '', companyCountry: '', companyCity: '',
-      role: '', ein: '', stateOfIncorporation: '', membership: ''
+      employees: 0, name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
+      businessType: '', companyAddressDisplay: '', companyAddress: '', companyZipcode: '', companyState: '', companyCountry: '', companyCity: '',
+      ein: '', stateOfIncorporation: '', memberOf: ''
     },
-    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPolicy: '', ticketingPayout: '', otherTicketingPayout: '' },
+    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPayout: '', paymentProcessing: '', otherPaymentProcessing: '' },
     volumeInfo: {
       lastYearEvents: 0, lastYearTickets: 0, lastYearSales: 0,
       nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0
     },
     fundsInfo: {
-      yourFunds: '', fundUse: '', timingForFunding: ''
+      yourFunds: '', useOfProceeds: '', timingOfFunding: ''
     },
     ownershipInfo: {
       owners: [],

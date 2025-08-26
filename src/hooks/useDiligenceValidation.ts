@@ -42,10 +42,10 @@ export const useDiligenceValidation = () => {
 
     // Validation Ticketing Information
     if (diligenceInfo.ticketingCompanyReport.fileInfos.length === 0) {
-      console.log("ticketingInfo.ticketingPayout", ticketingInfo.ticketingPayout);
+      console.log("ticketingInfo.paymentProcessing", ticketingInfo.paymentProcessing);
       errors.push('Reports from ticketing company is required');
     }
-    if (ticketingInfo.ticketingPayout === 'Venue (i.e. post show settlement)' && diligenceInfo.ticketingServiceAgreement.fileInfos.length === 0) {
+    if (ticketingInfo.paymentProcessing === 'Venue' && diligenceInfo.ticketingServiceAgreement.fileInfos.length === 0) {
       errors.push('Ticketing Service Agreement is required');
     }
 

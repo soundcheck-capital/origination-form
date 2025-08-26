@@ -32,7 +32,7 @@ const TicketingInformationStep: React.FC = () => {
           accept=".xlsx,.pdf,.csv,.jpg,.png"
           multiple={false}
           onFilesChange={(fileInfos) => handleFilesChange('ticketingServiceAgreement', fileInfos)}
-          required={ticketingInfo.ticketingPayout === 'Venue (i.e. post show settlement)' ? true : false}
+          required={ticketingInfo.paymentProcessing === 'Venue' ? true : false}
         />
 
       </div>

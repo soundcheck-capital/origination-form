@@ -9,7 +9,7 @@ import NumberInput from './customComponents/NumberField';
 import DatePickerField from './customComponents/DatePickerField';
 import DropdownField from './customComponents/DropdownField';
 import { useValidation } from '../contexts/ValidationContext';
-import { legalEntityTypes, usStates } from '../store/form/hubspotLists';
+import { businessType, usStates } from '../store/form/hubspotLists';
 interface Owner {
   id: string;
   ownerName: string;
@@ -49,11 +49,11 @@ const OwnershipStep: React.FC = () => {
         } else {
           setFieldError('dba', null);
         }
-      } else if (name === 'legalEntityType') {
+      } else if (name === 'businessType') {
         if (!value) {
-          setFieldError('legalEntityType', 'Business type is required');
+          setFieldError('businessType', 'Business type is required');
         } else {
-          setFieldError('legalEntityType', null);
+          setFieldError('businessType', null);
         }
       } else if (name === 'stateOfIncorporation') {
         if (!value) {
@@ -235,7 +235,7 @@ const OwnershipStep: React.FC = () => {
       <StepTitle title="Business Legal Information" />
       <TextField type="text" label="Legal Business Name" name="legalEntityName" value={companyInfo.name} onChange={handleChange} error='' onBlur={() => { }} required />
       <TextField type="text" label="DBA" name="dba" value={companyInfo.dba} onChange={handleChange} error='' onBlur={() => { }} required />
-      <DropdownField label="Business Type" name="legalEntityType" value={companyInfo.legalEntityType} onChange={handleChange} error='' onBlur={() => { }} options={legalEntityTypes} required />
+      <DropdownField label="Business Type" name="businessType" value={companyInfo.businessType} onChange={handleChange} error='' onBlur={() => { }} options={businessType} required />
 
       <DropdownField label="State of Incorporation" name="stateOfIncorporation" value={companyInfo.stateOfIncorporation} onChange={handleChange} error='' onBlur={() => { }} options={usStates} required />
 
