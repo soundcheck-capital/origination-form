@@ -89,7 +89,7 @@ const MultiStepFormContent: React.FC = () => {
           nextYearTickets: formData.formData.volumeInfo.nextYearTickets,
           nextYearSales: formData.formData.volumeInfo.nextYearSales,
           owners: formData.formData.ownershipInfo.owners,
-          singleEntity: formData.formData.financesInfo.singleEntity,
+          singleEntity: formData.formData.financesInfo.singleEntity ? 'Single Entity' : 'Multi Entity group structure',
           assetsTransferred: formData.formData.financesInfo.assetsTransferred ? 'Yes' : 'No',
           filedLastYearTaxes: formData.formData.financesInfo.filedLastYearTaxes ? 'Yes' : 'No',
           lastYearTaxes: formData.formData.financesInfo.lastYearTaxes,

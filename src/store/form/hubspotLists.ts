@@ -20,7 +20,7 @@ export const clientType = {
     '10+ years':'10+ years',
   };
   export const memberOf = {
-    'NATO (National Association of Theater Owners)':'NATO (National Association of Theater Owners)',
+    'NATO (National Association of Theatre Owners)':'NATO (National Association of Theatre Owners)',
     'NIVA (National Independent Venue Association)':'NIVA (National Independent Venue Association)',
     'Promotores Unidos':'Promotores Unidos',
     'Other':'Other'
@@ -99,7 +99,7 @@ export const clientType = {
     'Corporation':'Corporation', 
    'Limited Liability Company (LLC)':'Limited Liability Company (LLC)', 
    'Partnership':'Partnership', 
-   'Sole Proprietorship':'Sole Proprietorship',
+   'Sole proprietorship':'Sole Proprietorship',
  };
 
   export const ticketingPartners = {
@@ -152,8 +152,8 @@ export const clientType = {
   };
 
   export const useOfProceeds = {
-    'Artist Deposit':'Artist Deposit',
-    'Venue Deposit':'Venue Deposit',
+    'Artist deposit':'Artist Deposit',
+    'Venue deposit':'Venue Deposit',
     'Show Marketing':'Show Marketing',
     'Operational / Show Expenses':'Operational / Show Expenses',
     'General Working Capital Needs':'General Working Capital Needs',
