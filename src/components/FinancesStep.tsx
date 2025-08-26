@@ -38,14 +38,10 @@ const FinancesStep: React.FC = () => {
       text: "Have you filed your business taxes for last year?",
       name: 'filedLastYearTaxes'
     },
-    {
-      id: 'ticketing',
-      text: "Do you have any debt or liability to any existing or former ticketing agents?",
-      name: 'hasTicketingDebt'
-    },
+
     {
       id: 'debt',
-      text: "Do you have any business debt or material liabilities?",
+      text: "Do you have any business debt or material liabilities (including ticketing company)?",
       name: 'hasBusinessDebt',
     },
     {
@@ -113,7 +109,6 @@ const FinancesStep: React.FC = () => {
     if (name === 'filedLastYearTaxes' && e.target.checked) {
       dispatch(updateFinancesInfo({
         filedLastYearTaxes: true,
-        lastYearTaxes: []
       }));
     }
 
@@ -151,15 +146,7 @@ const FinancesStep: React.FC = () => {
   };
 
   const handleFileChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        dispatch(updateFinancesInfo({ [field]: content }));
-      };
-      reader.readAsDataURL(file);
-    }
+
   };
 
   const addDebt = () => {
@@ -187,43 +174,50 @@ const FinancesStep: React.FC = () => {
         }}
       >
 
-        <div className="mb-8 w-full flex flex-row space-between items-center">
-          <p className='text-sm font-400 text-gray-700 w-full justify-start '>{question.text}</p>
+        <div className="w-full flex items-center justify-between mb-8">
+          {/* Question à gauche */}
+          <span className="text-sm font-medium text-gray-700 w-[60%]">
+            {question.text}
+          </span>
 
-          <div className='w-full flex flex-row  justify-end  gap-x-2'>
+          {/* Bloc No | switch | Yes à droite */}
+          <div className="flex items-center gap-2">
             <label
-              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-400 ' : 'text-gray-700 font-bold '}`}
+              className={`text-sm font-semibold transition-colors
+                  ${financesInfo[question.name] ? 'text-gray-400/70' : 'text-gray-700'}`}
               htmlFor={question.name}
-            > No</label>
+            >
+              No
+            </label>
+
             <input
-              className="mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-rose-300 accent-rose-500
-                before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full
-                 before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem]
-                  after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)]
-                   after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] 
-                   checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none
-                    checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)]
-                     checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 
-                     focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)]
-                      focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block
-                       focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary 
-                       checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]
-                        checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-rose-200 dark:after:bg-rose-500 dark:checked:bg-primary
-                         dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+              id={question.name}
+              name={question.name}
               type="checkbox"
               role="switch"
-              name={question.name}
-              id={question.name}
               checked={financesInfo[question.name]}
               onChange={handleRadioChange}
+              className="shrink-0 mt-[0.2rem] h-5 w-10 cursor-pointer appearance-none rounded-full bg-rose-300
+                 relative transition-colors duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)]
+                 after:absolute after:left-[2px] after:top-1/2 after:-translate-y-1/2
+                 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow
+                 after:transition-transform after:duration-[380ms] after:ease-[cubic-bezier(0.22,1,0.36,1)]
+                 checked:bg-emerald-500 checked:after:translate-x-[1.25rem]
+                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2
+                 dark:bg-rose-200 dark:checked:bg-emerald-400
+                 motion-reduce:transition-none motion-reduce:after:transition-none"
             />
-            <label
-              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo[question.name] ? '  text-gray-700 font-bold ' : 'text-gray-400 '}`}
-              htmlFor={question.name}
-            > Yes</label>
-          </div>
 
+            <label
+              className={`text-sm font-semibold transition-colors
+                  ${financesInfo[question.name] ? 'text-gray-700' : 'text-gray-400/70'}`}
+              htmlFor={question.name}
+            >
+              Yes
+            </label>
+          </div>
         </div>
+
 
         {question.name === 'hasBusinessDebt' && financesInfo[question.name] && (
           <div className="conditional-content animate-fadeIn w-full flex flex-col gap-4 mb-4">
@@ -239,20 +233,20 @@ const FinancesStep: React.FC = () => {
                       onChange={(e) => handleDebtTypeChange(debtIndex, e.target.value)}
                       label="Select type of debt"
                       name="debtType"
-                      error=""
-                      onBlur={() => {}}
+                      onBlur={() => { }}
                       required={true}
+                      error=''
                     />
-                      <CurrencyField 
+                    <CurrencyField
                       value={debt.balance}
                       onChange={(e) => handleDebtBalanceChange(debtIndex, e.toString())}
                       label="outstanding balance"
                       name="debtBalance"
                       required={true}
                     />
-                    
-                    
-                    {financesInfo.debts.length > 1 && ( 
+
+
+                    {financesInfo.debts.length > 1 && (
                       <button
                         className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
                         onClick={() => removeDebt(debtIndex)}
@@ -336,60 +330,43 @@ const FinancesStep: React.FC = () => {
       <div className="flex flex-col space-between gap-4 mx-auto items-center w-full mb-4" >
         <p className='text-sm font-300 text-gray-700'>Is the Company a single entity or part of a multi-entity group structure? <br />This includes a group of affiliates that share ownership</p>
         <div className="flex items-center gap-4">
-        <div className='w-full flex flex-row gap-x-4 justify-end lg:w-full'>
+          <div className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-4">
             <label
-              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-400 ' : 'text-gray-700 font-bold '}`}
+              className={`text-sm text-right whitespace-nowrap transition-colors
+                ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
               htmlFor="singleEntity"
-            > Multi-entity</label>
+            >
+              Multi-entity
+            </label>
+
             <input
-              className="mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-rose-300 accent-rose-500
-                before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full
-                 before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem]
-                  after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)]
-                   after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] 
-                   checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none
-                    checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)]
-                     checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 
-                     focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)]
-                      focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block
-                       focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary 
-                       checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]
-                        checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-rose-200 dark:after:bg-rose-500 dark:checked:bg-primary
-                         dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+              className="shrink-0 mt-[0.3rem] h-5 w-10 cursor-pointer appearance-none rounded-full bg-rose-300
+               relative transition-colors duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)]
+               after:absolute after:left-[2px] after:top-1/2 after:-translate-y-1/2
+               after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow
+               after:transition-transform after:duration-[380ms] after:ease-[cubic-bezier(0.22,1,0.36,1)]
+               checked:bg-emerald-500 checked:after:translate-x-[1.25rem]
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2
+               dark:bg-rose-200 dark:checked:bg-emerald-400
+               motion-reduce:transition-none motion-reduce:after:transition-none"
               type="checkbox"
               role="switch"
               name="singleEntity"
               id="singleEntity"
-              checked={financesInfo['singleEntity']}
+              checked={financesInfo.singleEntity}
               onChange={handleRadioChange}
             />
+
             <label
-              className={`inline-block px-[0.15rem] hover:cursor-pointer font-300 text-sm ${financesInfo['singleEntity'] ? '  text-gray-700 font-bold ' : 'text-gray-400 '}`}
+              className={`text-sm text-left whitespace-nowrap transition-colors
+                ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
               htmlFor="singleEntity"
-            > Single entity</label>  
+            >
+              Single entity
+            </label>
           </div>
-          {/* <label className="flex items-center">
-            <input
-              type="radio"
-              name="singleEntity"
-              value="yes"
-              checked={financesInfo['singleEntity']}
-              onChange={handleSingleEntityChange}
-              className="mr-2 accent-rose-500 size-4"
-            />
-            Single entity
-          </label>
-          <label className="flex items-center">
-            <input
-              type="radio"
-              name="singleEntity"
-              value="no"
-              checked={!financesInfo['singleEntity']}
-              onChange={handleSingleEntityChange}
-              className="mr-2 accent-rose-500 size-4"
-            />
-            Multi-entity
-          </label> */}
+
+
 
         </div>
       </div>

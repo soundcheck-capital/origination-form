@@ -20,14 +20,15 @@ export const clientType = {
     '10+ years':'10+ years',
   };
   export const memberOf = {
-    'NATO (National Association of Theatre Owners)':'NATO (National Association of Theatre Owners)',
     'NIVA (National Independent Venue Association)':'NIVA (National Independent Venue Association)',
     'Promotores Unidos':'Promotores Unidos',
+    'NATO (National Association of Theatre Owners)':'NATO (National Association of Theatre Owners)',
     'Other':'Other'
   };
 
   export const debtTypes = {
     'Credit card debt':'Credit card debt',
+    'Ticketing Company':'Ticketing Company',
     'Account payables':'Account payables',
     'Terms loans':'Terms loans',
     'Merchant Cash Advance':'Merchant Cash Advance',
@@ -129,11 +130,11 @@ export const clientType = {
   };
   
   export const settlementPayout = {
-	  'Daily':'Daily payout (on our merchant account - e.g. Stripe)',
-    'Weekly':'Weekly payout',
-    'Bi-monthly':'Bi-monthly payout',
-    'Monthly':'Monthly payout',
-    'Post event':'Payout after the event',
+	  'Daily':'Daily payout/settlement (on our merchant account - e.g. Stripe)',
+    'Weekly':'Weekly payout/settlement',
+    'Bi-monthly':'Bi-monthly payout/settlement',
+    'Monthly':'Monthly payout/settlement',
+    'Post event':'Post event payout/settlement',
     'It varies':'It varies'
   };
   

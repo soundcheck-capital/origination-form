@@ -88,7 +88,6 @@ export interface Address {
         singleEntity: boolean;
         assetsTransferred: boolean;
         filedLastYearTaxes: boolean;
-        lastYearTaxes: FileInfo[];
         hasTicketingDebt: boolean;
         hasBusinessDebt: boolean;
         debts: Array<{

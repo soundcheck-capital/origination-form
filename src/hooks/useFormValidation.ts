@@ -88,6 +88,10 @@ export const useFormValidation = () => {
         if (!owner.ownerAddress.trim()) errors[`owner${index}Address`] = `Owner ${index + 1}: Address is required`;
         if (!owner.ownerBirthDate.trim()) errors[`owner${index}BirthDate`] = `Owner ${index + 1}: Birth date is required`;
       });
+      const totalPercentage = ownershipInfo.owners.reduce((sum, owner) => sum + parseFloat(owner.ownershipPercentage), 0);
+      if(totalPercentage > 100){
+        errors.ownershipPercentage = 'Total ownership percentage cannot exceed 100%';
+      }
     }
 
     return { isValid: Object.keys(errors).length === 0, errors };
@@ -156,6 +160,15 @@ export const useFormValidation = () => {
   
     return { isValid: Object.keys(errors).length === 0, errors };
   };
+
+  const validateAdditionalInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const { additionalComments, industryReferences } = formData.formData.financesInfo;
+    const errors: { [key: string]: string } = {};
+    if (!additionalComments.trim()) errors.additionalComments = 'Additional comments are required';
+    if (!industryReferences.trim()) errors.industryReferences = 'Industry references are required';
+    return { isValid: Object.keys(errors).length === 0, errors };
+  };
+
   // New function to validate current step only
   const validateCurrentStep = (step: number): { isValid: boolean; errors: { [key: string]: string } } => {
     // Skip validation only if explicitly disabled in development mode
@@ -184,7 +197,7 @@ export const useFormValidation = () => {
       case 9:
         return validateLegalDiligenceFiles();
       case 10:
-        return { isValid: true, errors: {} }; // Other step - no validation needed
+        return validateAdditionalInfo();
       case 11:
         return { isValid: true, errors: {} }; // Summary step - no validation needed
       default:
@@ -202,7 +215,7 @@ export const useFormValidation = () => {
     const ticketingDiligenceFiles = validateTicketingDiligenceFiles();
     const financialDiligenceFiles = validateFinancialDiligenceFiles();
     const legalDiligenceFiles = validateLegalDiligenceFiles();
-
+    const additionalInfo = validateAdditionalInfo();
     const allErrors = {
       'Personal Information': personalInfo.errors,
       'Company Information': companyInfo.errors,
@@ -213,6 +226,7 @@ export const useFormValidation = () => {
       'Ticketing Diligence Files': ticketingDiligenceFiles.errors,
       'Financial Diligence Files': financialDiligenceFiles.errors,
       'Legal Diligence Files': legalDiligenceFiles.errors,
+      'Additional Information': additionalInfo.errors,
     };
 
     const isValid = personalInfo.isValid && 
@@ -223,7 +237,8 @@ export const useFormValidation = () => {
                    financesInfo.isValid && 
                    ticketingDiligenceFiles.isValid &&
                    financialDiligenceFiles.isValid &&
-                   legalDiligenceFiles.isValid;
+                   legalDiligenceFiles.isValid &&
+                   additionalInfo.isValid;
 
     return { isValid, errors: allErrors };
   };
@@ -238,6 +253,7 @@ export const useFormValidation = () => {
     validateTicketingDiligenceFiles,
     validateFinancialDiligenceFiles,
     validateLegalDiligenceFiles,
+    validateAdditionalInfo,
     validateCurrentStep,
     validateAllSteps,
     isDevelopment,

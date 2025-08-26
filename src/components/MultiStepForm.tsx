@@ -92,7 +92,6 @@ const MultiStepFormContent: React.FC = () => {
           singleEntity: formData.formData.financesInfo.singleEntity ? 'Single Entity' : 'Multi Entity group structure',
           assetsTransferred: formData.formData.financesInfo.assetsTransferred ? 'Yes' : 'No',
           filedLastYearTaxes: formData.formData.financesInfo.filedLastYearTaxes ? 'Yes' : 'No',
-          lastYearTaxes: formData.formData.financesInfo.lastYearTaxes,
           hasTicketingDebt: formData.formData.financesInfo.hasTicketingDebt ? 'Yes' : 'No',
           hasBusinessDebt: formData.formData.financesInfo.hasBusinessDebt ? 'Yes' : 'No',
           hasOverdueLiabilities: formData.formData.financesInfo.hasOverdueLiabilities ? 'Yes' : 'No',
@@ -197,6 +196,12 @@ const MultiStepFormContent: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
+  const handleStepClick = (stepNumber: number) => {
+    setCurrentStepErrors(null);
+    setCurrentStep(stepNumber);
+    window.scrollTo(0, 0);
+  };
+
 
 
 
@@ -286,7 +291,7 @@ const MultiStepFormContent: React.FC = () => {
       case 10:
         return <OtherStep />;
       case 11:
-        return <SummaryStep renderValidationErrors={renderValidationErrors()} />;
+        return <SummaryStep renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
       default:
         return null;
     }

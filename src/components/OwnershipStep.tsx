@@ -155,6 +155,10 @@ const OwnershipStep: React.FC = () => {
          setFieldError(fieldName, error);
        }
      }
+     const totalPercentage = updatedOwners.reduce((sum, owner) => sum + parseFloat(owner.ownershipPercentage), 0);
+     if(totalPercentage > 100){
+      setFieldError('owner1Percentage', 'Total ownership percentage cannot exceed 100%');
+     }
      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
    }, [dispatch, ownershipInfo.owners, setFieldError]);
 
