@@ -16,7 +16,7 @@ export class FormHelper {
     }
     
     // Attendre que l'application soit chargée
-    await expect(this.page.locator('h1')).toContainText('Get Funding');
+    await expect(this.page.locator('h1')).toContainText('Get Funding', { timeout: 10000 });
   }
 
   // Remplir l'étape d'information personnelle

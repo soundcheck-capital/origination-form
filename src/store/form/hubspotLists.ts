@@ -142,8 +142,7 @@ export const clientType = {
     'Ticketing Co':'Ticketing Company',
     'Own Processor':'Payment Processor (e.g. Stripe)',
     'Venue':'Venue (i.e. post show settlement)',
-    'Stripe':'Stripe',
-    'POS Co':'POS Co'
+    'Other':'Other'
   };
   
   export const timingOfFunding = {
