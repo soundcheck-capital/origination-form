@@ -166,12 +166,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
                 <span className="ml-2 text-gray-800">{ticketingInfo.otherPartner}</span>
               </div>
             )}
-            {ticketingInfo.otherPaymentProcessing && (
-              <div>
-                <span className=" text-gray-600 font-bold">Other Payment Processing:</span>
-                <span className="ml-2 text-gray-800">{ticketingInfo.otherPaymentProcessing}</span>
-              </div>
-            )}
+            
           </div>
         </div>
 

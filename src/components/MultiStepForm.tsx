@@ -80,7 +80,6 @@ const MultiStepFormContent: React.FC = () => {
           currentPartner: formData.formData.ticketingInfo.currentPartner,
           otherPartner: formData.formData.ticketingInfo.otherPartner,
           paymentProcessing: formData.formData.ticketingInfo.paymentProcessing,
-          otherPaymentProcessing: formData.formData.ticketingInfo.otherPaymentProcessing,
           settlementPayout: formData.formData.ticketingInfo.settlementPayout,
           lastYearEvents: formData.formData.volumeInfo.lastYearEvents,
           lastYearTickets: formData.formData.volumeInfo.lastYearTickets,
@@ -312,6 +311,7 @@ const MultiStepFormContent: React.FC = () => {
   
     return (
       <div className="flex justify-center mt-4">
+        
         <label className="flex items-center text-sm text-gray-600">
           <input
             type="checkbox"
@@ -332,24 +332,13 @@ const MultiStepFormContent: React.FC = () => {
   return (
     <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
-
+      
       <main className="w-full h-full flex flex-col bg-white p-6">
+        <div className=" flex justify-center items-center h-10 w-full bg-blue-500 mb-4">
+          <p className='text-white text-xs font-bold'>TESTING VERSION 1.0.2</p>
+        </div>
         <div className="flex justify-center items-center">
           <img src={logo} alt="Logo" className="w-24 " />
-          {/* <div className="absolute top-8 right-8 flex gap-4">
-            <button
-              onClick={handleClearFormData}
-              className="text-sm text-gray-500 hover:text-gray-700 underline"
-            >
-              Clear Form
-            </button>
-            <button
-              onClick={handleLogout}
-              className="text-sm text-gray-500 hover:text-gray-700 underline"
-            >
-              Logout
-            </button>
-          </div> */}
         </div>
 
        
@@ -357,7 +346,7 @@ const MultiStepFormContent: React.FC = () => {
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
           <div className="w-full mx-auto">
-
+            
             <div className="relative w-full">
               <div className="rounded-xl absolute top-0 left-0 h-1 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
@@ -382,7 +371,7 @@ const MultiStepFormContent: React.FC = () => {
           {/* Navigation Buttons */}
           <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
             {currentStep === 1 && (
-              <ButtonPrimary className='lg:first:w-[30%] ' onClick={handleNextStep} disabled={isSavingStep}>
+              <ButtonPrimary className='lg:first:w-[40%] ' onClick={handleNextStep} disabled={isSavingStep}>
                 {isSavingStep ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

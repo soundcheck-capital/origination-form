@@ -42,7 +42,6 @@ export const useFormValidation = () => {
     const errors: { [key: string]: string } = {};
 
     if (!ticketingInfo.paymentProcessing) errors.paymentProcessing = 'Payment processing is required';
-    if (ticketingInfo.paymentProcessing === 'Other' && !ticketingInfo.otherPaymentProcessing.trim()) errors.otherPaymentProcessing = 'Other payment processing is required';
 
     if (!ticketingInfo.currentPartner.trim()) errors.currentPartner = 'Ticketing partner is required';
     if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) errors.otherPartner = 'Other ticketing partner is required';

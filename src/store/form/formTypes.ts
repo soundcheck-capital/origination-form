@@ -66,7 +66,6 @@ export interface Address {
         otherPartner: string;
         settlementPayout: string;
         paymentProcessing: string;  
-        otherPaymentProcessing: string;
       };
       volumeInfo: {
         lastYearEvents: number;

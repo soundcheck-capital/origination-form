@@ -41,6 +41,34 @@ export interface TestFormData {
     useOfProceeds: string;
     timingOfFunding: string;
   };
+  ownershipInfo: {
+    owners: Array<{
+      id: string;
+      ownerName: string;
+      ownershipPercentage: string;
+      ownerAddress: string;
+      ownerBirthDate: string;
+    }>;
+  };
+  financesInfo: {
+    assetsTransferred?: boolean;
+    filedLastYearTaxes?: boolean;
+    hasTicketingDebt?: boolean;
+    hasBusinessDebt?: boolean;
+    hasOverdueLiabilities?: boolean;
+    isLeasingLocation?: boolean;
+    hasTaxLiens?: boolean;
+    hasJudgments?: boolean;
+    hasBankruptcy?: boolean;
+    ownershipChanged?: boolean;
+    leaseEndDate?: string;
+    debts?: Array<{
+      type: string;
+      balance: string;
+    }>;
+    industryReferences?: string;
+    additionalComments?: string;
+  };
 }
 
 // Jeu de données 1 : Petite entreprise
@@ -84,8 +112,36 @@ export const smallCompanyData: TestFormData = {
   },
   fundsInfo: {
     yourFunds: "50000",
-    useOfProceeds: "Marketing and promotion",
-    timingOfFunding: "Within 30 days"
+    useOfProceeds: "Show Marketing",
+    timingOfFunding: "In the next month"
+  },
+  ownershipInfo: {
+    owners: [{
+      id: "1",
+      ownerName: "Jean Dupont",
+      ownershipPercentage: "100",
+      ownerAddress: "123 Rue de la Paix, Paris, 75001",
+      ownerBirthDate: "1985-06-15"
+    }]
+  },
+  financesInfo: {
+    assetsTransferred: false,
+    filedLastYearTaxes: true,
+    hasTicketingDebt: false,
+    hasBusinessDebt: true,
+    hasOverdueLiabilities: false,
+    isLeasingLocation: true,
+    hasTaxLiens: false,
+    hasJudgments: false,
+    hasBankruptcy: false,
+    ownershipChanged: false,
+    leaseEndDate: "2025-12-31",
+    debts: [{
+      type: "Credit Card",
+      balance: "15000"
+    }],
+    industryReferences: "Local venue owners and sound equipment suppliers in Paris area. Contact: venue@example.com",
+    additionalComments: "Small but growing event promotion company focused on intimate venues and emerging artists."
   }
 };
 
@@ -130,8 +186,50 @@ export const mediumCompanyData: TestFormData = {
   },
   fundsInfo: {
     yourFunds: "250000",
-    useOfProceeds: "Venue improvements",
-    timingOfFunding: "Within 60 days"
+    useOfProceeds: "Venue deposit",
+    timingOfFunding: "In the next 3 months"
+  },
+  ownershipInfo: {
+    owners: [
+      {
+        id: "1",
+        ownerName: "Marie Martin",
+        ownershipPercentage: "60",
+        ownerAddress: "456 Avenue des Champs, Lyon, 69000",
+        ownerBirthDate: "1980-03-22"
+      },
+      {
+        id: "2",
+        ownerName: "Laurent Durand",
+        ownershipPercentage: "40",
+        ownerAddress: "789 Rue de la République, Lyon, 69003",
+        ownerBirthDate: "1978-11-10"
+      }
+    ]
+  },
+  financesInfo: {
+    assetsTransferred: false,
+    filedLastYearTaxes: true,
+    hasTicketingDebt: true,
+    hasBusinessDebt: true,
+    hasOverdueLiabilities: false,
+    isLeasingLocation: false,
+    hasTaxLiens: false,
+    hasJudgments: false,
+    hasBankruptcy: false,
+    ownershipChanged: false,
+    debts: [
+      {
+        type: "Bank Loan",
+        balance: "125000"
+      },
+      {
+        type: "Line of Credit",
+        balance: "50000"
+      }
+    ],
+    industryReferences: "Regional venue network, established partnerships with major booking agencies. Contact: booking@lyonevents.com",
+    additionalComments: "Established venue management company with solid track record and expansion plans for additional locations."
   }
 };
 
@@ -176,8 +274,61 @@ export const largeCompanyData: TestFormData = {
   },
   fundsInfo: {
     yourFunds: "1000000",
-    useOfProceeds: "Expansion",
-    timingOfFunding: "Within 90 days"
+    useOfProceeds: "General Working Capital Needs",
+    timingOfFunding: "In the next 2 weeks"
+  },
+  ownershipInfo: {
+    owners: [
+      {
+        id: "1",
+        ownerName: "Pierre Dubois",
+        ownershipPercentage: "45",
+        ownerAddress: "789 Boulevard International, Marseille, 13000",
+        ownerBirthDate: "1975-09-12"
+      },
+      {
+        id: "2", 
+        ownerName: "Sophie Bernard",
+        ownershipPercentage: "30",
+        ownerAddress: "321 Rue de l'Innovation, Marseille, 13008",
+        ownerBirthDate: "1982-05-08"
+      },
+      {
+        id: "3",
+        ownerName: "Investment Group LTD",
+        ownershipPercentage: "25",
+        ownerAddress: "555 Corporate Center, Marseille, 13009",
+        ownerBirthDate: "1990-01-01"
+      }
+    ]
+  },
+  financesInfo: {
+    assetsTransferred: true,
+    filedLastYearTaxes: true,
+    hasTicketingDebt: false,
+    hasBusinessDebt: true,
+    hasOverdueLiabilities: false,
+    isLeasingLocation: false,
+    hasTaxLiens: false,
+    hasJudgments: false,
+    hasBankruptcy: false,
+    ownershipChanged: true,
+    debts: [
+      {
+        type: "Bank Loan",
+        balance: "500000"
+      },
+      {
+        type: "SBA Loan",
+        balance: "300000"
+      },
+      {
+        type: "Equipment Financing",
+        balance: "150000"
+      }
+    ],
+    industryReferences: "International venue partnerships, major festival collaborations, established relationships with top-tier booking agencies. Contact: partnerships@bigeventsco.com",
+    additionalComments: "Large-scale event production company with international reach and significant infrastructure investments planned for expansion into new markets."
   }
 };
 

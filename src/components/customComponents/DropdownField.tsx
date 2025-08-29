@@ -1,7 +1,7 @@
 
 import { useValidation } from '../../contexts/ValidationContext';
 
-const DropdownField = ({ label, name, value, onChange, error, onBlur, options, required = false }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: { [key: string]: string }, required?: boolean }) => {
+const DropdownField = ({ label, name, value, onChange, error, onBlur, options, required = false, description = '' }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: { [key: string]: string }, required?: boolean, description?: string }) => {
   const id = name.replace(/\s+/g, '_').toLowerCase();
   const { hasError, getFieldError } = useValidation();
   const hasFieldError = hasError(name);
@@ -29,6 +29,7 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
                     <option key={key} value={key}>{value}</option>
                 ))}
             </select>
+            {description && <p className='text-xs text-amber-500 text-left w-full ml-2 mt-1'>{description}</p>}
             {fieldError && (
               <p className="mt-1 text-sm text-red-600 px-2">{fieldError}</p>
             )}

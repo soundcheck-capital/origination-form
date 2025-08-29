@@ -130,21 +130,26 @@ export const clientType = {
   };
   
   export const settlementPayout = {
-	  'Daily':'Daily payout/settlement (on our merchant account - e.g. Stripe)',
-    'Weekly':'Weekly payout/settlement',
-    'Bi-monthly':'Bi-monthly payout/settlement',
-    'Monthly':'Monthly payout/settlement',
-    'Post event':'Post event payout/settlement',
+	  'Daily':'Daily',
+    'Weekly':'Weekly',
+    'Bi-monthly':'Bi-monthly',
+    'Monthly':'Monthly',
+    'Post event':'Post event',
     'It varies':'It varies'
   };
   
   export const paymentProcessing = {
-    'Ticketing Co':'Ticketing Company',
-    'Own Processor':'Payment Processor (e.g. Stripe)',
-    'Venue':'Venue (i.e. post show settlement)',
-    'Other':'Other'
+    'Ticketing Co':'From the Ticketing Co (e.g. Ticketmaster)',
+    'Own Processor':'From the Payment Processor (e.g. Stripe)',
+    'Venue':'From the Venue (e.g. MSG)',
+    'It varies':'It varies'
   };
-  
+  export const precision = [
+    'The Ticketing Co is the merchant of record',
+    'From the Payment Processor (e.g. Stripe) We are the merchant of record',
+    'We receive the funds with the post-show settlement',
+    ''
+  ];
   export const timingOfFunding = {
     'In the next 2 weeks':'In the next 2 weeks',
     'In the next month':'In the next month',

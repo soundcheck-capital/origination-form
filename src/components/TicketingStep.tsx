@@ -8,7 +8,7 @@ import TextField from './customComponents/TextField';
 import NumberInput from './customComponents/NumberField';
 import CurrencyField from './customComponents/CurrencyField';
 import { useValidation } from '../contexts/ValidationContext';
-import { paymentProcessing, ticketingPartners, settlementPayout } from '../store/form/hubspotLists';
+import { paymentProcessing, ticketingPartners, settlementPayout, precision } from '../store/form/hubspotLists';
 
 
 
@@ -36,23 +36,35 @@ const TicketingStep: React.FC = () => {
   };
 
 
+  const getPrecision = (paymentProcessing: string) => {
+    switch(paymentProcessing) {
+      case 'Ticketing Co':
+        return precision[0];
+      case 'Own Processor':
+        return precision[1];
+      case 'Venue':
+        return precision[2];
+      case 'It varies':
+        return precision[3];
+      default:
+        return '';
+    }
+  }
 
 
   return (
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Ticketing Information" />
     
-      <DropdownField label="Who do you receive ticketing payouts from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required />
-      {ticketingInfo.paymentProcessing === 'Other' && (
-      <TextField label="Other Ticketing Payout" name="otherPaymentProcessing" value={ticketingInfo.otherPaymentProcessing} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
-     )}
+      <DropdownField label="Who do you receive your Ticket sales settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required description={getPrecision(ticketingInfo.paymentProcessing)} />
+      
       <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required />
      
      {ticketingInfo.currentPartner === 'Other' && (
       <TextField label="Other Ticketing Partner" name="otherPartner" value={ticketingInfo.otherPartner} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
      )}
 
-      <DropdownField label="What is your ticketing partner settlement/payout policy?" name="settlementPayout" value={ticketingInfo.settlementPayout} onChange={handleChange} error='' onBlur={() => { }} options={settlementPayout} required />
+      <DropdownField label="What is the payout/settlement policy?" name="settlementPayout" value={ticketingInfo.settlementPayout} onChange={handleChange} error='' onBlur={() => { }} options={settlementPayout} required />
 
       {/* <TicketingVolumeStep /> */}
 

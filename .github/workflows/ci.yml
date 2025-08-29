@@ -1,0 +1,110 @@
+# .github/workflows/ci.yml
+name: CI (CRA + Playwright) → Netlify
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # CRA sort proprement des tests Jest en CI (désactive watch)
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # CRA est plus fiable avec Node 18 (évite quelques vieilles deps capricieuses)
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      # Tests unitaires CRA (Jest via react-scripts)
+      - name: Unit tests (Jest)
+        run: npm test -- --watchAll=false --ci
+
+      # Build de prod puis on sert le "build" pour l'E2E
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright (browsers)
+        run: npx playwright install --with-deps
+
+      - name: Start static server
+        run: |
+          npx serve -s build -l 5173 &
+          npx wait-on http://127.0.0.1:5173 --timeout 60000
+
+      - name: Playwright E2E
+        env:
+          BASE_URL: http://127.0.0.1:5173
+          CI: true
+          # Variables d'environnement pour les tests (valeurs de test)
+          REACT_APP_FORM_PASSWORD: "123456"
+          REACT_APP_WEBHOOK_URL: "https://webhook.test.com/test"
+          REACT_APP_WEBHOOK_URL_FILES: "https://webhook.test.com/files"
+          REACT_APP_HUBSPOT_COMPANY_ID: "12345"
+          REACT_APP_HUBSPOT_DEAL_ID: "67890"
+          REACT_APP_HUBSPOT_CONTACT_ID: "11111"
+          REACT_APP_HUBSPOT_DRIVE_ID: "test-drive-id"
+        run: npx playwright test --reporter=github
+
+      # (Optionnel) tests API si tu as un script séparé
+      - name: API tests
+        run: npm run test:api --if-present
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            playwright-report/**
+            test-results/**
+          if-no-files-found: ignore
+
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (prod)
+        env:
+          # Variables d'environnement pour la production (secrets GitHub)
+          REACT_APP_FORM_PASSWORD: ${{ secrets.REACT_APP_FORM_PASSWORD }}
+          REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
+          REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
+          REACT_APP_HUBSPOT_COMPANY_ID: ${{ secrets.REACT_APP_HUBSPOT_COMPANY_ID }}
+          REACT_APP_HUBSPOT_DEAL_ID: ${{ secrets.REACT_APP_HUBSPOT_DEAL_ID }}
+          REACT_APP_HUBSPOT_CONTACT_ID: ${{ secrets.REACT_APP_HUBSPOT_CONTACT_ID }}
+          REACT_APP_HUBSPOT_DRIVE_ID: ${{ secrets.REACT_APP_HUBSPOT_DRIVE_ID }}
+        run: npm run build
+
+      - name: Deploy to Netlify (prod)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: npx netlify-cli deploy --prod --dir=build --message "CI deploy $GITHUB_SHA"

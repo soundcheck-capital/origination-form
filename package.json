@@ -39,10 +39,24 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:components": "playwright test tests/e2e/components/",
+    "test:steps": "playwright test tests/e2e/steps/",
+    "test:step1": "playwright test tests/e2e/steps/step1-personal-info.spec.ts",
+    "test:step2": "playwright test tests/e2e/steps/step2-company-info.spec.ts",
+    "test:step3": "playwright test tests/e2e/steps/step3-ticketing.spec.ts",
+    "test:step4": "playwright test tests/e2e/steps/step4-your-funds.spec.ts",
+    "test:step5": "playwright test tests/e2e/steps/step5-ownership.spec.ts",
+    "test:step6": "playwright test tests/e2e/steps/step6-finances.spec.ts",
+    "test:step7": "playwright test tests/e2e/steps/step7-ticketing-information.spec.ts",
+    "test:step8": "playwright test tests/e2e/steps/step8-financial-information.spec.ts",
+    "test:step9": "playwright test tests/e2e/steps/step9-legal-information.spec.ts",
+    "test:step10": "playwright test tests/e2e/steps/step10-additional-information.spec.ts",
+    "test:navigation": "playwright test tests/e2e/steps/step-navigation.spec.ts",
     "test:api": "playwright test tests/e2e/api/",
     "test:flows": "playwright test tests/e2e/flows/",
     "test:report": "playwright show-report"
   },
+  
+  
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -64,6 +78,7 @@
   "devDependencies": {
     "@playwright/test": "^1.55.0",
     "@types/react": "^19.1.9",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "netlify-cli": "^17.0.0"
   }
 }
