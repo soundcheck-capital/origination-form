@@ -15,8 +15,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
   const { personalInfo, companyInfo, ticketingInfo, volumeInfo, fundsInfo, ownershipInfo, financesInfo } = formData;
 
   // Check if we're in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const [disableSubmissionBlock, setDisableSubmissionBlock] = useState(() => {
+  const [disableSubmissionBlock] = useState(() => {
     return localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true';
   });
 

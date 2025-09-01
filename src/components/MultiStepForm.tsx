@@ -37,7 +37,6 @@ const MultiStepFormContent: React.FC = () => {
   
   // Vérifier l'environnement (development, staging, production)
   const currentEnvironment = process.env.REACT_APP_ENVIRONMENT || 'development';
-  const isProductionEnvironment = currentEnvironment === 'production';
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
   const { currentStepErrors, setCurrentStepErrors } = useValidation();
   const [isSavingStep, setIsSavingStep] = useState(false);
@@ -347,7 +346,7 @@ const MultiStepFormContent: React.FC = () => {
             checked={disableValidation}
             onChange={(e) => {
               setDisableValidation(e.target.checked);
-              console.log("DISABLE_VALIDATION", e.target.checked);
+              isDevelopment && console.log("DISABLE_VALIDATION", e.target.checked);
             }}
             className="mr-2"
           />
@@ -360,7 +359,7 @@ const MultiStepFormContent: React.FC = () => {
             checked={allowFormAccess}
             onChange={(e) => {
               setAllowFormAccess(e.target.checked);
-              console.log("DEV_ALLOW_FORM_ACCESS", e.target.checked);
+              isDevelopment && console.log("DEV_ALLOW_FORM_ACCESS", e.target.checked);
             }}
             className="mr-2"
           />
@@ -441,7 +440,6 @@ const MultiStepFormContent: React.FC = () => {
             )}
             {currentStep === 11 && (
               <ButtonPrimary onClick={() => {
-                console.log("onSubmit");
                 triggerValidationThenSubmit();
               }} disabled={false}>Submit</ButtonPrimary>
             )}
