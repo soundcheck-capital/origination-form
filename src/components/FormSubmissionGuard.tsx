@@ -1,7 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { RootState } from '../store';
 import { useSubmissionStatus } from '../hooks/useSubmissionStatus';
 
 interface FormSubmissionGuardProps {
@@ -9,27 +7,19 @@ interface FormSubmissionGuardProps {
 }
 
 const FormSubmissionGuard: React.FC<FormSubmissionGuardProps> = ({ children }) => {
-  const isSubmittedLocal = useSelector((state: RootState) => state.form.isSubmitted);
-  const { isLoading, isSubmitted: isSubmittedBackend, error } = useSubmissionStatus();
+  const { isLoading, isSubmitted } = useSubmissionStatus();
   
   // Vérifier l'environnement
   const isDevelopment = process.env.NODE_ENV === 'development';
   const allowFormAccess = localStorage.getItem('DEV_ALLOW_FORM_ACCESS') === 'true';
+
+  // Seule la réponse backend détermine le blocage
   
-  // Combinaison des deux sources : local ET backend
-  const isSubmitted = isSubmittedLocal || isSubmittedBackend;
-  
-  // DEBUG LOGS
-  isDevelopment && console.log('🔍 FormSubmissionGuard Debug:', {
-    isSubmittedLocal,
-    isSubmittedBackend,
+  // Debug logs en développement uniquement
+  isDevelopment && console.log('🔍 FormSubmissionGuard:', {
     isSubmitted,
     isLoading,
-    error,
-    isDevelopment,
-    allowFormAccess,
-    NODE_ENV: process.env.NODE_ENV,
-    REACT_APP_ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT
+    allowFormAccess
   });
   
   // Afficher un loader pendant la vérification
@@ -44,21 +34,17 @@ const FormSubmissionGuard: React.FC<FormSubmissionGuardProps> = ({ children }) =
     );
   }
   
-  // Si formulaire déjà soumis
+  // Si formulaire déjà soumis selon le backend
   if (isSubmitted) {
     // En développement : possibilité de contourner avec localStorage
-    if (isDevelopment && !isSubmittedBackend) {
-      const allowFormAccess = localStorage.getItem('DEV_ALLOW_FORM_ACCESS') === 'true';
+    if (isDevelopment) {
       if (!allowFormAccess) {
-        isDevelopment && console.log('🔒 FormSubmissionGuard: Form already submitted, redirecting to success page');
         return <Navigate to="/submit-success" replace />;
       } else {
-        isDevelopment && console.log('🔓 FormSubmissionGuard: DEV_ALLOW_FORM_ACCESS enabled, allowing form access');
         return <>{children}</>;
       }
     } else {
-      // Production/Staging : toujours bloquer
-      isDevelopment && console.log('🔒 FormSubmissionGuard: Form already submitted, access blocked');
+      // Production/Staging : toujours bloquer si backend dit soumis
       return <Navigate to="/submit-success" replace />;
     }
   }

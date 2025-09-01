@@ -41,34 +41,12 @@ const MultiStepFormContent: React.FC = () => {
   const { currentStepErrors, setCurrentStepErrors } = useValidation();
   const [isSavingStep, setIsSavingStep] = useState(false);
   const isSubmitted = useSelector((state: RootState) => state.form.isSubmitted);
-  // BLOCAGE SIMPLE : Si formulaire soumis, rediriger immédiatement
+  // Redirection après soumission locale réussie
   useEffect(() => {
-    isDevelopment && console.log('🔍 MultiStepForm useEffect Debug:', {
-      isSubmitted,
-      isDevelopment,
-      currentEnvironment,
-      NODE_ENV: process.env.NODE_ENV,
-      REACT_APP_ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT,
-      allowFormAccess: localStorage.getItem('DEV_ALLOW_FORM_ACCESS')
-    });
-    
     if (isSubmitted) {
-      // En développement : option pour tester le blocage
-      if (isDevelopment) {
-        const allowFormAccess = localStorage.getItem('DEV_ALLOW_FORM_ACCESS') === 'true';
-        if (!allowFormAccess) {
-          isDevelopment && console.log('🛠️ DEV: Form submitted, redirecting to success (DEV_ALLOW_FORM_ACCESS not enabled)');
-          navigate('/submit-success');
-        } else {
-          isDevelopment && console.log('🛠️ DEV: Form submitted but DEV_ALLOW_FORM_ACCESS enabled, staying on form');
-        }
-      } else {
-        // Production/Staging : toujours bloquer
-        isDevelopment && console.log(`🚀 ${currentEnvironment}: Form submitted, blocking access`);
-        navigate('/submit-success');
-      }
+      navigate('/submit-success');
     }
-  }, [isSubmitted, navigate, isDevelopment, currentEnvironment]);
+  }, [isSubmitted, navigate]);
 
   // Load application data if ID is provided
   useEffect(() => {

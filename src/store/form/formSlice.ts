@@ -7,7 +7,6 @@ import { submissionService } from '../../services/submissionService';
 // Fonction pour sauvegarder dans le localStorage
 const saveToLocalStorage = (state: FormState) => {
   try {
-    localStorage.setItem('isSubmitted', 'true');
     localStorage.setItem('soundcheckFormData', JSON.stringify({
       formData: state.formData,
       diligenceInfo: state.diligenceInfo,
@@ -34,11 +33,9 @@ const formSlice = createSlice({
   initialState: (() => {
     // Essayer de charger les données sauvegardées au démarrage
     const savedData = loadFromLocalStorage();
-    const isSubmittedFromStorage = localStorage.getItem('isSubmitted') === 'true';
     const isDevelopment = process.env.NODE_ENV === 'development';
     isDevelopment && console.log('🔍 FormSlice Init Debug:', {
       hasStoredData: !!savedData,
-      isSubmittedFromStorage,
       savedData
     });
     
@@ -46,14 +43,11 @@ const formSlice = createSlice({
       return {
         ...initialState,
         ...savedData,
-        isSubmitted: isSubmittedFromStorage // Forcer la lecture depuis localStorage
+        isSubmitted: false // Toujours false au démarrage, seul le backend détermine
       };
     }
     
-    return {
-      ...initialState,
-      isSubmitted: isSubmittedFromStorage
-    };
+    return initialState;
   })(),
   reducers: {
     setCurrentStep: (state, action: PayloadAction<number>) => {
@@ -114,7 +108,6 @@ const formSlice = createSlice({
       state.isSubmitted = false;
       localStorage.removeItem('soundcheckFormData');
       localStorage.removeItem('formAuthenticated');
-      localStorage.removeItem('isSubmitted'); // Nettoyer aussi ce flag
     }
   },
   extraReducers: (builder) => {
@@ -133,11 +126,10 @@ const formSlice = createSlice({
         // tu peux ajouter une confirmation ou update une clé "lastSaved"
       })
       .addCase(submitApplication.fulfilled, (state, action) => {
-        // MARQUER LE FORMULAIRE COMME SOUMIS
+        // MARQUER LE FORMULAIRE COMME SOUMIS LOCALEMENT
         state.isSubmitted = true;
         
-        // Sauvegarder l'état "soumis" dans localStorage
-        localStorage.setItem('isSubmitted', 'true');
+        // Sauvegarder les données (sans isSubmitted dans localStorage)
         saveToLocalStorage(state);
         
         // Notifier le backend (Make.com) de la soumission

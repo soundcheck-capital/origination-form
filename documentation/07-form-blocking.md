@@ -2,24 +2,26 @@
 
 ## 🎯 **Vue d'Ensemble**
 
-Le système empêche la re-soumission du formulaire une fois qu'il a été soumis, avec une vérification locale + backend centralisée.
+Le système empêche la re-soumission du formulaire en utilisant **uniquement le backend** comme source de vérité. Plus de localStorage pour `isSubmitted`.
 
-## 🏗️ **Architecture Double**
+## 🏗️ **Architecture Backend-Only**
 
 ```
-┌─────────────────┐    ┌──────────────────┐
-│   Local Store   │    │    Backend       │
-│   (Redux +      │    │   (Make.com)     │
-│   localStorage) │    │                  │
-└─────────────────┘    └──────────────────┘
-         │                       │
-         └───────────┬───────────┘
-                     │
-              ┌─────────────┐
-              │   Guard     │
-              │ isSubmitted │
-              │ = A OR B    │
-              └─────────────┘
+┌──────────────────┐
+│    Backend       │
+│   (Make.com)     │
+│   Source of      │
+│     Truth        │
+└─────────┬────────┘
+          │
+          │ IsFormSubmitted: true/false
+          │
+   ┌─────────────┐
+   │   Guard     │
+   │ isSubmitted │
+   │ = Backend   │
+   │   Only      │
+   └─────────────┘
 ```
 
 ## 🔄 **Flux de Fonctionnement**
@@ -60,13 +62,13 @@ REACT_APP_HUBSPOT_DEAL_ID=your_deal_id
 
 ### **FormSubmissionGuard**
 ```typescript
-// Double vérification
-const isSubmitted = isSubmittedLocal || isSubmittedBackend;
+// Seule source de vérité : backend
+const isSubmitted = isSubmittedBackend;
 
 // Loader pendant vérification
 if (isLoading) return <LoadingSpinner />;
 
-// Blocage avec fallback développement
+// Blocage basé uniquement sur backend
 if (isSubmitted && !allowDevAccess) {
   return <Navigate to="/submit-success" />;
 }

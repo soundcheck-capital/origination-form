@@ -1,9 +1,5 @@
 // Service pour vérifier l'état de soumission du formulaire via Make.com
-export interface SubmissionStatus {
-  isSubmitted: boolean;
-  submittedAt?: string;
-  message?: string;
-}
+
 
 class SubmissionService {
   private readonly webhookUrl: string;
@@ -14,9 +10,9 @@ class SubmissionService {
 
   /**
    * Vérifie si le formulaire a déjà été soumis
-   * @returns Promise<SubmissionStatus>
+   * @returns Promise<boolean>
    */
-  async checkSubmissionStatus(): Promise<SubmissionStatus> {
+  async checkSubmissionStatus(): Promise<boolean> {
     try {
       console.log('🔍 Vérification du statut de soumission...');
       
@@ -34,24 +30,18 @@ class SubmissionService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = JSON.parse(await response.text())
+      const data = JSON.parse(await response.text());
       
-      console.log('📊 Réponse du statut:', data);
-      
-      // Adapter selon la réponse de votre webhook Make.com
-      return {
-        isSubmitted: data.IsFormSubmitted === 'true' ? true : false,
-      };
+      // Utiliser la clé correcte retournée par Make.com
+      return data.isFormSubmitted === true;
 
     } catch (error) {
       console.error('❌ Erreur lors de la vérification du statut:', error);
       
       // En cas d'erreur, assumer que le formulaire n'est pas soumis
       // pour ne pas bloquer l'utilisateur par erreur
-      return {
-        isSubmitted: false,
-        message: 'Erreur de vérification - accès autorisé par défaut'
-      };
+      return false
+      
     }
   }
 
