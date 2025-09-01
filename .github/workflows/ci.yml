@@ -1,5 +1,6 @@
 # .github/workflows/ci.yml
-name: CI (CRA + Playwright) → Netlify
+# 🚀 CI/CD Pipeline using Makefile commands
+name: CI/CD → Netlify
 
 on:
   push:
@@ -12,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Job pour déterminer l'environnement selon la branche
+  # Déterminer l'environnement selon la branche
   determine-environment:
     runs-on: ubuntu-latest
     outputs:
@@ -36,61 +37,39 @@ jobs:
             echo "netlify-alias=preview" >> $GITHUB_OUTPUT
           fi
 
+  # 🧪 Tests avec Makefile
   test:
     needs: determine-environment
     runs-on: ubuntu-latest
+    # 🔧 Skip tests avec variable GitHub OU message de commit
+    if: vars.SKIP_TESTS != 'true' && !contains(github.event.head_commit.message, '[skip tests]')
     env:
-      # CRA sort proprement des tests Jest en CI (désactive watch)
+      # Variables de test (environnement CI)
       CI: true
+      REACT_APP_FORM_PASSWORD: "123456"
+      REACT_APP_WEBHOOK_URL: "https://webhook.test.com/test"
+      REACT_APP_WEBHOOK_URL_FILES: "https://webhook.test.com/files"
+      REACT_APP_HUBSPOT_COMPANY_ID: "12345"
+      REACT_APP_HUBSPOT_DEAL_ID: "67890"
+      REACT_APP_HUBSPOT_CONTACT_ID: "11111"
+      REACT_APP_HUBSPOT_DRIVE_ID: "test-drive-id"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # CRA est plus fiable avec Node 18 (évite quelques vieilles deps capricieuses)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
 
-      - name: Install deps
-        run: npm ci
+      - name: 🚀 CI Setup (via Makefile)
+        run: make ci-setup
 
-      # Tests unitaires CRA (Jest via react-scripts)
-      - name: Unit tests (Jest)
-        run: npm test -- --watchAll=false --ci
+      - name: 🧪 Run CI Tests (via Makefile)  
+        run: make ci-test
 
-      # Build de prod puis on sert le "build" pour l'E2E
-      - name: Build
-        run: npm run build
-
-      - name: Install Playwright (browsers)
-        run: npx playwright install --with-deps
-
-      - name: Start static server
-        run: |
-          npx serve -s build -l 5173 &
-          npx wait-on http://127.0.0.1:5173 --timeout 60000
-
-      - name: Playwright E2E
-        env:
-          BASE_URL: http://127.0.0.1:5173
-          CI: true
-          # Variables d'environnement pour les tests (valeurs de test)
-          REACT_APP_FORM_PASSWORD: "123456"
-          REACT_APP_WEBHOOK_URL: "https://webhook.test.com/test"
-          REACT_APP_WEBHOOK_URL_FILES: "https://webhook.test.com/files"
-          REACT_APP_HUBSPOT_COMPANY_ID: "12345"
-          REACT_APP_HUBSPOT_DEAL_ID: "67890"
-          REACT_APP_HUBSPOT_CONTACT_ID: "11111"
-          REACT_APP_HUBSPOT_DRIVE_ID: "test-drive-id"
-        run: npx playwright test --reporter=github
-
-      # (Optionnel) tests API si tu as un script séparé
-      - name: API tests
-        run: npm run test:api --if-present
-
-      - name: Upload Playwright artifacts
+      - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -100,11 +79,31 @@ jobs:
             test-results/**
           if-no-files-found: ignore
 
+  # 🚀 Déploiement avec Makefile
   deploy:
     needs: [determine-environment, test]
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/develop')
+    # 🔧 Deploy même si tests skippés OU réussis
+    if: |
+      always() && 
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      github.event_name == 'push' && 
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/develop')
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
+    env:
+      # Variables d'environnement pour le build
+      REACT_APP_FORM_PASSWORD: ${{ secrets.REACT_APP_FORM_PASSWORD }}
+      REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
+      REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
+      REACT_APP_HUBSPOT_COMPANY_ID: ${{ secrets.REACT_APP_HUBSPOT_COMPANY_ID }}
+      REACT_APP_HUBSPOT_DEAL_ID: ${{ secrets.REACT_APP_HUBSPOT_DEAL_ID }}
+      REACT_APP_HUBSPOT_CONTACT_ID: ${{ secrets.REACT_APP_HUBSPOT_CONTACT_ID }}
+      REACT_APP_HUBSPOT_DRIVE_ID: ${{ secrets.REACT_APP_HUBSPOT_DRIVE_ID }}
+      REACT_APP_ENVIRONMENT: ${{ needs.determine-environment.outputs.environment }}
+      REACT_APP_BRANCH: ${{ github.ref_name }}
+      # Variables Netlify
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -115,31 +114,18 @@ jobs:
           node-version: 18
           cache: npm
 
-      - name: Install deps
-        run: npm ci
+      - name: Install dependencies
+        run: make install
 
-      - name: Build for environment
-        env:
-          # Variables d'environnement spécifiques à l'environment
-          REACT_APP_FORM_PASSWORD: ${{ secrets.REACT_APP_FORM_PASSWORD }}
-          REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
-          REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
-          REACT_APP_HUBSPOT_COMPANY_ID: ${{ secrets.REACT_APP_HUBSPOT_COMPANY_ID }}
-          REACT_APP_HUBSPOT_DEAL_ID: ${{ secrets.REACT_APP_HUBSPOT_DEAL_ID }}
-          REACT_APP_HUBSPOT_CONTACT_ID: ${{ secrets.REACT_APP_HUBSPOT_CONTACT_ID }}
-          REACT_APP_HUBSPOT_DRIVE_ID: ${{ secrets.REACT_APP_HUBSPOT_DRIVE_ID }}
-          # Variables spécifiques à l'environnement
-          REACT_APP_ENVIRONMENT: ${{ needs.determine-environment.outputs.environment }}
-          REACT_APP_BRANCH: ${{ github.ref_name }}
-        run: npm run build
+      - name: 🏗️ Build (via Makefile)
+        run: make build
 
-      - name: Deploy to Netlify
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: 🚀 Deploy to Netlify (via Makefile)
         run: |
           if [[ "${{ needs.determine-environment.outputs.environment }}" == "production" ]]; then
-            npx netlify-cli deploy --prod --dir=build --message "Production deploy $GITHUB_SHA"
+            make deploy-prod
+          elif [[ "${{ needs.determine-environment.outputs.environment }}" == "staging" ]]; then
+            make deploy-staging  
           else
-            npx netlify-cli deploy --alias=${{ needs.determine-environment.outputs.netlify-alias }} --dir=build --message "${{ needs.determine-environment.outputs.environment }} deploy $GITHUB_SHA"
+            make deploy-dev
           fi

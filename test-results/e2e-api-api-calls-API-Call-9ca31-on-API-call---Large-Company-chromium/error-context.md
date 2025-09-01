@@ -1,0 +1,60 @@
+# Page snapshot
+
+```yaml
+- main [ref=e4]:
+  - paragraph [ref=e6]: TESTING VERSION 1.0.2
+  - img "Logo" [ref=e8]
+  - generic [ref=e9]:
+    - generic [ref=e12]:
+      - heading "Get Funding" [level=1] [ref=e13]
+      - generic [ref=e14]:
+        - paragraph [ref=e15]: Contact Information
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - text: First Name
+            - generic [ref=e18]: "*"
+          - textbox "Please enter your information here" [ref=e19]: Pierre
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - text: Last Name
+            - generic [ref=e22]: "*"
+          - textbox "Please enter your information here" [ref=e23]: Dubois
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - text: Email
+            - generic [ref=e26]: "*"
+          - textbox "Please enter your information here" [ref=e27]: pierre.dubois@grandeentreprise.com
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - text: Confirm Email
+            - generic [ref=e30]: "*"
+          - textbox "Please enter your information here" [ref=e31]: pierre.dubois@grandeentreprise.com
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - text: Phone
+            - generic [ref=e34]: "*"
+          - textbox "Please enter your information here" [active] [ref=e35]: +1-147-258-369
+        - paragraph [ref=e36]:
+          - text: By filling this form, you agree to SoundCheck Capital
+          - link "Terms of Service" [ref=e37] [cursor=pointer]:
+            - /url: https://soundcheckcapital.com/terms-of-service
+          - text: and
+          - link "Privacy Policy" [ref=e38] [cursor=pointer]:
+            - /url: https://soundcheckcapital.com/privacy-policy
+    - paragraph [ref=e39]:
+      - generic [ref=e40]: "*"
+      - text: Required fields
+    - button "Next" [ref=e42] [cursor=pointer]
+    - generic [ref=e43]:
+      - generic [ref=e44]: 🛠️ Development Tools
+      - generic [ref=e45]:
+        - checkbox "Disable step validation" [ref=e46]
+        - text: Disable step validation
+      - generic [ref=e47]:
+        - checkbox "Allow form access after submission" [ref=e48]
+        - text: Allow form access after submission
+    - generic [ref=e49]:
+      - generic [ref=e50]: 🌍 development
+      - generic [ref=e51]: •
+      - generic [ref=e52]: ⏳ Not Submitted
+```
