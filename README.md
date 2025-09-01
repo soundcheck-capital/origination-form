@@ -1,206 +1,215 @@
-# SoundCheck Origination Form
+# 🚀 Origination Form - SoundCheck Capital
 
-A modern React application for collecting and managing SoundCheck Capital funding applications. This application allows users to submit detailed information about their company, finances, and due diligence documents.
+Une application React moderne pour la collecte et gestion des demandes de financement SoundCheck Capital, avec système de tests E2E complet et intégration Make.com.
 
-## 🚀 Features
+## ⚡ **Démarrage Ultra-Rapide**
 
-### 📋 Multi-Step Form
-- **Personal Information** : Applicant contact details and information
-- **Company Information** : Company and business activity details
-- **Ticketing Information** : Ticket sales data
-- **Ticketing Volume** : Performance metrics
-- **Ownership Structure** : Company ownership details
-- **Financial Information** : Financial data and projections
-- **Your Funds** : Funding requirements
-- **Legal Information** : Documents and compliance
-- **Due Diligence Documents** : File upload and management
-- **Summary** : Complete overview before submission
-
-### 🔐 Security
-- Password protection
-- User authentication
-- Real-time data validation
-- Automatic data backup
-
-### 📁 File Management
-- Multiple file upload
-- Support for various formats (PDF, Excel, images)
-- Google Drive integration
-- Make.com webhook for automated processing
-
-### 🎨 User Interface
-- Modern and responsive design
-- Intuitive navigation with sidebar
-- Custom components
-- Real-time visual validation
-
-## 🛠 Technologies Used
-
-- **Frontend** : React 19, TypeScript
-- **State Management** : Redux Toolkit
-- **Routing** : React Router DOM
-- **Styling** : Tailwind CSS, Material Tailwind
-- **Maps** : Google Maps API
-- **Upload** : Google Drive integration + Make.com webhook
-- **Tests** : Jest, React Testing Library
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js (version 16 or higher)
-- npm or yarn
-
-### Installing Dependencies
 ```bash
-# Clone the repository
-git clone https://github.com/soundcheck-capital/origination-form.git
-cd origination-form
+# Setup complet en une commande
+make setup && make dev
 
-# Install dependencies
-npm install
+# Ou installation classique
+npm install && npm start
 ```
 
-### Environment Configuration
-```bash
-# Copy the example file
-cp env.example .env
+L'application sera disponible sur [http://localhost:3001](http://localhost:3001).
 
-# Configure environment variables
-REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/your-webhook-id
-REACT_APP_WEBHOOK_URL_FILES=https://hook.us1.make.com/your-files-webhook-id
-REACT_APP_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
-REACT_APP_FORM_PASSWORD=
-HUBSPOT_COMPANY_ID=
-HUBSPOT_DEAL_ID=
-HUBSPOT_CONTACT_ID=
+## 📚 **Documentation Complète**
+
+📖 **[Voir la documentation complète](./documentation/README.md)**
+
+### 🎯 **Guides Rapides**
+- [**Tests E2E**](./documentation/03-testing.md)
+- [**Commandes Makefile**](./documentation/04-makefile.md)
+- [**Déploiement CI/CD**](./documentation/05-deployment.md)
+- [**Blocage Formulaire**](./documentation/07-form-blocking.md)
+- [**Intégration Backend**](./documentation/08-backend-integration.md)
+
+## 🎮 **Commandes Principales**
+
+```bash
+# 🚀 Développement
+make dev               # Serveur de développement
+make test              # Tests E2E complets
+make test-chrome       # Tests rapides
+
+# 🧪 Tests par étape
+make test-step1        # Personal Info
+make test-step3        # Ticketing + Volume
+make test-step5        # Ownership (dynamique)
+
+# 🚀 Déploiement
+make deploy-prod       # Production avec tests
+make deploy-prod-skip-tests  # Urgence sans tests
+
+# 🔧 Maintenance
+make help              # Toutes les commandes
+make clean && make setup     # Reset complet
 ```
 
-## 🚀 Getting Started
+## 🏗️ **Architecture Moderne**
 
-### Development Mode
-```bash
-# Start the development server
-npm start
+### **🎯 Stack Technique**
+- **Frontend** : React 18 + TypeScript + Redux Toolkit
+- **Tests** : Playwright E2E (10 étapes + API + flows)
+- **CI/CD** : GitHub Actions + Netlify multi-environnements
+- **Backend** : Make.com webhooks + HubSpot
+- **Build** : Makefile standardisé + cache optimisé
+
+### **🔒 Sécurité & Robustesse**
+- **Double blocage** : Local + Backend centralisé
+- **Protection formulaire** après soumission
+- **Validation multi-niveaux** : Client + Serveur
+- **Fallback gracieux** en cas d'erreurs
+
+### **📊 Couverture Tests**
+- **150+ tests** Playwright automatisés
+- **10 étapes** testées individuellement  
+- **API mocking** : Soumission + Upload
+- **3 jeux de données** : Small/Medium/Large Company
+- **Multi-navigateurs** : Chrome, Firefox, Safari, Mobile
+
+## 🎯 **Fonctionnalités Clés**
+
+### **✅ Formulaire Multi-Étapes (10 + Summary)**
+1. **Personal Info** - Email, nom, rôle
+2. **Company Info** - Entreprise, adresse, employés
+3. **Ticketing** - Partenaire + 6 champs volume
+4. **Your Funds** - Montant, utilisation, timing
+5. **Ownership** - Propriétaires dynamiques (%)
+6. **Finances** - Questions conditionnelles + dettes
+7. **Ticketing Files** - Upload documents billetterie
+8. **Financial Files** - États financiers + relevés
+9. **Legal Files** - 5 types de documents légaux
+10. **Additional Info** - Références + commentaires
+11. **Summary** - Récapitulatif navigable
+
+### **⚡ Système Avancé**
+- **Auto-save** : Sauvegarde à chaque changement
+- **Data persistence** : Survit aux rechargements
+- **Conditional logic** : Champs dynamiques selon réponses
+- **File uploads** : Multiple types, validation taille/format
+- **Mobile responsive** : Optimisé tous devices
+
+## 🔗 **Intégrations**
+
+### **📤 Make.com Webhooks**
+```json
+// Données formulaire
+POST /webhook/data
+{
+  "personalInfo": {...},
+  "companyInfo": {...},
+  "ticketingInfo": {...}
+}
+
+// Upload fichiers
+POST /webhook/files
+FormData with metadata
+
+// Vérification statut
+POST /webhook/status
+{"hubspotDealId": "123"}
+→ {"IsFormSubmitted": "true/false"}
 ```
-The application will be available at [http://localhost:3001](http://localhost:3001)
 
-### Testing
-```bash
-# Run tests
-npm test
+### **🎯 HubSpot Integration**
+- **Deal tracking** : Lié aux deals HubSpot
+- **Contact sync** : Création/mise à jour contacts
+- **Pipeline automation** : Déclencheurs selon soumissions
 
-# Run tests in watch mode
-npm test -- --watch
+## 🚀 **CI/CD & Déploiements**
+
+### **🌍 Multi-Environnements**
+| Branche | Environnement | URL | Tests |
+|---------|---------------|-----|-------|
+| `main` | 🟢 Production | `app.domain.com` | Complets |
+| `staging` | 🟡 Staging | `staging--app.netlify.app` | Complets |
+| `develop` | 🔵 Development | `dev--app.netlify.app` | Chrome only |
+
+### **⚡ Pipeline Optimisé**
+```
+Push → Tests E2E → Build → Deploy
+ ↓       ↓         ↓      ↓
+2min   8-12min    3min   2min
 ```
 
-### Production Build
-```bash
-# Build the application
-npm run build
+**Total : 15-20 min** (ou 7 min avec skip tests)
 
-# Deploy to GitHub Pages
-npm run deploy
+## 🛠️ **Développement**
+
+### **🎯 Workflow Quotidien**
+```bash
+# Setup initial (une fois)
+make setup
+
+# Développement
+make dev               # Serveur + watch
+make test-step3        # Test étape en cours
+make pre-commit        # Avant commit
+
+# Debug
+make test-ui           # Interface graphique
+make test-debug        # Mode debug
 ```
 
-## 🌐 Deployment
-
-The application is configured to be deployed on Netlify. The configuration includes:
-
-### Netlify Configuration
-- **Build command**: `npm run build`
-- **Publish directory**: `build`
-- **Node version**: 18
-- **SPA routing**: Configured with `_redirects` and `netlify.toml`
-
-### GitHub Pages (Alternative)
-For GitHub Pages deployment, see [DEPLOYMENT.md](./DEPLOYMENT.md) for details.
-
-### Production URL
-The application is available at : `https://boris-origination-form.netlify.app/origination-form/`
-
-## 🔧 Configuration
-
-### Make.com Webhooks
-The application uses two separate Make.com webhooks for optimized processing:
-
-1. **Form Data Webhook** (`REACT_APP_WEBHOOK_URL`): Receives form data without files
-2. **Files Webhook** (`REACT_APP_WEBHOOK_URL_FILES`): Receives individual files with metadata
-
-**Features:**
-- **File size limit**: 100MB per file
-- **Separated processing**: Form data and files are sent to different endpoints
-- **Individual file uploads**: Each file is uploaded separately to prevent timeouts
-- **Progress tracking**: Real-time upload progress display
-- **Error handling**: Continues processing even if some files fail
-
-See [WEBHOOK_INTEGRATION.md](./WEBHOOK_INTEGRATION.md) for detailed configuration.
-
-### Google Maps API
-- Create a Google Cloud project
-- Enable Google Maps JavaScript API
-- Configure the API key in environment variables
-
-### Google Drive (Optional)
-- Configure Google Drive credentials
-- Enable Google Drive API
-- Configure appropriate permissions
-
-## 📁 Project Structure
-
+### **📁 Structure Projet**
 ```
 src/
-├── components/           # React components
-│   ├── customComponents/ # Reusable custom components
-│   └── ...              # Form steps
-├── contexts/            # React contexts (validation, files)
-├── hooks/               # Custom hooks
-├── services/            # External services (Google Drive)
-├── store/               # Redux configuration
-│   ├── auth/           # Authentication management
-│   └── form/           # Form management
-└── utils/              # Utilities and helpers
+├── components/        # Composants + steps
+├── store/            # Redux (auth + form)  
+├── hooks/            # Hooks personnalisés
+├── services/         # API + submission service
+└── utils/            # Helpers
+
+tests/
+├── fixtures/         # Jeux de données
+├── utils/           # FormHelper class
+└── e2e/             # Tests par catégorie
+    ├── steps/       # Tests étapes 1-10
+    ├── api/         # Tests API calls
+    └── flows/       # Tests flux complets
+
+documentation/        # Docs organisées
+├── README.md        # Index principal
+├── 03-testing.md    # Guide tests
+├── 04-makefile.md   # Commandes
+├── 05-deployment.md # CI/CD
+└── 07-form-blocking.md # Sécurité
 ```
 
-## 🔄 Data Flow
+## 🎯 **Pour Bien Commencer**
 
-1. **Input** : User fills out the multi-step form
-2. **Validation** : Real-time data validation
-3. **Save** : Automatic data backup
-4. **Form Data Submission** : Form data sent to primary webhook (without files)
-5. **File Uploads** : Individual files uploaded to separate webhook with progress tracking
-6. **Confirmation** : Success page and notification
+### **👨‍💻 Développeur**
+1. `make setup` → Installation complète
+2. `make dev` → Démarrer développement  
+3. `make test-step1` → Tester une étape
+4. **[Guide Testing](./documentation/03-testing.md)** 
 
-## 🧪 Testing
+### **🚀 DevOps**
+1. **[Guide Deployment](./documentation/05-deployment.md)**
+2. **[Environnements](./documentation/06-environments.md)**
+3. `make deploy-staging` → Test déploiement
 
-```bash
-# Unit tests
-npm test
+### **🔒 Sécurité**
+1. **[Blocage Formulaire](./documentation/07-form-blocking.md)**
+2. **[Intégration Backend](./documentation/08-backend-integration.md)**
 
-# Tests with coverage
-npm test -- --coverage
-
-# Specific tests
-npm test -- --testNamePattern="PersonalInfoStep"
-```
-
-## 🤝 Contributing
-
-1. Fork the project
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is private and proprietary to SoundCheck Capital.
-
-## 📞 Support
-
-For any questions or issues :
-- Create an issue on GitHub
-- Contact the SoundCheck Capital development team
+### **🆘 Support**
+- **Tests** : `make test-debug`
+- **Deploy urgent** : `make deploy-prod-skip-tests`
+- **Reset** : `make clean-all && make setup`
+- **Aide** : `make help`
 
 ---
 
-**SoundCheck Capital** - Simplifying access to funding for ticketing companies.
+## 📊 **Métriques**
+
+- **📝 Formulaire** : 10 étapes + 50+ champs
+- **🧪 Tests** : 150+ tests automatisés
+- **⚡ Performance** : < 3s chargement
+- **📱 Responsive** : Mobile + Desktop
+- **🔒 Sécurité** : Double validation + blocage
+- **🚀 Deploy** : 15 min avec tests, 7 min sans
+
+**Application prête pour la production ! 🎉**

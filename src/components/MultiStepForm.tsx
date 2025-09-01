@@ -134,9 +134,9 @@ const MultiStepFormContent: React.FC = () => {
           timingOfFunding: formData.formData.fundsInfo.timingOfFunding,
           additionalComments: formData.formData.financesInfo.additionalComments,
         },
-        hubspotContact: process.env.REACT_APP_HUBSPOT_CONTACT_ID,
-        hubspotCompany: process.env.REACT_APP_HUBSPOT_COMPANY_ID,
-        hubspotDeal: process.env.REACT_APP_HUBSPOT_DEAL_ID,
+        hubspotContactId: process.env.REACT_APP_HUBSPOT_CONTACT_ID,
+        hubspotCompanyId: process.env.REACT_APP_HUBSPOT_COMPANY_ID,
+        hubspotDealId: process.env.REACT_APP_HUBSPOT_DEAL_ID,
       };
 
 

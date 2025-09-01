@@ -32,9 +32,6 @@ export const useFileUpload = () => {
   // Fonction pour envoyer les données du formulaire (sans fichiers)
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
-      console.log("Sending form data to:", process.env.REACT_APP_WEBHOOK_URL);
-
-    
       
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
         method: 'POST',
@@ -86,7 +83,6 @@ export const useFileUpload = () => {
       formData.append('hubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
       formData.append('hubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
       formData.append('driveId', process.env.REACT_APP_HUBSPOT_DRIVE_ID || '');
-      console.log(`Sending file ${file.name} (${fieldName}) to files endpoint`);
 
       const response = await fetch(process.env.REACT_APP_WEBHOOK_URL_FILES || '', {
         method: 'POST',
@@ -121,7 +117,6 @@ export const useFileUpload = () => {
 
     try {
       // 1. Envoyer d'abord les données du formulaire (sans fichiers)
-      console.log("Step 1: Sending form data...");
       const formDataResult = await sendFormData(formData);
       
       if (!formDataResult.success) {
@@ -129,7 +124,6 @@ export const useFileUpload = () => {
       }
 
       // 2. Envoyer les fichiers individuellement
-      console.log("Step 2: Sending files...");
       const fileResults: FileUploadResult[] = [];
       let totalFiles = 0;
       let processedFiles = 0;
