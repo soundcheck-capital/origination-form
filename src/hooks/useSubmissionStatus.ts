@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { submissionService, SubmissionStatus } from '../services/submissionService';
 import { setSubmitted } from '../store/form/formSlice';
@@ -18,7 +18,7 @@ export const useSubmissionStatus = (): UseSubmissionStatusReturn => {
   const [submissionData, setSubmissionData] = useState<SubmissionStatus | null>(null);
   const dispatch = useDispatch();
 
-  const checkStatus = async () => {
+  const checkStatus = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -41,12 +41,12 @@ export const useSubmissionStatus = (): UseSubmissionStatusReturn => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [dispatch]);
 
   // Vérification au montage du composant
   useEffect(() => {
     checkStatus();
-  }, []);
+  }, [checkStatus]);
 
   return {
     isLoading,
