@@ -34,18 +34,42 @@ const MultiStepFormContent: React.FC = () => {
   const { getAllFiles } = useDiligenceFiles();
   const { uploadToMake, uploadProgress, isUploading } = useFileUpload();
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
+  
+  // Vérifier l'environnement (development, staging, production)
+  const currentEnvironment = process.env.REACT_APP_ENVIRONMENT || 'development';
+  const isProductionEnvironment = currentEnvironment === 'production';
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
   const { currentStepErrors, setCurrentStepErrors } = useValidation();
   const [isSavingStep, setIsSavingStep] = useState(false);
-
-  // Vérifier si le formulaire a été soumis avec succès
+  const isSubmitted = useSelector((state: RootState) => state.form.isSubmitted);
+  // BLOCAGE SIMPLE : Si formulaire soumis, rediriger immédiatement
   useEffect(() => {
-    const disableSubmissionBlock = localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true';
-    if (formData.isSubmitted && !isDevelopment && !disableSubmissionBlock) {
-      // Rediriger vers la page de succès si le formulaire a été soumis
-      navigate('/submit-success');
+    isDevelopment && console.log('🔍 MultiStepForm useEffect Debug:', {
+      isSubmitted,
+      isDevelopment,
+      currentEnvironment,
+      NODE_ENV: process.env.NODE_ENV,
+      REACT_APP_ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT,
+      allowFormAccess: localStorage.getItem('DEV_ALLOW_FORM_ACCESS')
+    });
+    
+    if (isSubmitted) {
+      // En développement : option pour tester le blocage
+      if (isDevelopment) {
+        const allowFormAccess = localStorage.getItem('DEV_ALLOW_FORM_ACCESS') === 'true';
+        if (!allowFormAccess) {
+          isDevelopment && console.log('🛠️ DEV: Form submitted, redirecting to success (DEV_ALLOW_FORM_ACCESS not enabled)');
+          navigate('/submit-success');
+        } else {
+          isDevelopment && console.log('🛠️ DEV: Form submitted but DEV_ALLOW_FORM_ACCESS enabled, staying on form');
+        }
+      } else {
+        // Production/Staging : toujours bloquer
+        isDevelopment && console.log(`🚀 ${currentEnvironment}: Form submitted, blocking access`);
+        navigate('/submit-success');
+      }
     }
-  }, [formData.isSubmitted, navigate, isDevelopment]);
+  }, [isSubmitted, navigate, isDevelopment, currentEnvironment]);
 
   // Load application data if ID is provided
   useEffect(() => {
@@ -94,7 +118,6 @@ const MultiStepFormContent: React.FC = () => {
           hasTicketingDebt: formData.formData.financesInfo.hasTicketingDebt ? 'Yes' : 'No',
           hasBusinessDebt: formData.formData.financesInfo.hasBusinessDebt ? 'Yes' : 'No',
           hasOverdueLiabilities: formData.formData.financesInfo.hasOverdueLiabilities ? 'Yes' : 'No',
-          isLeasingLocation: formData.formData.financesInfo.isLeasingLocation ? 'Yes' : 'No',
           hasTaxLiens: formData.formData.financesInfo.hasTaxLiens ? 'Yes' : 'No',
           hasJudgments: formData.formData.financesInfo.hasJudgments ? 'Yes' : 'No',
           hasBankruptcy: formData.formData.financesInfo.hasBankruptcy ? 'Yes' : 'No',
@@ -117,7 +140,6 @@ const MultiStepFormContent: React.FC = () => {
         hubspotDeal: process.env.REACT_APP_HUBSPOT_DEAL_ID,
       };
 
-      console.log("formDataToSend => ", formDataToSend);
 
       // Récupérer tous les fichiers pour l'upload
       const allFiles = getAllFiles();
@@ -128,7 +150,6 @@ const MultiStepFormContent: React.FC = () => {
       if (result.success) {
         setSaveMessage('Application submitted successfully!');
         
-        // Marquer comme soumis
         dispatch(setSubmitted());
 
         // Navigate to success page after a delay
@@ -144,8 +165,7 @@ const MultiStepFormContent: React.FC = () => {
       setSaveMessage(error instanceof Error ? error.message : 'Failed to submit application. Please try again.');
     } 
   };
-  const handleSubmit2 = () => {
-    console.log("handleSubmit2");
+  const triggerValidationThenSubmit = () => {
     const validation = validateAllSteps();
     
     if (!validation.isValid) {
@@ -297,33 +317,54 @@ const MultiStepFormContent: React.FC = () => {
   };
 
   function DevToggle({ isDevelopment }: { isDevelopment: boolean }) {
-    // 1. initialiser le state depuis localStorage (vaut true/false selon la chaîne stockée)
+    // Toggle pour la validation d'étapes
     const [disableValidation, setDisableValidation] = useState(() => {
-      return localStorage.getItem('DISABLE_VALIDATION') === 'true' ? true : false;
+      return localStorage.getItem('DISABLE_VALIDATION') === 'true';
+    });
+    
+    // Toggle pour permettre l'accès au formulaire après soumission
+    const [allowFormAccess, setAllowFormAccess] = useState(() => {
+      return localStorage.getItem('DEV_ALLOW_FORM_ACCESS') === 'true';
     });
   
-    // 2. synchroniser localStorage si le state change (optionnel, car on l'écrit déjà dans onChange)
     useEffect(() => {
       localStorage.setItem('DISABLE_VALIDATION', disableValidation.toString());
     }, [disableValidation]);
+    
+    useEffect(() => {
+      localStorage.setItem('DEV_ALLOW_FORM_ACCESS', allowFormAccess.toString());
+    }, [allowFormAccess]);
   
     if (!isDevelopment) return null;
   
     return (
-      <div className="flex justify-center mt-4">
+      <div className="flex flex-col items-center mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div className="text-sm font-medium text-yellow-800 mb-2">🛠️ Development Tools</div>
         
-        <label className="flex items-center text-sm text-gray-600">
+        <label className="flex items-center text-sm text-gray-600 mb-2">
           <input
             type="checkbox"
             checked={disableValidation}
             onChange={(e) => {
-              // 3. mettre à jour le state (ce qui force le re-render)
               setDisableValidation(e.target.checked);
               console.log("DISABLE_VALIDATION", e.target.checked);
             }}
             className="mr-2"
           />
-          Disable step validation (dev mode only)
+          Disable step validation
+        </label>
+        
+        <label className="flex items-center text-sm text-gray-600">
+          <input
+            type="checkbox"
+            checked={allowFormAccess}
+            onChange={(e) => {
+              setAllowFormAccess(e.target.checked);
+              console.log("DEV_ALLOW_FORM_ACCESS", e.target.checked);
+            }}
+            className="mr-2"
+          />
+          Allow form access after submission
         </label>
       </div>
     );
@@ -334,9 +375,9 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
       
       <main className="w-full h-full flex flex-col bg-white p-6">
-        <div className=" flex justify-center items-center h-10 w-full bg-blue-500 mb-4">
+        {isDevelopment && (<div className=" flex justify-center items-center h-10 w-full bg-blue-500 mb-4">
           <p className='text-white text-xs font-bold'>TESTING VERSION 1.0.2</p>
-        </div>
+        </div>)}
         <div className="flex justify-center items-center">
           <img src={logo} alt="Logo" className="w-24 " />
         </div>
@@ -401,7 +442,7 @@ const MultiStepFormContent: React.FC = () => {
             {currentStep === 11 && (
               <ButtonPrimary onClick={() => {
                 console.log("onSubmit");
-                handleSubmit2();
+                triggerValidationThenSubmit();
               }} disabled={false}>Submit</ButtonPrimary>
             )}
                     </div>
@@ -445,7 +486,26 @@ const MultiStepFormContent: React.FC = () => {
            
 
           {/* Development Mode Toggle */}
-           {isDevelopment && <DevToggle isDevelopment={isDevelopment} />}
+          {isDevelopment && <DevToggle isDevelopment={isDevelopment} />}
+          
+          {/* Status Indicator (Development Only) */}
+          {isDevelopment && (
+            <div className="mt-2 p-2 bg-gray-100 rounded text-xs text-center">
+              <span className="font-medium">🌍 {currentEnvironment}</span>
+              <span className="mx-2">•</span>
+              <span className={isSubmitted ? 'text-green-600' : 'text-orange-600'}>
+                {isSubmitted ? '✅ Submitted' : '⏳ Not Submitted'}
+              </span>
+              {isSubmitted && (
+                <>
+                  <span className="mx-2">•</span>
+                  <span className={localStorage.getItem('DEV_ALLOW_FORM_ACCESS') === 'true' ? 'text-red-600' : 'text-green-600'}>
+                    {localStorage.getItem('DEV_ALLOW_FORM_ACCESS') === 'true' ? '🔓 Access Allowed' : '🔒 Access Blocked'}
+                  </span>
+                </>
+              )}
+            </div>
+          )}
 
           </div>
         </main>

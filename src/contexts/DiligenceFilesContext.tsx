@@ -49,7 +49,7 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
   const [diligenceFiles, setDiligenceFiles] = useState<DiligenceFiles>(initialDiligenceFiles);
   const dispatch = useDispatch();
   const reduxDiligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
-
+  const isDevelopment = process.env.NODE_ENV === 'development';
   const updateReduxStore = useCallback((updatedFiles: DiligenceFiles) => {
     const diligenceInfo: { [key: string]: DiligenceFileData } = {};
     
@@ -118,7 +118,7 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
         
         // Si on a des métadonnées mais pas de fichiers, c'est qu'on a refreshé
         if (field.fileInfos.length > 0 && field.files.length === 0) {
-          console.log(`Clearing ${fieldKey} field - files lost after refresh`);
+          isDevelopment && console.log(`Clearing ${fieldKey} field - files lost after refresh`);
           syncedFiles[fieldKey] = { files: [], fileInfos: [] };
           hasClearedFields = true;
         }
@@ -133,7 +133,7 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
         );
         
         if (validFiles.length !== field.files.length) {
-          console.log(`Clearing invalid files in ${fieldKey} field`);
+          isDevelopment && console.log(`Clearing invalid files in ${fieldKey} field`);
           syncedFiles[fieldKey] = { 
             files: validFiles, 
             fileInfos: field.fileInfos.slice(0, validFiles.length) 

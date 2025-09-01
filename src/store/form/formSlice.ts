@@ -33,13 +33,26 @@ const formSlice = createSlice({
   initialState: (() => {
     // Essayer de charger les données sauvegardées au démarrage
     const savedData = loadFromLocalStorage();
+    const isSubmittedFromStorage = localStorage.getItem('isSubmitted') === 'true';
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    isDevelopment && console.log('🔍 FormSlice Init Debug:', {
+      hasStoredData: !!savedData,
+      isSubmittedFromStorage,
+      savedData
+    });
+    
     if (savedData) {
       return {
         ...initialState,
-        ...savedData
+        ...savedData,
+        isSubmitted: isSubmittedFromStorage // Forcer la lecture depuis localStorage
       };
     }
-    return initialState;
+    
+    return {
+      ...initialState,
+      isSubmitted: isSubmittedFromStorage
+    };
   })(),
   reducers: {
     setCurrentStep: (state, action: PayloadAction<number>) => {
@@ -100,7 +113,7 @@ const formSlice = createSlice({
       state.isSubmitted = false;
       localStorage.removeItem('soundcheckFormData');
       localStorage.removeItem('formAuthenticated');
-      saveToLocalStorage(state);
+      localStorage.removeItem('isSubmitted'); // Nettoyer aussi ce flag
     }
   },
   extraReducers: (builder) => {
@@ -120,9 +133,13 @@ const formSlice = createSlice({
         console.log('Formulaire sauvegardé');
       })
       .addCase(submitApplication.fulfilled, (state, action) => {
-        // Vider le formulaire après soumission réussie
-        localStorage.removeItem('soundcheckFormData');
-        console.log('Formulaire soumis');
+        // MARQUER LE FORMULAIRE COMME SOUMIS
+        state.isSubmitted = true;
+        console.log('🎉 Formulaire soumis avec succès - isSubmitted set to true');
+        
+        // Sauvegarder l'état "soumis" dans localStorage
+        localStorage.setItem('isSubmitted', 'true');
+        saveToLocalStorage(state);
       });
   }
 });

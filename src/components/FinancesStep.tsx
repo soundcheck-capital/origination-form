@@ -14,7 +14,6 @@ import { debtTypes } from '../store/form/hubspotLists';
 const FinancesStep: React.FC = () => {
   const dispatch = useDispatch();
   const financesInfo = useSelector((state: RootState) => state.form.formData.financesInfo);
-  console.log(financesInfo);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [visibleQuestions, setVisibleQuestions] = useState<number[]>([0]);
   const [hasBeenVisited, setHasBeenVisited] = useState(false);
@@ -70,6 +69,7 @@ const FinancesStep: React.FC = () => {
       text: "Has any ownership of your business changed in the last two years?",
       name: 'ownershipChanged'
     }
+  
   ];
 
   // Filter questions based on conditions
@@ -98,7 +98,6 @@ const FinancesStep: React.FC = () => {
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
     dispatch(updateFinancesInfo({ [name]: e.target.checked }));
-    console.log(name, e.target.checked);
     // Automatically add a debt row when answering Yes
     if (name === 'hasBusinessDebt' && e.target.checked && financesInfo.debts.length === 0) {
       dispatch(updateFinancesInfo({

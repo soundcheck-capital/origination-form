@@ -3,15 +3,41 @@ name: CI (CRA + Playwright) → Netlify
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop, staging ]
   pull_request:
+    branches: [ main, develop ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  # Job pour déterminer l'environnement selon la branche
+  determine-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      netlify-alias: ${{ steps.set-env.outputs.netlify-alias }}
+    steps:
+      - name: Determine environment
+        id: set-env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "netlify-alias=main" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "netlify-alias=staging" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "environment=development" >> $GITHUB_OUTPUT
+            echo "netlify-alias=dev" >> $GITHUB_OUTPUT
+          else
+            echo "environment=development" >> $GITHUB_OUTPUT
+            echo "netlify-alias=preview" >> $GITHUB_OUTPUT
+          fi
+
   test:
+    needs: determine-environment
     runs-on: ubuntu-latest
     env:
       # CRA sort proprement des tests Jest en CI (désactive watch)
@@ -75,9 +101,10 @@ jobs:
           if-no-files-found: ignore
 
   deploy:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [determine-environment, test]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/develop')
     runs-on: ubuntu-latest
+    environment: ${{ needs.determine-environment.outputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -91,9 +118,9 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Build (prod)
+      - name: Build for environment
         env:
-          # Variables d'environnement pour la production (secrets GitHub)
+          # Variables d'environnement spécifiques à l'environment
           REACT_APP_FORM_PASSWORD: ${{ secrets.REACT_APP_FORM_PASSWORD }}
           REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
           REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
@@ -101,10 +128,18 @@ jobs:
           REACT_APP_HUBSPOT_DEAL_ID: ${{ secrets.REACT_APP_HUBSPOT_DEAL_ID }}
           REACT_APP_HUBSPOT_CONTACT_ID: ${{ secrets.REACT_APP_HUBSPOT_CONTACT_ID }}
           REACT_APP_HUBSPOT_DRIVE_ID: ${{ secrets.REACT_APP_HUBSPOT_DRIVE_ID }}
+          # Variables spécifiques à l'environnement
+          REACT_APP_ENVIRONMENT: ${{ needs.determine-environment.outputs.environment }}
+          REACT_APP_BRANCH: ${{ github.ref_name }}
         run: npm run build
 
-      - name: Deploy to Netlify (prod)
+      - name: Deploy to Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: npx netlify-cli deploy --prod --dir=build --message "CI deploy $GITHUB_SHA"
+        run: |
+          if [[ "${{ needs.determine-environment.outputs.environment }}" == "production" ]]; then
+            npx netlify-cli deploy --prod --dir=build --message "Production deploy $GITHUB_SHA"
+          else
+            npx netlify-cli deploy --alias=${{ needs.determine-environment.outputs.netlify-alias }} --dir=build --message "${{ needs.determine-environment.outputs.environment }} deploy $GITHUB_SHA"
+          fi

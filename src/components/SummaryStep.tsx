@@ -36,20 +36,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
  */}
       {renderValidationErrors}
 
-      {/* Development Mode Toggle for Submission Block */}
-      {isDevelopment && (
-        <div className="flex justify-center mb-4">
-          <label className="flex items-center text-sm text-gray-600">
-            <input
-              type="checkbox"
-              checked={disableSubmissionBlock}
-              onChange={(e) => setDisableSubmissionBlock(e.target.checked)}
-              className="mr-2"
-            />
-            Disable submission block (dev mode only)
-          </label>
-        </div>
-      )}
+   
 
        <div className="w-full max-w-2xl space-y-6">
         {/* Personal Information */}
