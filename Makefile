@@ -242,7 +242,7 @@ deploy-staging-skip-tests: ## 🚀 Déployer en staging SANS tests
 	@$(MAKE) build
 	npx netlify deploy --dir=build --alias=staging
 
-ahdeploy-prod: build ## 🚀 Déployer en production
+deploy-prod: build ## 🚀 Déployer en production
 	@echo "$(BLUE)🚀 Déploiement production...$(NC)"
 	npx netlify deploy --dir=build --prod
 
