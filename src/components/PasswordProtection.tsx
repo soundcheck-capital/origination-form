@@ -75,7 +75,7 @@ setPassword(e.target.value);
           Access Required
         </h2>
         <p className="mt-2 text-center text-sm text-white">
-          Please enter your given password to access the application form
+        Please enter your password to access the application form
         </p>
       </div>
 
