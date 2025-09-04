@@ -335,7 +335,7 @@ const FinancesStep: React.FC = () => {
                 ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
               htmlFor="singleEntity"
             >
-              Multi-entity
+              Single entity
             </label>
 
             <input
@@ -361,7 +361,7 @@ const FinancesStep: React.FC = () => {
                 ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
               htmlFor="singleEntity"
             >
-              Single entity
+              Multi-entity
             </label>
           </div>
 
