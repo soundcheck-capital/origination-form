@@ -28,7 +28,7 @@ export const clientType = {
 
   export const debtTypes = {
     'Credit card debt':'Credit card debt',
-    'Ticketing Company':'Ticketing Company',
+    'Ticketing Company':'Ticketing Co debt',
     'Account payables':'Account payables',
     'Terms loans':'Terms loans',
     'Merchant Cash Advance':'Merchant Cash Advance',
