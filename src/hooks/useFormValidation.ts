@@ -75,7 +75,7 @@ export const useFormValidation = () => {
     if (!companyInfo.name.trim()) errors.name = 'Legal entity name is required';
     if (!companyInfo.ein.trim()) errors.ein = 'EIN is required';
     if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
-    if (!companyInfo.companyAddress.trim()) errors.companyAddress = 'Company address is required';
+    if (!companyInfo.companyAddressDisplay.trim()) errors.companyAddress = 'Company address is required';
     if (!companyInfo.stateOfIncorporation.trim()) errors.stateOfIncorporation = 'State of incorporation is required';
     if (!companyInfo.businessType) errors.businessType = 'Business type is required';
     if (ownershipInfo.owners.length === 0) {

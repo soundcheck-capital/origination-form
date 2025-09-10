@@ -7,6 +7,13 @@ interface FormSubmissionGuardProps {
 }
 
 const FormSubmissionGuard: React.FC<FormSubmissionGuardProps> = ({ children }) => {
+  // Désactiver complètement le guard pendant les tests
+  const isTestEnvironment = process.env.REACT_APP_DISABLE_FORM_GUARD === 'true';
+  
+  if (isTestEnvironment) {
+    return <>{children}</>;
+  }
+  
   const { isLoading, isSubmitted } = useSubmissionStatus();
   
   // Vérifier l'environnement

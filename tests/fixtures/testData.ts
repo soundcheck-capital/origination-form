@@ -9,19 +9,14 @@ export interface TestFormData {
   };
   companyInfo: {
     name: string;
-    dba: string;
+    role?: string; // Nouveau champ dans CompanyInfoStep
     clientType: string;
-    businessType: string;
     yearsInBusiness: string;
-    ein: string;
-    companyAddress: string;
-    companyCity: string;
-    companyState: string;
-    companyZipcode: string;
-    stateOfIncorporation: string;
     employees: number;
     socials: string;
     memberOf: string;
+    // Champs supprimés car ils ne sont plus dans CompanyInfoStep
+    // dba, businessType, ein, companyAddress, etc. sont dans d'autres étapes
   };
   ticketingInfo: {
     currentPartner: string;
@@ -78,24 +73,17 @@ export const smallCompanyData: TestFormData = {
     lastname: "Dupont",
     email: "jean.dupont@petiteentreprise.com",
     emailConfirm: "jean.dupont@petiteentreprise.com",
-    phone: "0123456789",
+    phone: "12345678901234", // Numéro plus long pour validation
     role: "CEO"
   },
   companyInfo: {
     name: "Petite Entreprise SAS",
-    dba: "Petite Entreprise",
+    role: "CEO",
     clientType: "Promoter",
-    businessType: "LLC",
-    yearsInBusiness: "3",
-    ein: "123456789",
-    companyAddress: "123 Rue de la Paix",
-    companyCity: "Paris",
-    companyState: "CA",
-    companyZipcode: "75001",
-    stateOfIncorporation: "CA",
+    yearsInBusiness: "2-5 years",
     employees: 5,
-    socials: "@petiteentreprise",
-    memberOf: "INTIX"
+    socials: "https://petiteentreprise.com",
+    memberOf: "Other"
   },
   ticketingInfo: {
     currentPartner: "Eventbrite",
@@ -152,24 +140,17 @@ export const mediumCompanyData: TestFormData = {
     lastname: "Martin",
     email: "marie.martin@moyenneentreprise.com",
     emailConfirm: "marie.martin@moyenneentreprise.com",
-    phone: "0987654321",
+    phone: "09876543210987", // Numéro plus long pour validation
     role: "CFO"
   },
   companyInfo: {
     name: "Moyenne Entreprise Corp",
-    dba: "Moyenne Events",
+    role: "CFO",
     clientType: "Venue",
-    businessType: "Corporation",
-    yearsInBusiness: "7",
-    ein: "987654321",
-    companyAddress: "456 Avenue des Champs",
-    companyCity: "Lyon",
-    companyState: "NY",
-    companyZipcode: "69000",
-    stateOfIncorporation: "NY",
+    yearsInBusiness: "5-10 years",
     employees: 25,
-    socials: "@moyenneevents",
-    memberOf: "IAVM"
+    socials: "https://moyenneevents.com",
+    memberOf: "Other"
   },
   ticketingInfo: {
     currentPartner: "Ticketmaster",
@@ -240,24 +221,17 @@ export const largeCompanyData: TestFormData = {
     lastname: "Dubois",
     email: "pierre.dubois@grandeentreprise.com",
     emailConfirm: "pierre.dubois@grandeentreprise.com",
-    phone: "0147258369",
+    phone: "01472583691234", // Numéro plus long pour validation
     role: "President"
   },
   companyInfo: {
     name: "Grande Entreprise International",
-    dba: "Big Events Co",
-    clientType: "Promoter",
-    businessType: "Corporation",
-    yearsInBusiness: "15",
-    ein: "456789123",
-    companyAddress: "789 Boulevard International",
-    companyCity: "Marseille",
-    companyState: "TX",
-    companyZipcode: "13000",
-    stateOfIncorporation: "TX",
+    role: "President",
+    clientType: "Festival",
+    yearsInBusiness: "10+ years",
     employees: 150,
-    socials: "@bigeventsco",
-    memberOf: "IAVM"
+    socials: "https://bigeventsco.com",
+    memberOf: "Other"
   },
   ticketingInfo: {
     currentPartner: "AXS",
