@@ -97,7 +97,16 @@ const FinancesStep: React.FC = () => {
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
-    dispatch(updateFinancesInfo({ [name]: e.target.checked }));
+    
+    // Special handling for singleEntity - invert the logic for correct visual representation
+    if (name === 'singleEntity') {
+      // When switch is checked (right/Multi-entity), singleEntity should be false
+      // When switch is unchecked (left/Single entity), singleEntity should be true
+      dispatch(updateFinancesInfo({ [name]: !e.target.checked }));
+    } else {
+      dispatch(updateFinancesInfo({ [name]: e.target.checked }));
+    }
+    
     // Automatically add a debt row when answering Yes
     if (name === 'hasBusinessDebt' && e.target.checked && financesInfo.debts.length === 0) {
       dispatch(updateFinancesInfo({
@@ -332,7 +341,7 @@ const FinancesStep: React.FC = () => {
           <div className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-4">
             <label
               className={`text-sm text-right whitespace-nowrap transition-colors
-                ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
+                ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
               htmlFor="singleEntity"
             >
               Single entity
@@ -352,13 +361,13 @@ const FinancesStep: React.FC = () => {
               role="switch"
               name="singleEntity"
               id="singleEntity"
-              checked={financesInfo.singleEntity}
+              checked={!financesInfo.singleEntity}
               onChange={handleRadioChange}
             />
 
             <label
               className={`text-sm text-left whitespace-nowrap transition-colors
-                ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
+                ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
               htmlFor="singleEntity"
             >
               Multi-entity

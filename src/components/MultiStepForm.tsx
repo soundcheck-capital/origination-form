@@ -346,9 +346,9 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
       
       <main className="w-full h-full flex flex-col bg-white p-6">
-        {isDevelopment && (<div className=" flex justify-center items-center h-10 w-full bg-blue-500 mb-4">
-          <p className='text-white text-xs font-bold'>TESTING VERSION 1.0.2</p>
-        </div>)}
+        <div className=" flex justify-center items-center h-10 w-full bg-blue-500 mb-4">
+          <p className='text-white text-xs font-bold'>BETA VERSION v1.0.5</p>
+        </div>
         <div className="flex justify-center items-center">
           <img src={logo} alt="Logo" className="w-24 " />
         </div>
