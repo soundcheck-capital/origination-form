@@ -76,6 +76,31 @@ export const useFileUpload = () => {
     }
   };
 
+  // Mapping des champs vers leurs dossiers Google Drive
+  const getGoogleDriveFolders = (fieldName: string): { folder: string; subFolder: string } => {
+    const folderMapping: { [key: string]: { folder: string; subFolder: string } } = {
+      // Ticketing Information
+      'ticketingCompanyReport': { folder: 'Ticketing Information', subFolder: 'Ticketing Report' },
+      'ticketingServiceAgreement': { folder: 'Ticketing Information', subFolder: 'Service Agreement' },
+      
+      // Financial Information
+      'financialStatements': { folder: 'Financial Information', subFolder: 'Financial Statements' },
+      'bankStatement': { folder: 'Financial Information', subFolder: 'Bank Statements' },
+      'lastYearTaxes': { folder: 'Financial Information', subFolder: 'Tax Documents' },
+      
+      // Legal Information
+      'incorporationCertificate': { folder: 'Legal Information', subFolder: 'Incorporation Certificate' },
+      'legalEntityChart': { folder: 'Legal Information', subFolder: 'Legal Entity Chart' },
+      'governmentId': { folder: 'Legal Information', subFolder: 'Government ID' },
+      'w9form': { folder: 'Legal Information', subFolder: 'W9 Form' },
+      
+      // Other
+      'other': { folder: 'Other Documents', subFolder: 'Other' },
+    };
+
+    return folderMapping[fieldName] || { folder: 'Other Documents', subFolder: 'Uncategorized' };
+  };
+
   // Fonction pour envoyer un fichier individuel
   const sendFile = async (file: File, fieldName: string, fileInfo: any): Promise<FileUploadResult> => {
     try {
@@ -93,9 +118,15 @@ export const useFileUpload = () => {
         };
       }
 
+      // Récupérer les informations de dossier Google Drive
+      const { folder, subFolder } = getGoogleDriveFolders(fieldName);
+      console.log(`📁 [useFileUpload] Google Drive location: ${folder}/${subFolder}`);
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('fieldName', fieldName);
+      formData.append('folder', folder);
+      formData.append('subFolder', subFolder);
       formData.append('hubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
       formData.append('hubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
       formData.append('hubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
