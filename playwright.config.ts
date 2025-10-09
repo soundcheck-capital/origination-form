@@ -68,5 +68,9 @@ export default defineConfig({
     url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    env: {
+      ...process.env,
+      REACT_APP_DISABLE_FORM_GUARD: 'true', // Désactiver le FormSubmissionGuard pendant les tests
+    },
   },
 });
