@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
 import { fetchApplicationById } from '../store/auth/authThunks';
 import {   setSubmitted } from '../store/form/formSlice';
-import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
+import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
 import PersonalInfoStep from './PersonalInfoStep';
