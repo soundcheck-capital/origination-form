@@ -123,10 +123,56 @@ Chaque fichier a un statut qui évolue :
 ```
 file: [File object]
 fieldName: string (ex: "ticketingCompanyReport")
+folder: string (ex: "Ticketing Information")
+subFolder: string (ex: "Ticketing Report")
 hubspotCompanyId: string
 hubspotDealId: string
 hubspotContactId: string
 driveId: string
+```
+
+### Mapping des dossiers Google Drive
+
+Chaque fichier est automatiquement associé à un dossier et sous-dossier :
+
+| fieldName | folder | subFolder |
+|-----------|--------|-----------|
+| `ticketingCompanyReport` | Ticketing Information | Ticketing Report |
+| `ticketingServiceAgreement` | Ticketing Information | Service Agreement |
+| `financialStatements` | Financial Information | Financial Statements |
+| `bankStatement` | Financial Information | Bank Statements |
+| `lastYearTaxes` | Financial Information | Tax Documents |
+| `incorporationCertificate` | Legal Information | Incorporation Certificate |
+| `legalEntityChart` | Legal Information | Legal Entity Chart |
+| `governmentId` | Legal Information | Government ID |
+| `w9form` | Legal Information | W9 Form |
+| `other` | Other Documents | Other |
+
+**Exemple de requête reçue par Make.com** :
+```
+POST /webhook/file-upload
+
+Content-Type: multipart/form-data
+
+file: [binary data of financial-statement.pdf]
+fieldName: "financialStatements"
+folder: "Financial Information"
+subFolder: "Financial Statements"
+hubspotCompanyId: "37482602639"
+hubspotDealId: "41089395317"
+hubspotContactId: "133819925426"
+driveId: "1ABC..."
+```
+
+**Utilisation dans Make.com** :
+```javascript
+// Récupérer les informations
+const file = data.file;
+const folder = data.folder; // "Financial Information"
+const subFolder = data.subFolder; // "Financial Statements"
+
+// Créer la structure dans Google Drive :
+// Root Folder > "Financial Information" > "Financial Statements" > file
 ```
 
 ### Endpoint de soumission du formulaire
