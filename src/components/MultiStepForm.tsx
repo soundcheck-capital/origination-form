@@ -30,7 +30,6 @@ const MultiStepFormContent: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const formData = useSelector((state: RootState) => state.form);
   const [saveMessage, setSaveMessage] = useState('');
-  const { getAllFiles } = useDiligenceFiles();
   const { sendFormData, isUploading } = useFileUpload();
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
   

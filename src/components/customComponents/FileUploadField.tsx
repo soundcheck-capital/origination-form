@@ -76,7 +76,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   const validateFileType = (file: File): { valid: boolean; error?: string } => {
     const acceptedExtensions = accept.split(',').map(ext => ext.trim().toLowerCase());
     const fileName = file.name.toLowerCase();
-    const fileExtension = '.' + fileName.split('.').pop();
     
     const isValid = acceptedExtensions.some(ext => {
       // Gérer les extensions avec ou sans point
