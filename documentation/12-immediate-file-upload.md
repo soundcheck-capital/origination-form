@@ -141,7 +141,7 @@ Chaque fichier est automatiquement associé à un dossier et sous-dossier :
 | `ticketingServiceAgreement` | Ticketing Information | Service Agreement |
 | `financialStatements` | Financial Information | Financial Statements |
 | `bankStatement` | Financial Information | Bank Statements |
-| `lastYearTaxes` | Financial Information | Tax Documents |
+| `lastYearTaxes` | Financial Information | Last Year Taxes |
 | `incorporationCertificate` | Legal Information | Incorporation Certificate |
 | `legalEntityChart` | Legal Information | Legal Entity Chart |
 | `governmentId` | Legal Information | Government ID |

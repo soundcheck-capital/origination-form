@@ -23,19 +23,9 @@ jobs:
       - name: Determine environment
         id: set-env
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "environment=production" >> $GITHUB_OUTPUT
-            echo "netlify-alias=main" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
-            echo "environment=staging" >> $GITHUB_OUTPUT
-            echo "netlify-alias=staging" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-            echo "environment=development" >> $GITHUB_OUTPUT
-            echo "netlify-alias=dev" >> $GITHUB_OUTPUT
-          else
-            echo "environment=development" >> $GITHUB_OUTPUT
-            echo "netlify-alias=preview" >> $GITHUB_OUTPUT
-          fi
+          # Only develop branch is configured for CI/CD
+          echo "environment=development" >> $GITHUB_OUTPUT
+          echo "netlify-alias=dev" >> $GITHUB_OUTPUT
 
   # 🧪 Tests avec Makefile
   test:
@@ -82,12 +72,12 @@ jobs:
   # 🚀 Déploiement avec Makefile
   deploy:
     needs: [determine-environment, test]
-    # 🔧 Deploy même si tests skippés OU réussis
+    # 🔧 Deploy même si tests skippés OU réussis, uniquement sur develop
     if: |
       always() && 
       (needs.test.result == 'success' || needs.test.result == 'skipped') &&
       github.event_name == 'push' && 
-      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/develop')
+      github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
     env:
@@ -121,11 +111,4 @@ jobs:
         run: make build
 
       - name: 🚀 Deploy to Netlify (via Makefile)
-        run: |
-          if [[ "${{ needs.determine-environment.outputs.environment }}" == "production" ]]; then
-            make deploy-prod
-          elif [[ "${{ needs.determine-environment.outputs.environment }}" == "staging" ]]; then
-            make deploy-staging  
-          else
-            make deploy-dev
-          fi
+        run: make deploy-dev

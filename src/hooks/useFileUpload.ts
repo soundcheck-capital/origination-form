@@ -86,7 +86,7 @@ export const useFileUpload = () => {
       // Financial Information
       'financialStatements': { folder: 'Financial Information', subFolder: 'Financial Statements' },
       'bankStatement': { folder: 'Financial Information', subFolder: 'Bank Statements' },
-      'lastYearTaxes': { folder: 'Financial Information', subFolder: 'Tax Documents' },
+      'lastYearTaxes': { folder: 'Financial Information', subFolder: 'Last Year Taxes' },
       
       // Legal Information
       'incorporationCertificate': { folder: 'Legal Information', subFolder: 'Incorporation Certificate' },
