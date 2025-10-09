@@ -4,9 +4,9 @@ name: CI/CD → Netlify
 
 on:
   push:
-    branches: [ main, develop, staging ]
+    branches: [develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ develop ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
