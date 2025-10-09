@@ -1,5 +1,7 @@
 # Intégration Webhook Make.com (Approche Simple)
 
+> **⚡ Architecture actuelle** : Les fichiers sont maintenant uploadés **immédiatement** lors de leur sélection par l'utilisateur, et non plus lors de la soumission finale. Voir [Upload Immédiat de Fichiers](./12-immediate-file-upload.md) pour plus de détails.
+
 ## 🎯 **Solution simplifiée**
 
 Nous avons simplifié l'approche pour envoyer directement les fichiers à Make.com sans passer par Google Drive. Cette solution est :
@@ -8,6 +10,7 @@ Nous avons simplifié l'approche pour envoyer directement les fichiers à Make.c
 - ✅ **Plus rapide** : Upload direct vers Make.com
 - ✅ **Plus fiable** : Moins de points de défaillance
 - ✅ **Transparente** : L'utilisateur ne voit que "Envoi en cours..."
+- ✅ **Upload immédiat** : Les fichiers sont uploadés dès leur sélection avec feedback instantané
 
 ## 📋 **Configuration requise**
 
@@ -23,8 +26,16 @@ Nous avons simplifié l'approche pour envoyer directement les fichiers à Make.c
 Créez un fichier `.env` à la racine du projet :
 
 ```env
+# Endpoint pour les données du formulaire (JSON)
 REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/jgqcxlbrh75heny8znuyj8uel2de92hm
+
+# Endpoint pour les fichiers (multipart/form-data)
+REACT_APP_WEBHOOK_URL_FILES=https://hook.us1.make.com/xb8xxsf5qo48ox03jkxc42shojhu2sml
 ```
+
+> **📝 Note** : Il y a maintenant **deux endpoints distincts** :
+> - `REACT_APP_WEBHOOK_URL` : Pour envoyer les données du formulaire (JSON)
+> - `REACT_APP_WEBHOOK_URL_FILES` : Pour uploader les fichiers individuellement (FormData)
 
 ### 3. Redémarrer le serveur
 
@@ -34,15 +45,34 @@ npm start
 
 ## 🔄 **Flux de données**
 
-### Avant (avec Google Drive) :
+### Ancien système (avec Google Drive) :
 1. Upload fichiers → Google Drive
 2. Récupérer liens → Envoyer à Make.com
 3. Make.com traite les liens
 
-### Maintenant (direct) :
-1. Upload fichiers → Make.com directement
-2. Make.com reçoit les fichiers
-3. Make.com peut les traiter et les stocker
+### Ancien système (direct batch) :
+1. Remplir le formulaire
+2. Cliquer sur Submit
+3. Upload de tous les fichiers + données du formulaire
+4. Make.com reçoit tout en une fois
+
+### 🆕 Nouveau système (upload immédiat) :
+1. **Pendant le remplissage** :
+   - Utilisateur sélectionne un fichier
+   - Upload immédiat → `REACT_APP_WEBHOOK_URL_FILES`
+   - Feedback instantané (success/error)
+   - Répéter pour chaque fichier
+
+2. **Lors du submit** :
+   - Validation du formulaire
+   - Envoi uniquement des données → `REACT_APP_WEBHOOK_URL`
+   - Redirection vers la page de succès
+
+**Avantages** :
+- ✅ Feedback immédiat sur chaque fichier
+- ✅ Submit final plus rapide
+- ✅ Meilleure gestion des erreurs
+- ✅ Possibilité de corriger un fichier en erreur sans tout recommencer
 
 ## 📊 **Structure des données reçues**
 
