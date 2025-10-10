@@ -97,14 +97,11 @@ export const useFormValidation = () => {
   };
 
   const validateFinancesInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { financesInfo } = formData.formData;
-    const { diligenceInfo } = formData;
     const errors: { [key: string]: string } = {};
 
-    // Validate based on singleEntity condition
-    if (!financesInfo.singleEntity && diligenceInfo.legalEntityChart.files.length === 0) {
-      errors.legalEntityChart = 'Legal entity chart is required when not a single entity';
-    }
+    // Step 6 only validates the finance questions, not the diligence files
+    // The Legal Entity Chart file will be validated later in step 9 (Legal Information)
+    // No specific validation needed here - all questions use switches/checkboxes
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };

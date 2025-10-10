@@ -56,7 +56,7 @@ const TicketingStep: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Ticketing Information" />
     
-      <DropdownField label="Who do you receive your Ticket sales settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required description={getPrecision(ticketingInfo.paymentProcessing)} />
+      <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required description={getPrecision(ticketingInfo.paymentProcessing)} />
       
       <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required />
      

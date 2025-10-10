@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
 import { fetchApplicationById } from '../store/auth/authThunks';
 import {   setSubmitted } from '../store/form/formSlice';
-import { DiligenceFilesProvider, useDiligenceFiles } from '../contexts/DiligenceFilesContext';
+import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
 import PersonalInfoStep from './PersonalInfoStep';
@@ -22,7 +22,6 @@ import TicketingInformationStep from './TicketingInformationStep';
 import FinancialInformationStep from './FinancialInformationStep';
 import OtherStep from './OtherStep';
 import { useFormValidation } from '../hooks/useFormValidation';
-import FileLossNotification from './FileLossNotification';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,8 +30,7 @@ const MultiStepFormContent: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const formData = useSelector((state: RootState) => state.form);
   const [saveMessage, setSaveMessage] = useState('');
-  const { getAllFiles } = useDiligenceFiles();
-  const { uploadToMake, uploadProgress, isUploading } = useFileUpload();
+  const { sendFormData, isUploading } = useFileUpload();
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
   
   // Vérifier l'environnement (development, staging, production)
@@ -115,12 +113,9 @@ const MultiStepFormContent: React.FC = () => {
 
       };
 
-
-      // Récupérer tous les fichiers pour l'upload
-      const allFiles = getAllFiles();
-
-      // Upload direct vers Make.com avec les fichiers
-      const result = await uploadToMake(formDataToSend, allFiles);
+      // Les fichiers sont déjà uploadés individuellement lors de leur sélection
+      // Envoyer uniquement les données du formulaire
+      const result = await sendFormData(formDataToSend);
 
       if (result.success) {
         setSaveMessage('Application submitted successfully!');
@@ -350,9 +345,9 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
       
       <main className="w-full h-full flex flex-col bg-white p-6">
-        {isDevelopment && (<div className=" flex justify-center items-center h-10 w-full bg-blue-500 mb-4">
-          <p className='text-white text-xs font-bold'>TESTING VERSION 1.0.2</p>
-        </div>)}
+        <div className=" flex justify-center items-center h-10 w-full bg-blue-500 mb-4">
+          <p className='text-white text-xs font-bold'>BETA VERSION v1.0.5</p>
+        </div>
         <div className="flex justify-center items-center">
           <img src={logo} alt="Logo" className="w-24 " />
         </div>
@@ -374,8 +369,6 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
-          <FileLossNotification />
-
             <h1 className="text-3xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
@@ -430,31 +423,13 @@ const MultiStepFormContent: React.FC = () => {
           </div>
         )}
 
-        {/* Upload Progress */}
+        {/* Submission in progress */}
         {isUploading && (
           <div className="w-full mx-auto my-4 p-4 rounded-lg bg-blue-50 border border-blue-200">
-            <div className="text-center mb-2">
+            <div className="text-center">
               <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-              <span className="text-blue-700 font-medium">Uploading files...</span>
+              <span className="text-blue-700 font-medium">Submitting application...</span>
             </div>
-            {Object.keys(uploadProgress).length > 0 && (
-              <div className="space-y-2">
-                {Object.entries(uploadProgress).map(([fieldName, progress]) => (
-                  <div key={fieldName} className="w-full">
-                    <div className="flex justify-between text-sm text-blue-600 mb-1">
-                      <span className="capitalize">{fieldName.replace(/([A-Z])/g, ' $1').trim()}</span>
-                      <span>{progress}%</span>
-                    </div>
-                    <div className="w-full bg-blue-200 rounded-full h-2">
-                      <div 
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         )}
            

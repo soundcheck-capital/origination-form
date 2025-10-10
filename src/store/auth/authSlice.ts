@@ -18,7 +18,6 @@ const authSlice = createSlice({
         state.error = null;
       });
       builder.addCase(loginUser.fulfilled, (state, action) => {
-        console.log('Thunk réussi');
   
         state.loading = false;
         state.isAuthenticated = true;
@@ -29,7 +28,6 @@ const authSlice = createSlice({
           firstname: action.payload.first_name,
           lastname: action.payload.last_name
         }
-        console.log('state.user', state.user);
       });
       builder.addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
