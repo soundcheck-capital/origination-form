@@ -205,4 +205,66 @@ test.describe('Step 5: Business & Ownership', () => {
     const legalNameInput = page.locator('input[name="legalEntityName"]');
     await expect(legalNameInput).toBeVisible();
   });
+
+  test('Company address validation shows error when empty', async ({ page }) => {
+    // Remplir tous les autres champs requis pour éviter d'autres erreurs de validation
+    await page.fill('input[name="legalEntityName"]', 'Test Company LLC');
+    await page.fill('input[name="dba"]', 'Test DBA');
+    await page.selectOption('select[name="businessType"]', 'Corporation');
+    await page.selectOption('select[name="stateOfIncorporation"]', 'CA');
+    await page.fill('input[name="ein"]', '12-3456789');
+    
+    // Remplir les champs du propriétaire
+    await page.fill('input[name="owner0Name"]', 'John Doe');
+    await page.fill('input[name="owner0Percentage"]', '100');
+    await page.fill('input[name="owner0Address"]', '123 Main St, Los Angeles, CA, 90210, United States');
+    await page.fill('input[name="owner0BirthDate"]', '1985-06-15');
+    
+    // Laisser le champ d'adresse de l'entreprise vide
+    const companyAddressInput = page.locator('input[name="companyAddressDisplay"]');
+    await companyAddressInput.clear();
+    
+    // Cliquer sur Next pour déclencher la validation
+    await page.click('button:has-text("Next")');
+    
+    // Vérifier que le message d'erreur s'affiche
+    await expect(page.locator('text=Company address is required')).toBeVisible();
+    
+    // Vérifier que l'utilisateur reste sur la même étape
+    await expect(page.locator('h1:has-text("Business & Ownership")')).toBeVisible();
+  });
+
+  test('Auto-scroll to top when validation errors occur', async ({ page }) => {
+    // Vider tous les champs pour forcer des erreurs de validation
+    await page.fill('input[name="legalEntityName"]', '');
+    await page.fill('input[name="dba"]', '');
+    await page.fill('input[name="ein"]', '');
+    await page.fill('input[name="owner0Name"]', '');
+    await page.fill('input[name="owner0Percentage"]', '');
+    await page.fill('input[name="owner0Address"]', '');
+    await page.fill('input[name="owner0BirthDate"]', '');
+    
+    // Scroll vers le bas de la page pour tester le scroll automatique vers le haut
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(500);
+    
+    // Vérifier qu'on est bien en bas de la page
+    const scrollPositionBefore = await page.evaluate(() => window.scrollY);
+    console.log('Scroll position before:', scrollPositionBefore);
+    expect(scrollPositionBefore).toBeGreaterThan(100);
+    
+    // Cliquer sur Next pour déclencher la validation
+    await page.click('button:has-text("Next")');
+    
+    // Attendre que la validation se déclenche et que l'auto-scroll s'active
+    await page.waitForTimeout(1500);
+    
+    // Vérifier que la page a scrollé vers le haut
+    const scrollPositionAfter = await page.evaluate(() => window.scrollY);
+    console.log('Scroll position after:', scrollPositionAfter);
+    expect(scrollPositionAfter).toBeLessThan(100);
+    
+    // Vérifier que l'utilisateur reste sur la même étape
+    await expect(page.locator('h1:has-text("Business & Ownership")')).toBeVisible();
+  });
 });

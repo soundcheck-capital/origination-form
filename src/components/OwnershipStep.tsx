@@ -63,11 +63,11 @@ const OwnershipStep: React.FC = () => {
         }
       } else if (name === 'companyAddressDisplay') {
         if (!value.trim()) {
-          setFieldError('companyAddress', 'Company address is required');
+          setFieldError('companyAddressDisplay', 'Company address is required');
         } else if (value.length < 5) {
-          setFieldError('companyAddress', 'Company address is too short');
+          setFieldError('companyAddressDisplay', 'Company address is too short');
         } else {
-          setFieldError('companyAddress', null);
+          setFieldError('companyAddressDisplay', null);
         }
       } else {
         setFieldError(name, null);
@@ -84,11 +84,11 @@ const OwnershipStep: React.FC = () => {
 
     // Real-time validation for company address
     if (!address.trim()) {
-      setFieldError('companyAddress', 'Company address is required');
+      setFieldError('companyAddressDisplay', 'Company address is required');
     } else if (address.length < 5) {
-      setFieldError('companyAddress', 'Company address is too short');
+      setFieldError('companyAddressDisplay', 'Company address is too short');
     } else {
-      setFieldError('companyAddress', null);
+      setFieldError('companyAddressDisplay', null);
     }
   };
 
