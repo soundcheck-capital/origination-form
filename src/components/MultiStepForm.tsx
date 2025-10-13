@@ -36,7 +36,7 @@ const MultiStepFormContent: React.FC = () => {
   // Vérifier l'environnement (development, staging, production)
   const currentEnvironment = process.env.REACT_APP_ENVIRONMENT || 'development';
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
-  const { currentStepErrors, setCurrentStepErrors } = useValidation();
+  const { currentStepErrors, setCurrentStepErrors, focusFirstErrorField } = useValidation();
   const [isSavingStep, setIsSavingStep] = useState(false);
   const isSubmitted = useSelector((state: RootState) => state.form.isSubmitted);
   // Redirection après soumission locale réussie
@@ -160,6 +160,12 @@ const MultiStepFormContent: React.FC = () => {
       const currentErrors = currentStepErrors || {};
       const merged = { ...currentErrors, ...validation.errors };
       setCurrentStepErrors(merged);
+      
+      // Scroll vers le haut pour que l'utilisateur voie les erreurs
+      setTimeout(() => {
+        focusFirstErrorField();
+      }, 100);
+      
       return;
     }
 

@@ -166,6 +166,11 @@ const FinancesStep: React.FC = () => {
   const removeDebt = (index: number) => {
     const newDebts = financesInfo.debts.filter((_, i) => i !== index);
     dispatch(updateFinancesInfo({ debts: newDebts }));
+    
+    // Si on efface la dernière dette, remettre le switch à "No"
+    if (newDebts.length === 0) {
+      dispatch(updateFinancesInfo({ hasBusinessDebt: false }));
+    }
   };
 
   const renderQuestion = (question: Question, index: number) => {
@@ -254,19 +259,17 @@ const FinancesStep: React.FC = () => {
                     />
 
 
-                    {financesInfo.debts.length > 1 && (
-                      <button
-                        className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
-                        onClick={() => removeDebt(debtIndex)}
-                        title="Remove debt"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M3 6h18"></path>
-                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                        </svg>
-                      </button>
-                    )}
+                    <button
+                      className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
+                      onClick={() => removeDebt(debtIndex)}
+                      title="Remove debt"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                    </button>
                   </div>
                   {/* {financesInfo.debts.length > 1 && (
                     <div className="border-b border-rose-300 w-[50%] mx-auto my-4 mt-8"></div>
@@ -297,7 +300,6 @@ const FinancesStep: React.FC = () => {
 
         {question.name === 'filedLastYearTaxes' && financesInfo[question.name] && (
           <div className="conditional-content animate-fadeIn">
-
             <FileUploadField
               field="lastYearTaxes"
               title="Last year tax file"

@@ -7,6 +7,7 @@ interface ValidationContextType {
   getFieldError: (fieldName: string) => string | null;
   setFieldError: (fieldName: string, error: string | null) => void;
   clearFieldError: (fieldName: string) => void;
+  focusFirstErrorField: () => void;
 }
 
 const ValidationContext = createContext<ValidationContextType | undefined>(undefined);
@@ -55,6 +56,16 @@ export const ValidationProvider: React.FC<ValidationProviderProps> = ({ children
     setFieldError(fieldName, null);
   };
 
+  const focusFirstErrorField = () => {
+    // Scroll vers le haut de la page pour que l'utilisateur voie les erreurs
+    setTimeout(() => {
+      window.scrollTo({ 
+        top: 0, 
+        behavior: 'auto' 
+      });
+    }, 100);
+  };
+
   const value = {
     currentStepErrors,
     setCurrentStepErrors,
@@ -62,6 +73,7 @@ export const ValidationProvider: React.FC<ValidationProviderProps> = ({ children
     getFieldError,
     setFieldError,
     clearFieldError,
+    focusFirstErrorField,
   };
 
   return (
