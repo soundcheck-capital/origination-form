@@ -352,4 +352,125 @@ test.describe('Step 6: Finances', () => {
     // Vérifier qu'on reste sur la même étape
     await expect(page.locator('h1:has-text("Finances")')).toBeVisible();
   });
+
+  test('Debt removal functionality works correctly', async ({ page }) => {
+    // Naviguer vers l'étape 6 (Finances)
+    await page.goto('/form/1');
+    await page.waitForTimeout(1000);
+    
+    // Remplir les étapes précédentes rapidement pour arriver à l'étape 6
+    await page.fill('input[name="firstname"]', 'Test');
+    await page.fill('input[name="lastname"]', 'User');
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.fill('input[name="emailConfirm"]', 'test@example.com');
+    await page.fill('input[name="phone"]', '12345678901234');
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    
+    // Continuer avec les autres étapes...
+    await page.fill('input[name="legalEntityName"]', 'Test Company');
+    await page.fill('input[name="dba"]', 'Test DBA');
+    await page.selectOption('select[name="businessType"]', 'Corporation');
+    await page.selectOption('select[name="stateOfIncorporation"]', 'CA');
+    await page.fill('input[name="companyAddressDisplay"]', '123 Main St, Los Angeles, CA, 90210, United States');
+    await page.fill('input[name="ein"]', '12-3456789');
+    await page.fill('input[name="owner0Name"]', 'John Doe');
+    await page.fill('input[name="owner0Percentage"]', '100');
+    await page.fill('input[name="owner0Address"]', '123 Main St, Los Angeles, CA, 90210, United States');
+    await page.fill('input[name="owner0BirthDate"]', '1985-06-15');
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    
+    // Continuer vers l'étape 6...
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    
+    // Maintenant on devrait être à l'étape 6
+    await expect(page.locator('h1:has-text("Finances")')).toBeVisible();
+    
+    // Trouver la question sur les dettes et activer le switch
+    const debtSwitch = page.locator('input[name="hasBusinessDebt"]');
+    await debtSwitch.check();
+    await page.waitForTimeout(500);
+    
+    // Vérifier qu'une ligne de dette apparaît
+    await expect(page.locator('select[name="debtType"]')).toBeVisible();
+    await expect(page.locator('input[name="debtBalance"]')).toBeVisible();
+    
+    // Vérifier que la poubelle est visible même sur la première ligne
+    const trashButton = page.locator('button[title="Remove debt"]');
+    await expect(trashButton).toBeVisible();
+    
+    // Cliquer sur la poubelle pour supprimer la dette
+    await trashButton.click();
+    await page.waitForTimeout(500);
+    
+    // Vérifier que le switch est revenu à "No" automatiquement
+    await expect(debtSwitch).not.toBeChecked();
+    
+    // Vérifier que la ligne de dette a disparu
+    await expect(page.locator('select[name="debtType"]')).not.toBeVisible();
+  });
+
+  test('Tax file validation works correctly', async ({ page }) => {
+    // Naviguer vers l'étape 6 (Finances)
+    await page.goto('/form/1');
+    await page.waitForTimeout(1000);
+    
+    // Remplir les étapes précédentes rapidement pour arriver à l'étape 6
+    await page.fill('input[name="firstname"]', 'Test');
+    await page.fill('input[name="lastname"]', 'User');
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.fill('input[name="emailConfirm"]', 'test@example.com');
+    await page.fill('input[name="phone"]', '12345678901234');
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    
+    // Continuer avec les autres étapes...
+    await page.fill('input[name="legalEntityName"]', 'Test Company');
+    await page.fill('input[name="dba"]', 'Test DBA');
+    await page.selectOption('select[name="businessType"]', 'Corporation');
+    await page.selectOption('select[name="stateOfIncorporation"]', 'CA');
+    await page.fill('input[name="companyAddressDisplay"]', '123 Main St, Los Angeles, CA, 90210, United States');
+    await page.fill('input[name="ein"]', '12-3456789');
+    await page.fill('input[name="owner0Name"]', 'John Doe');
+    await page.fill('input[name="owner0Percentage"]', '100');
+    await page.fill('input[name="owner0Address"]', '123 Main St, Los Angeles, CA, 90210, United States');
+    await page.fill('input[name="owner0BirthDate"]', '1985-06-15');
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    
+    // Continuer vers l'étape 6...
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    
+    // Maintenant on devrait être à l'étape 6
+    await expect(page.locator('h1:has-text("Finances")')).toBeVisible();
+    
+    // Trouver la question sur les taxes et activer le switch
+    const taxSwitch = page.locator('input[name="filedLastYearTaxes"]');
+    await taxSwitch.check();
+    await page.waitForTimeout(500);
+    
+    // Vérifier que le champ de téléchargement de fichier apparaît
+    await expect(page.locator('input[type="file"]')).toBeVisible();
+    
+    // Essayer de passer à l'étape suivante sans télécharger de fichier
+    await page.click('button:has-text("Next")');
+    await page.waitForTimeout(500);
+    
+    // Vérifier que l'erreur de validation s'affiche
+    await expect(page.locator('text=Tax file is required when you have filed your business taxes')).toBeVisible();
+    
+    // Vérifier qu'on reste sur la même étape
+    await expect(page.locator('h1:has-text("Finances")')).toBeVisible();
+  });
 });

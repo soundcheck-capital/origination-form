@@ -1,0 +1,113 @@
+# Page snapshot
+
+```yaml
+- main [ref=e4]:
+  - paragraph [ref=e6]: BETA VERSION v1.0.5
+  - img "Logo" [ref=e8]
+  - generic [ref=e9]:
+    - generic [ref=e12]:
+      - heading "Tell us about your business" [level=1] [ref=e13]
+      - generic [ref=e14]:
+        - paragraph [ref=e15]: Ticketing Information
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - text: Who do you receive the payout/settlement from?
+            - generic [ref=e18]: "*"
+          - combobox [ref=e19]:
+            - option [selected]
+            - option "From the Ticketing Co (e.g. Ticketmaster)"
+            - option "From the Payment Processor (e.g. Stripe)"
+            - option "From the Venue (e.g. MSG)"
+            - option "It varies"
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - text: Ticketing Partner
+            - generic [ref=e22]: "*"
+          - combobox [ref=e23]:
+            - option
+            - option "AXS"
+            - option "Etix"
+            - option "Eventbrite"
+            - option "EventLive"
+            - option "Fever"
+            - option "Frontgate"
+            - option "Leap Event Technology"
+            - option "PreKindle"
+            - option "See Tickets"
+            - option "Shotgun"
+            - option "Showpass"
+            - option "SquadUp"
+            - option "TicketFairy"
+            - option "Ticketmaster" [selected]
+            - option "Ticketon"
+            - option "TicketTailor"
+            - option "Ticketspice"
+            - option "Ticketweb"
+            - option "Tixr"
+            - option "Venue Pilot"
+            - option "Various"
+            - option "Other"
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - text: What is the payout/settlement policy?
+            - generic [ref=e26]: "*"
+          - combobox [ref=e27]:
+            - option
+            - option "Daily"
+            - option "Weekly" [selected]
+            - option "Bi-monthly"
+            - option "Monthly"
+            - option "Post event"
+            - option "It varies"
+        - paragraph [ref=e28]: Ticketing Volume
+        - paragraph [ref=e29]: Last 12 Months
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - text: Number of Events
+            - generic [ref=e32]: "*"
+          - textbox "Please enter your information here" [ref=e33]: "0"
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - text: Number of Tickets sold online
+            - generic [ref=e36]: "*"
+          - textbox "Please enter your information here" [ref=e37]: "0"
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - text: Online Gross Tickets Sales
+            - generic [ref=e40]: "*"
+          - textbox "Please enter your information here" [ref=e41]: $0
+        - paragraph [ref=e42]: Next 12 Months
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - text: Number of Events
+            - generic [ref=e45]: "*"
+          - textbox "Please enter your information here" [ref=e46]: "0"
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - text: Number of Tickets sold online
+            - generic [ref=e49]: "*"
+          - textbox "Please enter your information here" [ref=e50]: "0"
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - text: Online Gross Tickets Sales
+            - generic [ref=e53]: "*"
+          - textbox "Please enter your information here" [ref=e54]: $0
+    - paragraph [ref=e55]:
+      - generic [ref=e56]: "*"
+      - text: Required fields
+    - generic [ref=e57]:
+      - button "Previous" [ref=e58] [cursor=pointer]
+      - button "Next" [ref=e59] [cursor=pointer]
+    - generic [ref=e60]:
+      - generic [ref=e61]: 🛠️ Development Tools
+      - generic [ref=e62]:
+        - checkbox "Disable step validation" [ref=e63]
+        - text: Disable step validation
+      - generic [ref=e64]:
+        - checkbox "Allow form access after submission" [ref=e65]
+        - text: Allow form access after submission
+    - generic [ref=e66]:
+      - generic [ref=e67]: 🌍 development
+      - generic [ref=e68]: •
+      - generic [ref=e69]: ⏳ Not Submitted
+```

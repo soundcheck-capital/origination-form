@@ -1,0 +1,87 @@
+# Page snapshot
+
+```yaml
+- main [ref=e4]:
+  - paragraph [ref=e6]: BETA VERSION v1.0.5
+  - img "Logo" [ref=e8]
+  - generic [ref=e9]:
+    - generic [ref=e12]:
+      - heading "Tell us about your business" [level=1] [ref=e13]
+      - generic [ref=e14]:
+        - paragraph [ref=e15]: Company Information
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - text: Company Name
+            - generic [ref=e18]: "*"
+          - textbox "Please enter your information here" [ref=e19]
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - text: Your Role
+            - generic [ref=e22]: "*"
+          - textbox "Please enter your information here" [ref=e23]
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - text: Company Type
+            - generic [ref=e26]: "*"
+          - combobox [ref=e27]:
+            - option [selected]
+            - option "Promoter"
+            - option "Venue"
+            - option "Festival"
+            - option "Performing Arts Center"
+            - option "Theatre"
+            - option "Movie Theatre"
+            - option "Sports Team"
+            - option "Museum"
+            - option "Attraction"
+            - option "Other"
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - text: Years in Business
+            - generic [ref=e30]: "*"
+          - combobox [ref=e31]:
+            - option [selected]
+            - option "Less than 1 year"
+            - option "1-2 years"
+            - option "2-5 years"
+            - option "5-10 years"
+            - option "10+ years"
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - text: Number of Employees
+            - generic [ref=e34]: "*"
+          - spinbutton "Please enter your information here" [ref=e35]: "0"
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - text: Website - Socials
+            - generic [ref=e38]: "*"
+          - textbox "Please enter your information here" [ref=e39]
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - text: Are you a member of?
+            - generic [ref=e42]: "*"
+          - combobox [ref=e43]:
+            - option [selected]
+            - option "NIVA (National Independent Venue Association)"
+            - option "Promotores Unidos"
+            - option "NATO (National Association of Theatre Owners)"
+            - option "Other"
+    - paragraph [ref=e44]:
+      - generic [ref=e45]: "*"
+      - text: Required fields
+    - generic [ref=e46]:
+      - button "Previous" [ref=e47] [cursor=pointer]
+      - button "Next" [ref=e48] [cursor=pointer]
+    - generic [ref=e49]:
+      - generic [ref=e50]: 🛠️ Development Tools
+      - generic [ref=e51]:
+        - checkbox "Disable step validation" [ref=e52]
+        - text: Disable step validation
+      - generic [ref=e53]:
+        - checkbox "Allow form access after submission" [ref=e54]
+        - text: Allow form access after submission
+    - generic [ref=e55]:
+      - generic [ref=e56]: 🌍 development
+      - generic [ref=e57]: •
+      - generic [ref=e58]: ⏳ Not Submitted
+```
