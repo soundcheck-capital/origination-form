@@ -7,7 +7,15 @@ interface FormSubmissionGuardProps {
 }
 
 const FormSubmissionGuard: React.FC<FormSubmissionGuardProps> = ({ children }) => {
+  // IMPORTANT: Appeler tous les hooks en premier (règle des hooks React)
   const { isLoading, isSubmitted } = useSubmissionStatus();
+  
+  // Désactiver complètement le guard pendant les tests
+  const isTestEnvironment = process.env.REACT_APP_DISABLE_FORM_GUARD === 'true';
+  
+  if (isTestEnvironment) {
+    return <>{children}</>;
+  }
   
   // Vérifier l'environnement
   const isDevelopment = process.env.NODE_ENV === 'development';
@@ -28,7 +36,7 @@ const FormSubmissionGuard: React.FC<FormSubmissionGuardProps> = ({ children }) =
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Vérification du statut...</p>
+          <p className="mt-2 text-gray-600">Checking status...</p>
         </div>
       </div>
     );

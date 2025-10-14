@@ -97,7 +97,16 @@ const FinancesStep: React.FC = () => {
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
-    dispatch(updateFinancesInfo({ [name]: e.target.checked }));
+    
+    // Special handling for singleEntity - invert the logic for correct visual representation
+    if (name === 'singleEntity') {
+      // When switch is checked (right/Multi-entity), singleEntity should be false
+      // When switch is unchecked (left/Single entity), singleEntity should be true
+      dispatch(updateFinancesInfo({ [name]: !e.target.checked }));
+    } else {
+      dispatch(updateFinancesInfo({ [name]: e.target.checked }));
+    }
+    
     // Automatically add a debt row when answering Yes
     if (name === 'hasBusinessDebt' && e.target.checked && financesInfo.debts.length === 0) {
       dispatch(updateFinancesInfo({
@@ -157,6 +166,11 @@ const FinancesStep: React.FC = () => {
   const removeDebt = (index: number) => {
     const newDebts = financesInfo.debts.filter((_, i) => i !== index);
     dispatch(updateFinancesInfo({ debts: newDebts }));
+    
+    // Si on efface la dernière dette, remettre le switch à "No"
+    if (newDebts.length === 0) {
+      dispatch(updateFinancesInfo({ hasBusinessDebt: false }));
+    }
   };
 
   const renderQuestion = (question: Question, index: number) => {
@@ -245,19 +259,17 @@ const FinancesStep: React.FC = () => {
                     />
 
 
-                    {financesInfo.debts.length > 1 && (
-                      <button
-                        className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
-                        onClick={() => removeDebt(debtIndex)}
-                        title="Remove debt"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M3 6h18"></path>
-                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                        </svg>
-                      </button>
-                    )}
+                    <button
+                      className="btn-icon remove-debt text-red-300 hover:text-red-500 hover:cursor-pointer right-0"
+                      onClick={() => removeDebt(debtIndex)}
+                      title="Remove debt"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                    </button>
                   </div>
                   {/* {financesInfo.debts.length > 1 && (
                     <div className="border-b border-rose-300 w-[50%] mx-auto my-4 mt-8"></div>
@@ -288,7 +300,6 @@ const FinancesStep: React.FC = () => {
 
         {question.name === 'filedLastYearTaxes' && financesInfo[question.name] && (
           <div className="conditional-content animate-fadeIn">
-
             <FileUploadField
               field="lastYearTaxes"
               title="Last year tax file"
@@ -332,10 +343,10 @@ const FinancesStep: React.FC = () => {
           <div className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-4">
             <label
               className={`text-sm text-right whitespace-nowrap transition-colors
-                ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
+                ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
               htmlFor="singleEntity"
             >
-              Multi-entity
+              Single entity
             </label>
 
             <input
@@ -352,16 +363,16 @@ const FinancesStep: React.FC = () => {
               role="switch"
               name="singleEntity"
               id="singleEntity"
-              checked={financesInfo.singleEntity}
+              checked={!financesInfo.singleEntity}
               onChange={handleRadioChange}
             />
 
             <label
               className={`text-sm text-left whitespace-nowrap transition-colors
-                ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
+                ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
               htmlFor="singleEntity"
             >
-              Single entity
+              Multi-entity
             </label>
           </div>
 

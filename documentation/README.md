@@ -25,6 +25,7 @@ Cette documentation couvre tous les aspects du projet : développement, tests, d
 ### **🛠️ Technique & Architecture**
 - [**Intégration Webhooks**](./09-webhooks.md) - Configuration Make.com
 - [**Migration & Historique**](./10-migration.md) - Historique des changements
+- [**Upload Immédiat de Fichiers**](./12-immediate-file-upload.md) - Architecture d'upload en temps réel
 
 ## 🎮 **Commandes Rapides**
 

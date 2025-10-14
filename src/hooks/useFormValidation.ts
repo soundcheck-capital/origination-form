@@ -75,7 +75,7 @@ export const useFormValidation = () => {
     if (!companyInfo.name.trim()) errors.name = 'Legal entity name is required';
     if (!companyInfo.ein.trim()) errors.ein = 'EIN is required';
     if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
-    if (!companyInfo.companyAddress.trim()) errors.companyAddress = 'Company address is required';
+    if (!companyInfo.companyAddressDisplay.trim()) errors.companyAddressDisplay = 'Company address is required';
     if (!companyInfo.stateOfIncorporation.trim()) errors.stateOfIncorporation = 'State of incorporation is required';
     if (!companyInfo.businessType) errors.businessType = 'Business type is required';
     if (ownershipInfo.owners.length === 0) {
@@ -101,9 +101,10 @@ export const useFormValidation = () => {
     const { diligenceInfo } = formData;
     const errors: { [key: string]: string } = {};
 
-    // Validate based on singleEntity condition
-    if (!financesInfo.singleEntity && diligenceInfo.legalEntityChart.files.length === 0) {
-      errors.legalEntityChart = 'Legal entity chart is required when not a single entity';
+    // If user answered Yes to "Have you filed your business taxes for last year?"
+    // then the tax file is required
+    if (financesInfo.filedLastYearTaxes && diligenceInfo.lastYearTaxes.files.length === 0) {
+      errors.lastYearTaxes = 'Tax file is required when you have filed your business taxes';
     }
 
     return { isValid: Object.keys(errors).length === 0, errors };

@@ -1,0 +1,120 @@
+# Page snapshot
+
+```yaml
+- main [ref=e4]:
+  - paragraph [ref=e6]: BETA VERSION v1.0.5
+  - img "Logo" [ref=e8]
+  - generic [ref=e9]:
+    - generic [ref=e12]:
+      - heading "Tell us about your business" [level=1] [ref=e13]
+      - generic [ref=e14]:
+        - paragraph [ref=e15]: Ticketing Information
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - text: Who do you receive the payout/settlement from?
+            - generic [ref=e18]: "*"
+          - combobox [ref=e19]:
+            - option
+            - option "From the Ticketing Co (e.g. Ticketmaster)"
+            - option "From the Payment Processor (e.g. Stripe)"
+            - option "From the Venue (e.g. MSG)" [selected]
+            - option "It varies"
+          - paragraph [ref=e20]: We receive the funds with the post-show settlement
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - text: Ticketing Partner
+            - generic [ref=e23]: "*"
+          - combobox [ref=e24]:
+            - option
+            - option "AXS"
+            - option "Etix"
+            - option "Eventbrite" [selected]
+            - option "EventLive"
+            - option "Fever"
+            - option "Frontgate"
+            - option "Leap Event Technology"
+            - option "PreKindle"
+            - option "See Tickets"
+            - option "Shotgun"
+            - option "Showpass"
+            - option "SquadUp"
+            - option "TicketFairy"
+            - option "Ticketmaster"
+            - option "Ticketon"
+            - option "TicketTailor"
+            - option "Ticketspice"
+            - option "Ticketweb"
+            - option "Tixr"
+            - option "Venue Pilot"
+            - option "Various"
+            - option "Other"
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - text: What is the payout/settlement policy?
+            - generic [ref=e27]: "*"
+          - combobox [ref=e28]:
+            - option
+            - option "Daily" [selected]
+            - option "Weekly"
+            - option "Bi-monthly"
+            - option "Monthly"
+            - option "Post event"
+            - option "It varies"
+        - paragraph [ref=e29]: Ticketing Volume
+        - paragraph [ref=e30]: Last 12 Months
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - text: Number of Events
+            - generic [ref=e33]: "*"
+          - textbox "Please enter your information here" [ref=e34]: "0"
+          - paragraph [ref=e35]: Last year events must be greater than 0
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - text: Number of Tickets sold online
+            - generic [ref=e38]: "*"
+          - textbox "Please enter your information here" [ref=e39]: "0"
+          - paragraph [ref=e40]: Last year tickets must be greater than 0
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - text: Online Gross Tickets Sales
+            - generic [ref=e43]: "*"
+          - textbox "Please enter your information here" [ref=e44]: $0
+          - paragraph [ref=e45]: Last year sales must be greater than 0
+        - paragraph [ref=e46]: Next 12 Months
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - text: Number of Events
+            - generic [ref=e49]: "*"
+          - textbox "Please enter your information here" [ref=e50]: "0"
+          - paragraph [ref=e51]: Next year events must be greater than 0
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - text: Number of Tickets sold online
+            - generic [ref=e54]: "*"
+          - textbox "Please enter your information here" [ref=e55]: "0"
+          - paragraph [ref=e56]: Next year tickets must be greater than 0
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - text: Online Gross Tickets Sales
+            - generic [ref=e59]: "*"
+          - textbox "Please enter your information here" [ref=e60]: $0
+          - paragraph [ref=e61]: Next year sales must be greater than 0
+    - paragraph [ref=e62]:
+      - generic [ref=e63]: "*"
+      - text: Required fields
+    - generic [ref=e64]:
+      - button "Previous" [ref=e65] [cursor=pointer]
+      - button "Next" [active] [ref=e66] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]: 🛠️ Development Tools
+      - generic [ref=e69]:
+        - checkbox "Disable step validation" [ref=e70]
+        - text: Disable step validation
+      - generic [ref=e71]:
+        - checkbox "Allow form access after submission" [ref=e72]
+        - text: Allow form access after submission
+    - generic [ref=e73]:
+      - generic [ref=e74]: 🌍 development
+      - generic [ref=e75]: •
+      - generic [ref=e76]: ⏳ Not Submitted
+```

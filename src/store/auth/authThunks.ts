@@ -18,7 +18,6 @@ export const loginUser = createAsyncThunk(
         
         // Store token in localStorage
         localStorage.setItem('token', response.data.token);
-        console.log('response', response.data);
         return response.data;
       } catch (error: any) {
         return rejectWithValue(error.response?.data?.message || 'Login failed');
@@ -63,7 +62,6 @@ export const loginUser = createAsyncThunk(
     async (_, { getState, rejectWithValue }) => {
       try {
         const { auth } = getState() as { auth: AuthState };
-        console.log('auth', auth);
         const config = {
           headers: {
             Authorization: `Bearer ${auth.token}`
@@ -71,7 +69,6 @@ export const loginUser = createAsyncThunk(
         };
         
         const response = await axios.get(`${API_URL}/users/${auth.user?.id}`, config);
-        console.log('response', response.data);
         return response.data;
       } catch (error: any) {
         return rejectWithValue(error.response?.data?.message || 'Failed to fetch user profile');
@@ -142,7 +139,6 @@ export const loginUser = createAsyncThunk(
         
         const response = await axios.get(`${API_URL}/applications/all`, config);
         
-        console.log('response', response.data);
         // Ensure we always return an array
         return Array.isArray(response.data) ? response.data : [];
       } catch (error: any) {

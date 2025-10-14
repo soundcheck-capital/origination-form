@@ -4,17 +4,25 @@ import { RootState } from '../store';
 import { FileInfo, DiligenceFileData } from '../store/form/formTypes';
 import { updateDiligenceInfo } from '../store/form/formSlice';
 
+// Status d'upload pour chaque fichier
+export type UploadStatus = 'pending' | 'uploading' | 'success' | 'error';
+
+export interface FileUploadStatus {
+  status: UploadStatus;
+  error?: string;
+}
+
 interface DiligenceFiles {
-  ticketingCompanyReport: { files: File[]; fileInfos: FileInfo[] };
-  ticketingServiceAgreement: { files: File[]; fileInfos: FileInfo[] };
-  financialStatements: { files: File[]; fileInfos: FileInfo[] };
-  bankStatement: { files: File[]; fileInfos: FileInfo[] };
-  incorporationCertificate: { files: File[]; fileInfos: FileInfo[] };
-  legalEntityChart: { files: File[]; fileInfos: FileInfo[] };
-  governmentId: { files: File[]; fileInfos: FileInfo[] };
-  w9form: { files: File[]; fileInfos: FileInfo[] };
-  lastYearTaxes: { files: File[]; fileInfos: FileInfo[] };
-  other: { files: File[]; fileInfos: FileInfo[] };
+  ticketingCompanyReport: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  ticketingServiceAgreement: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  financialStatements: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  bankStatement: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  incorporationCertificate: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  legalEntityChart: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  governmentId: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  w9form: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  lastYearTaxes: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  other: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
 }
 
 interface DiligenceFilesContextType {
@@ -24,21 +32,22 @@ interface DiligenceFilesContextType {
   clearFiles: (field: keyof DiligenceFiles) => void;
   getAllFiles: () => { [key: string]: File[] };
   getAllFileInfos: () => { [key: string]: FileInfo[] };
+  updateFileUploadStatus: (field: keyof DiligenceFiles, index: number, status: FileUploadStatus) => void;
 }
 
 const DiligenceFilesContext = createContext<DiligenceFilesContextType | undefined>(undefined);
 
 const initialDiligenceFiles: DiligenceFiles = {
-  ticketingCompanyReport: { files: [], fileInfos: [] },
-  ticketingServiceAgreement: { files: [], fileInfos: [] },
-  financialStatements: { files: [], fileInfos: [] },
-  bankStatement: { files: [], fileInfos: [] },
-  incorporationCertificate: { files: [], fileInfos: [] },
-  legalEntityChart: { files: [], fileInfos: [] },
-  governmentId: { files: [], fileInfos: [] },
-  w9form: { files: [], fileInfos: [] },
-  lastYearTaxes: { files: [], fileInfos: [] },
-  other: { files: [], fileInfos: [] },
+  ticketingCompanyReport: { files: [], fileInfos: [], uploadStatuses: [] },
+  ticketingServiceAgreement: { files: [], fileInfos: [], uploadStatuses: [] },
+  financialStatements: { files: [], fileInfos: [], uploadStatuses: [] },
+  bankStatement: { files: [], fileInfos: [], uploadStatuses: [] },
+  incorporationCertificate: { files: [], fileInfos: [], uploadStatuses: [] },
+  legalEntityChart: { files: [], fileInfos: [], uploadStatuses: [] },
+  governmentId: { files: [], fileInfos: [], uploadStatuses: [] },
+  w9form: { files: [], fileInfos: [], uploadStatuses: [] },
+  lastYearTaxes: { files: [], fileInfos: [], uploadStatuses: [] },
+  other: { files: [], fileInfos: [], uploadStatuses: [] },
 };
 
 interface DiligenceFilesProviderProps {
@@ -69,43 +78,53 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
       const syncedFiles: DiligenceFiles = {
         ticketingCompanyReport: { 
           files: reduxDiligenceInfo.ticketingCompanyReport?.files || [], 
-          fileInfos: reduxDiligenceInfo.ticketingCompanyReport?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.ticketingCompanyReport?.fileInfos || [],
+          uploadStatuses: [] 
         },
         ticketingServiceAgreement: { 
           files: reduxDiligenceInfo.ticketingServiceAgreement?.files || [], 
-          fileInfos: reduxDiligenceInfo.ticketingServiceAgreement?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.ticketingServiceAgreement?.fileInfos || [],
+          uploadStatuses: [] 
         },
         financialStatements: { 
           files: reduxDiligenceInfo.financialStatements?.files || [], 
-          fileInfos: reduxDiligenceInfo.financialStatements?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.financialStatements?.fileInfos || [],
+          uploadStatuses: [] 
         },
         bankStatement: { 
           files: reduxDiligenceInfo.bankStatement?.files || [], 
-          fileInfos: reduxDiligenceInfo.bankStatement?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.bankStatement?.fileInfos || [],
+          uploadStatuses: [] 
         },
         incorporationCertificate: { 
           files: reduxDiligenceInfo.incorporationCertificate?.files || [], 
-          fileInfos: reduxDiligenceInfo.incorporationCertificate?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.incorporationCertificate?.fileInfos || [],
+          uploadStatuses: [] 
         },
         legalEntityChart: { 
           files: reduxDiligenceInfo.legalEntityChart?.files || [], 
-          fileInfos: reduxDiligenceInfo.legalEntityChart?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.legalEntityChart?.fileInfos || [],
+          uploadStatuses: [] 
         },
         governmentId: { 
           files: reduxDiligenceInfo.governmentId?.files || [], 
-          fileInfos: reduxDiligenceInfo.governmentId?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.governmentId?.fileInfos || [],
+          uploadStatuses: [] 
         },
         w9form: { 
           files: reduxDiligenceInfo.w9form?.files || [], 
-          fileInfos: reduxDiligenceInfo.w9form?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.w9form?.fileInfos || [],
+          uploadStatuses: [] 
         },
         other: { 
           files: reduxDiligenceInfo.other?.files || [], 
-          fileInfos: reduxDiligenceInfo.other?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.other?.fileInfos || [],
+          uploadStatuses: [] 
         },
         lastYearTaxes: { 
           files: reduxDiligenceInfo.lastYearTaxes?.files || [], 
-          fileInfos: reduxDiligenceInfo.lastYearTaxes?.fileInfos || [] 
+          fileInfos: reduxDiligenceInfo.lastYearTaxes?.fileInfos || [],
+          uploadStatuses: [] 
         },
       };
       
@@ -117,7 +136,7 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
         
         // Si on a des métadonnées mais pas de fichiers, c'est qu'on a refreshé
         if (field.fileInfos.length > 0 && field.files.length === 0) {
-          syncedFiles[fieldKey] = { files: [], fileInfos: [] };
+          syncedFiles[fieldKey] = { files: [], fileInfos: [], uploadStatuses: [] };
           hasClearedFields = true;
         }
         
@@ -133,7 +152,8 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
         if (validFiles.length !== field.files.length) {
           syncedFiles[fieldKey] = { 
             files: validFiles, 
-            fileInfos: field.fileInfos.slice(0, validFiles.length) 
+            fileInfos: field.fileInfos.slice(0, validFiles.length),
+            uploadStatuses: field.uploadStatuses?.slice(0, validFiles.length) || []
           };
           hasClearedFields = true;
         }
@@ -164,12 +184,14 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
     setDiligenceFiles(prev => {
       const currentField = prev[field];
       const newFileInfos = newFiles.map((file, index) => createFileInfo(file, currentField.files.length + index));
+      const newUploadStatuses = newFiles.map(() => ({ status: 'pending' as UploadStatus }));
       
       const updatedFiles = {
         ...prev,
         [field]: {
           files: [...currentField.files, ...newFiles],
           fileInfos: [...currentField.fileInfos, ...newFileInfos],
+          uploadStatuses: [...(currentField.uploadStatuses || []), ...newUploadStatuses],
         },
       };
 
@@ -185,12 +207,14 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
       const currentField = prev[field];
       const newFiles = currentField.files.filter((_, i) => i !== index);
       const newFileInfos = currentField.fileInfos.filter((_, i) => i !== index);
+      const newUploadStatuses = (currentField.uploadStatuses || []).filter((_, i) => i !== index);
       
       const updatedFiles = {
         ...prev,
         [field]: {
           files: newFiles,
           fileInfos: newFileInfos,
+          uploadStatuses: newUploadStatuses,
         },
       };
 
@@ -205,7 +229,7 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
     setDiligenceFiles(prev => {
       const updatedFiles = {
         ...prev,
-        [field]: { files: [], fileInfos: [] },
+        [field]: { files: [], fileInfos: [], uploadStatuses: [] },
       };
 
       // Mettre à jour Redux
@@ -231,6 +255,26 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
     return allFileInfos;
   }, [diligenceFiles]);
 
+  const updateFileUploadStatus = useCallback((field: keyof DiligenceFiles, index: number, status: FileUploadStatus) => {
+    console.log(`🔄 [DiligenceContext] Updating upload status for ${field}[${index}]:`, status);
+    
+    setDiligenceFiles(prev => {
+      const currentField = prev[field];
+      const newUploadStatuses = [...(currentField.uploadStatuses || [])];
+      newUploadStatuses[index] = status;
+      
+      console.log(`📊 [DiligenceContext] New upload statuses for ${field}:`, newUploadStatuses);
+      
+      return {
+        ...prev,
+        [field]: {
+          ...currentField,
+          uploadStatuses: newUploadStatuses,
+        },
+      };
+    });
+  }, []);
+
   const value = {
     diligenceFiles,
     addFiles,
@@ -238,6 +282,7 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
     clearFiles,
     getAllFiles,
     getAllFileInfos,
+    updateFileUploadStatus,
   };
 
   return (

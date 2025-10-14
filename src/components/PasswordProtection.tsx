@@ -16,9 +16,7 @@ const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError('Password cannot be empty or contain only spaces');
   } else if(e.target.value.length < 6){
     setError('Password must be at least 6 characters long');
-  } else if(e.target.value.length > 12){
-    setError('Password must be less than 12 characters long');
-  } else {
+ } else {
     setError('');
   }
 } else {
@@ -75,7 +73,7 @@ setPassword(e.target.value);
           Access Required
         </h2>
         <p className="mt-2 text-center text-sm text-white">
-          Please enter your given password to access the application form
+        Please enter your password to access the application form
         </p>
       </div>
 

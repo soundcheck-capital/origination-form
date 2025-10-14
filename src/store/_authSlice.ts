@@ -50,7 +50,6 @@ export const loginUser = createAsyncThunk(
       
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
-      console.log('response', response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
@@ -95,7 +94,6 @@ export const fetchUserProfile = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const { auth } = getState() as { auth: AuthState };
-      console.log('auth', auth);
       const config = {
         headers: {
           Authorization: `Bearer ${auth.token}`
@@ -103,7 +101,6 @@ export const fetchUserProfile = createAsyncThunk(
       };
       
       const response = await axios.get(`${API_URL}/users/${auth.user?.id}`, config);
-      console.log('response', response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user profile');
@@ -226,7 +223,6 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
-      console.log('Thunk réussi');
 
       state.loading = false;
       state.isAuthenticated = true;
@@ -237,7 +233,6 @@ const authSlice = createSlice({
         firstname: action.payload.first_name,
         lastname: action.payload.last_name
       }
-      console.log('state.user', state.user);
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;

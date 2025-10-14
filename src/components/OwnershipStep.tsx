@@ -63,11 +63,11 @@ const OwnershipStep: React.FC = () => {
         }
       } else if (name === 'companyAddressDisplay') {
         if (!value.trim()) {
-          setFieldError('companyAddress', 'Company address is required');
+          setFieldError('companyAddressDisplay', 'Company address is required');
         } else if (value.length < 5) {
-          setFieldError('companyAddress', 'Company address is too short');
+          setFieldError('companyAddressDisplay', 'Company address is too short');
         } else {
-          setFieldError('companyAddress', null);
+          setFieldError('companyAddressDisplay', null);
         }
       } else {
         setFieldError(name, null);
@@ -84,11 +84,11 @@ const OwnershipStep: React.FC = () => {
 
     // Real-time validation for company address
     if (!address.trim()) {
-      setFieldError('companyAddress', 'Company address is required');
+      setFieldError('companyAddressDisplay', 'Company address is required');
     } else if (address.length < 5) {
-      setFieldError('companyAddress', 'Company address is too short');
+      setFieldError('companyAddressDisplay', 'Company address is too short');
     } else {
-      setFieldError('companyAddress', null);
+      setFieldError('companyAddressDisplay', null);
     }
   };
 
@@ -140,17 +140,21 @@ const OwnershipStep: React.FC = () => {
      // Real-time validation
      const ownerIndex = updatedOwners.findIndex(o => o.id === id);
      if (ownerIndex !== -1) {
-       const fieldName = `owner${ownerIndex}${field.charAt(0).toUpperCase() + field.slice(1)}`;
+       let fieldName = '';
        if (field === 'ownerName') {
+         fieldName = `owner${ownerIndex}Name`;
          const error = validateOwnerName(value as string);
          setFieldError(fieldName, error);
        } else if (field === 'ownershipPercentage') {
+         fieldName = `owner${ownerIndex}Percentage`;
          const error = validateOwnershipPercentage(value as string);
          setFieldError(fieldName, error);
        } else if (field === 'ownerAddress') {
+         fieldName = `owner${ownerIndex}Address`;
          const error = validateOwnerAddress(value as string);
          setFieldError(fieldName, error);
        } else if (field === 'ownerBirthDate') {
+         fieldName = `owner${ownerIndex}BirthDate`;
          const error = validateOwnerBirthDate(value as string);
          setFieldError(fieldName, error);
        }
@@ -158,6 +162,8 @@ const OwnershipStep: React.FC = () => {
      const totalPercentage = updatedOwners.reduce((sum, owner) => sum + parseFloat(owner.ownershipPercentage), 0);
      if(totalPercentage > 100){
       setFieldError('owner1Percentage', 'Total ownership percentage cannot exceed 100%');
+     } else {
+      setFieldError('owner1Percentage', null);
      }
      dispatch(updateOwnershipInfo({ owners: updatedOwners }));
    }, [dispatch, ownershipInfo.owners, setFieldError]);
@@ -211,7 +217,10 @@ const OwnershipStep: React.FC = () => {
    };
 
    const validateOwnerAddress = (address: string): string | null => {
-     if (!address.trim() || address.length < 5) return 'Owner address is required';
+     if (!address.trim()) return 'Owner address is required';
+     if (address.length < 10) return 'Please enter a complete address';
+     // Accept any address with reasonable length (even if not selected from Google)
+     // The visual indicator in AddressAutocomplete will guide users to select from dropdown
      return null;
    };
 
