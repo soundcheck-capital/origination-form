@@ -350,9 +350,9 @@ const MultiStepFormContent: React.FC = () => {
     <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
       
-      <main className="relative w-full h-full flex flex-col bg-white p-6 pt-12">
-        <div className="pointer-events-none absolute top-0 right-0 w-28 h-28 overflow-hidden">
-          <div className="absolute top-[18px] right-[-36px] rotate-45 bg-red-600 text-white text-[0.55rem] font-semibold uppercase tracking-[0.35em] shadow-md flex items-center justify-center px-4 py-[2px] leading-[1.4] text-center">
+      <main className="relative w-full h-full flex flex-col bg-white p-6 pt-16">
+        <div className="pointer-events-none absolute -top-6 -right-12">
+          <div className="rotate-45 bg-red-600 text-white text-[0.6rem] font-semibold uppercase tracking-[0.35em] shadow-lg px-12 py-2">
             BETA
           </div>
         </div>
