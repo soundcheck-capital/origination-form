@@ -352,7 +352,9 @@ const MultiStepFormContent: React.FC = () => {
       
       <main className="relative w-full h-full flex flex-col bg-white p-6 pt-16">
         <div className="pointer-events-none absolute top-4 -right-12">
-          <div className="rotate-45 bg-red-600 text-white text-[0.4rem] font-semibold uppercase tracking-[0.25em] shadow-lg px-10 py-1.5">
+          <div
+            className="relative rotate-45 bg-red-600 text-white text-[0.8rem] font-semibold uppercase tracking-[0.25em] shadow-lg px-14 py-3 flex items-center justify-center after:content-[''] after:absolute after:-bottom-6 after:right-0 after:border-l-[24px] after:border-l-transparent after:border-t-[24px] after:border-t-red-700"
+          >
             BETA
           </div>
         </div>
