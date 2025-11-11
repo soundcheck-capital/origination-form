@@ -6,6 +6,7 @@ import DropdownField from './customComponents/DropdownField';
 import CurrencyField from './customComponents/CurrencyField';
 import { useValidation } from '../contexts/ValidationContext';
 import { timingOfFunding, useOfProceeds } from '../store/form/hubspotLists';
+import { calculateMaxAdvance } from '../utils/calculations';
 
 
 
@@ -26,8 +27,7 @@ const YourFundingStep: React.FC = () => {
   };
   let capitalAmount = 0;
   if(ticketingVolume.lastYearSales > 0 && ticketingVolume.nextYearSales > 0 && ticketingVolume.lastYearTickets > 0 && ticketingVolume.nextYearTickets > 0 && ticketingVolume.lastYearEvents > 0 && ticketingVolume.nextYearEvents > 0) {
-    const maxAmount = ticketingVolume.lastYearSales * 0.15;
-    capitalAmount = maxAmount > 1000000 ? 1000000 : maxAmount;
+    capitalAmount = calculateMaxAdvance(ticketingVolume.lastYearSales, ticketingVolume.nextYearSales);
   }
   return (
     <div className="flex flex-col items-center justify-center w-full mt-16 animate-fade-in-right duration-1000">
