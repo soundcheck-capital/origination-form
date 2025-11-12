@@ -7,7 +7,7 @@
 .PHONY: help install dev build test clean lint format deploy
 
 # Variables
-NODE_VERSION := 18
+NODE_VERSION := 24
 NPM := npm
 PORT := 3001
 

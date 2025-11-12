@@ -75,10 +75,11 @@ test.describe('Step 4: Your Funds', () => {
   });
 
   test('Funding recommendation is displayed', async ({ page }) => {
-    // Avec les données de volume que nous avons saisies (1,250,000 en ventes), 
-    // le calcul devrait afficher: 1,250,000 * 0.15 = 187,500
+    // Avec les données de volume que nous avons saisies:
+    // Last: $1,250,000, Next: $1,500,000
+    // le calcul devrait afficher: MIN(1,250,000, 1,500,000) * 0.10 = $125,000
     await expect(page.locator('text=Based on your ticketing sales volume')).toBeVisible();
-    await expect(page.locator('text=$187,500')).toBeVisible();
+    await expect(page.locator('text=$125,000')).toBeVisible();
     await expect(page.locator('text=*The capital amount stated is non-binding')).toBeVisible();
   });
 
@@ -163,10 +164,61 @@ test.describe('Step 4: Your Funds', () => {
   test('Form accessibility features', async ({ page }) => {
     // Vérifier que les champs ont les bons attributs
     await expect(page.locator('input[name="yourFunds"]')).toHaveAttribute('required');
-    
+
     // Le champ yourFunds devrait être un input de type text (géré par CurrencyField)
     const fundsInput = page.locator('input[name="yourFunds"]');
     await expect(fundsInput).toBeVisible();
+  });
+
+  test('Max advance calculation: Last=$2M, Next=$3M → Max=$200,000', async ({ page }) => {
+    // Retourner à l'étape 3 pour modifier les volumes
+    await formHelper.goToPreviousStep();
+    await expect(page.locator('h1:has-text("Ticketing information")')).toBeVisible();
+
+    // Modifier les volumes de ventes
+    await page.fill('input[name="lastYearSales"]', '2000000');
+    await page.fill('input[name="nextYearSales"]', '3000000');
+
+    await formHelper.waitForValidation();
+    await formHelper.goToNextStep();
+    await expect(page.locator('h1:has-text("Customize your funding")')).toBeVisible();
+
+    // Vérifier le calcul: MIN(2,000,000, 3,000,000) * 0.10 = $200,000
+    await expect(page.locator('text=$200,000')).toBeVisible();
+  });
+
+  test('Max advance calculation: Last=$8M, Next=$6M → Max=$500,000 (capped)', async ({ page }) => {
+    // Retourner à l'étape 3 pour modifier les volumes
+    await formHelper.goToPreviousStep();
+    await expect(page.locator('h1:has-text("Ticketing information")')).toBeVisible();
+
+    // Modifier les volumes de ventes
+    await page.fill('input[name="lastYearSales"]', '8000000');
+    await page.fill('input[name="nextYearSales"]', '6000000');
+
+    await formHelper.waitForValidation();
+    await formHelper.goToNextStep();
+    await expect(page.locator('h1:has-text("Customize your funding")')).toBeVisible();
+
+    // Vérifier le calcul: MIN(8,000,000, 6,000,000) * 0.10 = 600,000, capped at $500,000
+    await expect(page.locator('text=$500,000')).toBeVisible();
+  });
+
+  test('Max advance calculation: Last=$1.5M, Next=$1.8M → Max=$150,000', async ({ page }) => {
+    // Retourner à l'étape 3 pour modifier les volumes
+    await formHelper.goToPreviousStep();
+    await expect(page.locator('h1:has-text("Ticketing information")')).toBeVisible();
+
+    // Modifier les volumes de ventes
+    await page.fill('input[name="lastYearSales"]', '1500000');
+    await page.fill('input[name="nextYearSales"]', '1800000');
+
+    await formHelper.waitForValidation();
+    await formHelper.goToNextStep();
+    await expect(page.locator('h1:has-text("Customize your funding")')).toBeVisible();
+
+    // Vérifier le calcul: MIN(1,500,000, 1,800,000) * 0.10 = $150,000
+    await expect(page.locator('text=$150,000')).toBeVisible();
   });
 
   // Test edge case supprimé pour simplifier - le calcul est complexe et dépend de plusieurs champs
