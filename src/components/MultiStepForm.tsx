@@ -9,18 +9,13 @@ import { ValidationProvider, useValidation } from '../contexts/ValidationContext
 import { useFileUpload } from '../hooks/useFileUpload';
 import PersonalInfoStep from './PersonalInfoStep';
 import CompanyInfoStep from './CompanyInfoStep';
-import TicketingStep from './TicketingStep';
-import OwnershipStep from './OwnershipStep';
-import FinancesStep from './FinancesStep';
+import TicketingFundingStep from './TicketingFundingStep';
+import BusinessFinancialStep from './BusinessFinancialStep';
+import AllUploadsStep from './AllUploadsStep';
 import SummaryStep from './SummaryStep';
 import logo from '../assets/logo_black_bold.svg';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
-import YourFundingStep from './YourFundsStep';
-import LegalInformationStep from './LegalInformationStep';
-import TicketingInformationStep from './TicketingInformationStep';
-import FinancialInformationStep from './FinancialInformationStep';
-import OtherStep from './OtherStep';
 import { useFormValidation } from '../hooks/useFormValidation';
 
 const MultiStepFormContent: React.FC = () => {
@@ -67,7 +62,6 @@ const MultiStepFormContent: React.FC = () => {
           city: formData.formData.companyInfo.companyCity,
           state: formData.formData.companyInfo.companyState,
           zip: formData.formData.companyInfo.companyZipcode,
-          employees: formData.formData.companyInfo.employees,
           dba: formData.formData.companyInfo.dba,
           yearsInBusiness: formData.formData.companyInfo.yearsInBusiness,
           socials: formData.formData.companyInfo.socials,
@@ -240,23 +234,13 @@ const MultiStepFormContent: React.FC = () => {
       case 2:
         return 'Tell us about your business';
       case 3:
-        return 'Tell us about your business';
+        return 'Ticketing & Funding';
       case 4:
-        return 'Customize your funding';
-      case 5:
         return 'Business & Ownership';
+      case 5:
+        return 'Due Diligence';
       case 6:
-        return 'Finances';
-      case 7:
-        return 'Due Diligence';
-      case 8:
-        return 'Due Diligence';
-      case 9:
-        return 'Due Diligence';
-      case 10:
-        return 'Other';
-      case 11:
-        return 'Thank you';
+        return 'Review & Submit';
       default:
         return 'SoundCheck';
     }
@@ -269,23 +253,12 @@ const MultiStepFormContent: React.FC = () => {
       case 2:
         return <CompanyInfoStep />;
       case 3:
-        return <TicketingStep />;
+        return <TicketingFundingStep />;
       case 4:
-        return <YourFundingStep />;
-
+        return <BusinessFinancialStep />;
       case 5:
-        return <OwnershipStep />;
+        return <AllUploadsStep />;
       case 6:
-        return <FinancesStep />;
-      case 7:
-        return <TicketingInformationStep />;
-      case 8:
-        return <FinancialInformationStep />;
-      case 9:
-        return <LegalInformationStep />;
-      case 10:
-        return <OtherStep />;
-      case 11:
         return <SummaryStep renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
       default:
         return null;
@@ -372,7 +345,7 @@ const MultiStepFormContent: React.FC = () => {
               <div className="rounded-xl absolute top-0 left-0 h-1 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
                 className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-1 transition-all duration-300"
-                style={{ width: `${((currentStep) / 11) * 100}%` }}
+                style={{ width: `${((currentStep) / 6) * 100}%` }}
               ></div>
             </div>
           </div>
@@ -383,7 +356,7 @@ const MultiStepFormContent: React.FC = () => {
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>
-          {(currentStep < 11 && currentStep > 0 && currentStep !== 6) && (
+          {(currentStep < 6 && currentStep > 0) && (
              <p className='text-xs text-gray-500 text-center'><span className='text-red-500'>*</span> Required fields</p>
             )}
 
@@ -405,7 +378,7 @@ const MultiStepFormContent: React.FC = () => {
               <ButtonSecondary onClick={handlePreviousStep} disabled={false}>Previous</ButtonSecondary>
             )}
 
-            {(currentStep < 11 && currentStep > 1) && (
+            {(currentStep < 6 && currentStep > 1) && (
               <ButtonPrimary onClick={handleNextStep} disabled={isSavingStep}>
                 {isSavingStep ? (
                   <div className="flex items-center gap-2">
@@ -417,7 +390,7 @@ const MultiStepFormContent: React.FC = () => {
                 )}
               </ButtonPrimary>
             )}
-            {currentStep === 11 && (
+            {currentStep === 6 && (
               <ButtonPrimary onClick={() => {
                 triggerValidationThenSubmit();
               }} disabled={false}>Submit</ButtonPrimary>

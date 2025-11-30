@@ -12,7 +12,6 @@ export const useFormValidation = () => {
     const errors: { [key: string]: string } = {};
 
     if (!personalInfo.email.trim()) errors.email = 'Email is required';
-    if(!personalInfo.emailConfirm.trim()) errors.emailConfirm = 'Email confirmation is required';
     if (!personalInfo.firstname.trim() || personalInfo.firstname.length < 2 ) errors.firstname = 'First name is required';
     if (personalInfo.firstname.length > 25 ) errors.firstname = 'First name is too long';
     if (!personalInfo.lastname.trim() || personalInfo.lastname.length < 2 ) errors.lastname = 'Last name is required';
@@ -30,36 +29,25 @@ export const useFormValidation = () => {
     if (!personalInfo.role) errors.role = 'Role is required';
     if (!companyInfo.socials) errors.socials = 'Socials are required';
     if (!companyInfo.yearsInBusiness.trim()) errors.yearsInBusiness = 'Years in business is required';
-    if (!companyInfo.employees) errors.employees = 'Number of employees is required';
     if (!companyInfo.clientType) errors.clientType = 'Company type is required';
       if (!companyInfo.memberOf) errors.memberOf = 'Membership is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateTicketingInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { ticketingInfo, volumeInfo } = formData.formData;
+  const validateTicketingFundingInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const { ticketingInfo, volumeInfo, fundsInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
+    // Ticketing validation
     if (!ticketingInfo.paymentProcessing) errors.paymentProcessing = 'Payment processing is required';
-
     if (!ticketingInfo.currentPartner.trim()) errors.currentPartner = 'Ticketing partner is required';
     if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) errors.otherPartner = 'Other ticketing partner is required';
     if (!ticketingInfo.settlementPayout) errors.settlementPayout = 'Settlement payout policy is required';
     if (volumeInfo.lastYearEvents <= 0) errors.lastYearEvents = 'Last year events must be greater than 0';
-    if (volumeInfo.lastYearTickets <= 0) errors.lastYearTickets = 'Last year tickets must be greater than 0';
     if (volumeInfo.lastYearSales <= 0) errors.lastYearSales = 'Last year sales must be greater than 0';
-    if (volumeInfo.nextYearEvents <= 0) errors.nextYearEvents = 'Next year events must be greater than 0';
-    if (volumeInfo.nextYearTickets <= 0) errors.nextYearTickets = 'Next year tickets must be greater than 0';
-    if (volumeInfo.nextYearSales <= 0) errors.nextYearSales = 'Next year sales must be greater than 0';
 
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-
-  const validateFundsInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { fundsInfo } = formData.formData;
-    const errors: { [key: string]: string } = {};
-
+    // Funding validation
     if (!fundsInfo.yourFunds.trim()) errors.yourFunds = 'Funding needs amount is required';
     if (!fundsInfo.timingOfFunding) errors.timingOfFunding = 'Timing for funding is required';
     if (!fundsInfo.useOfProceeds) errors.useOfProceeds = 'Use of proceeds is required';
@@ -67,17 +55,19 @@ export const useFormValidation = () => {
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateOwnershipInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { ownershipInfo } = formData.formData;
-    const { companyInfo } = formData.formData;
+  const validateBusinessFinancialInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const { ownershipInfo, companyInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
+    // Business info validation
     if (!companyInfo.name.trim()) errors.name = 'Legal entity name is required';
     if (!companyInfo.ein.trim()) errors.ein = 'EIN is required';
     if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
     if (!companyInfo.companyAddressDisplay.trim()) errors.companyAddressDisplay = 'Company address is required';
     if (!companyInfo.stateOfIncorporation.trim()) errors.stateOfIncorporation = 'State of incorporation is required';
     if (!companyInfo.businessType) errors.businessType = 'Business type is required';
+    
+    // Ownership validation
     if (ownershipInfo.owners.length === 0) {
       errors.owners = 'At least one owner is required';
     } else {
@@ -96,25 +86,12 @@ export const useFormValidation = () => {
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateFinancesInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
+  const validateAllUploadsInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const { diligenceInfo } = formData;
     const { financesInfo } = formData.formData;
-    const { diligenceInfo } = formData;
     const errors: { [key: string]: string } = {};
 
-    // If user answered Yes to "Have you filed your business taxes for last year?"
-    // then the tax file is required
-    if (financesInfo.filedLastYearTaxes && diligenceInfo.lastYearTaxes.files.length === 0) {
-      errors.lastYearTaxes = 'Tax file is required when you have filed your business taxes';
-    }
-
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-
-  const validateTicketingDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { diligenceInfo } = formData;
-    const errors: { [key: string]: string } = {};
-
-    // Ticketing Information
+    // Ticketing Information files
     if (diligenceInfo.ticketingCompanyReport.files.length === 0) {
       errors.ticketingCompanyReport = 'Ticketing company report is required';
     }
@@ -122,42 +99,23 @@ export const useFormValidation = () => {
       errors.ticketingServiceAgreement = 'Ticketing service agreement is required';
     }
 
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-  const validateFinancialDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { diligenceInfo } = formData;
-    const errors: { [key: string]: string } = {};
-
-    // Financial Information
+    // Financial Information files
     if (diligenceInfo.financialStatements.files.length === 0) {
       errors.financialStatements = 'Financial statements are required';
     }
-    if (diligenceInfo.bankStatement.files.length === 0) {
-      //errors.bankStatement = 'Bank statement is required';
-    }
 
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-  const validateLegalDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { diligenceInfo } = formData;
-    const { financesInfo } = formData.formData;
-    const errors: { [key: string]: string } = {};
-
-    // Legal Information
+    // Legal Information files
     if (diligenceInfo.incorporationCertificate.files.length === 0) {
       errors.incorporationCertificate = 'Incorporation certificate is required';
     }
     if (!financesInfo.singleEntity && diligenceInfo.legalEntityChart.files.length === 0) {
       errors.legalEntityChart = 'Legal entity chart is required';
     }
-    if (diligenceInfo.governmentId.files.length === 0) {
-      //errors.governmentId = 'Government ID is required';
-    }
 
-    if (diligenceInfo.w9form.files.length === 0) {
-      //errors.w9form = 'W9 form is required';
-    }
-  
+    // Additional Information
+    if (!financesInfo.additionalComments.trim()) errors.additionalComments = 'Additional comments are required';
+    if (!financesInfo.industryReferences.trim()) errors.industryReferences = 'Industry references are required';
+
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
@@ -183,22 +141,12 @@ export const useFormValidation = () => {
       case 2:
         return validateCompanyInfo();
       case 3:
-        return validateTicketingInfo();
+        return validateTicketingFundingInfo();
       case 4:
-        return validateFundsInfo();
+        return validateBusinessFinancialInfo();
       case 5:
-        return validateOwnershipInfo();
+        return validateAllUploadsInfo();
       case 6:
-        return validateFinancesInfo();
-      case 7:
-        return validateTicketingDiligenceFiles();
-      case 8:
-        return validateFinancialDiligenceFiles();
-      case 9:
-        return validateLegalDiligenceFiles();
-      case 10:
-        return validateAdditionalInfo();
-      case 11:
         return { isValid: true, errors: {} }; // Summary step - no validation needed
       default:
         return { isValid: true, errors: {} };
@@ -208,37 +156,23 @@ export const useFormValidation = () => {
   const validateAllSteps = (): { isValid: boolean; errors: { [key: string]: { [key: string]: string } } } => {
     const personalInfo = validatePersonalInfo();
     const companyInfo = validateCompanyInfo();
-    const ticketingInfo = validateTicketingInfo();
-    const fundsInfo = validateFundsInfo();
-    const ownershipInfo = validateOwnershipInfo();
-    const financesInfo = validateFinancesInfo();
-    const ticketingDiligenceFiles = validateTicketingDiligenceFiles();
-    const financialDiligenceFiles = validateFinancialDiligenceFiles();
-    const legalDiligenceFiles = validateLegalDiligenceFiles();
-    const additionalInfo = validateAdditionalInfo();
+    const ticketingFundingInfo = validateTicketingFundingInfo();
+    const businessFinancialInfo = validateBusinessFinancialInfo();
+    const allUploadsInfo = validateAllUploadsInfo();
+    
     const allErrors = {
       'Personal Information': personalInfo.errors,
       'Company Information': companyInfo.errors,
-      'Ticketing Information': ticketingInfo.errors,
-      'Funding Information': fundsInfo.errors,
-      'Ownership Information': ownershipInfo.errors,
-      'Financial Information': financesInfo.errors,
-      'Ticketing Diligence Files': ticketingDiligenceFiles.errors,
-      'Financial Diligence Files': financialDiligenceFiles.errors,
-      'Legal Diligence Files': legalDiligenceFiles.errors,
-      'Additional Information': additionalInfo.errors,
+      'Ticketing & Funding Information': ticketingFundingInfo.errors,
+      'Business & Financial Information': businessFinancialInfo.errors,
+      'Document Uploads & Additional Information': allUploadsInfo.errors,
     };
 
     const isValid = personalInfo.isValid && 
                    companyInfo.isValid && 
-                   ticketingInfo.isValid && 
-                   fundsInfo.isValid && 
-                   ownershipInfo.isValid && 
-                   financesInfo.isValid && 
-                   ticketingDiligenceFiles.isValid &&
-                   financialDiligenceFiles.isValid &&
-                   legalDiligenceFiles.isValid &&
-                   additionalInfo.isValid;
+                   ticketingFundingInfo.isValid && 
+                   businessFinancialInfo.isValid && 
+                   allUploadsInfo.isValid;
 
     return { isValid, errors: allErrors };
   };
@@ -246,13 +180,9 @@ export const useFormValidation = () => {
   return {
     validatePersonalInfo,
     validateCompanyInfo,
-    validateTicketingInfo,
-    validateFundsInfo,
-    validateOwnershipInfo,
-    validateFinancesInfo,
-    validateTicketingDiligenceFiles,
-    validateFinancialDiligenceFiles,
-    validateLegalDiligenceFiles,
+    validateTicketingFundingInfo,
+    validateBusinessFinancialInfo,
+    validateAllUploadsInfo,
     validateAdditionalInfo,
     validateCurrentStep,
     validateAllSteps,

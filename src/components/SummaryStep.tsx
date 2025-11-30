@@ -110,10 +110,6 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
               <span className="ml-2 text-gray-800">{companyInfo.stateOfIncorporation}</span>
             </div>
             <div>
-              <span className=" text-gray-600 font-bold">Employees:</span>
-              <span className="ml-2 text-gray-800">{companyInfo.employees}</span>
-            </div>
-            <div>
               <span className=" text-gray-600 font-bold">Socials:</span>
               <span className="ml-2 text-gray-800">{companyInfo.socials}</span>
             </div>
@@ -167,28 +163,12 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
           </h3>
           <div className="grid grid-cols-1 gap-4 text-sm">
             <div>
-              <span className=" text-gray-600 font-bold">Last Year Events:</span>
+              <span className=" text-gray-600 font-bold">Number of Events:</span>
               <span className="ml-2 text-gray-800">{volumeInfo.lastYearEvents}</span>
             </div>
             <div>
-                <span className=" text-gray-600 font-bold">Last Year Tickets:</span>
-              <span className="ml-2 text-gray-800">{volumeInfo.lastYearTickets}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Last Year Sales:</span>
+              <span className=" text-gray-600 font-bold">Online Gross Tickets Sales ($):</span>
               <span className="ml-2 text-gray-800">{formatCurrency(volumeInfo.lastYearSales)}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Next Year Events:</span>
-              <span className="ml-2 text-gray-800">{volumeInfo.nextYearEvents}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Next Year Tickets:</span>
-              <span className="ml-2 text-gray-800">{volumeInfo.nextYearTickets}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Next Year Sales:</span>
-              <span className="ml-2 text-gray-800">{formatCurrency(volumeInfo.nextYearSales)}</span>
             </div>
           </div>
         </div>
@@ -266,43 +246,26 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
             Financial Information
             <span className="ml-2 text-xs text-blue-600 font-normal">(Click to edit)</span>
           </h3>
-          <div className="grid grid-cols-1 gap-4 text-sm">
+          <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className=" text-gray-600 font-bold">Single Entity:</span>
               <span className="ml-2 text-gray-800">{financesInfo.singleEntity ? 'Yes' : 'No'}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Assets Transferred:</span>
-              <span className="ml-2 text-gray-800">{financesInfo.assetsTransferred ? 'Yes' : 'No'}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Filed Last Year Taxes:</span>
-              <span className="ml-2 text-gray-800">{financesInfo.filedLastYearTaxes ? 'Yes' : 'No'}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Has Ticketing Debt:</span>
-              <span className="ml-2 text-gray-800">{financesInfo.hasTicketingDebt ? 'Yes' : 'No'}</span>
             </div>
             <div>
               <span className=" text-gray-600 font-bold">Has Business Debt:</span>
               <span className="ml-2 text-gray-800">{financesInfo.hasBusinessDebt ? 'Yes' : 'No'}</span>
             </div>
             <div>
-              <span className=" text-gray-600 font-bold">Has Overdue Liabilities:</span>
-              <span className="ml-2 text-gray-800">{financesInfo.hasOverdueLiabilities ? 'Yes' : 'No'}</span>
-            </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Is Leasing Location:</span>
-              <span className="ml-2 text-gray-800">{financesInfo.isLeasingLocation ? 'Yes' : 'No'}</span>
-            </div>
-            <div>
               <span className=" text-gray-600 font-bold">Has Tax Liens:</span>
               <span className="ml-2 text-gray-800">{financesInfo.hasTaxLiens ? 'Yes' : 'No'}</span>
             </div>
             <div>
-              <span className=" text-gray-600 font-bold">Has Judgments:</span>
-              <span className="ml-2 text-gray-800">{financesInfo.hasJudgments ? 'Yes' : 'No'}</span>
+              <span className=" text-gray-600 font-bold">Has Overdue Liabilities:</span>
+              <span className="ml-2 text-gray-800">{financesInfo.hasOverdueLiabilities ? 'Yes' : 'No'}</span>
             </div>
+         
+           
+          
             <div>
                 <span className=" text-gray-600 font-bold">Has Bankruptcy:</span>
               <span className="ml-2 text-gray-800">{financesInfo.hasBankruptcy ? 'Yes' : 'No'}</span>
@@ -311,12 +274,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
               <span className=" text-gray-600 font-bold">Ownership Changed:</span>
               <span className="ml-2 text-gray-800">{financesInfo.ownershipChanged ? 'Yes' : 'No'}</span>
             </div>
-            {financesInfo.leaseEndDate && (
-              <div>
-                <span className=" text-gray-600 font-bold">Lease End Date:</span>
-                <span className="ml-2 text-gray-800">{financesInfo.leaseEndDate}</span>
-              </div>
-            )}
+          
             {financesInfo.debts.length > 0 && (
               <div className="col-span-2">
                 <span className=" text-gray-600 font-bold">Debts:</span>
@@ -460,20 +418,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
                 </button>
               </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className=" text-gray-600 font-bold">Last Year Taxes:</span>
-              <div className="flex items-center">
-                <span className="text-sm text-gray-800 mr-2">
-                  {diligenceInfo.lastYearTaxes.fileInfos.length} file(s)
-                </span>
-                <button 
-                  onClick={() => onStepClick?.(9)}
-                  className="text-sm text-blue-600 hover:text-blue-800 underline"
-                >
-                  Edit
-                </button>
-              </div>
-            </div>
+    
             <div className="flex items-center justify-between">
               <span className=" text-gray-600 font-bold">Other Documents:</span>
               <div className="flex items-center">

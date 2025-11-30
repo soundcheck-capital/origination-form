@@ -54,7 +54,6 @@ const CompanyInfoStep: React.FC = () => {
 
       <DropdownField label="Years in Business" name="yearsInBusiness" value={companyInfo.yearsInBusiness} onChange={handleChange} error='' onBlur={()=>{}} options={yearsInBusiness} required />
 
-      <TextField type="number" label="Number of Employees" name="employees" value={companyInfo.employees.toString()} onChange={handleChange} error='' onBlur={()=>{}} required />
       <TextField type="text" label="Website - Socials" name="socials" value={companyInfo.socials} onChange={handleChange} error='' onBlur={()=>{}} required />
       <DropdownField label="Are you a member of?" name="memberOf" value={companyInfo.memberOf} onChange={handleChange} error='' onBlur={()=>{}} options={memberOf} required />
    </div>

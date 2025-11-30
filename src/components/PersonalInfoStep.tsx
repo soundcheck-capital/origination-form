@@ -16,13 +16,6 @@ const PersonalInfoStep: React.FC = () => {
     return emailRegex.test(email);
   };
 
-  const validateEmailConfirm = (emailConfirm: string) => {
-    emailConfirm = emailConfirm.trim();
-    if (personalInfo.email !== emailConfirm) {
-      return 'Emails do not match';
-    }
-    return '';
-  };
 
  
 
@@ -101,13 +94,6 @@ const PersonalInfoStep: React.FC = () => {
         }
       }
 
-      if (name === 'emailConfirm' && value) {
-        if (validateEmailConfirm(value) !== '') {
-          setFieldError('emailConfirm', 'Emails do not match');
-        } else {
-          setFieldError('emailConfirm', null);
-        }
-      }
     }
   };
 
@@ -121,14 +107,6 @@ const PersonalInfoStep: React.FC = () => {
     }
   };
 
-  const handleEmailConfirmBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const emailConfirm = e.target.value;
-    if (emailConfirm && validateEmailConfirm(emailConfirm) !== '') {
-      setFieldError('emailConfirm', 'Emails do not match');
-    } else {
-      setFieldError('emailConfirm', null);
-    }
-  };
 
   
 
@@ -142,7 +120,6 @@ const PersonalInfoStep: React.FC = () => {
 
       <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange} error='' onBlur={handleEmailBlur} required />
       
-      <TextField type="email" label="Confirm Email" name="emailConfirm" value={personalInfo.emailConfirm} onChange={handleInputChange} error='' onBlur={handleEmailConfirmBlur} required />
 
       
       

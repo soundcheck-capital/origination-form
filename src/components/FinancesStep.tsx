@@ -21,22 +21,12 @@ const FinancesStep: React.FC = () => {
   interface Question {
     id: string;
     text: string;
-    name: keyof Pick<typeof financesInfo, 'assetsTransferred' | 'filedLastYearTaxes' | 'hasTicketingDebt' | 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasJudgments' | 'hasBankruptcy' | 'ownershipChanged'>;
+    name: keyof Pick<typeof financesInfo, 'hasTicketingDebt' | 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasBankruptcy' | 'ownershipChanged'>;
     showDateInput?: boolean;
     condition?: (financesInfo: any) => boolean;
   }
 
   const questions: Question[] = [
-    {
-      id: 'assetsTransferred',
-      text: "Is there more than ~$50,000 in cash, assets, or liabilities transferred to other entities, in a given month? This could include intercompany AR, intercompany AP, and intercompany loans*",
-      name: 'assetsTransferred'
-    },
-    {
-      id: 'taxes',
-      text: "Have you filed your business taxes for last year?",
-      name: 'filedLastYearTaxes'
-    },
 
     {
       id: 'debt',
@@ -53,11 +43,6 @@ const FinancesStep: React.FC = () => {
       id: 'taxLiens',
       text: "Does this legal entity have any outstanding tax arrears and/or liens?",
       name: 'hasTaxLiens'
-    },
-    {
-      id: 'judgments',
-      text: "Does this business that you're currently applying for (or, if you are a sole proprietor, do you) have any other material liabilities?",
-      name: 'hasJudgments'
     },
     {
       id: 'bankruptcy',
@@ -298,17 +283,6 @@ const FinancesStep: React.FC = () => {
           </div>
         )}
 
-        {question.name === 'filedLastYearTaxes' && financesInfo[question.name] && (
-          <div className="conditional-content animate-fadeIn">
-            <FileUploadField
-              field="lastYearTaxes"
-              title="Last year tax file"
-              accept=".pdf,.xlsx,.csv,.jpg,.png"
-              multiple={false}
-              onFilesChange={() => handleFileChange('lastYearTaxes')}
-            />
-          </div>
-        )}
       </div>
     );
   };
