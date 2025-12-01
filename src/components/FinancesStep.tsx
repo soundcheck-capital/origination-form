@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { updateFinancesInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
-import FileUploadField from './customComponents/FileUploadField';
 import DropdownField from './customComponents/DropdownField';
 import CurrencyField from './customComponents/CurrencyField';
 import { debtTypes } from '../store/form/hubspotLists';
@@ -136,10 +135,6 @@ const FinancesStep: React.FC = () => {
     const newDebts = [...financesInfo.debts];
     newDebts[index] = { ...newDebts[index], balance: value };
     dispatch(updateFinancesInfo({ debts: newDebts }));
-  };
-
-  const handleFileChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-
   };
 
   const addDebt = () => {
