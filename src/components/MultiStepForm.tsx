@@ -8,7 +8,6 @@ import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
 import PersonalInfoStep from './PersonalInfoStep';
-import CompanyInfoStep from './CompanyInfoStep';
 import TicketingFundingStep from './TicketingFundingStep';
 import BusinessFinancialStep from './BusinessFinancialStep';
 import AllUploadsStep from './AllUploadsStep';
