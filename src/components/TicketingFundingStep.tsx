@@ -63,7 +63,7 @@ const TicketingFundingStep: React.FC = () => {
 
   // Capital amount calculation (from YourFundingStep)
   let capitalAmount = 0;
-  if(ticketingVolume.lastYearSales > 0 && ticketingVolume.nextYearSales > 0 && ticketingVolume.lastYearTickets > 0 && ticketingVolume.nextYearTickets > 0 && ticketingVolume.lastYearEvents > 0 && ticketingVolume.nextYearEvents > 0) {
+  if(ticketingVolume.lastYearSales > 0  && ticketingVolume.lastYearEvents > 0) {
     const maxAmount = ticketingVolume.lastYearSales * 0.15;
     capitalAmount = maxAmount > 1000000 ? 1000000 : maxAmount;
   }

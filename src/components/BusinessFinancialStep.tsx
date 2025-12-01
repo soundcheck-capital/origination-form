@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateCompanyInfo, updateOwnershipInfo, updateFinancesInfo } from '../store/form/formSlice';
+import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice';
 import StepTitle from './customComponents/StepTitle';
 import TextField from './customComponents/TextField';
 import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
 import NumberInput from './customComponents/NumberField';
 import DatePickerField from './customComponents/DatePickerField';
 import DropdownField from './customComponents/DropdownField';
-import CurrencyField from './customComponents/CurrencyField';
-import TextAreaField from './customComponents/TextAreaField';
 import { useValidation } from '../contexts/ValidationContext';
-import { businessType, usStates, debtTypes } from '../store/form/hubspotLists';
+import { businessType, usStates } from '../store/form/hubspotLists';
 import FinancesStep from './FinancesStep';
 
 interface Owner {
@@ -39,8 +37,8 @@ const BusinessFinancialStep: React.FC = () => {
   const { setFieldError } = useValidation();
 
   // Financial questions state (from FinancesStep)
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [visibleQuestions, setVisibleQuestions] = useState<number[]>([0]);
+  const [, setCurrentQuestionIndex] = useState(0);
+  const [, setVisibleQuestions] = useState<number[]>([0]);
   const [hasBeenVisited, setHasBeenVisited] = useState(false);
 
   // Questions from FinancesStep (modified - removed the 3 obsolete questions)
@@ -305,51 +303,6 @@ const BusinessFinancialStep: React.FC = () => {
     if (age < 18) return 'Owner must be at least 18 years old';
     if (age > 120) return 'Please enter a valid date of birth';
     return null;
-  };
-
-  // Financial questions handlers (from FinancesStep)
-  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name } = e.target;
-    const value = e.target.value === 'true';
-    
-    dispatch(updateFinancesInfo({ [name]: value }));
-    
-    // If user answered Yes to hasBusinessDebt and there are no debts, add one
-    if (name === 'hasBusinessDebt' && value && financesInfo.debts.length === 0) {
-      dispatch(updateFinancesInfo({
-        debts: [{ type: '', balance: '' }]
-      }));
-    }
-    
-    // Show next question after a delay
-    setTimeout(() => {
-      if (currentQuestionIndex < filteredQuestions.length - 1) {
-        const nextIndex = currentQuestionIndex + 1;
-        setCurrentQuestionIndex(nextIndex);
-        setVisibleQuestions(prev => [...prev, nextIndex]);
-      }
-    }, 300);
-  };
-
-  const handleDebtChange = (index: number, field: string, value: string) => {
-    const updatedDebts = [...financesInfo.debts];
-    updatedDebts[index] = { ...updatedDebts[index], [field]: value };
-    dispatch(updateFinancesInfo({ debts: updatedDebts }));
-  };
-
-  const addDebt = () => {
-    const newDebt = { type: '', balance: '' };
-    dispatch(updateFinancesInfo({ debts: [...financesInfo.debts, newDebt] }));
-  };
-
-  const removeDebt = (index: number) => {
-    const updatedDebts = financesInfo.debts.filter((_, i) => i !== index);
-    dispatch(updateFinancesInfo({ debts: updatedDebts }));
-  };
-
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    dispatch(updateFinancesInfo({ [name]: value }));
   };
 
   return (
