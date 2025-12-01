@@ -251,14 +251,12 @@ const MultiStepFormContent: React.FC = () => {
       case 1:
         return <PersonalInfoStep />;
       case 2:
-        return <CompanyInfoStep />;
-      case 3:
         return <TicketingFundingStep />;
-      case 4:
+      case 3:
         return <BusinessFinancialStep />;
-      case 5:
+      case 4:
         return <AllUploadsStep />;
-      case 6:
+      case 5:
         return <SummaryStep renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
       default:
         return null;
@@ -345,7 +343,7 @@ const MultiStepFormContent: React.FC = () => {
               <div className="rounded-xl absolute top-0 left-0 h-1 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
                 className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-1 transition-all duration-300"
-                style={{ width: `${((currentStep) / 6) * 100}%` }}
+                style={{ width: `${((currentStep) / 5) * 100}%` }}
               ></div>
             </div>
           </div>
@@ -378,7 +376,7 @@ const MultiStepFormContent: React.FC = () => {
               <ButtonSecondary onClick={handlePreviousStep} disabled={false}>Previous</ButtonSecondary>
             )}
 
-            {(currentStep < 6 && currentStep > 1) && (
+            {(currentStep < 5 && currentStep > 1) && (
               <ButtonPrimary onClick={handleNextStep} disabled={isSavingStep}>
                 {isSavingStep ? (
                   <div className="flex items-center gap-2">
@@ -390,7 +388,7 @@ const MultiStepFormContent: React.FC = () => {
                 )}
               </ButtonPrimary>
             )}
-            {currentStep === 6 && (
+            {currentStep === 5 && (
               <ButtonPrimary onClick={() => {
                 triggerValidationThenSubmit();
               }} disabled={false}>Submit</ButtonPrimary>

@@ -86,7 +86,6 @@ const TicketingFundingStep: React.FC = () => {
       {/* Ticketing Volume Section - Exact copy from TicketingStep (modified) */}
       <StepTitle title="Ticketing Volume" />
 
-      <p className='text-sm text-amber-500 my-4 text-center lg:w-[30%] mx-auto'>Last 12 Months</p>
       <NumberInput label="Number of Events" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required />
       <CurrencyField label="Gross Annual Ticketing Volume ($)" name="lastYearSales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" id="lastYearSales" required />
 

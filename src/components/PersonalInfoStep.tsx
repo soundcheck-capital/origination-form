@@ -5,6 +5,7 @@ import { updatePersonalInfo } from '../store/form/formSlice';
 import TextField from './customComponents/TextField';
 import StepTitle from './customComponents/StepTitle';
 import { useValidation } from '../contexts/ValidationContext';
+import CompanyInfoStep from './CompanyInfoStep';
 
 const PersonalInfoStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -126,8 +127,13 @@ const PersonalInfoStep: React.FC = () => {
       <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={() => { }} required />
       
 
-
+      <CompanyInfoStep />
+      
+      
       <p className="text-sm text-gray-500 my-4 text-center ">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-500">Privacy Policy</a></p>
+    
+    
+    
     </div>
   );
 };
