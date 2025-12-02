@@ -1,11 +1,12 @@
 import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updatePersonalInfo } from '../store/form/formSlice';
-import TextField from './customComponents/TextField';
-import StepTitle from './customComponents/StepTitle';
-import { useValidation } from '../contexts/ValidationContext';
+import { RootState } from '../../store';
+import { updatePersonalInfo } from '../../store/form/formSlice';
+import TextField from '../customComponents/TextField';
+import StepTitle from '../customComponents/StepTitle';
+import { useValidation } from '../../contexts/ValidationContext';
 import CompanyInfoStep from './CompanyInfoStep';
+import TicketingFundingStep from '../TicketingFundingStep';
 
 const PersonalInfoStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -120,16 +121,13 @@ const PersonalInfoStep: React.FC = () => {
       <TextField type="text" label="Last Name" name="lastname" value={personalInfo.lastname} onChange={handleInputChange} error='' onBlur={() => { }} required />
 
       <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange} error='' onBlur={handleEmailBlur} required />
-      
-
-      
-      
+    
       <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={() => { }} required />
       
 
       <CompanyInfoStep />
       
-      
+      <TicketingFundingStep />
       <p className="text-sm text-gray-500 my-4 text-center ">By filling this form, you agree to SoundCheck Capital <a href="https://soundcheckcapital.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-blue-500">Terms of Service</a> and <a href="https://soundcheckcapital.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-500">Privacy Policy</a></p>
     
     

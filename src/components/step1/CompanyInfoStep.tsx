@@ -1,12 +1,12 @@
 import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateCompanyInfo, updatePersonalInfo } from '../store/form/formSlice';
-import StepTitle from './customComponents/StepTitle';
-import TextField from './customComponents/TextField';
-import DropdownField from './customComponents/DropdownField';
-import { useValidation } from '../contexts/ValidationContext';
-import { clientType, yearsInBusiness, memberOf } from '../store/form/hubspotLists';
+import { RootState } from '../../store';
+import { updateCompanyInfo, updatePersonalInfo } from '../../store/form/formSlice';
+import StepTitle from '../customComponents/StepTitle';
+import TextField from '../customComponents/TextField';
+import DropdownField from '../customComponents/DropdownField';
+import { useValidation } from '../../contexts/ValidationContext';
+import { clientType, yearsInBusiness, memberOf } from '../../store/form/hubspotLists';
 
 // Google Maps Autocomplete types
 declare global {
@@ -44,7 +44,7 @@ const CompanyInfoStep: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
+    <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Company Information" />
 
       <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}} required />

@@ -7,11 +7,11 @@ import {   setSubmitted } from '../store/form/formSlice';
 import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
-import PersonalInfoStep from './PersonalInfoStep';
-import TicketingFundingStep from './TicketingFundingStep';
-import BusinessFinancialStep from './BusinessFinancialStep';
-import AllUploadsStep from './AllUploadsStep';
-import SummaryStep from './SummaryStep';
+import Step1 from './step1';
+import Step2 from './step2';
+import Step3 from './step3';
+import Step4 from './step4';
+import Step5 from './step5';
 import logo from '../assets/logo_black_bold.svg';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
@@ -229,16 +229,14 @@ const MultiStepFormContent: React.FC = () => {
   const stepTitles = () => {
     switch (currentStep) {
       case 1:
-        return 'Get Funding';
-      case 2:
         return 'Tell us about your business';
-      case 3:
+      case 2:
         return 'Ticketing & Funding';
-      case 4:
+      case 3:
         return 'Business & Ownership';
+      case 4:
+        return 'Diligence';
       case 5:
-        return 'Due Diligence';
-      case 6:
         return 'Review & Submit';
       default:
         return 'SoundCheck';
@@ -248,15 +246,15 @@ const MultiStepFormContent: React.FC = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <PersonalInfoStep />;
+        return <Step1 />;
       case 2:
-        return <TicketingFundingStep />;
+        return <Step2 />;
       case 3:
-        return <BusinessFinancialStep />;
+        return <Step3 />;
       case 4:
-        return <AllUploadsStep />;
+        return <Step4 />;
       case 5:
-        return <SummaryStep renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
+        return <Step5 renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
       default:
         return null;
     }
@@ -353,9 +351,7 @@ const MultiStepFormContent: React.FC = () => {
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>
-          {(currentStep < 6 && currentStep > 0) && (
-             <p className='text-xs text-gray-500 text-center'><span className='text-red-500'>*</span> Required fields</p>
-            )}
+         
 
           {/* Navigation Buttons */}
           <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
