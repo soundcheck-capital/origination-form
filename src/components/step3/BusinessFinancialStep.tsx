@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice';
-import StepTitle from './customComponents/StepTitle';
-import TextField from './customComponents/TextField';
-import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
-import NumberInput from './customComponents/NumberField';
-import DatePickerField from './customComponents/DatePickerField';
-import DropdownField from './customComponents/DropdownField';
-import { useValidation } from '../contexts/ValidationContext';
-import { businessType, usStates } from '../store/form/hubspotLists';
-import FinancesStep from './FinancesStep';
+import { RootState } from '../../store';
+import { updateCompanyInfo, updateOwnershipInfo } from '../../store/form/formSlice';
+import StepTitle from '../customComponents/StepTitle';
+import TextField from '../customComponents/TextField';
+import { AddressAutocomplete } from '../customComponents/AddressAutocomplete';
+import NumberInput from '../customComponents/NumberField';
+import DatePickerField from '../customComponents/DatePickerField';
+import DropdownField from '../customComponents/DropdownField';
+import { useValidation } from '../../contexts/ValidationContext';
+import { businessType, usStates } from '../../store/form/hubspotLists';
+import FinancesStep from '../FinancesStep';
 
 interface Owner {
   id: string;

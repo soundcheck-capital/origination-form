@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { formatCurrency } from '../utils/format';
+import { RootState } from '../../store';
+import { formatCurrency } from '../../utils/format';
 
 interface SummaryStepProps {
   renderValidationErrors?: React.ReactNode;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateFinancesInfo } from '../store/form/formSlice';
-import StepTitle from './customComponents/StepTitle';
-import FileUploadField from './customComponents/FileUploadField';
-import TextAreaField from './customComponents/TextAreaField';
-import { useFormValidation } from '../hooks/useFormValidation';
+import { RootState } from '../../store';
+import { updateFinancesInfo } from '../../store/form/formSlice';
+import StepTitle from '../customComponents/StepTitle';
+import FileUploadField from '../customComponents/FileUploadField';
+import TextAreaField from '../customComponents/TextAreaField';
+import { useFormValidation } from '../../hooks/useFormValidation';
 
 const AllUploadsStep: React.FC = () => {
   const dispatch = useDispatch();
