@@ -17,7 +17,7 @@ declare global {
 
 
 
-const CompanyInfoStep: React.FC = () => {
+const CompanyInfo: React.FC = () => {
   const dispatch = useDispatch();
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
@@ -60,4 +60,4 @@ const CompanyInfoStep: React.FC = () => {
   );
 };
 
-export default CompanyInfoStep;
+export default CompanyInfo;

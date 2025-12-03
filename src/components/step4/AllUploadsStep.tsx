@@ -25,7 +25,7 @@ const AllUploadsStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full pt-8 animate-fade-in-right duration-1000">
+    <div className="flex flex-col justify-center w-full pt-8 animate-fade-in-right duration-1000">
       {/* Ticketing Information Section - Exact copy from TicketingInformationStep */}
       <StepTitle title="Ticketing Information" />
       
@@ -126,9 +126,7 @@ const AllUploadsStep: React.FC = () => {
       <div className="w-full mb-8 animate-fade-in-right duration-1000">  
         <StepTitle title="Additional Information" />
         
-        <p className="text-gray-400 mb-8 text-xs w-full text-center mx-auto items-center">
-          Please provide any additional information that might be helpful for our review process.
-        </p>
+      
 
         <TextAreaField
           label="Industry References"

@@ -56,16 +56,14 @@ export const useFormValidation = () => {
   };
 
   const validateBusinessFinancialInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { ownershipInfo, companyInfo } = formData.formData;
+    const { ownershipInfo, companyInfo, financesInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
-    // Business info validation
-    if (!companyInfo.name.trim()) errors.name = 'Legal entity name is required';
+    // Business info validation (legal information)
     if (!companyInfo.ein.trim()) errors.ein = 'EIN is required';
-    if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
-    if (!companyInfo.companyAddressDisplay.trim()) errors.companyAddressDisplay = 'Company address is required';
     if (!companyInfo.stateOfIncorporation.trim()) errors.stateOfIncorporation = 'State of incorporation is required';
     if (!companyInfo.businessType) errors.businessType = 'Business type is required';
+    if (!companyInfo.companyAddressDisplay.trim()) errors.companyAddressDisplay = 'Company address is required';
     
     // Ownership validation
     if (ownershipInfo.owners.length === 0) {
@@ -81,6 +79,11 @@ export const useFormValidation = () => {
       if(totalPercentage > 100){
         errors.ownershipPercentage = 'Total ownership percentage cannot exceed 100%';
       }
+    }
+
+    // Financial validation (basic required fields only)
+    if (financesInfo.hasBusinessDebt && financesInfo.debts.length === 0) {
+      errors.debts = 'Please provide debt details';
     }
 
     return { isValid: Object.keys(errors).length === 0, errors };
@@ -127,6 +130,17 @@ export const useFormValidation = () => {
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
+  // Validate Step 1: Personal + Company Info (consolidated)
+  const validateStep1 = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const personalValidation = validatePersonalInfo();
+    const companyValidation = validateCompanyInfo();
+    
+    return {
+      isValid: personalValidation.isValid && companyValidation.isValid,
+      errors: { ...personalValidation.errors, ...companyValidation.errors }
+    };
+  };
+
   // New function to validate current step only
   const validateCurrentStep = (step: number): { isValid: boolean; errors: { [key: string]: string } } => {
     // Skip validation only if explicitly disabled in development mode
@@ -137,16 +151,14 @@ export const useFormValidation = () => {
 
     switch (step) {
       case 1:
-        return validatePersonalInfo();
+        return validateStep1(); // Personal + Company Info
       case 2:
-        return validateCompanyInfo();
+        return validateTicketingFundingInfo(); // Ticketing + Funding
       case 3:
-        return validateTicketingFundingInfo();
+        return validateBusinessFinancialInfo(); // Business + Financial
       case 4:
-        return validateBusinessFinancialInfo();
+        return validateAllUploadsInfo(); // All Uploads
       case 5:
-        return validateAllUploadsInfo();
-      case 6:
         return { isValid: true, errors: {} }; // Summary step - no validation needed
       default:
         return { isValid: true, errors: {} };
@@ -154,22 +166,19 @@ export const useFormValidation = () => {
   };
 
   const validateAllSteps = (): { isValid: boolean; errors: { [key: string]: { [key: string]: string } } } => {
-    const personalInfo = validatePersonalInfo();
-    const companyInfo = validateCompanyInfo();
+    const step1Info = validateStep1();
     const ticketingFundingInfo = validateTicketingFundingInfo();
     const businessFinancialInfo = validateBusinessFinancialInfo();
     const allUploadsInfo = validateAllUploadsInfo();
     
     const allErrors = {
-      'Personal Information': personalInfo.errors,
-      'Company Information': companyInfo.errors,
-      'Ticketing & Funding Information': ticketingFundingInfo.errors,
-      'Business & Financial Information': businessFinancialInfo.errors,
-      'Document Uploads & Additional Information': allUploadsInfo.errors,
+      'Tell us about your business': step1Info.errors,
+      'Ticketing & Funding': ticketingFundingInfo.errors,
+      'Business & Ownership': businessFinancialInfo.errors,
+      'Diligence': allUploadsInfo.errors,
     };
 
-    const isValid = personalInfo.isValid && 
-                   companyInfo.isValid && 
+    const isValid = step1Info.isValid && 
                    ticketingFundingInfo.isValid && 
                    businessFinancialInfo.isValid && 
                    allUploadsInfo.isValid;
@@ -180,6 +189,7 @@ export const useFormValidation = () => {
   return {
     validatePersonalInfo,
     validateCompanyInfo,
+    validateStep1,
     validateTicketingFundingInfo,
     validateBusinessFinancialInfo,
     validateAllUploadsInfo,

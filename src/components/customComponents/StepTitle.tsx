@@ -1,6 +1,6 @@
 const StepTitle = ({ title }: { title: string }) => {
     return (
-        <p className=" text-amber-500 my-4 text-xl font-semibold text-left">{title}</p>
+        <p className=" text-amber-500 my-2 text-lg font-semibold text-left">{title}</p>
     );
 };
 

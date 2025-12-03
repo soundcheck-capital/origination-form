@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateFinancesInfo } from '../store/form/formSlice';
-import StepTitle from './customComponents/StepTitle';
-import DropdownField from './customComponents/DropdownField';
-import CurrencyField from './customComponents/CurrencyField';
-import { debtTypes } from '../store/form/hubspotLists';
+import { RootState } from '../../store';
+import { updateFinancesInfo } from '../../store/form/formSlice';
+import StepTitle from '../customComponents/StepTitle';
+import DropdownField from '../customComponents/DropdownField';
+import CurrencyField from '../customComponents/CurrencyField';
+import { debtTypes } from '../../store/form/hubspotLists';
 
 
 
@@ -305,17 +305,18 @@ const FinancesStep: React.FC = () => {
           }
         `
       }} />
-      <StepTitle title="Single vs Multi-entity" />
-      <div className="flex flex-col space-between gap-4 mx-auto items-center w-full mb-4" >
+      
+      <StepTitle title="Finances" />
+      <div className="flex flex-row space-between gap-4 mx-auto items-center w-full mb-4" >
         <p className='text-sm font-300 text-gray-700'>Is the Company a single entity or part of a multi-entity group structure? <br />This includes a group of affiliates that share ownership</p>
         <div className="flex items-center gap-4">
           <div className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-4">
             <label
-              className={`text-sm text-right whitespace-nowrap transition-colors
+              className={`text-sm text-left whitespace-nowrap transition-colors
                 ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
               htmlFor="singleEntity"
             >
-              Single entity
+              Single
             </label>
 
             <input
@@ -341,7 +342,7 @@ const FinancesStep: React.FC = () => {
                 ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
               htmlFor="singleEntity"
             >
-              Multi-entity
+              Multi
             </label>
           </div>
 
@@ -349,8 +350,6 @@ const FinancesStep: React.FC = () => {
 
         </div>
       </div>
-      <StepTitle title="Finances" />
-
       {filteredQuestions.map((question, index) => renderQuestion(question, index))}
     </div>
   );

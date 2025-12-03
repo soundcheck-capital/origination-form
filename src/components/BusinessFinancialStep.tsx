@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { updateCompanyInfo, updateOwnershipInfo } from '../../store/form/formSlice';
-import StepTitle from '../customComponents/StepTitle';
-import TextField from '../customComponents/TextField';
-import { AddressAutocomplete } from '../customComponents/AddressAutocomplete';
-import NumberInput from '../customComponents/NumberField';
-import DatePickerField from '../customComponents/DatePickerField';
-import DropdownField from '../customComponents/DropdownField';
-import { useValidation } from '../../contexts/ValidationContext';
-import { businessType, usStates } from '../../store/form/hubspotLists';
-import FinancesStep from './FinancesStep';
+import { RootState } from '../store';
+import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice';
+import StepTitle from './customComponents/StepTitle';
+import TextField from './customComponents/TextField';
+import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
+import NumberInput from './customComponents/NumberField';
+import DatePickerField from './customComponents/DatePickerField';
+import DropdownField from './customComponents/DropdownField';
+import { useValidation } from '../contexts/ValidationContext';
+import { businessType, usStates } from '../store/form/hubspotLists';
+import FinancesStep from './step3/FinancesStep';
 
 interface Owner {
   id: string;
@@ -306,8 +306,10 @@ const BusinessFinancialStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
-      
+    <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
+      <p className="text-gray-400 mb-8 text-xs mt-8 text-center">
+        Please carefully complete the information below and make sure that it is accurate including information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.
+      </p>
 
       {/* Business Legal Information Section - Exact copy from OwnershipStep */}
       <StepTitle title="Business Legal Information" />
