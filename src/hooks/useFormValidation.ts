@@ -36,18 +36,10 @@ export const useFormValidation = () => {
   };
 
   const validateTicketingFundingInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { ticketingInfo, volumeInfo, fundsInfo } = formData.formData;
+    const { fundsInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
-    // Ticketing validation
-    if (!ticketingInfo.paymentProcessing) errors.paymentProcessing = 'Payment processing is required';
-    if (!ticketingInfo.currentPartner.trim()) errors.currentPartner = 'Ticketing partner is required';
-    if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) errors.otherPartner = 'Other ticketing partner is required';
-    if (!ticketingInfo.settlementPayout) errors.settlementPayout = 'Settlement payout policy is required';
-    if (volumeInfo.lastYearEvents <= 0) errors.lastYearEvents = 'Last year events must be greater than 0';
-    if (volumeInfo.lastYearSales <= 0) errors.lastYearSales = 'Last year sales must be greater than 0';
-
-    // Funding validation
+    // Funding validation only (ticketing validation moved to step 1)
     if (!fundsInfo.yourFunds.trim()) errors.yourFunds = 'Funding needs amount is required';
     if (!fundsInfo.timingOfFunding) errors.timingOfFunding = 'Timing for funding is required';
     if (!fundsInfo.useOfProceeds) errors.useOfProceeds = 'Use of proceeds is required';
@@ -130,14 +122,25 @@ export const useFormValidation = () => {
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  // Validate Step 1: Personal + Company Info (consolidated)
+  // Validate Step 1: Personal + Company Info + Ticketing Info (consolidated)
   const validateStep1 = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const personalValidation = validatePersonalInfo();
     const companyValidation = validateCompanyInfo();
     
+    // Add ticketing validation for step 1
+    const { ticketingInfo, volumeInfo } = formData.formData;
+    const ticketingErrors: { [key: string]: string } = {};
+    
+    if (!ticketingInfo.paymentProcessing) ticketingErrors.paymentProcessing = 'Payment processing is required';
+    if (!ticketingInfo.currentPartner.trim()) ticketingErrors.currentPartner = 'Ticketing partner is required';
+    if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) ticketingErrors.otherPartner = 'Other ticketing partner is required';
+    if (!ticketingInfo.settlementPayout) ticketingErrors.settlementPayout = 'Settlement payout policy is required';
+    if (volumeInfo.lastYearEvents <= 0) ticketingErrors.lastYearEvents = 'Number of events must be greater than 0';
+    if (volumeInfo.lastYearSales <= 0) ticketingErrors.lastYearSales = 'Gross annual ticketing volume must be greater than 0';
+    
     return {
-      isValid: personalValidation.isValid && companyValidation.isValid,
-      errors: { ...personalValidation.errors, ...companyValidation.errors }
+      isValid: personalValidation.isValid && companyValidation.isValid && Object.keys(ticketingErrors).length === 0,
+      errors: { ...personalValidation.errors, ...companyValidation.errors, ...ticketingErrors }
     };
   };
 
