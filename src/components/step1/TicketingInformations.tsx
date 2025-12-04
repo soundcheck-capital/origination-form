@@ -1,20 +1,19 @@
 import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { updateTicketingInfo, updateVolumeInfo, updateFundsInfo } from '../../store/form/formSlice';
+import { updateTicketingInfo, updateVolumeInfo } from '../../store/form/formSlice';
 import StepTitle from '../customComponents/StepTitle';
 import DropdownField from '../customComponents/DropdownField';
 import TextField from '../customComponents/TextField';
 import NumberInput from '../customComponents/NumberField';
 import CurrencyField from '../customComponents/CurrencyField';
 import { useValidation } from '../../contexts/ValidationContext';
-import { paymentProcessing, ticketingPartners, settlementPayout, precision, timingOfFunding, useOfProceeds } from '../../store/form/hubspotLists';
+import { paymentProcessing, ticketingPartners, settlementPayout, precision } from '../../store/form/hubspotLists';
 
 const TicketingFundingStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
-  const fundsInfo = useSelector((state: RootState) => state.form.formData.fundsInfo);
   const { setFieldError } = useValidation();
 
   // Ticketing handlers
