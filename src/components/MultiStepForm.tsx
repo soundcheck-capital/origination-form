@@ -347,7 +347,7 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
-            <h1 className="text-4xl mb-16 text-center font-bold text-neutral-900">{stepTitles()}</h1>
+            <h1 className="text-4xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import StepTitle from './customComponents/StepTitle';
-import FileUploadField from './customComponents/FileUploadField';
+import StepTitle from '../customComponents/StepTitle';
+import FileUploadField from '../customComponents/FileUploadField';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 
 const TicketingInformationStep: React.FC = () => {
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
@@ -12,8 +12,8 @@ const TicketingInformationStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full pt-8 animate-fade-in-right duration-1000">
-      <StepTitle title="Ticketing Information" />
+    <div className="flex flex-col w-full animate-fade-in-right duration-1000">
+      <StepTitle title="Ticketing" />
       
       <div className="w-full">  
         <FileUploadField

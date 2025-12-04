@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateFinancesInfo } from '../store/form/formSlice';
-import StepTitle from './customComponents/StepTitle';
-import TextAreaField from './customComponents/TextAreaField';
-import { useFormValidation } from '../hooks/useFormValidation';
+import { RootState } from '../../store';
+import { updateFinancesInfo } from '../../store/form/formSlice';
+import StepTitle from '../customComponents/StepTitle';
+import TextAreaField from '../customComponents/TextAreaField';
+import { useFormValidation } from '../../hooks/useFormValidation';
 const OtherStep: React.FC = () => {
   const dispatch = useDispatch();
   const financesInfo = useSelector((state: RootState) => state.form.formData.financesInfo);
@@ -16,10 +16,10 @@ const OtherStep: React.FC = () => {
   };
 
   return (
-      <div className="w-full mb-8 animate-fade-in-right duration-1000">  
-      <StepTitle title="Additional Information" />
+      <div className="w-full animate-fade-in-right duration-1000">  
+      <StepTitle title="References" />
       
-      <p className="text-gray-400 mb-8 text-xs w-full text-center mx-auto items-center">
+      <p className="text-gray-400 mb-8 text-xs w-full ">
         Please provide any additional information that might be helpful for our review process.
       </p>
 

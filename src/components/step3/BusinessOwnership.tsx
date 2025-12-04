@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateCompanyInfo, updateOwnershipInfo } from '../store/form/formSlice';
-import StepTitle from './customComponents/StepTitle';
-import TextField from './customComponents/TextField';
-import { AddressAutocomplete } from './customComponents/AddressAutocomplete';
-import NumberInput from './customComponents/NumberField';
-import DatePickerField from './customComponents/DatePickerField';
-import DropdownField from './customComponents/DropdownField';
-import { useValidation } from '../contexts/ValidationContext';
-import { businessType, usStates } from '../store/form/hubspotLists';
-import FinancesStep from './step3/FinancesStep';
+import { RootState } from '../../store';
+import { updateCompanyInfo, updateOwnershipInfo } from '../../store/form/formSlice';
+import StepTitle from '../customComponents/StepTitle';
+import TextField from '../customComponents/TextField';
+import { AddressAutocomplete } from '../customComponents/AddressAutocomplete';
+import NumberInput from '../customComponents/NumberField';
+import DatePickerField from '../customComponents/DatePickerField';
+import DropdownField from '../customComponents/DropdownField';
+import { useValidation } from '../../contexts/ValidationContext';
+import { businessType, usStates } from '../../store/form/hubspotLists';
 
 interface Owner {
   id: string;
@@ -29,7 +28,7 @@ interface Question {
   condition?: (financesInfo: any) => boolean;
 }
 
-const BusinessFinancialStep: React.FC = () => {
+const BusinessOwnership: React.FC = () => {
   const dispatch = useDispatch();
   const ownershipInfo = useSelector((state: RootState) => state.form.formData.ownershipInfo);
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
@@ -306,13 +305,11 @@ const BusinessFinancialStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full animate-fade-in-right duration-1000">
-      <p className="text-gray-400 mb-8 text-xs mt-8 text-center">
-        Please carefully complete the information below and make sure that it is accurate including information about the control person and all beneficial owner(s) owning more than 20% of the company. If this information is inaccurate or incomplete, this could result in delay or denial of your application.
-      </p>
+    <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
+      
 
       {/* Business Legal Information Section - Exact copy from OwnershipStep */}
-      <StepTitle title="Business Legal Information" />
+      <StepTitle title="Business & Legal" />
       <TextField 
         type="text" 
         label="Legal Business Name" 
@@ -379,12 +376,13 @@ const BusinessFinancialStep: React.FC = () => {
       />
 
       {/* Beneficial Ownership Section - Exact copy from OwnershipStep */}
-      <StepTitle title="Beneficial ownership & control person" />
-
+      <StepTitle title="Ownership" />
+      <p className="text-xs text-gray-500 mb-4">Please provide the name and ownership percentage of all beneficial owners of the business with more than 20% ownership.</p>
+      
       {ownershipInfo.owners.map((owner) => (
         <div key={owner.id} className="flex flex-col bg-white w-full">
           <div className="flex flex-row justify-between w-full">
-            <p className='block text-sm font-medium text-gray-700  '>
+            <p className='block text-sm font-bold text-gray-700  '>
               Owner {ownershipInfo.owners.indexOf(owner) + 1}
             </p>
             {ownershipInfo.owners.length > 1 && (
@@ -393,12 +391,14 @@ const BusinessFinancialStep: React.FC = () => {
                 onClick={() => removeOwner(owner.id)}
                 type="button"
               >
-                Delete owner
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             )}
           </div>
 
-          <div className="flex flex-row justify-between w-full gap-x-4 mt-8">
+          <div className="flex flex-row justify-between w-full gap-x-4">
             <TextField 
               type="text" 
               label="Owner Name" 
@@ -442,23 +442,25 @@ const BusinessFinancialStep: React.FC = () => {
             />
           </div>
 
-          {ownershipInfo.owners.length > 1 && (
-            <div className='w-[30%] mx-auto border-b border-amber-200 my-8 '></div>
-          )}
+         
         </div>
       ))}
-      
-      <button
-        className="add-owner text-sm text-gray-500 hover:text-rose-500 focus:outline-none my-4"
-        onClick={addOwner}
-        type="button"
-      >
-        + Add Owner
-      </button>
+        <div className="flex justify-center my-4">
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-amber-500 text-amber-500 hover:border-amber-400 hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all duration-200"
+            onClick={addOwner}
+            type="button"
+            title="Add Another Owner"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </button>
+        </div>
+     
 
-      <FinancesStep />
     </div>
   );
 };
 
-export default BusinessFinancialStep;
+export default BusinessOwnership;

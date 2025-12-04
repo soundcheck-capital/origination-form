@@ -113,7 +113,7 @@ const PersonalInfo: React.FC = () => {
   return (
     <div className="animate-fadeIn w-full ">
 
-      <StepTitle title="Contact Information" />
+      <StepTitle title="Contact" />
 
       <TextField type="text" label="First Name" name="firstname" value={personalInfo.firstname} onChange={handleInputChange} error='' onBlur={() => { }} required />
       <TextField type="text" label="Last Name" name="lastname" value={personalInfo.lastname} onChange={handleInputChange} error='' onBlur={() => { }} required />

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import StepTitle from './customComponents/StepTitle';
-import FileUploadField from './customComponents/FileUploadField';
+import StepTitle from '../customComponents/StepTitle';
+import FileUploadField from '../customComponents/FileUploadField';
 
 const FinancialInformationStep: React.FC = () => {
 
@@ -12,8 +12,8 @@ const FinancialInformationStep: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full pt-8 animate-fade-in-right duration-1000">
-      <StepTitle title="Financial Information" />
+    <div className="flex flex-col w-full animate-fade-in-right duration-1000">
+      <StepTitle title="Financial" />
       
       <div className="w-full">  
         <FileUploadField

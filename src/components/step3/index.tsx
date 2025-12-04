@@ -1,11 +1,11 @@
 import React from 'react';
-import BusinessFinancialStep from './BusinessFinancialStep';
-import FinancesStep from './FinancesStep';
+import BusinessOwnership from './BusinessOwnership';
+import FinancesStep from './Finances';
 
 const Step3: React.FC = () => {
     return  (  <>
 
-      <BusinessFinancialStep />
+      <BusinessOwnership />
       <FinancesStep />
       </>);
       

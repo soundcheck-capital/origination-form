@@ -45,7 +45,7 @@ const CompanyInfo: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
-      <StepTitle title="Company Information" />
+      <StepTitle title="Company" />
 
       <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}} required />
       <TextField type="text" label="Your Role" name="role" value={personalInfo.role} onChange={handleChange} error='' onBlur={()=>{}} required />

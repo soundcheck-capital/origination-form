@@ -55,8 +55,11 @@ const TicketingFundingStep: React.FC = () => {
   return (
     <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
       {/* Ticketing Information Section - Exact copy from TicketingStep */}
-      <StepTitle title="Ticketing Information" />
+      <StepTitle title="Ticketing" />
     
+      <NumberInput label="Number of Events" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required />
+      <CurrencyField label="Gross Annual Ticketing Volume ($)" name="lastYearSales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" id="lastYearSales" required />
+
       <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required description={getPrecision(ticketingInfo.paymentProcessing)} />
       
       <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required />
@@ -67,13 +70,6 @@ const TicketingFundingStep: React.FC = () => {
 
       <DropdownField label="What is the payout/settlement policy?" name="settlementPayout" value={ticketingInfo.settlementPayout} onChange={handleChange} error='' onBlur={() => { }} options={settlementPayout} required />
 
-      {/* Ticketing Volume Section - Exact copy from TicketingStep (modified) */}
-      <StepTitle title="Annual Ticketing Volume" />
-
-      <NumberInput label="Number of Events" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required />
-      <CurrencyField label="Gross Annual Ticketing Volume ($)" name="lastYearSales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" id="lastYearSales" required />
-
-      
     </div>
   );
 };
