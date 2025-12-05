@@ -12,6 +12,7 @@ import Step2 from './step2';
 import Step3 from './step3';
 import Step4 from './step4';
 import Step5 from './step5';
+import LoadingScreen from './customComponents/LoadingScreen';
 import logo from '../assets/logo_black_bold.svg';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
@@ -22,6 +23,7 @@ const MultiStepFormContent: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const formData = useSelector((state: RootState) => state.form);
   const [saveMessage, setSaveMessage] = useState('');
   const { sendFormData, isUploading } = useFileUpload();
@@ -162,6 +164,21 @@ const MultiStepFormContent: React.FC = () => {
       return;
     }
 
+    // Si on passe de l'étape 1 à l'étape 2, afficher le loader
+    if (currentStep === 1) {
+      setIsLoading(true);
+      
+      // Simuler l'analyse des informations pendant 3 secondes
+      setTimeout(() => {
+        setIsLoading(false);
+        setCurrentStep(currentStep + 1);
+        setCurrentStepErrors({});
+        window.scrollTo(0, 0);
+      }, 3000);
+      
+      return;
+    }
+
     // Démarrer l'animation de sauvegarde
     setIsSavingStep(true);
 
@@ -235,7 +252,7 @@ const MultiStepFormContent: React.FC = () => {
       case 3:
         return 'Business & Ownership';
       case 4:
-        return 'Diligence';
+        return 'Diligence Files';
       case 5:
         return 'Review & Submit';
       default:
@@ -314,6 +331,11 @@ const MultiStepFormContent: React.FC = () => {
     );
   }
   
+  // Afficher le loader si en cours de chargement
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}

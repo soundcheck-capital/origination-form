@@ -2,7 +2,6 @@ import React from 'react';
 import TicketingInformationStep from './TicketingInformationStep';
 import FinancialInformationStep from './FinancialInformationStep';
 import LegalInformationStep from './LegalInformationStep';
-import OtherStep from './OtherStep';
 
 const Step4: React.FC = () => {
   return (
@@ -10,7 +9,6 @@ const Step4: React.FC = () => {
       <TicketingInformationStep />
       <FinancialInformationStep />
       <LegalInformationStep />
-      <OtherStep />
     </div>
   );
 };
