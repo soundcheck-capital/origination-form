@@ -150,11 +150,24 @@ const MultiStepFormContent: React.FC = () => {
   const handleNextStep = async () => {
     const validation = validateCurrentStep(currentStep);
     
+    // Debug logging
+    if (isDevelopment) {
+      console.log('🔍 HandleNextStep Debug:', {
+        currentStep,
+        validation,
+        formData: formData.formData.ticketingInfo
+      });
+    }
+    
     if (!validation.isValid) {
       // Merge validation errors with existing field errors
       const currentErrors = currentStepErrors || {};
       const merged = { ...currentErrors, ...validation.errors };
       setCurrentStepErrors(merged);
+      
+      if (isDevelopment) {
+        console.log('❌ Validation failed:', merged);
+      }
       
       // Scroll vers le haut pour que l'utilisateur voie les erreurs
       setTimeout(() => {
@@ -162,6 +175,10 @@ const MultiStepFormContent: React.FC = () => {
       }, 100);
       
       return;
+    }
+    
+    if (isDevelopment) {
+      console.log('✅ Validation passed, proceeding to next step');
     }
 
     // Si on passe de l'étape 1 à l'étape 2, afficher le loader
