@@ -17,6 +17,8 @@ import logo from '../assets/logo_black_bold.svg';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
 import { useFormValidation } from '../hooks/useFormValidation';
+// Import debug utils to auto-clear validation bypass flags
+import '../utils/debugUtils';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

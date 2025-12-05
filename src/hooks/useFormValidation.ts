@@ -173,11 +173,12 @@ export const useFormValidation = () => {
       });
     }
     
+    // TEMPORARILY DISABLE THE VALIDATION BYPASS FOR DEBUGGING
     // Skip validation only if explicitly disabled in development mode
-    if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') { 
-        isDevelopment && console.log("⚠️ VALIDATION DISABLED", localStorage.getItem('DISABLE_VALIDATION'));
-      return { isValid: true, errors: {} };
-    }
+    // if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') { 
+    //     isDevelopment && console.log("⚠️ VALIDATION DISABLED", localStorage.getItem('DISABLE_VALIDATION'));
+    //   return { isValid: true, errors: {} };
+    // }
 
     switch (step) {
       case 1:
