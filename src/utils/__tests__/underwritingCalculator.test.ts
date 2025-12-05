@@ -11,7 +11,7 @@ describe('Underwriting Calculator', () => {
       const inputs: UnderwritingInputs = {
         yearsInBusiness: '10+ years',      // score: 0
         numberOfEvents: 50,                // score: 0 (50+)
-        paymentRemittedBy: 'Ticketing Co', // score: 1
+        paymentRemittedBy: 'From the Ticketing Co (e.g. Ticketmaster)', // score: 1
         paymentFrequency: 'Daily',         // score: 0
         grossAnnualTicketSales: 2000000    // $2M
       };
@@ -35,9 +35,9 @@ describe('Underwriting Calculator', () => {
   describe('Scenario 2 - Medium-Risk User (Mid-Band 7.5%)', () => {
     it('should calculate correct advance for medium-risk user', () => {
       const inputs: UnderwritingInputs = {
-        yearsInBusiness: '3-5 years',           // score: 1.5
+        yearsInBusiness: '2-5 years',           // score: 1.5
         numberOfEvents: 5,                      // score: 5.85 (4-6 range)
-        paymentRemittedBy: 'Payment Processor', // score: 3
+        paymentRemittedBy: 'It varies',         // score: 3
         paymentFrequency: 'Weekly',             // score: 1
         grossAnnualTicketSales: 3000000         // $3M
       };
@@ -63,8 +63,8 @@ describe('Underwriting Calculator', () => {
       const inputs: UnderwritingInputs = {
         yearsInBusiness: 'Less than 1 year', // score: 5
         numberOfEvents: 1,                   // score: 9
-        paymentRemittedBy: 'Venue',          // score: 5
-        paymentFrequency: 'Post-event',      // score: 5
+        paymentRemittedBy: 'From the Venue (e.g. MSG)', // score: 5
+        paymentFrequency: 'Post event',      // score: 5
         grossAnnualTicketSales: 10000000     // $10M
       };
 
@@ -89,7 +89,7 @@ describe('Underwriting Calculator', () => {
       const inputs: UnderwritingInputs = {
         yearsInBusiness: '10+ years',      // score: 0
         numberOfEvents: 50,                // score: 0
-        paymentRemittedBy: 'Ticketing Co', // score: 1
+        paymentRemittedBy: 'From the Ticketing Co (e.g. Ticketmaster)', // score: 1
         paymentFrequency: 'Daily',         // score: 0
         grossAnnualTicketSales: 20000000   // $20M
       };
@@ -124,23 +124,23 @@ describe('Underwriting Calculator', () => {
       const inputs: UnderwritingInputs = {
         yearsInBusiness: 'Less than 1 year', // score: 5
         numberOfEvents: 1,                   // score: 9
-        paymentRemittedBy: 'Venue',          // score: 5
-        paymentFrequency: 'Post-event',      // score: 5
+        paymentRemittedBy: 'From the Venue (e.g. MSG)', // score: 5
+        paymentFrequency: 'Post event',      // score: 5
         grossAnnualTicketSales: 1000000
       };
 
       const result = calculateUnderwritingResult(inputs);
       expect(result).not.toBeNull();
-      expect(result!.totalRiskScore).toBe(24);
+      expect(result!.totalRiskScore).toBe(24); // 5 + 9 + 5 + 5 = 24
       expect(result!.maxAdvancePercent).toBe(0.025); // Should still get 2.5%
     });
 
     it('should handle decimal risk scores correctly', () => {
       const inputs: UnderwritingInputs = {
-        yearsInBusiness: '3-5 years',     // score: 1.5
+        yearsInBusiness: '2-5 years',     // score: 1.5
         numberOfEvents: 5,                // score: 5.85
-        paymentRemittedBy: 'Own Processor', // score: 2
-        paymentFrequency: 'Bi-weekly',    // score: 2
+        paymentRemittedBy: 'From the Payment Processor (e.g. Stripe)', // score: 2
+        paymentFrequency: 'Bi-monthly',   // score: 2
         grossAnnualTicketSales: 1000000
       };
 
@@ -155,7 +155,7 @@ describe('Underwriting Calculator', () => {
       const inputs1: UnderwritingInputs = {
         yearsInBusiness: '10+ years',      // 0
         numberOfEvents: 50,                // 0  
-        paymentRemittedBy: 'Venue',        // 5
+        paymentRemittedBy: 'From the Venue (e.g. MSG)', // 5
         paymentFrequency: 'Weekly',        // 1
         grossAnnualTicketSales: 1000000
       };
@@ -166,9 +166,9 @@ describe('Underwriting Calculator', () => {
 
       // Test just above boundary at 6.0000001
       const inputs2: UnderwritingInputs = {
-        yearsInBusiness: '6-9 years',      // 0.5
+        yearsInBusiness: '5-10 years',     // 0.5
         numberOfEvents: 4,                 // 5.85
-        paymentRemittedBy: 'Ticketing Co', // 1
+        paymentRemittedBy: 'From the Ticketing Co (e.g. Ticketmaster)', // 1
         paymentFrequency: 'Daily',         // 0
         grossAnnualTicketSales: 1000000
       };

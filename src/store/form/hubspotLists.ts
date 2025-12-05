@@ -13,10 +13,10 @@ export const clientType = {
 };
   
   export const yearsInBusiness = {
-    'Less than 1 year':'Less than 1 year',
+    '0-1 year':'Less than 1 year',
     '1-2 years':'1-2 years',
-    '3-5 years':'3-5 years',
-    '6-9 years':'6-9 years',
+    '2-5 years':'2-5 years',
+    '5-10 years':'5-10 years',
     '10+ years':'10+ years',
   };
   export const memberOf = {
@@ -132,17 +132,16 @@ export const clientType = {
   export const settlementPayout = {
 	  'Daily':'Daily',
     'Weekly':'Weekly',
-    'Bi-weekly':'Bi-weekly',
+    'Bi-monthly':'Bi-monthly',
     'Monthly':'Monthly',
-    'Post-event':'Post-event',
+    'Post event':'Post event',
     'It varies':'It varies'
   };
   
   export const paymentProcessing = {
-    'Ticketing Co':'Ticketing Co',
-    'Own Processor':'Own Processor',
-    'Payment Processor':'Payment Processor',
-    'Venue':'Venue',
+    'Ticketing Co':'From the Ticketing Co (e.g. Ticketmaster)',
+    'Own Processor':'From the Payment Processor (e.g. Stripe)',
+    'Venue':'From the Venue (e.g. MSG)',
     'It varies':'It varies'
   };
   export const precision = [

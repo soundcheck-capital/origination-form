@@ -15,8 +15,8 @@
 export const YEARS_IN_BUSINESS_SCORES = {
   'Less than 1 year': 5,
   '1-2 years': 3,
-  '3-5 years': 1.5,
-  '6-9 years': 0.5,
+  '2-5 years': 1.5,  // Updated to match original dropdown
+  '5-10 years': 0.5, // Updated to match original dropdown
   '10+ years': 0
 } as const;
 
@@ -37,10 +37,10 @@ export const EVENTS_SCORES = {
  * Payment Remitted By Risk Scores
  */
 export const PAYMENT_REMITTED_BY_SCORES = {
-  'Ticketing Co': 1,
-  'Own Processor': 2,
-  'Payment Processor': 3,
-  'Venue': 5
+  'From the Ticketing Co (e.g. Ticketmaster)': 1,
+  'From the Payment Processor (e.g. Stripe)': 2,
+  'From the Venue (e.g. MSG)': 5,
+  'It varies': 3
 } as const;
 
 /**
@@ -49,9 +49,10 @@ export const PAYMENT_REMITTED_BY_SCORES = {
 export const PAYMENT_FREQUENCY_SCORES = {
   'Daily': 0,
   'Weekly': 1,
-  'Bi-weekly': 2,
+  'Bi-monthly': 2,  // Updated to match original dropdown
   'Monthly': 3,
-  'Post-event': 5
+  'Post event': 5,  // Updated to match original dropdown
+  'It varies': 4
 } as const;
 
 /**
