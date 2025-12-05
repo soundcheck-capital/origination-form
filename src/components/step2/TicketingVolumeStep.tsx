@@ -6,21 +6,44 @@ import CurrencyField from '../customComponents/CurrencyField';
 import { timingOfFunding, useOfProceeds } from '../../store/form/hubspotLists';
 import DropdownField from '../customComponents/DropdownField';
 import { useValidation } from '../../contexts/ValidationContext';
+import { calculateUnderwritingResult, formatAdvanceAmount, UnderwritingInputs } from '../../utils/underwritingCalculator';
+import { logUnderwritingBreakdown } from '../../utils/underwritingDebug';
 
 
 const Funding: React.FC = () => {
   const dispatch = useDispatch();
   const fundsInfo = useSelector((state: RootState) => state.form.formData.fundsInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
+  const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
+  const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const { setFieldError } = useValidation();
   const [showPreOffer, setShowPreOffer] = useState(false);
   const [showFields, setShowFields] = useState(false);
   
-  // Capital amount calculation (from YourFundingStep)
+  // New underwriting calculation
   let capitalAmount = 0;
-  if(ticketingVolume.lastYearSales > 0  && ticketingVolume.lastYearEvents > 0) {
-    const maxAmount = ticketingVolume.lastYearSales * 0.15;
-    capitalAmount = maxAmount > 1000000 ? 1000000 : maxAmount;
+  let underwritingResult = null;
+  
+  if (ticketingVolume.lastYearSales > 0 && 
+      ticketingVolume.lastYearEvents > 0 && 
+      companyInfo.yearsInBusiness &&
+      ticketingInfo.paymentProcessing &&
+      ticketingInfo.settlementPayout) {
+    
+    const inputs: UnderwritingInputs = {
+      yearsInBusiness: companyInfo.yearsInBusiness,
+      numberOfEvents: ticketingVolume.lastYearEvents,
+      paymentRemittedBy: ticketingInfo.paymentProcessing,
+      paymentFrequency: ticketingInfo.settlementPayout,
+      grossAnnualTicketSales: ticketingVolume.lastYearSales
+    };
+    
+    underwritingResult = calculateUnderwritingResult(inputs);
+    if (underwritingResult) {
+      capitalAmount = underwritingResult.advanceAmount;
+      // Debug logging in development
+      logUnderwritingBreakdown(inputs, underwritingResult);
+    }
   }
 
   // Show pre-offer immediately, then fields after delay
@@ -64,8 +87,13 @@ const Funding: React.FC = () => {
                 letterSpacing: '0.05em',
                 fontVariantNumeric: 'tabular-nums'
               }}>
-            ${capitalAmount.toLocaleString('en-US')}
+            {formatAdvanceAmount(capitalAmount)}
           </h3>
+          {underwritingResult && underwritingResult.isCapped && (
+            <p className='text-xs text-amber-600 mx-auto mb-2 text-center font-medium'>
+              * Amount capped at maximum advance limit
+            </p>
+          )}
           <p className='text-xs text-neutral-900 mx-auto mb-4 text-center font-bold'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please provide the info below and complete the following pages.</p>
         </div>
       )}
