@@ -78,6 +78,10 @@ export const useFormValidation = () => {
       errors.debts = 'Please provide debt details';
     }
 
+    // References validation (since OtherStep is in step 3)
+    if (!financesInfo.additionalComments.trim()) errors.additionalComments = 'Additional comments are required';
+    if (!financesInfo.industryReferences.trim()) errors.industryReferences = 'Industry references are required';
+
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
@@ -107,9 +111,7 @@ export const useFormValidation = () => {
       errors.legalEntityChart = 'Legal entity chart is required';
     }
 
-    // Additional Information
-    if (!financesInfo.additionalComments.trim()) errors.additionalComments = 'Additional comments are required';
-    if (!financesInfo.industryReferences.trim()) errors.industryReferences = 'Industry references are required';
+    // Additional Information validation is now handled in step 3
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };

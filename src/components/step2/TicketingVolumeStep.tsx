@@ -23,12 +23,10 @@ const Funding: React.FC = () => {
     capitalAmount = maxAmount > 1000000 ? 1000000 : maxAmount;
   }
 
-  // Show pre-offer immediately with animation, then fields after delay
+  // Show pre-offer immediately, then fields after delay
   useEffect(() => {
-    // Show pre-offer with slight delay for animation
-    const preOfferTimer = setTimeout(() => {
-      setShowPreOffer(true);
-    }, 300);
+    // Show pre-offer immediately
+    setShowPreOffer(true);
 
     // Show fields after 2 seconds delay
     const fieldsTimer = setTimeout(() => {
@@ -36,7 +34,6 @@ const Funding: React.FC = () => {
     }, 2000);
 
     return () => {
-      clearTimeout(preOfferTimer);
       clearTimeout(fieldsTimer);
     };
   }, []);
@@ -54,11 +51,11 @@ const Funding: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full mt-16 animate-fade-in-right duration-1000">
+    <div className="flex flex-col items-center justify-center w-full mt-16">
       
-      {/* Pre-offer section with working animation */}
+      {/* Pre-offer section */}
       {capitalAmount !== 0 && showPreOffer && (
-        <div className='flex flex-col items-center justify-center w-full mb-8 animate-fade-in-right duration-700'>
+        <div className='flex flex-col items-center justify-center w-full mb-8 transition-all duration-1000 ease-out animate-fade-in-up'>
           <p className='text-sm text-neutral-900 mx-auto mb-4 text-center'>You could qualify for a funding up to:</p>
           <h3 className='font-black text-6xl text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 drop-shadow-sm' 
               style={{ 
@@ -69,12 +66,13 @@ const Funding: React.FC = () => {
               }}>
             ${capitalAmount.toLocaleString('en-US')}
           </h3>
+          <p className='text-xs text-neutral-900 mx-auto mb-4 text-center font-bold'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please provide the info below and complete the following pages.</p>
         </div>
       )}
       
-      {/* Funding fields with working animation */}
+      {/* Funding fields with smooth animation */}
       {showFields && (
-        <div className="w-full space-y-6 animate-fade-in-right duration-700">
+        <div className="w-full space-y-6 transition-all duration-1000 ease-out animate-fade-in-up">
           <CurrencyField label="Funding Needs ($)" name="yourFunds" value={fundsInfo.yourFunds === '0' ? '' : fundsInfo.yourFunds} onChange={(value) => handleFundsCurrencyChange('yourFunds', value)} required />
           <DropdownField label="Timing for Funding" name="timingOfFunding" value={fundsInfo.timingOfFunding} onChange={handleFundsChange} error='' onBlur={() => { }} options={timingOfFunding} required />
           <DropdownField label="What do you plan to use the money for?" name="useOfProceeds" value={fundsInfo.useOfProceeds} onChange={handleFundsChange} error='' onBlur={() => { }} options={useOfProceeds} required />
