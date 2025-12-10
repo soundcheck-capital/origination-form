@@ -74,6 +74,7 @@ If AdvanceAmount > $500,000 → AdvanceAmount = $500,000
 
 ## Implementation Files
 
+- **`src/config/underwritingConfig.ts`** - Risk scoring tables and matrix configuration
 - **`src/utils/underwritingCalculator.ts`** - Main calculation logic
 - **`src/utils/underwritingDebug.ts`** - Development debugging utilities
 - **`src/utils/__tests__/underwritingCalculator.test.ts`** - Test cases for all scenarios
@@ -110,8 +111,29 @@ In development mode, detailed calculation breakdowns are logged to the console, 
 - Final calculated amount
 - Whether the cap was applied
 
-## Future Considerations
+## Configuration Management
 
-- The risk matrix and scoring tables are hardcoded for performance
-- Any changes to underwriting guidelines require code updates and redeployment
-- Consider moving to a configuration-based system if frequent updates are needed
+### Risk Scoring Configuration
+
+All risk scoring data is now centralized in `src/config/underwritingConfig.ts`:
+
+- **Risk scoring tables** for each category
+- **Risk matrix** with percentage bands
+- **Maximum advance cap** setting
+- **Validation logic** to ensure matrix completeness
+
+### Updating Underwriting Rules
+
+To modify underwriting rules:
+
+1. **Edit `src/config/underwritingConfig.ts`** - Update scoring tables or risk matrix
+2. **Run tests** - Ensure all scenarios still pass
+3. **Update documentation** - Reflect any changes in acceptance criteria
+4. **Deploy** - Changes take effect immediately
+
+### Benefits of Separation
+
+- **Clear separation** of business rules from calculation logic
+- **Easy updates** - Modify scoring without touching calculator code
+- **Better maintainability** - All underwriting data in one place
+- **Validation** - Automatic checks for matrix completeness

@@ -7,68 +7,14 @@
  * - Final advance amount with $500k cap
  */
 
-// Risk scoring tables based on underwriting guidelines
-
-/**
- * Years in Business Risk Scores
- */
-export const YEARS_IN_BUSINESS_SCORES = {
-  'Less than 1 year': 5,
-  '1-2 years': 3,
-  '2-5 years': 1.5,  // Updated to match original dropdown
-  '5-10 years': 0.5, // Updated to match original dropdown
-  '10+ years': 0
-} as const;
-
-/**
- * Number of Events Risk Scores
- */
-export const EVENTS_SCORES = {
-  '1': 9,
-  '2-3': 7.8,
-  '4-6': 5.85,
-  '7-12': 3.9,
-  '13-24': 1.95,
-  '25-49': 0.975,
-  '50+': 0
-} as const;
-
-/**
- * Payment Remitted By Risk Scores
- */
-export const PAYMENT_REMITTED_BY_SCORES = {
-  'From the Ticketing Co (e.g. Ticketmaster)': 1,
-  'From the Payment Processor (e.g. Stripe)': 2,
-  'From the Venue (e.g. MSG)': 5,
-  'It varies': 3
-} as const;
-
-/**
- * Payment Frequency Risk Scores
- */
-export const PAYMENT_FREQUENCY_SCORES = {
-  'Daily': 0,
-  'Weekly': 1,
-  'Bi-monthly': 2,  // Updated to match original dropdown
-  'Monthly': 3,
-  'Post event': 5,  // Updated to match original dropdown
-  'It varies': 4
-} as const;
-
-/**
- * Risk Matrix for Max Advance %
- */
-export const RISK_MATRIX = [
-  { lowerBound: 0, upperBound: 6, maxAdvancePercent: 0.10 },
-  { lowerBound: 6.0000001, upperBound: 12, maxAdvancePercent: 0.075 },
-  { lowerBound: 12.10, upperBound: 18, maxAdvancePercent: 0.05 },
-  { lowerBound: 18.10, upperBound: 24, maxAdvancePercent: 0.025 }
-] as const;
-
-/**
- * Maximum advance amount cap
- */
-export const MAX_ADVANCE_CAP = 500000;
+import {
+  YEARS_IN_BUSINESS_SCORES,
+  EVENTS_SCORES,
+  PAYMENT_REMITTED_BY_SCORES,
+  PAYMENT_FREQUENCY_SCORES,
+  RISK_MATRIX,
+  MAX_ADVANCE_CAP
+} from '../config/underwritingConfig';
 
 /**
  * Interface for underwriting inputs
@@ -105,13 +51,13 @@ function getYearsInBusinessScore(yearsInBusiness: string): number {
 }
 
 /**
- * Get risk score for number of events
+ * Get risk score for number of events (updated to match CSV)
  */
 function getEventsScore(numberOfEvents: number): number {
   if (numberOfEvents >= 50) return EVENTS_SCORES['50+'];
-  if (numberOfEvents >= 25) return EVENTS_SCORES['25-49'];
-  if (numberOfEvents >= 13) return EVENTS_SCORES['13-24'];
-  if (numberOfEvents >= 7) return EVENTS_SCORES['7-12'];
+  if (numberOfEvents >= 21) return EVENTS_SCORES['21+'];
+  if (numberOfEvents >= 11) return EVENTS_SCORES['11-20'];
+  if (numberOfEvents >= 7) return EVENTS_SCORES['7-10'];
   if (numberOfEvents >= 4) return EVENTS_SCORES['4-6'];
   if (numberOfEvents >= 2) return EVENTS_SCORES['2-3'];
   if (numberOfEvents === 1) return EVENTS_SCORES['1'];

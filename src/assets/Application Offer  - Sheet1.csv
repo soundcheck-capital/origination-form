@@ -1,0 +1,32 @@
+(1) Pre- Qual,,,,(2) Origination Form,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Years in Business,Risk Score,# of Events,Risk Score,Payment Remitted By,Risk Score,Payment Frequency,Risk Score,,,,Matrix for all 4,,,,,,,
+0,10,1 event,10,From Ticketing Co,1,Daily,0,,,,Lower Bound,Upper Bound,Max Advance %,,,,,
+"1, 2",8,2-3 events,8,From Payment Processor,3,Weekly,1,,,,0.00,7.00,10.00%,,,,,
+"3, 4, 5",5,4-6 events,7,From Venue,5,Bi Monthly,2,,,,7.10,14.00,7.50%,,,,,
+"6,7,8,9",3,7-10 events,6,Other,10,Monthly,3,,,,14.10,21.00,5.00%,,,,,
+10+,0,11-20 events,5,,,Post Event,5,,,,21.10,35.00,2.50%,,,,,
+,,21+ events,4,,,Other,5,,,,,,,,,,,
+,,50+ events,0,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Pre Qual,,,,Multiply Max Advance by Annual Gross Ticket Sales,,,,,,,,,,,,,,
+Lower Bound,Upper Bound,Max Advance %,,"Capped at $500,000",,,,,,,GTS,"$2,500,000.00","$1,000,000.00","$1,000,000.00","$500,000.00","$250,000.00"," $ 2,724,422 "," $ 1,800,000 "
+0,5,10.00%,,,,,,,,,    Years in Business,1-2 Years,6-9 years,10 + Years,3-5 Years,3-5 Years,10 + Years,6-9 years
+5.1,11,7.50%,,,,,,,,,     # of Events,7-10 Events,21+ events,50+ Events,50+ Events,7-10 Events,50+ events,11-20 Events
+11.1,15,5.00%,,,,,,,,,Payment By,Ticketing Co,Ticketing Co,Ticketing Co,Ticketing Co,Ticketing Co,Ticketing Co,Other
+15,20,2.50%,,,,,,,,,Frequency,Weekly,Weekly,Weekly,Weekly,Weekly,Weekly,Post event
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,Score,16,9,2,7,13,2,23
+Validation/Test vs old model,,,,,,,,,,,,,,,,,,
+GTS,"$2,500,000","$1,000,000","$1,000,000","$1,000,000","$500,000","$250,000","$15,000,000","$15,000,000"," $ 2,724,422 ",,Pre Qual,"$125,000","$75,000","$100,000","$50,000","$18,750","$272,442",
+    Years in Business,1-2 Years,6-9 years,6-9 years,10 + Years,3-5 Years,3-5 Years,10 + Years,10 + Years,10 + Years,,Orig Form,"$125,000","$75,000","$100,000","$50,000","$18,750","$272,442","$45,000"
+     # of Events,7-10 Events,21+ events,50+ events,50+ Events,50+ Events,7-10 Events,1 Event,4-6 Events,50+ events,,,,,,,,,
+Score,14,7,3,0,5,11,10,7,0,,,MATCHES,,,,,MOKB,Parachutes
+,,,,,,,,,,,,,,,,,,
+Old Model Max (capped at 15%),"$103,750","$115,000","$129,000","$150,000","$54,000","$14,750","$1,000,000","$1,000,000","$408,663",,,,,,,,,
+Old Model Max (Boris- capped at 10%),"$75,625","$77,500","$86,500","$100,000","$36,500","$10,375","$500,000","$500,000","$272,442",,,,,,,,,
+New Model Max,"$125,000","$75,000","$100,000","$100,000","$50,000","$18,750","$500,000","$500,000","$272,442",,,,,,,,,
+,,,,,,,"Riot, LIB",Good Vibez,MOKB,,,,,,,,,
+,120.48%,65.22%,77.52%,66.67%,92.59%,127.12%,50.00%,50.00%,66.67%,,,,,,,,,

@@ -17,11 +17,8 @@ const OtherStep: React.FC = () => {
 
   return (
       <div className="w-full animate-fade-in-right duration-1000">  
-      <StepTitle title="References" />
-      
-      <p className="text-gray-400 mb-8 text-xs w-full ">
-        Please provide any additional information that might be helpful for our review process.
-      </p>
+      <StepTitle title="" />
+  
 
       <TextAreaField
         label="Industry References"
@@ -32,6 +29,7 @@ const OtherStep: React.FC = () => {
         rows={4}
         required={true}
         error={errors.industryReferences}
+        labelClassName="text-amber-500 my-2 text-lg font-semibold text-left"
       />
 
       <TextAreaField
@@ -43,6 +41,7 @@ const OtherStep: React.FC = () => {
         rows={4}
         required={true}
         error={errors.additionalComments}
+        labelClassName="text-amber-500 my-2 text-lg font-semibold text-left"
       />
     </div>
   );

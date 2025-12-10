@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updateFundsInfo,  } from '../../store/form/formSlice';
-import CurrencyField from '../customComponents/CurrencyField';
 import { timingOfFunding, useOfProceeds } from '../../store/form/hubspotLists';
 import DropdownField from '../customComponents/DropdownField';
 import { useValidation } from '../../contexts/ValidationContext';
@@ -68,10 +67,7 @@ const Funding: React.FC = () => {
     setFieldError(name, null);
   };
 
-  const handleFundsCurrencyChange = (name: string, value: string) => {
-    dispatch(updateFundsInfo({ [name]: value }));
-    setFieldError(name, null);
-  };
+  
 
   return (
     <div className="flex flex-col items-center justify-center w-full mt-16">
@@ -94,14 +90,47 @@ const Funding: React.FC = () => {
               * Amount capped at maximum advance limit
             </p>
           )}
-          <p className='text-xs text-neutral-900 mx-auto mb-4 text-center font-bold'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please provide the info below and complete the following pages.</p>
+          
+          {/* Development Risk Score Display */}
+          {process.env.NODE_ENV === 'development' && underwritingResult && (
+            <div className='bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4 text-left'>
+              <h4 className='text-sm font-bold text-blue-800 mb-2'>🔍 Risk Score Debug (Dev Only)</h4>
+              <div className='grid grid-cols-2 gap-2 text-xs text-blue-700'>
+                <div>
+                  <span className='font-medium'>Years in Business:</span> {underwritingResult.breakdown.yearsInBusinessScore} pts
+                </div>
+                <div>
+                  <span className='font-medium'>Number of Events:</span> {underwritingResult.breakdown.eventsScore} pts
+                </div>
+                <div>
+                  <span className='font-medium'>Payment Remitted By:</span> {underwritingResult.breakdown.paymentRemittedByScore} pts
+                </div>
+                <div>
+                  <span className='font-medium'>Payment Frequency:</span> {underwritingResult.breakdown.paymentFrequencyScore} pts
+                </div>
+              </div>
+              <div className='mt-3 pt-2 border-t border-blue-300'>
+                <div className='text-sm font-bold text-blue-800'>
+                  Total Risk Score: {underwritingResult.totalRiskScore} / 24
+                </div>
+                <div className='text-xs text-blue-600'>
+                  Max Advance %: {(underwritingResult.maxAdvancePercent * 100).toFixed(1)}%
+                </div>
+                <div className='text-xs text-blue-600'>
+                  Raw Amount: ${(ticketingVolume.lastYearSales * underwritingResult.maxAdvancePercent).toLocaleString()}
+                  {underwritingResult.isCapped && ' → Capped at $500k'}
+                </div>
+              </div>
+            </div>
+          )}
+          <p className='text-xs text-neutral-900 mx-auto mb-4 text-center font-bold'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please complete the application.</p>
         </div>
       )}
       
       {/* Funding fields with smooth animation */}
       {showFields && (
         <div className="w-full space-y-6 transition-all duration-1000 ease-out animate-fade-in-up">
-          <CurrencyField label="Funding Needs ($)" name="yourFunds" value={fundsInfo.yourFunds === '0' ? '' : fundsInfo.yourFunds} onChange={(value) => handleFundsCurrencyChange('yourFunds', value)} required />
+         {/*   <CurrencyField label="Funding Needs ($)" name="yourFunds" value={fundsInfo.yourFunds === '0' ? '' : fundsInfo.yourFunds} onChange={(value) => handleFundsCurrencyChange('yourFunds', value)} required /> */}
           <DropdownField label="Timing for Funding" name="timingOfFunding" value={fundsInfo.timingOfFunding} onChange={handleFundsChange} error='' onBlur={() => { }} options={timingOfFunding} required />
           <DropdownField label="What do you plan to use the money for?" name="useOfProceeds" value={fundsInfo.useOfProceeds} onChange={handleFundsChange} error='' onBlur={() => { }} options={useOfProceeds} required />
         </div>
