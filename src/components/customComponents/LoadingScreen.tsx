@@ -13,8 +13,16 @@ const LoadingScreen: React.FC = () => {
 
   return (
     <div className={`fixed inset-0 bg-white z-50 flex flex-col items-center justify-center transition-opacity duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
-      {/* Logo Soundcheck */}
-      <div className="mb-8">
+      
+       {/* Indicateur de progression avec barres animées comme le logo */}
+       <div className={`flex justify-center items-end mt-8 space-x-1 transition-all duration-1000 ${barsVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+          <div className="w-2 h-3 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s', animationDuration: '1.5s' }}></div>
+          <div className="w-2 h-7 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s', animationDuration: '1.1s' }}></div>
+          <div className="w-2 h-5 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '0.9s' }}></div>
+          <div className="w-2 h-4 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0.6s', animationDuration: '1.3s' }}></div>
+        </div>
+        {/* Logo Soundcheck */}
+      {/* <div className="mb-8">
         <svg 
           width="85" 
           height="65" 
@@ -53,10 +61,10 @@ const LoadingScreen: React.FC = () => {
             </linearGradient>
           </defs>
         </svg>
-      </div>
+      </div> */}
 
       {/* Message de chargement */}
-      <div className={`text-center max-w-md transition-all duration-1000 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className={`mt-4 text-center max-w-md transition-all duration-1000 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <h2 className="text-2xl font-semibold text-gray-800 mb-2 animate-pulse">
           We are analyzing your information
         </h2>
@@ -64,16 +72,7 @@ const LoadingScreen: React.FC = () => {
           to personalize your funding options
         </p>
         
-        {/* Indicateur de progression avec barres animées comme le logo */}
-        <div className={`flex justify-center items-end mt-8 space-x-1 transition-all duration-1000 ${barsVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-          <div className="w-2 h-4 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0s', animationDuration: '1s' }}></div>
-          <div className="w-2 h-8 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s', animationDuration: '1.2s' }}></div>
-          <div className="w-2 h-6 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s', animationDuration: '0.8s' }}></div>
-          <div className="w-2 h-3 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s', animationDuration: '1.5s' }}></div>
-          <div className="w-2 h-7 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s', animationDuration: '1.1s' }}></div>
-          <div className="w-2 h-5 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '0.9s' }}></div>
-          <div className="w-2 h-4 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0.6s', animationDuration: '1.3s' }}></div>
-        </div>
+       
       </div>
     </div>
   );

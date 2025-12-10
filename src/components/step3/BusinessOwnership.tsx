@@ -101,7 +101,7 @@ const BusinessOwnership: React.FC = () => {
     } else {
       dispatch(updateCompanyInfo({ [name]: value }));
     }
-    
+
     // Real-time validation for company fields
     if (name === 'legalEntityName') {
       if (!value.trim() || value.length < 2) {
@@ -141,13 +141,13 @@ const BusinessOwnership: React.FC = () => {
   };
 
   const updateCompanyAddress = (address: string) => {
-    dispatch(updateCompanyInfo({ 
+    dispatch(updateCompanyInfo({
       companyAddressDisplay: address,
-      companyAddress: `${address.split(',')[0]}`, 
-      companyZipcode: address.split(',')[3], 
-      companyState: address.split(',')[2], 
-      companyCountry: address.split(',')[4], 
-      companyCity: address.split(',')[1] 
+      companyAddress: `${address.split(',')[0]}`,
+      companyZipcode: address.split(',')[3],
+      companyState: address.split(',')[2],
+      companyCountry: address.split(',')[4],
+      companyCity: address.split(',')[1]
     }));
 
     // Real-time validation for company address
@@ -166,7 +166,7 @@ const BusinessOwnership: React.FC = () => {
     const formatted = formatEIN(e.target.value);
     setEin(formatted);
     dispatch(updateCompanyInfo({ ein: formatted }));
-    
+
     // Real-time validation for EIN
     if (!formatted.trim()) {
       setFieldError('ein', 'EIN is required');
@@ -230,10 +230,10 @@ const BusinessOwnership: React.FC = () => {
       }
     }
     const totalPercentage = updatedOwners.reduce((sum, owner) => sum + parseFloat(owner.ownershipPercentage), 0);
-    if(totalPercentage > 100){
-     setFieldError('owner1Percentage', 'Total ownership percentage cannot exceed 100%');
+    if (totalPercentage > 100) {
+      setFieldError('owner1Percentage', 'Total ownership percentage cannot exceed 100%');
     } else {
-     setFieldError('owner1Percentage', null);
+      setFieldError('owner1Percentage', null);
     }
     dispatch(updateOwnershipInfo({ owners: updatedOwners }));
   }, [dispatch, ownershipInfo.owners, setFieldError]);
@@ -241,10 +241,10 @@ const BusinessOwnership: React.FC = () => {
   const addOwner = useCallback(() => {
     const newOwner: Owner = {
       id: crypto.randomUUID(),
-      ownerName: '', 
-      ownershipPercentage: '', 
+      ownerName: '',
+      ownershipPercentage: '',
       sameAddress: false,
-      ownerAddress: '', 
+      ownerAddress: '',
       ownerBirthDate: ''
     };
     dispatch(updateOwnershipInfo({
@@ -306,50 +306,50 @@ const BusinessOwnership: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
-      
+
 
       {/* Business Legal Information Section - Exact copy from OwnershipStep */}
       <StepTitle title="Business & Legal" />
-      <TextField 
-        type="text" 
-        label="Legal Business Name" 
-        name="legalEntityName" 
-        value={companyInfo.name} 
-        onChange={handleChange} 
-        error='' 
-        onBlur={() => { }} 
-        required 
+      <TextField
+        type="text"
+        label="Legal Business Name"
+        name="legalEntityName"
+        value={companyInfo.name}
+        onChange={handleChange}
+        error=''
+        onBlur={() => { }}
+        required
       />
-      <TextField 
-        type="text" 
-        label="DBA" 
-        name="dba" 
-        value={companyInfo.dba} 
-        onChange={handleChange} 
-        error='' 
-        onBlur={() => { }} 
-        required 
+      <TextField
+        type="text"
+        label="DBA"
+        name="dba"
+        value={companyInfo.dba}
+        onChange={handleChange}
+        error=''
+        onBlur={() => { }}
+        required
       />
-      <DropdownField 
-        label="Business Type" 
-        name="businessType" 
-        value={companyInfo.businessType} 
-        onChange={handleChange} 
-        error='' 
-        onBlur={() => { }} 
-        options={businessType} 
-        required 
+      <DropdownField
+        label="Business Type"
+        name="businessType"
+        value={companyInfo.businessType}
+        onChange={handleChange}
+        error=''
+        onBlur={() => { }}
+        options={businessType}
+        required
       />
 
-      <DropdownField 
-        label="State of Incorporation" 
-        name="stateOfIncorporation" 
-        value={companyInfo.stateOfIncorporation} 
-        onChange={handleChange} 
-        error='' 
-        onBlur={() => { }} 
-        options={usStates} 
-        required 
+      <DropdownField
+        label="State of Incorporation"
+        name="stateOfIncorporation"
+        value={companyInfo.stateOfIncorporation}
+        onChange={handleChange}
+        error=''
+        onBlur={() => { }}
+        options={usStates}
+        required
       />
 
       <AddressAutocomplete
@@ -361,31 +361,50 @@ const BusinessOwnership: React.FC = () => {
         error=''
         onBlur={() => { }}
         type="text"
-        id="companyAddressDisplay"  
+        id="companyAddressDisplay"
       />
 
-      <TextField 
-        type="text" 
-        label="Tax ID (EIN)" 
-        name="ein" 
-        value={ein} 
-        onChange={handleChangeEIN} 
-        error='' 
-        onBlur={() => { }} 
-        required 
+      <TextField
+        type="text"
+        label="Tax ID (EIN)"
+        name="ein"
+        value={ein}
+        onChange={handleChangeEIN}
+        error=''
+        onBlur={() => { }}
+        required
       />
 
       {/* Beneficial Ownership Section - Exact copy from OwnershipStep */}
       <StepTitle title="Ownership" />
-      <p className="text-xs text-gray-500 mb-4">Please provide the name and ownership percentage of all beneficial owners of the business with more than 20% ownership.</p>
-      
+      <p className="text-xs text-gray-500 mb-2">Please provide the name and ownership percentage of all beneficial owners of the business with more than 20% ownership.</p>
+
       {ownershipInfo.owners.map((owner) => (
         <div key={owner.id} className="flex flex-col bg-white w-full">
           <div className="flex flex-row justify-between w-full">
-            <p className='block text-sm font-bold text-gray-700  '>
-              Owner {ownershipInfo.owners.indexOf(owner) + 1}
-            </p>
-            {ownershipInfo.owners.length > 1 && (
+            {ownershipInfo.owners.indexOf(owner) + 1 === 1 ? (
+              <div className='flex flex-row justify-between w-full'>
+                <p className='block text-sm font-bold text-gray-700  '>
+                  Owner {ownershipInfo.owners.indexOf(owner) + 1}
+                </p>
+                <div className="flex justify-center pb-4">
+                  <button
+                    className="flex items-center justify-center w-6 h-6 rounded-full border border-amber-500 text-amber-400 hover:border-amber-300 hover:text-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-200 transition-all duration-200"
+                    onClick={addOwner}
+                    type="button"
+                    title="Add Another Owner"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </button>
+                </div>
+              </div>) : (
+              <p className='block text-sm font-bold text-gray-700  '>
+                Owner {ownershipInfo.owners.indexOf(owner) + 1}
+              </p>
+            )}
+            {ownershipInfo.owners.indexOf(owner) + 1 > 1 && (
               <button
                 className="text-sm text-red-500 hover:text-red-500 focus:outline-none font-bold text-end "
                 onClick={() => removeOwner(owner.id)}
@@ -399,65 +418,54 @@ const BusinessOwnership: React.FC = () => {
           </div>
 
           <div className="flex flex-row justify-between w-full gap-x-4">
-            <TextField 
-              type="text" 
-              label="Owner Name" 
-              name={`owner${ownershipInfo.owners.indexOf(owner)}Name`} 
-              value={owner.ownerName} 
-              onChange={(e) => handleOwnerChange(owner.id, 'ownerName', e.target.value)} 
-              error='' 
-              onBlur={() => { }} 
-              required 
+            <TextField
+              type="text"
+              label="Owner Name"
+              name={`owner${ownershipInfo.owners.indexOf(owner)}Name`}
+              value={owner.ownerName}
+              onChange={(e) => handleOwnerChange(owner.id, 'ownerName', e.target.value)}
+              error=''
+              onBlur={() => { }}
+              required
             />
 
-            <NumberInput 
-              showPercent={true} 
-              label="Ownership Percentage" 
-              name={`owner${ownershipInfo.owners.indexOf(owner)}Percentage`} 
-              value={owner.ownershipPercentage} 
-              onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)} 
-              required 
+            <NumberInput
+              showPercent={true}
+              label="Ownership Percentage"
+              name={`owner${ownershipInfo.owners.indexOf(owner)}Percentage`}
+              value={owner.ownershipPercentage}
+              onChange={(e) => handleOwnerChange(owner.id, 'ownershipPercentage', e)}
+              required
             />
           </div>
-          
+
           <div className="flex flex-row justify-between  gap-x-4 ">
-            <AddressAutocomplete 
-              label="Address" 
-              name={`owner${ownershipInfo.owners.indexOf(owner)}Address`} 
+            <AddressAutocomplete
+              label="Address"
+              name={`owner${ownershipInfo.owners.indexOf(owner)}Address`}
               value={owner.ownerAddress}
               onSelect={(address: string) => handleOwnerChange(owner.id, 'ownerAddress', address)}
-              onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)} 
-              error={''} 
-              onBlur={() => { }} 
-              type={''} 
-              id={''} 
-              required 
+              onChange={(e) => handleOwnerChange(owner.id, 'ownerAddress', e.target.value)}
+              error={''}
+              onBlur={() => { }}
+              type={''}
+              id={''}
+              required
             />
-            <DatePickerField 
-              label="Date of Birth" 
-              name={`owner${ownershipInfo.owners.indexOf(owner)}BirthDate`} 
-              value={owner.ownerBirthDate} 
-              onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)} 
-              required 
+            <DatePickerField
+              label="Date of Birth"
+              name={`owner${ownershipInfo.owners.indexOf(owner)}BirthDate`}
+              value={owner.ownerBirthDate}
+              onChange={(e) => handleOwnerChange(owner.id, 'ownerBirthDate', e.target.value)}
+              required
             />
           </div>
 
-         
+
         </div>
       ))}
-        <div className="flex justify-center my-4">
-          <button
-            className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-amber-500 text-amber-500 hover:border-amber-400 hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all duration-200"
-            onClick={addOwner}
-            type="button"
-            title="Add Another Owner"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </button>
-        </div>
-     
+
+
 
     </div>
   );
