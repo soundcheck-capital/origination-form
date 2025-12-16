@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updateFundsInfo,  } from '../../store/form/formSlice';
-import { timingOfFunding, useOfProceeds } from '../../store/form/hubspotLists';
+import { timingOfFunding, useOfProceeds, yearsInBusiness, paymentProcessing, settlementPayout } from '../../store/form/hubspotLists';
 import DropdownField from '../customComponents/DropdownField';
 import { useValidation } from '../../contexts/ValidationContext';
 import { calculateUnderwritingResult, formatAdvanceAmount, UnderwritingInputs } from '../../utils/underwritingCalculator';
@@ -19,6 +19,19 @@ const Funding: React.FC = () => {
   const [showPreOffer, setShowPreOffer] = useState(false);
   const [showFields, setShowFields] = useState(false);
   
+  // Helper functions to map keys to values for underwriting calculator
+  const mapYearsInBusiness = (key: string): string => {
+    return yearsInBusiness[key as keyof typeof yearsInBusiness] || key;
+  };
+  
+  const mapPaymentRemittedBy = (key: string): string => {
+    return paymentProcessing[key as keyof typeof paymentProcessing] || key;
+  };
+  
+  const mapPaymentFrequency = (key: string): string => {
+    return settlementPayout[key as keyof typeof settlementPayout] || key;
+  };
+  
   // New underwriting calculation
   let capitalAmount = 0;
   let underwritingResult = null;
@@ -29,15 +42,24 @@ const Funding: React.FC = () => {
       ticketingInfo.paymentProcessing &&
       ticketingInfo.settlementPayout) {
     
+    // Ensure numberOfEvents is a number (convert if needed)
+    const numberOfEvents = Number(ticketingVolume.lastYearEvents);
+    
+    // Ensure grossAnnualTicketSales is a number
+    const grossAnnualTicketSales = Number(ticketingVolume.lastYearSales);
+    
     const inputs: UnderwritingInputs = {
-      yearsInBusiness: companyInfo.yearsInBusiness,
-      numberOfEvents: ticketingVolume.lastYearEvents,
-      paymentRemittedBy: ticketingInfo.paymentProcessing,
-      paymentFrequency: ticketingInfo.settlementPayout,
-      grossAnnualTicketSales: ticketingVolume.lastYearSales
+      yearsInBusiness: mapYearsInBusiness(companyInfo.yearsInBusiness),
+      numberOfEvents: numberOfEvents,
+      paymentRemittedBy: mapPaymentRemittedBy(ticketingInfo.paymentProcessing),
+      paymentFrequency: mapPaymentFrequency(ticketingInfo.settlementPayout),
+      grossAnnualTicketSales: grossAnnualTicketSales
     };
     
+    console.log('inputs', inputs);
+    console.log('numberOfEvents type:', typeof numberOfEvents, 'value:', numberOfEvents);
     underwritingResult = calculateUnderwritingResult(inputs);
+    console.log('underwritingResult', underwritingResult);
     if (underwritingResult) {
       capitalAmount = underwritingResult.advanceAmount;
       // Debug logging in development
@@ -75,7 +97,7 @@ const Funding: React.FC = () => {
       {/* Pre-offer section */}
       {capitalAmount !== 0 && showPreOffer && (
         <div className='flex flex-col items-center justify-center w-full mb-8 transition-all duration-1000 ease-out animate-fade-in-up'>
-          <p className='text-sm text-neutral-900 mx-auto mb-4 text-center'>You could qualify for a funding up to:</p>
+          <p className='text-2xl text-neutral-900 mx-auto mb-4 text-center font-medium'>You're eligible for an advance up to:</p>
           <h3 className='font-black text-6xl text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 drop-shadow-sm' 
               style={{ 
                 fontFamily: '"SF Pro Display", "Helvetica Neue", "Arial Black", "Impact", "Franklin Gothic Medium", sans-serif', 
@@ -90,7 +112,8 @@ const Funding: React.FC = () => {
               * Amount capped at maximum advance limit
             </p>
           )}
-          
+                    <p className='text-xs text-neutral-500 mx-auto text-center font-normal'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please complete the application.</p>
+
           {/* Development Risk Score Display */}
           {process.env.NODE_ENV === 'development' && underwritingResult && (
             <div className='bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4 text-left'>
@@ -122,14 +145,13 @@ const Funding: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
-          <p className='text-xs text-neutral-900 mx-auto mb-4 text-center font-bold'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please complete the application.</p>
+          )} 
         </div>
       )}
       
       {/* Funding fields with smooth animation */}
       {showFields && (
-        <div className="w-full space-y-6 transition-all duration-1000 ease-out animate-fade-in-up">
+        <div className="w-full space-y-6 transition-opacity duration-2000 ease-out animate-fade-in-up mb-8">
          {/*   <CurrencyField label="Funding Needs ($)" name="yourFunds" value={fundsInfo.yourFunds === '0' ? '' : fundsInfo.yourFunds} onChange={(value) => handleFundsCurrencyChange('yourFunds', value)} required /> */}
           <DropdownField label="Timing for Funding" name="timingOfFunding" value={fundsInfo.timingOfFunding} onChange={handleFundsChange} error='' onBlur={() => { }} options={timingOfFunding} required />
           <DropdownField label="What do you plan to use the money for?" name="useOfProceeds" value={fundsInfo.useOfProceeds} onChange={handleFundsChange} error='' onBlur={() => { }} options={useOfProceeds} required />

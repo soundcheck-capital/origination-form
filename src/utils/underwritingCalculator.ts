@@ -47,20 +47,30 @@ export interface UnderwritingResult {
  * Get risk score for years in business
  */
 function getYearsInBusinessScore(yearsInBusiness: string): number {
-  return YEARS_IN_BUSINESS_SCORES[yearsInBusiness as keyof typeof YEARS_IN_BUSINESS_SCORES] ?? 0;
+  const key = yearsInBusiness as keyof typeof YEARS_IN_BUSINESS_SCORES;
+  const score = YEARS_IN_BUSINESS_SCORES[key];
+  if (score === undefined && yearsInBusiness) {
+    console.warn(`⚠️ Years in business value not found: "${yearsInBusiness}"`);
+    return 0;
+  }
+  return score ?? 0;
 }
 
 /**
  * Get risk score for number of events (updated to match CSV)
  */
 function getEventsScore(numberOfEvents: number): number {
-  if (numberOfEvents >= 50) return EVENTS_SCORES['50+'];
-  if (numberOfEvents >= 21) return EVENTS_SCORES['21+'];
-  if (numberOfEvents >= 11) return EVENTS_SCORES['11-20'];
-  if (numberOfEvents >= 7) return EVENTS_SCORES['7-10'];
-  if (numberOfEvents >= 4) return EVENTS_SCORES['4-6'];
-  if (numberOfEvents >= 2) return EVENTS_SCORES['2-3'];
-  if (numberOfEvents === 1) return EVENTS_SCORES['1'];
+  // Ensure we have a valid number
+  const events = Number(numberOfEvents);
+  if (isNaN(events) || events <= 0) return 0;
+  
+  if (events >= 50) return EVENTS_SCORES['50+'];
+  if (events >= 21) return EVENTS_SCORES['21+'];
+  if (events >= 11) return EVENTS_SCORES['11-20'];
+  if (events >= 7) return EVENTS_SCORES['7-10'];
+  if (events >= 4) return EVENTS_SCORES['4-6'];
+  if (events >= 2) return EVENTS_SCORES['2-3'];
+  if (events === 1) return EVENTS_SCORES['1'];
   return 0;
 }
 
@@ -68,14 +78,26 @@ function getEventsScore(numberOfEvents: number): number {
  * Get risk score for payment remitted by
  */
 function getPaymentRemittedByScore(paymentRemittedBy: string): number {
-  return PAYMENT_REMITTED_BY_SCORES[paymentRemittedBy as keyof typeof PAYMENT_REMITTED_BY_SCORES] ?? 0;
+  const key = paymentRemittedBy as keyof typeof PAYMENT_REMITTED_BY_SCORES;
+  const score = PAYMENT_REMITTED_BY_SCORES[key];
+  if (score === undefined && paymentRemittedBy) {
+    console.warn(`⚠️ Payment remitted by value not found: "${paymentRemittedBy}"`);
+    return 0;
+  }
+  return score ?? 0;
 }
 
 /**
  * Get risk score for payment frequency
  */
 function getPaymentFrequencyScore(paymentFrequency: string): number {
-  return PAYMENT_FREQUENCY_SCORES[paymentFrequency as keyof typeof PAYMENT_FREQUENCY_SCORES] ?? 0;
+  const key = paymentFrequency as keyof typeof PAYMENT_FREQUENCY_SCORES;
+  const score = PAYMENT_FREQUENCY_SCORES[key];
+  if (score === undefined && paymentFrequency) {
+    console.warn(`⚠️ Payment frequency value not found: "${paymentFrequency}"`);
+    return 0;
+  }
+  return score ?? 0;
 }
 
 /**
@@ -99,21 +121,35 @@ function getMaxAdvancePercent(totalRiskScore: number): number {
  * Calculate underwriting result based on new formula
  */
 export function calculateUnderwritingResult(inputs: UnderwritingInputs): UnderwritingResult | null {
-  // Validate inputs
+  // Validate and convert inputs
   if (!inputs.yearsInBusiness || 
-      inputs.numberOfEvents <= 0 || 
       !inputs.paymentRemittedBy || 
-      !inputs.paymentFrequency || 
-      inputs.grossAnnualTicketSales <= 0) {
+      !inputs.paymentFrequency) {
+    return null;
+  }
+  
+  // Ensure numberOfEvents is a valid number
+  const numberOfEvents = Number(inputs.numberOfEvents);
+  if (isNaN(numberOfEvents) || numberOfEvents <= 0) {
+    return null;
+  }
+  
+  // Ensure grossAnnualTicketSales is a valid number
+  const grossAnnualTicketSales = Number(inputs.grossAnnualTicketSales);
+  if (isNaN(grossAnnualTicketSales) || grossAnnualTicketSales <= 0) {
     return null;
   }
 
   // Calculate individual risk scores
   const yearsInBusinessScore = getYearsInBusinessScore(inputs.yearsInBusiness);
-  const eventsScore = getEventsScore(inputs.numberOfEvents);
+  const eventsScore = getEventsScore(numberOfEvents);
   const paymentRemittedByScore = getPaymentRemittedByScore(inputs.paymentRemittedBy);
   const paymentFrequencyScore = getPaymentFrequencyScore(inputs.paymentFrequency);
 
+  console.log('yearsInBusinessScore', yearsInBusinessScore);
+  console.log('eventsScore', eventsScore);
+  console.log('paymentRemittedByScore', paymentRemittedByScore);
+  console.log('paymentFrequencyScore', paymentFrequencyScore);
   // Calculate total risk score
   const totalRiskScore = yearsInBusinessScore + eventsScore + paymentRemittedByScore + paymentFrequencyScore;
 
@@ -121,7 +157,7 @@ export function calculateUnderwritingResult(inputs: UnderwritingInputs): Underwr
   const maxAdvancePercent = getMaxAdvancePercent(totalRiskScore);
 
   // Calculate raw advance amount
-  const rawAdvanceAmount = inputs.grossAnnualTicketSales * maxAdvancePercent;
+  const rawAdvanceAmount = grossAnnualTicketSales * maxAdvancePercent;
 
   // Apply cap
   const advanceAmount = Math.min(rawAdvanceAmount, MAX_ADVANCE_CAP);
