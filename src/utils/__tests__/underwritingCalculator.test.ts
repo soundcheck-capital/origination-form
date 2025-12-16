@@ -207,4 +207,58 @@ describe('Underwriting Calculator - CSV Validation', () => {
       expect(result2!.maxAdvancePercent).toBe(0.075); // Should be in 7.5% band (7.1-14)
     });
   });
+
+  describe('Form Key Mapping Tests - Validates mapping from form keys to values', () => {
+    /**
+     * These tests verify that the calculator works with the actual VALUES
+     * that should be passed after mapping from form keys.
+     * 
+     * Form keys (from hubspotLists.ts):
+     * - yearsInBusiness: '0-1 year' -> 'Less than 1 year'
+     * - paymentProcessing: 'Ticketing Co' -> 'From the Ticketing Co (e.g. Ticketmaster)'
+     * - settlementPayout: 'Daily' -> 'Daily' (same)
+     * 
+     * The mapping happens in TicketingVolumeStep.tsx before calling calculateUnderwritingResult
+     */
+    
+    it('should work with form values after mapping (not form keys)', () => {
+      // These are the VALUES that should be passed after mapping
+      // NOT the keys from the form dropdown
+      const inputs: UnderwritingInputs = {
+        yearsInBusiness: 'Less than 1 year',  // Mapped from '0-1 year'
+        numberOfEvents: 1,
+        paymentRemittedBy: 'From the Ticketing Co (e.g. Ticketmaster)', // Mapped from 'Ticketing Co'
+        paymentFrequency: 'Daily',           // Same as form key
+        grossAnnualTicketSales: 1000000
+      };
+
+      const result = calculateUnderwritingResult(inputs);
+      
+      expect(result).not.toBeNull();
+      expect(result!.breakdown.yearsInBusinessScore).toBe(10); // Should be 10, not 0
+      expect(result!.breakdown.eventsScore).toBe(10); // Should be 10, not 0
+      expect(result!.breakdown.paymentRemittedByScore).toBe(1); // Should be 1, not 0
+      expect(result!.totalRiskScore).toBe(21); // 10 + 10 + 1 + 0 = 21
+    });
+
+    it('should return 0 scores if form KEYS are passed instead of VALUES', () => {
+      // This demonstrates the bug that was fixed
+      // If form KEYS are passed directly (without mapping), scores will be 0
+      const inputsWithKeys: UnderwritingInputs = {
+        yearsInBusiness: '0-1 year',  // This is a FORM KEY, not the value
+        numberOfEvents: 1,
+        paymentRemittedBy: 'Ticketing Co',  // This is a FORM KEY, not the value
+        paymentFrequency: 'Daily',
+        grossAnnualTicketSales: 1000000
+      };
+
+      const result = calculateUnderwritingResult(inputsWithKeys);
+      
+      // These would return 0 because the keys don't match the config
+      expect(result).not.toBeNull();
+      expect(result!.breakdown.yearsInBusinessScore).toBe(0); // Key not found
+      expect(result!.breakdown.paymentRemittedByScore).toBe(0); // Key not found
+      // This demonstrates why mapping is necessary
+    });
+  });
 });
