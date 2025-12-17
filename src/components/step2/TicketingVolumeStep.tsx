@@ -7,6 +7,7 @@ import DropdownField from '../customComponents/DropdownField';
 import { useValidation } from '../../contexts/ValidationContext';
 import { calculateUnderwritingResult, formatAdvanceAmount, UnderwritingInputs } from '../../utils/underwritingCalculator';
 import { logUnderwritingBreakdown } from '../../utils/underwritingDebug';
+import LoadingBars from '../customComponents/LoadingBars';
 
 
 const Funding: React.FC = () => {
@@ -16,8 +17,8 @@ const Funding: React.FC = () => {
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const { setFieldError } = useValidation();
-  const [showPreOffer, setShowPreOffer] = useState(false);
-  const [showFields, setShowFields] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
+  const [showQuestions, setShowQuestions] = useState(false);
   
   // Helper functions to map keys to values for underwriting calculator
   const mapYearsInBusiness = (key: string): string => {
@@ -56,10 +57,7 @@ const Funding: React.FC = () => {
       grossAnnualTicketSales: grossAnnualTicketSales
     };
     
-    console.log('inputs', inputs);
-    console.log('numberOfEvents type:', typeof numberOfEvents, 'value:', numberOfEvents);
     underwritingResult = calculateUnderwritingResult(inputs);
-    console.log('underwritingResult', underwritingResult);
     if (underwritingResult) {
       capitalAmount = underwritingResult.advanceAmount;
       // Debug logging in development
@@ -67,18 +65,14 @@ const Funding: React.FC = () => {
     }
   }
 
-  // Show pre-offer immediately, then fields after delay
+  // Mount animation + show a small loader before revealing questions
   useEffect(() => {
-    // Show pre-offer immediately
-    setShowPreOffer(true);
-
-    // Show fields after 2 seconds delay
-    const fieldsTimer = setTimeout(() => {
-      setShowFields(true);
-    }, 2000);
-
+    // Let the first paint happen, then enable transitions
+    const raf = requestAnimationFrame(() => setHasMounted(true));
+    const questionsTimer = setTimeout(() => setShowQuestions(true), 1800);
     return () => {
-      clearTimeout(fieldsTimer);
+      cancelAnimationFrame(raf);
+      clearTimeout(questionsTimer);
     };
   }, []);
 
@@ -95,8 +89,14 @@ const Funding: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full mt-16">
       
       {/* Pre-offer section */}
-      {capitalAmount !== 0 && showPreOffer && (
-        <div className='flex flex-col items-center justify-center w-full mb-8 transition-all duration-1000 ease-out animate-fade-in-up'>
+      {capitalAmount !== 0 && (
+        <div
+          className={[
+            'flex flex-col items-center justify-center w-full mb-8',
+            'transition-all duration-500 ease-out',
+            hasMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+          ].join(' ')}
+        >
           <p className='text-2xl text-neutral-900 mx-auto mb-4 text-center font-medium'>You're eligible for an advance up to:</p>
           <h3 className='font-black text-6xl text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 drop-shadow-sm' 
               style={{ 
@@ -149,10 +149,27 @@ const Funding: React.FC = () => {
         </div>
       )}
       
-      {/* Funding fields with smooth animation */}
-      {showFields && (
-        <div className="w-full space-y-6 transition-opacity duration-2000 ease-out animate-fade-in-up mb-8">
-         {/*   <CurrencyField label="Funding Needs ($)" name="yourFunds" value={fundsInfo.yourFunds === '0' ? '' : fundsInfo.yourFunds} onChange={(value) => handleFundsCurrencyChange('yourFunds', value)} required /> */}
+      {/* Questions reveal */}
+      {!showQuestions ? (
+        <div
+          className={[
+            'w-full mb-8 flex flex-col items-center justify-center',
+            'transition-all duration-300 ease-out',
+            hasMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'
+          ].join(' ')}
+          aria-live="polite"
+        >
+          <LoadingBars className="mt-2 scale-75" visible />
+          <p className="mt-4 text-gray-700 text-lg font-medium">A few more questions</p>
+        </div>
+      ) : (
+        <div
+          className={[
+            'w-full space-y-6 mb-8',
+            'transition-all duration-300 ease-out',
+            'opacity-100 translate-y-0'
+          ].join(' ')}
+        >
           <DropdownField label="Timing for Funding" name="timingOfFunding" value={fundsInfo.timingOfFunding} onChange={handleFundsChange} error='' onBlur={() => { }} options={timingOfFunding} required />
           <DropdownField label="What do you plan to use the money for?" name="useOfProceeds" value={fundsInfo.useOfProceeds} onChange={handleFundsChange} error='' onBlur={() => { }} options={useOfProceeds} required />
         </div>

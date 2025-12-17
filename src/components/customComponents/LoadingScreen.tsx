@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingBars from './LoadingBars';
 
 const LoadingScreen: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -15,12 +16,7 @@ const LoadingScreen: React.FC = () => {
     <div className={`fixed inset-0 bg-white z-50 flex flex-col items-center justify-center transition-opacity duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
       
        {/* Indicateur de progression avec barres animées comme le logo */}
-       <div className={`flex justify-center items-end mt-8 space-x-1 transition-all duration-1000 ${barsVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-          <div className="w-2 h-3 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s', animationDuration: '1.5s' }}></div>
-          <div className="w-2 h-7 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s', animationDuration: '1.1s' }}></div>
-          <div className="w-2 h-5 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '0.9s' }}></div>
-          <div className="w-2 h-4 bg-gradient-to-b from-pink-500 via-orange-400 to-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '0.6s', animationDuration: '1.3s' }}></div>
-        </div>
+       <LoadingBars className="mt-8" visible={barsVisible} />
         {/* Logo Soundcheck */}
       {/* <div className="mb-8">
         <svg 

@@ -24,7 +24,13 @@ const TicketingFundingStep: React.FC = () => {
   };
 
   const handleNumberChange = (name: string, value: string) => {
-    dispatch(updateVolumeInfo({ [name]: value }));
+    // Enforce integer only for number of events fields
+    if (name === 'lastYearEvents' || name === 'nextYearEvents') {
+      const intValue = value === '' ? 0 : parseInt(value, 10);
+      dispatch(updateVolumeInfo({ [name]: isNaN(intValue) ? 0 : intValue }));
+    } else {
+      dispatch(updateVolumeInfo({ [name]: value }));
+    }
     setFieldError(name, null);
   };
 
@@ -56,7 +62,7 @@ const TicketingFundingStep: React.FC = () => {
       {/* Ticketing Information Section - Exact copy from TicketingStep */}
       <StepTitle title="Ticketing" />
     
-      <NumberInput label="Number of Events/Year" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required />
+      <NumberInput label="Number of Events/Year" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required integerOnly />
       <CurrencyField label="Gross Annual Ticketing Volume ($)" name="lastYearSales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" id="lastYearSales" required />
 
       <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required description={getPrecision(ticketingInfo.paymentProcessing)} />

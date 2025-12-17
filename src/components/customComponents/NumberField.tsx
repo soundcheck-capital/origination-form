@@ -9,6 +9,7 @@ interface NumberInputProps {
   id?: string;
   name?: string;
   showPercent?: boolean; // Si true, affiche '%' comme suffixe après blur
+  integerOnly?: boolean; // Si true, n'autorise que des entiers (pas de décimales)
   required?: boolean;
 }
 
@@ -19,6 +20,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   label,
   id,
   showPercent = false,
+  integerOnly = false,
   name,
   required = false,
 }) => {
@@ -42,6 +44,10 @@ const NumberInput: React.FC<NumberInputProps> = ({
       input = input.slice(0, -suffix.length);
     }
     input = input.replace(/,/g, "");
+    if (integerOnly) {
+      // Keep only digits (no decimals, no signs)
+      input = input.replace(/[^\d]/g, "");
+    }
     onChange(input);
   };
 
