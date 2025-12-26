@@ -15,10 +15,10 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
         id={inputId} 
         value={value} 
         name={name} 
-        className={`w-full p-2 text-sm text-gray-900 rounded-xl border focus:outline-none  focus:ring-amber-500 ${
+        className={`w-full px-4 py-2 text-sm text-gray-900 rounded-3xl border focus:outline-none  focus:ring-purple-400 ${
           hasFieldError 
             ? 'border-gray-300 focus:border-red-500' 
-            : 'border-gray-300 focus:border-amber-500'
+            : 'border-gray-300 focus:border-purple-400'
         }`} 
         placeholder={placeholder || ''} 
         required 

@@ -151,10 +151,10 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
           value={countryCode}
           onChange={handleCountryCodeChange}
           className={`
-            block p-2 text-sm text-gray-900 rounded-xl border focus:outline-none
+            block p-2 text-sm text-gray-900 rounded-3xl border focus:outline-none
             ${hasFieldError 
               ? 'border-gray-300 focus:border-red-500' 
-              : 'border-gray-300 focus:border-amber-500'
+              : 'border-gray-300 focus:border-purple-400'
             }
             min-w-[120px]
           `}
@@ -178,11 +178,11 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
           onBlur={handleBlurEvent}
           placeholder={countryCode === '+1' ? '(XXX) XXX-XXXX' : 'Enter phone number'}
           className={`
-            flex-1 block p-2 text-sm text-gray-900 rounded-xl border
+            flex-1 block p-2 text-sm text-gray-900 rounded-3xl border
             focus:outline-none
             ${hasFieldError 
               ? 'border-gray-300 focus:border-red-500' 
-              : 'border-gray-300 focus:border-amber-500'
+              : 'border-gray-300 focus:border-purple-400'
             }
           `}
         />

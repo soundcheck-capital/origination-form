@@ -29,7 +29,7 @@ const OtherStep: React.FC = () => {
         rows={4}
         required={true}
         error={errors.industryReferences}
-        labelClassName="text-amber-500 my-2 text-lg font-semibold text-left"
+        labelClassName="text-gray-700 my-2 text-sm font-bold text-left"
       />
 
       <TextAreaField
@@ -41,7 +41,7 @@ const OtherStep: React.FC = () => {
         rows={4}
         required={true}
         error={errors.additionalComments}
-        labelClassName="text-amber-500 my-2 text-lg font-semibold text-left"
+        labelClassName="text-gray-700 my-2 text-sm font-bold text-left"
       />
     </div>
   );

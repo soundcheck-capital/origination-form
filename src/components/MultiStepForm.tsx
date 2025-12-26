@@ -360,10 +360,22 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
       <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-hidden">
-        {/* Beta Corner Ribbon */}
-        <div className="absolute top-0 left-0 w-32 h-32 overflow-hidden z-50 pointer-events-none">
-          <div className="absolute -left-10 top-7 w-40 py-2 text-center bg-gradient-to-r from-[#FFA800] to-[#FF0057] shadow-lg transform -rotate-45">
-            <span className="text-white text-xs font-bold tracking-wider uppercase">Beta</span>
+        {/* Beta Badge */}
+        <div className="absolute top-4 right-4 z-50 pointer-events-none">
+          <div className="
+            px-3 py-1.5
+            backdrop-blur-md 
+            border border-white/40
+            bg-gradient-to-r from-amber-400/50 via-orange-400/50 to-rose-500/50
+            shadow-md shadow-amber-200/30
+            rounded-full
+            flex items-center justify-center
+            before:absolute before:inset-0 before:rounded-full
+            before:bg-gradient-to-br before:from-white/20 before:to-transparent
+            before:pointer-events-none
+            relative
+          ">
+            <span className="text-white text-[10px] font-bold tracking-wider uppercase relative z-10 drop-shadow-sm">Beta</span>
           </div>
         </div>
 
@@ -376,11 +388,34 @@ const MultiStepFormContent: React.FC = () => {
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
           <div className="w-full mx-auto">
-            
             <div className="relative w-full">
-              <div className="rounded-xl absolute top-0 left-0 h-1 bg-gray-200 w-full"></div>
-              <div  //bg-[#F99927]
-                className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-1 transition-all duration-300"
+              {/* Background track with glass effect */}
+              <div className="
+                rounded-xl 
+                absolute top-0 left-0 
+                h-2 w-full
+                backdrop-blur-sm
+                border border-gray-300/30
+                bg-white/30
+                shadow-inner
+              "></div>
+              
+              {/* Progress fill with glass effect */}
+              <div 
+                className="
+                  rounded-xl 
+                  absolute top-0 left-0 
+                  h-2
+                  backdrop-blur-md
+                  border border-white/40
+                  bg-gradient-to-r from-amber-400/60 via-orange-400/60 to-rose-500/60
+                  shadow-lg shadow-amber-300/40
+                  transition-all duration-300 ease-out
+                  before:absolute before:inset-0 before:rounded-xl
+                  before:bg-gradient-to-r before:from-white/20 before:to-transparent
+                  before:pointer-events-none
+                  relative
+                "
                 style={{ width: `${((currentStep) / 5) * 100}%` }}
               ></div>
             </div>
@@ -388,7 +423,7 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
-            <h1 className="text-4xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
+            <h1 className="text-2xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>

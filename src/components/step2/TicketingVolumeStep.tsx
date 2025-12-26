@@ -97,22 +97,42 @@ const Funding: React.FC = () => {
             hasMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
           ].join(' ')}
         >
-          <p className='text-2xl text-neutral-900 mx-auto mb-4 text-center font-medium'>You're eligible for an advance up to:</p>
-          <h3 className='font-black text-6xl text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 drop-shadow-sm' 
-              style={{ 
-                fontFamily: '"SF Pro Display", "Helvetica Neue", "Arial Black", "Impact", "Franklin Gothic Medium", sans-serif', 
-                fontWeight: 900, 
-                letterSpacing: '0.05em',
-                fontVariantNumeric: 'tabular-nums'
-              }}>
-            {formatAdvanceAmount(capitalAmount)}
-          </h3>
-          {underwritingResult && underwritingResult.isCapped && (
-            <p className='text-xs text-amber-600 mx-auto mb-2 text-center font-medium'>
-              * Amount capped at maximum advance limit
-            </p>
-          )}
-                    <p className='text-xs text-neutral-500 mx-auto text-center font-normal'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please complete the application.</p>
+          <div className="
+            w-full max-w-2xl
+            px-8 py-6
+            rounded-3xl
+            backdrop-blur-md
+            bg-white/60
+            border border-white/80
+            shadow-lg
+            relative
+            before:absolute before:inset-0 before:rounded-3xl
+            before:bg-gradient-to-br before:from-blue-200/20 before:via-purple-100/15 before:to-rose-200/20
+            before:pointer-events-none
+            after:absolute after:inset-0 after:rounded-3xl
+            after:bg-gradient-to-tr after:from-transparent after:via-white/40 after:to-transparent
+            after:pointer-events-none
+            ring-1 ring-white/60
+          " style={{
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5), 0 0 20px rgba(147, 51, 234, 0.1), 0 0 30px rgba(236, 72, 153, 0.1)'
+          }}>
+            <p className='text-2xl text-neutral-900 mx-auto mb-4 text-center font-medium relative z-10'>You're eligible for an advance up to:</p>
+            <h3 className='font-black text-6xl text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 drop-shadow-sm relative z-10' 
+                style={{ 
+                  fontFamily: '"SF Pro Display", "Helvetica Neue", "Arial Black", "Impact", "Franklin Gothic Medium", sans-serif', 
+                  fontWeight: 900, 
+                  letterSpacing: '0.05em',
+                  fontVariantNumeric: 'tabular-nums'
+                }}>
+              {formatAdvanceAmount(capitalAmount)}
+            </h3>
+            {underwritingResult && underwritingResult.isCapped && (
+              <p className='text-xs text-amber-600 mx-auto mb-2 text-center font-medium relative z-10'>
+                * Amount capped at maximum advance limit
+              </p>
+            )}
+            <p className='text-xs text-neutral-500 mx-auto text-center font-normal relative z-10'>The estimate is based on your responses and SoundCheck's market insights. To receive a formal offer, please complete the application.</p>
+          </div>
 
           {/* Development Risk Score Display */}
           {process.env.NODE_ENV === 'development' && underwritingResult && (

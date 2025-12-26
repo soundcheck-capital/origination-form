@@ -38,7 +38,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
         placeholder={placeholder}
         rows={rows}
         required={required}
-        className={`block w-full p-4 text-sm text-gray-900 rounded-2xl border border-gray-300 focus:border-amber-400 peer focus:ring-amber-200 focus:outline-none resize-vertical`}
+        className={`block w-full p-4 text-sm text-gray-900 rounded-3xl border border-gray-300 focus:border-purple-400 peer focus:ring-purple-200 focus:outline-none resize-vertical`}
       />
 
       {error && (

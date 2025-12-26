@@ -5,6 +5,7 @@ import { updateFinancesInfo } from '../../store/form/formSlice';
 import StepTitle from '../customComponents/StepTitle';
 import DropdownField from '../customComponents/DropdownField';
 import CurrencyField from '../customComponents/CurrencyField';
+import Switch from '../customComponents/Switch';
 import { debtTypes } from '../../store/form/hubspotLists';
 
 
@@ -175,39 +176,28 @@ const FinancesStep: React.FC = () => {
 
           {/* Bloc No | switch | Yes à droite */}
           <div className="flex items-center gap-2">
-            <label
+            {/* <label
               className={`text-sm font-semibold transition-colors
                   ${financesInfo[question.name] ? 'text-gray-400/70' : 'text-gray-700'}`}
               htmlFor={question.name}
             >
               No
-            </label>
+            </label> */}
 
-            <input
+            <Switch
               id={question.name}
               name={question.name}
-              type="checkbox"
-              role="switch"
               checked={financesInfo[question.name]}
               onChange={handleRadioChange}
-              className="shrink-0 mt-[0.2rem] h-5 w-10 cursor-pointer appearance-none rounded-full bg-rose-300
-                 relative transition-colors duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)]
-                 after:absolute after:left-[2px] after:top-1/2 after:-translate-y-1/2
-                 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow
-                 after:transition-transform after:duration-[380ms] after:ease-[cubic-bezier(0.22,1,0.36,1)]
-                 checked:bg-emerald-500 checked:after:translate-x-[1.25rem]
-                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2
-                 dark:bg-rose-200 dark:checked:bg-emerald-400
-                 motion-reduce:transition-none motion-reduce:after:transition-none"
             />
 
-            <label
+            {/* <label
               className={`text-sm font-semibold transition-colors
                   ${financesInfo[question.name] ? 'text-gray-700' : 'text-gray-400/70'}`}
               htmlFor={question.name}
             >
               Yes
-            </label>
+            </label> */}
           </div>
         </div>
 
@@ -258,10 +248,32 @@ const FinancesStep: React.FC = () => {
               ))}
             </div>
 
-            <div className="w-full mb-4 flex justify-center" onClick={addDebt}>
-              <span className="text-rose-500 hover:text-rose-700 hover:cursor-pointer">
-                + Add Debt
-              </span>
+            <div className="w-full mb-4 flex justify-center">
+              <button
+                onClick={addDebt}
+                className="
+                  inline-block
+                  px-4 py-2
+                  backdrop-blur-md
+                  border border-white/60
+                  bg-gradient-to-br from-blue-200/50 via-purple-100/45 to-rose-200/50
+                  shadow-lg shadow-blue-200/30
+                  rounded-full
+                  before:absolute before:inset-0 before:rounded-full
+                  before:bg-gradient-to-br before:from-white/20 before:to-transparent
+                  before:pointer-events-none
+                  relative
+                  ring-1 ring-white/50
+                  hover:shadow-xl hover:shadow-blue-300/40
+                  hover:border-white/70
+                  transition-all duration-300 ease-out
+                  cursor-pointer
+                "
+              >
+                <span className="relative z-10 text-gray-700 font-semibold text-sm">
+                  Add Debt
+                </span>
+              </button>
             </div>
           </div>
         )}
@@ -320,45 +332,31 @@ const FinancesStep: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex  ">
-          <div className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <label
+        <div className="flex justify-end">
+          <div className="flex items-center">
+            {/* <label
               className={`text-sm text-left whitespace-nowrap transition-colors
                 ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
               htmlFor="singleEntity"
             >
               No
-            </label>
+            </label> */}
 
-            <input
-              className="shrink-0 mt-[0.3rem] h-5 w-10 cursor-pointer appearance-none rounded-full bg-rose-300
-               relative transition-colors duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)]
-               after:absolute after:left-[2px] after:top-1/2 after:-translate-y-1/2
-               after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow
-               after:transition-transform after:duration-[380ms] after:ease-[cubic-bezier(0.22,1,0.36,1)]
-               checked:bg-emerald-500 checked:after:translate-x-[1.25rem]
-               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2
-               dark:bg-rose-200 dark:checked:bg-emerald-400
-               motion-reduce:transition-none motion-reduce:after:transition-none"
-              type="checkbox"
-              role="switch"
-              name="singleEntity"
+            <Switch
               id="singleEntity"
+              name="singleEntity"
               checked={!financesInfo.singleEntity}
               onChange={handleRadioChange}
             />
 
-            <label
+            {/* <label
               className={`text-sm text-left whitespace-nowrap transition-colors
                 ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
               htmlFor="singleEntity"
             >
               Yes
-            </label>
+            </label> */}
           </div>
-
-
-
         </div>
       </div>
       {filteredQuestions.map((question, index) => renderQuestion(question, index))}
