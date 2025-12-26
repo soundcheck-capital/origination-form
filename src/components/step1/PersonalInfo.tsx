@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updatePersonalInfo } from '../../store/form/formSlice';
 import TextField from '../customComponents/TextField';
+import PhoneField from '../customComponents/PhoneField';
 import StepTitle from '../customComponents/StepTitle';
 import { useValidation } from '../../contexts/ValidationContext';
 
@@ -19,56 +20,10 @@ const PersonalInfo: React.FC = () => {
 
  
 
-  const formatPhoneNumber = (value: string) => {
-    let digits;
-    // Remove all non-digits
-    value = value.trim();
-    value = value.replace(/[^0-9]/g, '');
-    if (value.includes('+1')) {
-      digits = value.replace(/\D/g, '');
-      digits = digits.substring(1);
-    } else if (value.includes('1')) {
-      digits = value.replace(/\D/g, '');
-      digits = digits.substring(1);
-    } else {
-      digits = value;
-    }
-    // If it starts with 1, treat as US number
-    if (digits.startsWith('1') && digits.length > 1) {
-      const number = digits; // Remove the 1
-      if (number.length <= 3) {
-        return `+1-${number}`;
-      } else if (number.length <= 6) {
-        return `+1-${number.substring(0, 3)}-${number.substring(3)}`;
-      } else {
-        return `+1-${number.substring(0, 3)}-${number.substring(3, 6)}-${number.substring(6, 10)}`;
-      }
-    } else if (digits.length > 0) {
-      // If it doesn't start with 1, add +1 prefix
-      if (digits.length <= 3) {
-        return `+1-${digits}`;
-      } else if (digits.length <= 6) {
-        return `+1-${digits.substring(0, 3)}-${digits.substring(3)}`;
-      } else {
-        return `+1-${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6, 10)}`;
-      }
-    }
-
-    return value;
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === 'phone') {
-      const formattedValue = formatPhoneNumber(value);
-      dispatch(updatePersonalInfo({
-        personalInfo: {
-          ...personalInfo,
-          [name]: formattedValue
-        }
-      }));
-    } else if (name === 'firstname' || name === 'lastname') {
+    if (name === 'firstname' || name === 'lastname') {
       const formattedValue = value.trim().replace(/[^a-zA-Z\s]/g, '');
       dispatch(updatePersonalInfo({
         personalInfo: {
@@ -120,7 +75,22 @@ const PersonalInfo: React.FC = () => {
 
       <TextField type="email" label="Email" name="email" value={personalInfo.email} onChange={handleInputChange} error='' onBlur={handleEmailBlur} required />
     
-      <TextField type="tel" label="Phone" name="phone" value={personalInfo.phone} onChange={handleInputChange} error='' onBlur={() => { }} required />
+      <PhoneField 
+        label="Phone" 
+        name="phone" 
+        value={personalInfo.phone} 
+        onChange={(value) => {
+          dispatch(updatePersonalInfo({
+            personalInfo: {
+              ...personalInfo,
+              phone: value
+            }
+          }));
+        }}
+        error='' 
+        onBlur={() => { }} 
+        required 
+      />
       
 
       

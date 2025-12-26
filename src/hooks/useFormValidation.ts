@@ -16,7 +16,13 @@ export const useFormValidation = () => {
     if (personalInfo.firstname.length > 25 ) errors.firstname = 'First name is too long';
     if (!personalInfo.lastname.trim() || personalInfo.lastname.length < 2 ) errors.lastname = 'Last name is required';
     if (personalInfo.lastname.length > 25 ) errors.lastname = 'Last name is too long';
-    if (!personalInfo.phone.trim() || personalInfo.phone.length < 15) errors.phone = 'Phone number is required';
+    // Validate phone: must have country code prefix + number
+    // Minimum: prefix (e.g., +1) + at least 7 digits = ~10 characters
+    // For US: +1 + 10 digits = 12 characters
+    const phoneRegex = /^\+\d{1,3}\d{7,}$/;
+    if (!personalInfo.phone.trim() || !phoneRegex.test(personalInfo.phone.replace(/\s/g, ''))) {
+      errors.phone = 'Please enter a valid phone number';
+    }
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
