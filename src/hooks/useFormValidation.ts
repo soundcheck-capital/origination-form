@@ -46,7 +46,7 @@ export const useFormValidation = () => {
     const errors: { [key: string]: string } = {};
 
     // Funding validation only (ticketing validation moved to step 1)
-    if (!fundsInfo.yourFunds.trim()) errors.yourFunds = 'Funding needs amount is required';
+    // yourFunds field has been removed, validation removed accordingly
     if (!fundsInfo.timingOfFunding) errors.timingOfFunding = 'Timing for funding is required';
     if (!fundsInfo.useOfProceeds) errors.useOfProceeds = 'Use of proceeds is required';
 
