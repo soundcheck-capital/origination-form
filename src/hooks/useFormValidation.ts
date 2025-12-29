@@ -19,8 +19,9 @@ export const useFormValidation = () => {
     // Validate phone: must have country code prefix + number
     // Minimum: prefix (e.g., +1) + at least 7 digits = ~10 characters
     // For US: +1 + 10 digits = 12 characters
+    const cleanedPhone = personalInfo.phone.trim().replace(/[^\d+]/g, ''); // Remove all non-digit and non-plus characters
     const phoneRegex = /^\+\d{1,3}\d{7,}$/;
-    if (!personalInfo.phone.trim() || !phoneRegex.test(personalInfo.phone.replace(/\s/g, ''))) {
+    if (!personalInfo.phone.trim() || !phoneRegex.test(cleanedPhone)) {
       errors.phone = 'Please enter a valid phone number';
     }
 
