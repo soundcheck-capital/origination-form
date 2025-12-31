@@ -23,7 +23,7 @@ export const clientType = {
     'NIVA (National Independent Venue Association)':'NIVA (National Independent Venue Association)',
     'Promotores Unidos':'Promotores Unidos',
     'NATO (National Association of Theatre Owners)':'NATO (National Association of Theatre Owners)',
-    'Other':'Other'
+    'None':'None'
   };
 
   export const debtTypes = {
@@ -105,6 +105,7 @@ export const clientType = {
 
   export const ticketingPartners = {
     'AXS':'AXS',
+    'Easol':'Easol',
     'Etix':'Etix',
     'Eventbrite':'Eventbrite',
     'EventLive':'EventLive',
@@ -139,9 +140,9 @@ export const clientType = {
   };
   
   export const paymentProcessing = {
-    'Ticketing Co':'From the Ticketing Co (e.g. Ticketmaster)',
-    'Own Processor':'From the Payment Processor (e.g. Stripe)',
-    'Venue':'From the Venue (e.g. MSG)',
+    'Ticketing Co':'The Ticketing Co (e.g. Ticketmaster)',
+    'Own Processor':'The Payment Processor (e.g. Stripe)',
+    'Venue':'The Venue (e.g. MSG)',
     'It varies':'It varies'
   };
   export const precision = [
