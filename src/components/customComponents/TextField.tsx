@@ -8,7 +8,7 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
   
   return (  
     <div className="w-full mb-4" onFocus={onFocus}>
-      <label className="text-xs text-gray-500 px-2 top-2 start-1">{label} {required && <span className="text-red-500">*</span>}</label>
+      <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
       <input 
         autoComplete="on" 
         type={type} 

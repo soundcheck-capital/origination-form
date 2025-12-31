@@ -133,7 +133,7 @@ export const AddressAutocomplete: React.FC<{ label: string, name: string, value:
   
   return <div className="w-full mb-4">
     <label className="text-xs text-gray-500 px-2 top-2 start-1">
-      {label} {required && <span className="text-red-500">*</span>}
+      {label}
     </label>
     <div className="relative">
       <input 

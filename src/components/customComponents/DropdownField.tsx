@@ -9,7 +9,7 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
   
     return (
         <div className="relative w-full mb-4">  
-          <label className="text-xs text-gray-500 px-2 top-2 start-1">{label} {required && <span className="text-red-500">*</span>}</label>
+          <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
           <div className="relative">
             <select 
               id={id} 
