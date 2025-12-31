@@ -12,12 +12,18 @@ export const useFormValidation = () => {
     const errors: { [key: string]: string } = {};
 
     if (!personalInfo.email.trim()) errors.email = 'Email is required';
-    if(!personalInfo.emailConfirm.trim()) errors.emailConfirm = 'Email confirmation is required';
     if (!personalInfo.firstname.trim() || personalInfo.firstname.length < 2 ) errors.firstname = 'First name is required';
     if (personalInfo.firstname.length > 25 ) errors.firstname = 'First name is too long';
     if (!personalInfo.lastname.trim() || personalInfo.lastname.length < 2 ) errors.lastname = 'Last name is required';
     if (personalInfo.lastname.length > 25 ) errors.lastname = 'Last name is too long';
-    if (!personalInfo.phone.trim() || personalInfo.phone.length < 15) errors.phone = 'Phone number is required';
+    // Validate phone: must have country code prefix + number
+    // Minimum: prefix (e.g., +1) + at least 7 digits = ~10 characters
+    // For US: +1 + 10 digits = 12 characters
+    const cleanedPhone = personalInfo.phone.trim().replace(/[^\d+]/g, ''); // Remove all non-digit and non-plus characters
+    const phoneRegex = /^\+\d{1,3}\d{7,}$/;
+    if (!personalInfo.phone.trim() || !phoneRegex.test(cleanedPhone)) {
+      errors.phone = 'Please enter a valid phone number';
+    }
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
@@ -30,54 +36,35 @@ export const useFormValidation = () => {
     if (!personalInfo.role) errors.role = 'Role is required';
     if (!companyInfo.socials) errors.socials = 'Socials are required';
     if (!companyInfo.yearsInBusiness.trim()) errors.yearsInBusiness = 'Years in business is required';
-    if (!companyInfo.employees) errors.employees = 'Number of employees is required';
     if (!companyInfo.clientType) errors.clientType = 'Company type is required';
       if (!companyInfo.memberOf) errors.memberOf = 'Membership is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateTicketingInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { ticketingInfo, volumeInfo } = formData.formData;
-    const errors: { [key: string]: string } = {};
-
-    if (!ticketingInfo.paymentProcessing) errors.paymentProcessing = 'Payment processing is required';
-
-    if (!ticketingInfo.currentPartner.trim()) errors.currentPartner = 'Ticketing partner is required';
-    if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) errors.otherPartner = 'Other ticketing partner is required';
-    if (!ticketingInfo.settlementPayout) errors.settlementPayout = 'Settlement payout policy is required';
-    if (volumeInfo.lastYearEvents <= 0) errors.lastYearEvents = 'Last year events must be greater than 0';
-    if (volumeInfo.lastYearTickets <= 0) errors.lastYearTickets = 'Last year tickets must be greater than 0';
-    if (volumeInfo.lastYearSales <= 0) errors.lastYearSales = 'Last year sales must be greater than 0';
-    if (volumeInfo.nextYearEvents <= 0) errors.nextYearEvents = 'Next year events must be greater than 0';
-    if (volumeInfo.nextYearTickets <= 0) errors.nextYearTickets = 'Next year tickets must be greater than 0';
-    if (volumeInfo.nextYearSales <= 0) errors.nextYearSales = 'Next year sales must be greater than 0';
-
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-
-  const validateFundsInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
+  const validateTicketingFundingInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { fundsInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
-    if (!fundsInfo.yourFunds.trim()) errors.yourFunds = 'Funding needs amount is required';
+    // Funding validation only (ticketing validation moved to step 1)
+    // yourFunds field has been removed, validation removed accordingly
     if (!fundsInfo.timingOfFunding) errors.timingOfFunding = 'Timing for funding is required';
     if (!fundsInfo.useOfProceeds) errors.useOfProceeds = 'Use of proceeds is required';
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateOwnershipInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { ownershipInfo } = formData.formData;
-    const { companyInfo } = formData.formData;
+  const validateBusinessFinancialInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const { ownershipInfo, companyInfo, financesInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
-    if (!companyInfo.name.trim()) errors.name = 'Legal entity name is required';
+    // Business info validation (legal information)
     if (!companyInfo.ein.trim()) errors.ein = 'EIN is required';
-    if (!companyInfo.dba.trim()) errors.dba = 'DBA name is required';
-    if (!companyInfo.companyAddressDisplay.trim()) errors.companyAddressDisplay = 'Company address is required';
     if (!companyInfo.stateOfIncorporation.trim()) errors.stateOfIncorporation = 'State of incorporation is required';
     if (!companyInfo.businessType) errors.businessType = 'Business type is required';
+    if (!companyInfo.companyAddressDisplay.trim()) errors.companyAddressDisplay = 'Company address is required';
+    
+    // Ownership validation
     if (ownershipInfo.owners.length === 0) {
       errors.owners = 'At least one owner is required';
     } else {
@@ -93,28 +80,24 @@ export const useFormValidation = () => {
       }
     }
 
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-
-  const validateFinancesInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { financesInfo } = formData.formData;
-    const { diligenceInfo } = formData;
-    const errors: { [key: string]: string } = {};
-
-    // If user answered Yes to "Have you filed your business taxes for last year?"
-    // then the tax file is required
-    if (financesInfo.filedLastYearTaxes && diligenceInfo.lastYearTaxes.files.length === 0) {
-      errors.lastYearTaxes = 'Tax file is required when you have filed your business taxes';
+    // Financial validation (basic required fields only)
+    if (financesInfo.hasBusinessDebt && financesInfo.debts.length === 0) {
+      errors.debts = 'Please provide debt details';
     }
 
+    // References validation (since OtherStep is in step 3)
+    if (!financesInfo.additionalComments.trim()) errors.additionalComments = 'Additional comments are required';
+    if (!financesInfo.industryReferences.trim()) errors.industryReferences = 'Industry references are required';
+
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
-  const validateTicketingDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
+  const validateAllUploadsInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { diligenceInfo } = formData;
+    const { financesInfo } = formData.formData;
     const errors: { [key: string]: string } = {};
 
-    // Ticketing Information
+    // Ticketing Information files
     if (diligenceInfo.ticketingCompanyReport.files.length === 0) {
       errors.ticketingCompanyReport = 'Ticketing company report is required';
     }
@@ -122,42 +105,21 @@ export const useFormValidation = () => {
       errors.ticketingServiceAgreement = 'Ticketing service agreement is required';
     }
 
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-  const validateFinancialDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { diligenceInfo } = formData;
-    const errors: { [key: string]: string } = {};
-
-    // Financial Information
+    // Financial Information files
     if (diligenceInfo.financialStatements.files.length === 0) {
       errors.financialStatements = 'Financial statements are required';
     }
-    if (diligenceInfo.bankStatement.files.length === 0) {
-      //errors.bankStatement = 'Bank statement is required';
-    }
 
-    return { isValid: Object.keys(errors).length === 0, errors };
-  };
-  const validateLegalDiligenceFiles = (): { isValid: boolean; errors: { [key: string]: string } } => {
-    const { diligenceInfo } = formData;
-    const { financesInfo } = formData.formData;
-    const errors: { [key: string]: string } = {};
-
-    // Legal Information
+    // Legal Information files
     if (diligenceInfo.incorporationCertificate.files.length === 0) {
       errors.incorporationCertificate = 'Incorporation certificate is required';
     }
     if (!financesInfo.singleEntity && diligenceInfo.legalEntityChart.files.length === 0) {
       errors.legalEntityChart = 'Legal entity chart is required';
     }
-    if (diligenceInfo.governmentId.files.length === 0) {
-      //errors.governmentId = 'Government ID is required';
-    }
 
-    if (diligenceInfo.w9form.files.length === 0) {
-      //errors.w9form = 'W9 form is required';
-    }
-  
+    // Additional Information validation is now handled in step 3
+
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
@@ -169,36 +131,72 @@ export const useFormValidation = () => {
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
+  // Validate Step 1: Personal + Company Info + Ticketing Info (consolidated)
+  const validateStep1 = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const personalValidation = validatePersonalInfo();
+    const companyValidation = validateCompanyInfo();
+    
+    // Add ticketing validation for step 1
+    const { ticketingInfo, volumeInfo } = formData.formData;
+    const ticketingErrors: { [key: string]: string } = {};
+    
+    // Debug logging
+    if (isDevelopment) {
+      console.log('🔍 Step 1 Validation Debug:', {
+        ticketingInfo,
+        volumeInfo,
+        paymentProcessing: ticketingInfo.paymentProcessing,
+        settlementPayout: ticketingInfo.settlementPayout,
+        currentPartner: ticketingInfo.currentPartner,
+        otherPartner: ticketingInfo.otherPartner
+      });
+    }
+    
+    if (!ticketingInfo.paymentProcessing) ticketingErrors.paymentProcessing = 'Payment processing is required';
+    if (!ticketingInfo.currentPartner.trim()) ticketingErrors.currentPartner = 'Ticketing partner is required';
+    if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) ticketingErrors.otherPartner = 'Other ticketing partner is required';
+    if (!ticketingInfo.settlementPayout) ticketingErrors.settlementPayout = 'Settlement payout policy is required';
+    if (volumeInfo.lastYearEvents <= 0) ticketingErrors.lastYearEvents = 'Number of events must be greater than 0';
+    if (volumeInfo.lastYearSales <= 0) ticketingErrors.lastYearSales = 'Gross annual ticketing volume must be greater than 0';
+    
+    if (isDevelopment) {
+      console.log('🚨 Step 1 Validation Errors:', ticketingErrors);
+    }
+    
+    return {
+      isValid: personalValidation.isValid && companyValidation.isValid && Object.keys(ticketingErrors).length === 0,
+      errors: { ...personalValidation.errors, ...companyValidation.errors, ...ticketingErrors }
+    };
+  };
+
   // New function to validate current step only
   const validateCurrentStep = (step: number): { isValid: boolean; errors: { [key: string]: string } } => {
-    // Skip validation only if explicitly disabled in development mode
-    if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') { 
-        isDevelopment && console.log("DISABLE_VALIDATION", localStorage.getItem('DISABLE_VALIDATION'));
-      return { isValid: true, errors: {} };
+    // Debug: Check if validation is disabled
+    if (isDevelopment) {
+      console.log('🔍 Validation Check:', {
+        step,
+        disableValidation: localStorage.getItem('DISABLE_VALIDATION'),
+        isDevelopment
+      });
     }
+    
+    // TEMPORARILY DISABLE THE VALIDATION BYPASS FOR DEBUGGING
+    // Skip validation only if explicitly disabled in development mode
+    // if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') { 
+    //     isDevelopment && console.log("⚠️ VALIDATION DISABLED", localStorage.getItem('DISABLE_VALIDATION'));
+    //   return { isValid: true, errors: {} };
+    // }
 
     switch (step) {
       case 1:
-        return validatePersonalInfo();
+        return validateStep1(); // Personal + Company Info
       case 2:
-        return validateCompanyInfo();
+        return validateTicketingFundingInfo(); // Ticketing + Funding
       case 3:
-        return validateTicketingInfo();
+        return validateBusinessFinancialInfo(); // Business + Financial
       case 4:
-        return validateFundsInfo();
+        return validateAllUploadsInfo(); // All Uploads
       case 5:
-        return validateOwnershipInfo();
-      case 6:
-        return validateFinancesInfo();
-      case 7:
-        return validateTicketingDiligenceFiles();
-      case 8:
-        return validateFinancialDiligenceFiles();
-      case 9:
-        return validateLegalDiligenceFiles();
-      case 10:
-        return validateAdditionalInfo();
-      case 11:
         return { isValid: true, errors: {} }; // Summary step - no validation needed
       default:
         return { isValid: true, errors: {} };
@@ -206,39 +204,22 @@ export const useFormValidation = () => {
   };
 
   const validateAllSteps = (): { isValid: boolean; errors: { [key: string]: { [key: string]: string } } } => {
-    const personalInfo = validatePersonalInfo();
-    const companyInfo = validateCompanyInfo();
-    const ticketingInfo = validateTicketingInfo();
-    const fundsInfo = validateFundsInfo();
-    const ownershipInfo = validateOwnershipInfo();
-    const financesInfo = validateFinancesInfo();
-    const ticketingDiligenceFiles = validateTicketingDiligenceFiles();
-    const financialDiligenceFiles = validateFinancialDiligenceFiles();
-    const legalDiligenceFiles = validateLegalDiligenceFiles();
-    const additionalInfo = validateAdditionalInfo();
+    const step1Info = validateStep1();
+    const ticketingFundingInfo = validateTicketingFundingInfo();
+    const businessFinancialInfo = validateBusinessFinancialInfo();
+    const allUploadsInfo = validateAllUploadsInfo();
+    
     const allErrors = {
-      'Personal Information': personalInfo.errors,
-      'Company Information': companyInfo.errors,
-      'Ticketing Information': ticketingInfo.errors,
-      'Funding Information': fundsInfo.errors,
-      'Ownership Information': ownershipInfo.errors,
-      'Financial Information': financesInfo.errors,
-      'Ticketing Diligence Files': ticketingDiligenceFiles.errors,
-      'Financial Diligence Files': financialDiligenceFiles.errors,
-      'Legal Diligence Files': legalDiligenceFiles.errors,
-      'Additional Information': additionalInfo.errors,
+      'Tell us about your business': step1Info.errors,
+      'Ticketing & Funding': ticketingFundingInfo.errors,
+      'Business & Ownership': businessFinancialInfo.errors,
+      'Diligence': allUploadsInfo.errors,
     };
 
-    const isValid = personalInfo.isValid && 
-                   companyInfo.isValid && 
-                   ticketingInfo.isValid && 
-                   fundsInfo.isValid && 
-                   ownershipInfo.isValid && 
-                   financesInfo.isValid && 
-                   ticketingDiligenceFiles.isValid &&
-                   financialDiligenceFiles.isValid &&
-                   legalDiligenceFiles.isValid &&
-                   additionalInfo.isValid;
+    const isValid = step1Info.isValid && 
+                   ticketingFundingInfo.isValid && 
+                   businessFinancialInfo.isValid && 
+                   allUploadsInfo.isValid;
 
     return { isValid, errors: allErrors };
   };
@@ -246,13 +227,10 @@ export const useFormValidation = () => {
   return {
     validatePersonalInfo,
     validateCompanyInfo,
-    validateTicketingInfo,
-    validateFundsInfo,
-    validateOwnershipInfo,
-    validateFinancesInfo,
-    validateTicketingDiligenceFiles,
-    validateFinancialDiligenceFiles,
-    validateLegalDiligenceFiles,
+    validateStep1,
+    validateTicketingFundingInfo,
+    validateBusinessFinancialInfo,
+    validateAllUploadsInfo,
     validateAdditionalInfo,
     validateCurrentStep,
     validateAllSteps,

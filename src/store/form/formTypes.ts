@@ -36,14 +36,12 @@ export interface Address {
     formData: {
       personalInfo: {
         email: string;
-        emailConfirm: string;
         firstname: string;
         lastname: string;
         phone: string;
         role: string;
       };
       companyInfo: {
-        employees: number;
         name: string;
         dba: string;
         yearsInBusiness: string;

@@ -61,7 +61,7 @@ export const ValidationProvider: React.FC<ValidationProviderProps> = ({ children
     setTimeout(() => {
       window.scrollTo({ 
         top: 0, 
-        behavior: 'auto' 
+        behavior: 'smooth' 
       });
     }, 100);
   };

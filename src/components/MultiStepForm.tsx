@@ -7,27 +7,25 @@ import {   setSubmitted } from '../store/form/formSlice';
 import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
-import PersonalInfoStep from './PersonalInfoStep';
-import CompanyInfoStep from './CompanyInfoStep';
-import TicketingStep from './TicketingStep';
-import OwnershipStep from './OwnershipStep';
-import FinancesStep from './FinancesStep';
-import SummaryStep from './SummaryStep';
+import Step1 from './step1';
+import Step2 from './step2';
+import Step3 from './step3';
+import Step4 from './step4';
+import Step5 from './step5';
+import LoadingScreen from './customComponents/LoadingScreen';
 import logo from '../assets/logo_black_bold.svg';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
-import YourFundingStep from './YourFundsStep';
-import LegalInformationStep from './LegalInformationStep';
-import TicketingInformationStep from './TicketingInformationStep';
-import FinancialInformationStep from './FinancialInformationStep';
-import OtherStep from './OtherStep';
 import { useFormValidation } from '../hooks/useFormValidation';
+// Import debug utils to auto-clear validation bypass flags
+import '../utils/debugUtils';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const formData = useSelector((state: RootState) => state.form);
   const [saveMessage, setSaveMessage] = useState('');
   const { sendFormData, isUploading } = useFileUpload();
@@ -67,7 +65,6 @@ const MultiStepFormContent: React.FC = () => {
           city: formData.formData.companyInfo.companyCity,
           state: formData.formData.companyInfo.companyState,
           zip: formData.formData.companyInfo.companyZipcode,
-          employees: formData.formData.companyInfo.employees,
           dba: formData.formData.companyInfo.dba,
           yearsInBusiness: formData.formData.companyInfo.yearsInBusiness,
           socials: formData.formData.companyInfo.socials,
@@ -155,16 +152,48 @@ const MultiStepFormContent: React.FC = () => {
   const handleNextStep = async () => {
     const validation = validateCurrentStep(currentStep);
     
+    // Debug logging
+    if (isDevelopment) {
+      console.log('🔍 HandleNextStep Debug:', {
+        currentStep,
+        validation,
+        formData: formData.formData.ticketingInfo
+      });
+    }
+    
     if (!validation.isValid) {
       // Merge validation errors with existing field errors
       const currentErrors = currentStepErrors || {};
       const merged = { ...currentErrors, ...validation.errors };
       setCurrentStepErrors(merged);
       
+      if (isDevelopment) {
+        console.log('❌ Validation failed:', merged);
+      }
+      
       // Scroll vers le haut pour que l'utilisateur voie les erreurs
       setTimeout(() => {
         focusFirstErrorField();
       }, 100);
+      
+      return;
+    }
+    
+    if (isDevelopment) {
+      console.log('✅ Validation passed, proceeding to next step');
+    }
+
+    // Si on passe de l'étape 1 à l'étape 2, afficher le loader
+    if (currentStep === 1) {
+      setIsLoading(true);
+      
+      // Simuler l'analyse des informations pendant 3 secondes
+      setTimeout(() => {
+        setIsLoading(false);
+        setCurrentStep(currentStep + 1);
+        setCurrentStepErrors({});
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 3000);
       
       return;
     }
@@ -236,27 +265,15 @@ const MultiStepFormContent: React.FC = () => {
   const stepTitles = () => {
     switch (currentStep) {
       case 1:
-        return 'Get Funding';
+        return 'Tell us about your business';
       case 2:
-        return 'Tell us about your business';
+        return 'Get funding';
       case 3:
-        return 'Tell us about your business';
-      case 4:
-        return 'Customize your funding';
-      case 5:
         return 'Business & Ownership';
-      case 6:
-        return 'Finances';
-      case 7:
-        return 'Due Diligence';
-      case 8:
-        return 'Due Diligence';
-      case 9:
-        return 'Due Diligence';
-      case 10:
-        return 'Other';
-      case 11:
-        return 'Thank you';
+      case 4:
+        return 'Diligence Files';
+      case 5:
+        return 'Review & Submit';
       default:
         return 'SoundCheck';
     }
@@ -265,28 +282,15 @@ const MultiStepFormContent: React.FC = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <PersonalInfoStep />;
+        return <Step1 />;
       case 2:
-        return <CompanyInfoStep />;
+        return <Step2 />;
       case 3:
-        return <TicketingStep />;
+        return <Step3 />;
       case 4:
-        return <YourFundingStep />;
-
+        return <Step4 />;
       case 5:
-        return <OwnershipStep />;
-      case 6:
-        return <FinancesStep />;
-      case 7:
-        return <TicketingInformationStep />;
-      case 8:
-        return <FinancialInformationStep />;
-      case 9:
-        return <LegalInformationStep />;
-      case 10:
-        return <OtherStep />;
-      case 11:
-        return <SummaryStep renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
+        return <Step5 renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
       default:
         return null;
     }
@@ -346,6 +350,11 @@ const MultiStepFormContent: React.FC = () => {
     );
   }
   
+  // Afficher le loader si en cours de chargement
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
@@ -372,20 +381,18 @@ const MultiStepFormContent: React.FC = () => {
               <div className="rounded-xl absolute top-0 left-0 h-1 bg-gray-200 w-full"></div>
               <div  //bg-[#F99927]
                 className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-1 transition-all duration-300"
-                style={{ width: `${((currentStep) / 11) * 100}%` }}
+                style={{ width: `${((currentStep) / 5) * 100}%` }}
               ></div>
             </div>
           </div>
 
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
-            <h1 className="text-3xl text-center font-bold text-neutral-900">{stepTitles()}</h1>
+            <h1 className="text-4xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>
-          {(currentStep < 11 && currentStep > 0 && currentStep !== 6) && (
-             <p className='text-xs text-gray-500 text-center'><span className='text-red-500'>*</span> Required fields</p>
-            )}
+         
 
           {/* Navigation Buttons */}
           <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
@@ -405,7 +412,7 @@ const MultiStepFormContent: React.FC = () => {
               <ButtonSecondary onClick={handlePreviousStep} disabled={false}>Previous</ButtonSecondary>
             )}
 
-            {(currentStep < 11 && currentStep > 1) && (
+            {(currentStep < 5 && currentStep > 1) && (
               <ButtonPrimary onClick={handleNextStep} disabled={isSavingStep}>
                 {isSavingStep ? (
                   <div className="flex items-center gap-2">
@@ -417,7 +424,7 @@ const MultiStepFormContent: React.FC = () => {
                 )}
               </ButtonPrimary>
             )}
-            {currentStep === 11 && (
+            {currentStep === 5 && (
               <ButtonPrimary onClick={() => {
                 triggerValidationThenSubmit();
               }} disabled={false}>Submit</ButtonPrimary>
