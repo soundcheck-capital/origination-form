@@ -8,7 +8,7 @@ import TextField from '../customComponents/TextField';
 import NumberInput from '../customComponents/NumberField';
 import CurrencyField from '../customComponents/CurrencyField';
 import { useValidation } from '../../contexts/ValidationContext';
-import { paymentProcessing, ticketingPartners, settlementPayout, precision } from '../../store/form/hubspotLists';
+import { paymentProcessing, ticketingPartners, settlementPayout } from '../../store/form/hubspotLists';
 
 const TicketingFundingStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -40,20 +40,20 @@ const TicketingFundingStep: React.FC = () => {
   };
 
   
-  const getPrecision = (paymentProcessing: string) => {
-    switch(paymentProcessing) {
-      case 'Ticketing Co':
-        return precision[0];
-      case 'Own Processor':
-        return precision[1];
-      case 'Venue':
-        return precision[2];
-      case 'It varies':
-        return precision[3];
-      default:
-        return '';
-    }
-  }
+  // const getPrecision = (paymentProcessing: string) => {
+  //   switch(paymentProcessing) {
+  //     case 'Ticketing Co':
+  //       return precision[0];
+  //     case 'Own Processor':
+  //       return precision[1];
+  //     case 'Venue':
+  //       return precision[2];
+  //     case 'It varies':
+  //       return precision[3];
+  //     default:
+  //       return '';
+  //   }
+  // }
 
 
 
@@ -62,7 +62,7 @@ const TicketingFundingStep: React.FC = () => {
       {/* Ticketing Information Section - Exact copy from TicketingStep */}
       <StepTitle title="Ticketing" />
     
-      <NumberInput label="Number of Events/Year" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required integerOnly />
+      <NumberInput label="Number of Events/Year" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required  />
       <CurrencyField label="Gross Annual Ticketing Volume ($)" name="lastYearSales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" id="lastYearSales" required />
 
       <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required  />
