@@ -21,7 +21,7 @@ const FinancesStep: React.FC = () => {
   interface Question {
     id: string;
     text: string;
-    name: keyof Pick<typeof financesInfo, 'hasTicketingDebt' | 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'isLeasingLocation' | 'hasTaxLiens' | 'hasBankruptcy' | 'ownershipChanged'>;
+    name: keyof Pick<typeof financesInfo, 'hasBusinessDebt' | 'hasOverdueLiabilities' | 'hasTaxLiens' | 'hasBankruptcy' | 'ownershipChanged'>;
     showDateInput?: boolean;
     condition?: (financesInfo: any) => boolean;
   }
@@ -85,6 +85,7 @@ const FinancesStep: React.FC = () => {
     
     // Special handling for singleEntity - invert the logic for correct visual representation
     if (name === 'singleEntity') {
+      console.log('singleEntity', e.target.checked);
       // When switch is checked (right/Multi-entity), singleEntity should be false
       // When switch is unchecked (left/Single entity), singleEntity should be true
       dispatch(updateFinancesInfo({ [name]: !e.target.checked }));
@@ -121,10 +122,7 @@ const FinancesStep: React.FC = () => {
 
 
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    dispatch(updateFinancesInfo({ leaseEndDate: value }));
-  };
+  
 
   const handleDebtTypeChange = (index: number, value: string) => {
     const newDebts = [...financesInfo.debts];
@@ -278,17 +276,7 @@ const FinancesStep: React.FC = () => {
           </div>
         )}
 
-        {question.showDateInput && financesInfo[question.name] && (
-          <div className="conditional-content animate-fadeIn">
-            <label className="radio-label">If so, what is the lease end date?</label>
-            <input
-              type="date"
-              value={financesInfo.leaseEndDate}
-              onChange={handleDateChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        )}
+
 
       </div>
     );

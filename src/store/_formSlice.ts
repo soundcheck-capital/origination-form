@@ -41,11 +41,7 @@ interface FormState {
       membership: string;
     };
     volumeInfo: {
-      lastYearEvents: number;
-      lastYearTickets: number;
-      lastYearSales: number;
       nextYearEvents: number;
-      nextYearTickets: number;
       nextYearSales: number;
     };
     fundsInfo: {
@@ -57,7 +53,7 @@ interface FormState {
     };
     ownershipInfo: {
       legalEntityType: string;  
-      companyName: string;
+      legalBusinessName: string;
       dba: string;
       companyAddress: string;
       companyCity: string;
@@ -122,11 +118,8 @@ let initialState: FormState = {
       membership: '',
     },
     volumeInfo: {
-      lastYearEvents: 0,
-      lastYearTickets: 0,
-      lastYearSales: 0,
+  
       nextYearEvents: 0,
-      nextYearTickets: 0,
       nextYearSales: 0,
     },
     fundsInfo: {
@@ -138,7 +131,7 @@ let initialState: FormState = {
     },
     ownershipInfo: {  
       legalEntityType: '',
-      companyName: '',
+      legalBusinessName: '',
       dba: '',
       companyAddress: '',
       companyCity: '',

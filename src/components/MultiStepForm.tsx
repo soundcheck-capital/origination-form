@@ -65,6 +65,7 @@ const MultiStepFormContent: React.FC = () => {
           city: formData.formData.companyInfo.companyCity,
           state: formData.formData.companyInfo.companyState,
           zip: formData.formData.companyInfo.companyZipcode,
+          legalBusinessName: formData.formData.companyInfo.legalBusinessName,
           dba: formData.formData.companyInfo.dba,
           yearsInBusiness: formData.formData.companyInfo.yearsInBusiness,
           socials: formData.formData.companyInfo.socials,
@@ -77,14 +78,10 @@ const MultiStepFormContent: React.FC = () => {
           otherPartner: formData.formData.ticketingInfo.otherPartner,
           paymentProcessing: formData.formData.ticketingInfo.paymentProcessing,
           settlementPayout: formData.formData.ticketingInfo.settlementPayout,
-          lastYearEvents: formData.formData.volumeInfo.lastYearEvents,
-          lastYearTickets: formData.formData.volumeInfo.lastYearTickets,
-          lastYearSales: formData.formData.volumeInfo.lastYearSales,
           nextYearEvents: formData.formData.volumeInfo.nextYearEvents,
-          nextYearTickets: formData.formData.volumeInfo.nextYearTickets,
           nextYearSales: formData.formData.volumeInfo.nextYearSales,
           owners: formData.formData.ownershipInfo.owners,
-          singleEntity: formData.formData.financesInfo.singleEntity ? 'Multi Entity group structure' : 'Single Entity',
+          singleEntity: formData.formData.financesInfo.singleEntity ? 'Single Entity' : 'Multi Entity group structure',
           assetsTransferred: formData.formData.financesInfo.assetsTransferred ? 'Yes' : 'No',
           filedLastYearTaxes: formData.formData.financesInfo.filedLastYearTaxes ? 'Yes' : 'No',
           hasTicketingDebt: formData.formData.financesInfo.hasTicketingDebt ? 'Yes' : 'No',
@@ -94,18 +91,17 @@ const MultiStepFormContent: React.FC = () => {
           hasJudgments: formData.formData.financesInfo.hasJudgments ? 'Yes' : 'No',
           hasBankruptcy: formData.formData.financesInfo.hasBankruptcy ? 'Yes' : 'No',
           ownershipChanged: formData.formData.financesInfo.ownershipChanged ? 'Yes' : 'No',
-          leaseEndDate: formData.formData.financesInfo.leaseEndDate,
           debts: formData.formData.financesInfo.debts,
         },
         deal: {
           nextYearEvents: formData.formData.volumeInfo.nextYearEvents,
-          nextYearTickets: formData.formData.volumeInfo.nextYearTickets,
           nextYearSales: formData.formData.volumeInfo.nextYearSales,
           settlementPolicy: formData.formData.ticketingInfo.settlementPayout,
           purchasePrice: formData.formData.fundsInfo.yourFunds,
           useOfProceeds: formData.formData.fundsInfo.useOfProceeds,
           timingOfFunding: formData.formData.fundsInfo.timingOfFunding,
           additionalComments: formData.formData.financesInfo.additionalComments,
+          industryReferences: formData.formData.financesInfo.industryReferences,
         },
 
       };
@@ -360,25 +356,6 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
       <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-hidden">
-        {/* Beta Badge */}
-        <div className="absolute top-4 right-4 z-50 pointer-events-none">
-          <div className="
-            px-3 py-1.5
-            backdrop-blur-md 
-            border border-white/40
-            bg-gradient-to-r from-amber-400/50 via-orange-400/50 to-rose-500/50
-            shadow-md shadow-amber-200/30
-            rounded-full
-            flex items-center justify-center
-            before:absolute before:inset-0 before:rounded-full
-            before:bg-gradient-to-br before:from-white/20 before:to-transparent
-            before:pointer-events-none
-            relative
-          ">
-            <span className="text-white text-[10px] font-bold tracking-wider uppercase relative z-10 drop-shadow-sm">Beta</span>
-          </div>
-        </div>
-
         <div className="flex justify-center items-center">
           <img src={logo} alt="Logo" className="w-24 " />
         </div>

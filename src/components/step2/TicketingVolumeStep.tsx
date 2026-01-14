@@ -37,17 +37,17 @@ const Funding: React.FC = () => {
   let capitalAmount = 0;
   let underwritingResult = null;
   
-  if (ticketingVolume.lastYearSales > 0 && 
-      ticketingVolume.lastYearEvents > 0 && 
+  if (ticketingVolume.nextYearSales > 0 && 
+      ticketingVolume.nextYearEvents > 0 && 
       companyInfo.yearsInBusiness &&
       ticketingInfo.paymentProcessing &&
       ticketingInfo.settlementPayout) {
     
     // Ensure numberOfEvents is a number (convert if needed)
-    const numberOfEvents = Number(ticketingVolume.lastYearEvents);
+    const numberOfEvents = Number(ticketingVolume.nextYearEvents);
     
     // Ensure grossAnnualTicketSales is a number
-    const grossAnnualTicketSales = Number(ticketingVolume.lastYearSales);
+    const grossAnnualTicketSales = Number(ticketingVolume.nextYearSales);
     
     const inputs: UnderwritingInputs = {
       yearsInBusiness: mapYearsInBusiness(companyInfo.yearsInBusiness),
@@ -160,7 +160,7 @@ const Funding: React.FC = () => {
                   Max Advance %: {(underwritingResult.maxAdvancePercent * 100).toFixed(1)}%
                 </div>
                 <div className='text-xs text-blue-600'>
-                  Raw Amount: ${(ticketingVolume.lastYearSales * underwritingResult.maxAdvancePercent).toLocaleString()}
+                  Raw Amount: ${(ticketingVolume.nextYearSales * underwritingResult.maxAdvancePercent).toLocaleString()}
                   {underwritingResult.isCapped && ' → Capped at $500k'}
                 </div>
               </div>

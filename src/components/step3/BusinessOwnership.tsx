@@ -93,11 +93,19 @@ const BusinessOwnership: React.FC = () => {
     }
   }, [financesInfo, hasBeenVisited, filteredQuestions]);
 
+  // Sync dba with company name (from step 1) when component mounts or name changes
+  useEffect(() => {
+    if (companyInfo.name && !companyInfo.dba) {
+      dispatch(updateCompanyInfo({ dba: companyInfo.name }));
+    }
+  }, [companyInfo.name, companyInfo.dba, dispatch]);
+
   // Business info handlers (from OwnershipStep)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    // legalEntityName is now independent - only updates legalBusinessName
     if (name === "legalEntityName") {
-      dispatch(updateCompanyInfo({ name: value, dba: value }));
+      dispatch(updateCompanyInfo({ legalBusinessName: value }));
     } else {
       dispatch(updateCompanyInfo({ [name]: value }));
     }
@@ -105,9 +113,9 @@ const BusinessOwnership: React.FC = () => {
     // Real-time validation for company fields
     if (name === 'legalEntityName') {
       if (!value.trim() || value.length < 2) {
-        setFieldError('name', 'Company name is required');
+        setFieldError('legalEntityName', 'Legal business name is required');
       } else {
-        setFieldError('name', null);
+        setFieldError('legalEntityName', null);
       }
     } else if (name === 'dba') {
       if (!value.trim()) {
@@ -314,7 +322,7 @@ const BusinessOwnership: React.FC = () => {
         type="text"
         label="Legal Business Name"
         name="legalEntityName"
-        value={companyInfo.name}
+        value={companyInfo.legalBusinessName}
         onChange={handleChange}
         error=''
         onBlur={() => { }}

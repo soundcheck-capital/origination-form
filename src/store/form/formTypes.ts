@@ -43,6 +43,7 @@ export interface Address {
       };
       companyInfo: {
         name: string;
+        legalBusinessName: string;
         dba: string;
         yearsInBusiness: string;
         socials: string;
@@ -66,11 +67,7 @@ export interface Address {
         paymentProcessing: string;  
       };
       volumeInfo: {
-        lastYearEvents: number;
-        lastYearTickets: number;
-        lastYearSales: number;
         nextYearEvents: number;
-        nextYearTickets: number;
         nextYearSales: number;
       };
       fundsInfo: {
@@ -92,8 +89,7 @@ export interface Address {
           balance: string;
         }>;
         hasOverdueLiabilities: boolean;
-        isLeasingLocation: boolean;
-        leaseEndDate: string;
+    
         hasTaxLiens: boolean;
         hasJudgments: boolean;
         hasBankruptcy: boolean;

@@ -155,8 +155,8 @@ export const useFormValidation = () => {
     if (!ticketingInfo.currentPartner.trim()) ticketingErrors.currentPartner = 'Ticketing partner is required';
     if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) ticketingErrors.otherPartner = 'Other ticketing partner is required';
     if (!ticketingInfo.settlementPayout) ticketingErrors.settlementPayout = 'Settlement payout policy is required';
-    if (volumeInfo.lastYearEvents <= 0) ticketingErrors.lastYearEvents = 'Number of events must be greater than 0';
-    if (volumeInfo.lastYearSales <= 0) ticketingErrors.lastYearSales = 'Gross annual ticketing volume must be greater than 0';
+    if (volumeInfo.nextYearEvents <= 0) ticketingErrors.nextYearEvents = 'Number of events must be greater than 0';
+    if (volumeInfo.nextYearSales <= 0) ticketingErrors.nextYearSales = 'Gross annual ticketing volume must be greater than 0';
     
     if (isDevelopment) {
       console.log('🚨 Step 1 Validation Errors:', ticketingErrors);

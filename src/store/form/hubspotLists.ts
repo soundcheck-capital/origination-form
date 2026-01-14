@@ -23,7 +23,7 @@ export const clientType = {
     'NIVA (National Independent Venue Association)':'NIVA (National Independent Venue Association)',
     'Promotores Unidos':'Promotores Unidos',
     'NATO (National Association of Theatre Owners)':'NATO (National Association of Theatre Owners)',
-    'Other':'Other'
+    'None':'Other'
   };
 
   export const debtTypes = {
