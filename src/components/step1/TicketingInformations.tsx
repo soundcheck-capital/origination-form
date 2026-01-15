@@ -62,8 +62,8 @@ const TicketingFundingStep: React.FC = () => {
       {/* Ticketing Information Section - Exact copy from TicketingStep */}
       <StepTitle title="Ticketing" />
     
-      <NumberInput label="Number of Events/Year" name="lastYearEvents" value={ticketingVolume.lastYearEvents.toString()} onChange={(value) => handleNumberChange('lastYearEvents', value)} placeholder="Fill in" id="lastYearEvents" required integerOnly />
-      <CurrencyField label="Gross Annual Ticketing Volume ($)" name="lastYearSales" value={ticketingVolume.lastYearSales.toString()} onChange={(value) => handleCurrencyChange('lastYearSales', value)} placeholder="Fill in" id="lastYearSales" required />
+      <NumberInput label="Number of Events/Year" name="nextYearEvents" value={ticketingVolume.nextYearEvents.toString()} onChange={(value) => handleNumberChange('nextYearEvents', value)} placeholder="Fill in" id="nextYearEvents" required integerOnly />
+      <CurrencyField label="Gross Annual Ticketing Volume ($)" name="nextYearSales" value={ticketingVolume.nextYearSales.toString()} onChange={(value) => handleCurrencyChange('nextYearSales', value)} placeholder="Fill in" id="nextYearSales" required />
 
       <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required  />
       

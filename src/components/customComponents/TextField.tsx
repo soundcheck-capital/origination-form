@@ -8,17 +8,17 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
   
   return (  
     <div className="w-full mb-4" onFocus={onFocus}>
-      <label className="text-xs text-gray-500 px-2 top-2 start-1">{label} {required && <span className="text-red-500">*</span>}</label>
+      <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
       <input 
         autoComplete="on" 
         type={type} 
         id={inputId} 
         value={value} 
         name={name} 
-        className={`w-full p-2 text-sm text-gray-900 rounded-xl border focus:outline-none  focus:ring-amber-500 ${
+        className={`w-full px-4 py-2 text-sm text-gray-900 rounded-3xl border focus:outline-none  focus:ring-purple-400 ${
           hasFieldError 
             ? 'border-gray-300 focus:border-red-500' 
-            : 'border-gray-300 focus:border-amber-500'
+            : 'border-gray-300 focus:border-purple-400'
         }`} 
         placeholder={placeholder || ''} 
         required 

@@ -8,14 +8,13 @@ export const initialState: FormState = {
   formData: {
     personalInfo: { email: '', firstname: '', lastname: '', phone: '', role: '' },
     companyInfo: {
-      name: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
+      name: '', legalBusinessName: '', dba: '', yearsInBusiness: '', socials: '', clientType: '',
       businessType: '', companyAddressDisplay: '', companyAddress: '', companyZipcode: '', companyState: '', companyCountry: '', companyCity: '',
       ein: '', stateOfIncorporation: '', memberOf: ''
     },
     ticketingInfo: { currentPartner: '', otherPartner: '', settlementPayout: '', paymentProcessing: '' },
     volumeInfo: {
-      lastYearEvents: 0, lastYearTickets: 0, lastYearSales: 0,
-      nextYearEvents: 0, nextYearTickets: 0, nextYearSales: 0
+      nextYearEvents: 0, nextYearSales: 0,
     },
     fundsInfo: {
       yourFunds: '', useOfProceeds: '', timingOfFunding: ''
@@ -25,8 +24,8 @@ export const initialState: FormState = {
     },
     financesInfo: {
       singleEntity: true, assetsTransferred: false, filedLastYearTaxes: false, hasBusinessDebt: false,
-      debts: [], hasOverdueLiabilities: false, isLeasingLocation: false,
-      leaseEndDate: '', hasTaxLiens: false, hasJudgments: false,
+      debts: [], hasOverdueLiabilities: false, 
+       hasTaxLiens: false, hasJudgments: false,
       hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false,
       industryReferences: '',
       additionalComments: '',

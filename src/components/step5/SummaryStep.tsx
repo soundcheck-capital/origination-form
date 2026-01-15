@@ -162,11 +162,11 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
           <div className="grid grid-cols-1 gap-4 text-sm">
             <div>
               <span className=" text-gray-600 font-bold">Number of Events:</span>
-              <span className="ml-2 text-gray-800">{volumeInfo.lastYearEvents}</span>
+              <span className="ml-2 text-gray-800">{volumeInfo.nextYearEvents}</span>
             </div>
             <div>
               <span className=" text-gray-600 font-bold">Online Gross Tickets Sales ($):</span>
-              <span className="ml-2 text-gray-800">{formatCurrency(volumeInfo.lastYearSales)}</span>
+              <span className="ml-2 text-gray-800">{formatCurrency(volumeInfo.nextYearSales)}</span>
             </div>
           </div>
         </div>
