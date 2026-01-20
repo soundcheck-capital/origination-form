@@ -172,31 +172,13 @@ const FinancesStep: React.FC = () => {
             {question.text}
           </span>
 
-          {/* Bloc No | switch | Yes à droite */}
-          <div className="flex items-center gap-2">
-            {/* <label
-              className={`text-sm font-semibold transition-colors
-                  ${financesInfo[question.name] ? 'text-gray-400/70' : 'text-gray-700'}`}
-              htmlFor={question.name}
-            >
-              No
-            </label> */}
-
-            <Switch
-              id={question.name}
-              name={question.name}
-              checked={financesInfo[question.name]}
-              onChange={handleRadioChange}
-            />
-
-            {/* <label
-              className={`text-sm font-semibold transition-colors
-                  ${financesInfo[question.name] ? 'text-gray-700' : 'text-gray-400/70'}`}
-              htmlFor={question.name}
-            >
-              Yes
-            </label> */}
-          </div>
+          {/* Switch avec labels Yes/No intégrés */}
+          <Switch
+            id={question.name}
+            name={question.name}
+            checked={financesInfo[question.name]}
+            onChange={handleRadioChange}
+          />
         </div>
 
 
@@ -307,11 +289,11 @@ const FinancesStep: React.FC = () => {
       }} />
       
       <StepTitle title="Diligence Questions" />
-      <div className="flex space-between  items-center w-full mb-8" >
-        <div className="flex mb-2 items-center w-full">
-          <p className='text-sm font-300 text-gray-700 '>Is the Company part of a multi-entity group structure?</p>
-          <div className="relative group w-[30%]">
-            <svg className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help absolute left-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex items-start justify-between w-full mb-8 gap-4" >
+        <div className="flex items-start flex-1 min-w-0 gap-2">
+          <p className='text-sm font-300 text-gray-700 flex-1'>Is the Company part of a multi-entity group structure?</p>
+          <div className="relative group flex-shrink-0 mt-0.5">
+            <svg className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-gray-800 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
@@ -320,30 +302,14 @@ const FinancesStep: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end flex-shrink-0 items-start pt-0.5">
           <div className="flex items-center">
-            {/* <label
-              className={`text-sm text-left whitespace-nowrap transition-colors
-                ${financesInfo.singleEntity ? 'text-gray-700 font-bold' : 'text-gray-400'}`}
-              htmlFor="singleEntity"
-            >
-              No
-            </label> */}
-
             <Switch
               id="singleEntity"
               name="singleEntity"
               checked={!financesInfo.singleEntity}
               onChange={handleRadioChange}
             />
-
-            {/* <label
-              className={`text-sm text-left whitespace-nowrap transition-colors
-                ${financesInfo.singleEntity ? 'text-gray-400' : 'text-gray-700 font-bold'}`}
-              htmlFor="singleEntity"
-            >
-              Yes
-            </label> */}
           </div>
         </div>
       </div>
