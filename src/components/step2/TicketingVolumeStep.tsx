@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updateFundsInfo,  } from '../../store/form/formSlice';
@@ -33,37 +33,54 @@ const Funding: React.FC = () => {
     return settlementPayout[key as keyof typeof settlementPayout] || key;
   };
   
-  // New underwriting calculation
-  let capitalAmount = 0;
-  let underwritingResult = null;
-  
-  if (ticketingVolume.nextYearSales > 0 && 
-      ticketingVolume.nextYearEvents > 0 && 
-      companyInfo.yearsInBusiness &&
-      ticketingInfo.paymentProcessing &&
-      ticketingInfo.settlementPayout) {
+  // New underwriting calculation with useMemo for optimization
+  const { capitalAmount, underwritingResult } = useMemo(() => {
+    let amount = 0;
+    let result = null;
     
-    // Ensure numberOfEvents is a number (convert if needed)
-    const numberOfEvents = Number(ticketingVolume.nextYearEvents);
-    
-    // Ensure grossAnnualTicketSales is a number
-    const grossAnnualTicketSales = Number(ticketingVolume.nextYearSales);
-    
-    const inputs: UnderwritingInputs = {
-      yearsInBusiness: mapYearsInBusiness(companyInfo.yearsInBusiness),
-      numberOfEvents: numberOfEvents,
-      paymentRemittedBy: mapPaymentRemittedBy(ticketingInfo.paymentProcessing),
-      paymentFrequency: mapPaymentFrequency(ticketingInfo.settlementPayout),
-      grossAnnualTicketSales: grossAnnualTicketSales
-    };
-    
-    underwritingResult = calculateUnderwritingResult(inputs);
-    if (underwritingResult) {
-      capitalAmount = underwritingResult.advanceAmount;
-      // Debug logging in development
-      logUnderwritingBreakdown(inputs, underwritingResult);
+    if (ticketingVolume.nextYearSales > 0 && 
+        ticketingVolume.nextYearEvents > 0 && 
+        companyInfo.yearsInBusiness &&
+        ticketingInfo.paymentProcessing &&
+        ticketingInfo.settlementPayout) {
+      
+      // Ensure numberOfEvents is a number (convert if needed)
+      const numberOfEvents = Number(ticketingVolume.nextYearEvents);
+      
+      // Ensure grossAnnualTicketSales is a number
+      const grossAnnualTicketSales = Number(ticketingVolume.nextYearSales);
+      
+      const inputs: UnderwritingInputs = {
+        yearsInBusiness: mapYearsInBusiness(companyInfo.yearsInBusiness),
+        numberOfEvents: numberOfEvents,
+        paymentRemittedBy: mapPaymentRemittedBy(ticketingInfo.paymentProcessing),
+        paymentFrequency: mapPaymentFrequency(ticketingInfo.settlementPayout),
+        grossAnnualTicketSales: grossAnnualTicketSales
+      };
+      
+      result = calculateUnderwritingResult(inputs);
+      if (result) {
+        amount = result.advanceAmount;
+        // Debug logging in development
+        logUnderwritingBreakdown(inputs, result);
+      }
     }
-  }
+    
+    return { capitalAmount: amount, underwritingResult: result };
+  }, [
+    ticketingVolume.nextYearSales,
+    ticketingVolume.nextYearEvents,
+    companyInfo.yearsInBusiness,
+    ticketingInfo.paymentProcessing,
+    ticketingInfo.settlementPayout
+  ]);
+
+  // Update fundsInfo.yourFunds when capitalAmount changes
+  useEffect(() => {
+    if (capitalAmount > 0) {
+      dispatch(updateFundsInfo({ yourFunds: capitalAmount.toString() }));
+    }
+  }, [capitalAmount, dispatch]);
 
   // Mount animation + show a small loader before revealing questions
   useEffect(() => {
