@@ -13,7 +13,7 @@ import Step3 from './step3';
 import Step4 from './step4';
 import Step5 from './step5';
 import LoadingScreen from './customComponents/LoadingScreen';
-import logo from '../assets/logo_black_bold.svg';
+import logo from '../assets/logo_side_black.svg';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
 import { useFormValidation } from '../hooks/useFormValidation';
@@ -357,7 +357,7 @@ const MultiStepFormContent: React.FC = () => {
 
       <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-hidden">
         <div className="flex justify-center items-center">
-          <img src={logo} alt="Logo" className="w-24 " />
+          <img src={logo} alt="Logo" className="w-48 " />
         </div>
 
        
