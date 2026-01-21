@@ -19,6 +19,7 @@ import ButtonSecondary from './customComponents/ButtonSecondary';
 import { useFormValidation } from '../hooks/useFormValidation';
 // Import debug utils to auto-clear validation bypass flags
 import '../utils/debugUtils';
+import { getTicketingPartnerLogo, isValidTicketingPartner } from '../utils/ticketingPartnerUtils';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,6 +38,12 @@ const MultiStepFormContent: React.FC = () => {
   const { currentStepErrors, setCurrentStepErrors, focusFirstErrorField } = useValidation();
   const [isSavingStep, setIsSavingStep] = useState(false);
   const isSubmitted = useSelector((state: RootState) => state.form.isSubmitted);
+  
+  // Récupérer le ticketing partner depuis l'environnement
+  const ticketingCoEnv = process.env.REACT_APP_TICKETING_CO || '';
+  const ticketingPartnerLogo = ticketingCoEnv && isValidTicketingPartner(ticketingCoEnv) 
+    ? getTicketingPartnerLogo(ticketingCoEnv) 
+    : null;
   // Redirection après soumission locale réussie
   useEffect(() => {
     if (isSubmitted) {
@@ -356,8 +363,15 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
       <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-hidden">
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center gap-4">
           <img src={logo} alt="Logo" className="w-48 " />
+          {ticketingPartnerLogo && (
+            <img 
+              src={ticketingPartnerLogo} 
+              alt={`${ticketingCoEnv} Logo`} 
+              className="h-12 object-contain" 
+            />
+          )}
         </div>
 
        

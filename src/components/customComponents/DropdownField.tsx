@@ -1,7 +1,7 @@
 import React from 'react';
 import { useValidation } from '../../contexts/ValidationContext';
 
-const DropdownField = ({ label, name, value, onChange, error, onBlur, options, required = false, description = '' }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: { [key: string]: string }, required?: boolean, description?: string }) => {
+const DropdownField = ({ label, name, value, onChange, error, onBlur, options, required = false, description = '', disabled = false }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: { [key: string]: string }, required?: boolean, description?: string, disabled?: boolean }) => {
   const id = name.replace(/\s+/g, '_').toLowerCase();
   const { hasError, getFieldError } = useValidation();
   const hasFieldError = hasError(name);
@@ -16,9 +16,14 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
               name={name} 
               value={value} 
               onChange={onChange} 
+              disabled={disabled}
               className={`block w-full px-3 py-2 text-sm text-gray-900 
               rounded-3xl border
-             focus:outline-none pr-10 appearance-none cursor-pointer ${
+             focus:outline-none pr-10 appearance-none ${
+                disabled 
+                  ? 'cursor-not-allowed bg-gray-100 opacity-60' 
+                  : 'cursor-pointer'
+              } ${
                 hasFieldError 
                   ? 'border-gray-300 focus:border-red-500' 
                   : 'border-gray-300 focus:border-purple-400'
