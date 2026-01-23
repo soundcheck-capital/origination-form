@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { useDiligenceFiles } from '../../contexts/DiligenceFilesContext';
 import { useValidation } from '../../contexts/ValidationContext';
 import { useFileUpload } from '../../hooks/useFileUpload';
@@ -52,6 +54,9 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       setValidationErrors([]);
     }, 10000);
   };
+  
+  // Récupérer le nom de la company depuis le store Redux pour les formulaires génériques
+  const companyName = useSelector((state: RootState) => state.form.formData.companyInfo.name);
 
   // Constante locale pour la limite de taille (10MB)
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB en bytes
@@ -169,7 +174,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
 
     // Uploader le fichier
     console.log(`🌐 [FileUpload] Calling uploadFile hook...`);
-    const result = await uploadFile(file, field);
+    const result = await uploadFile(file, field, companyName);
     console.log(`🌐 [FileUpload] uploadFile result:`, result);
 
     // Mettre à jour le statut selon le résultat
