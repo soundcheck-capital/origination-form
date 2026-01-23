@@ -30,56 +30,81 @@ export const useFileUpload = () => {
   };
 
   // Fonction publique pour uploader un seul fichier immédiatement
-  const uploadFile = async (file: File, fieldName: string): Promise<FileUploadResult> => {
+  const uploadFile = async (file: File, fieldName: string, companyName?: string): Promise<FileUploadResult> => {
     return sendFile(file, fieldName, {
       id: `file-${Date.now()}`,
       name: file.name,
       size: file.size,
       type: file.type,
       uploadedAt: new Date().toISOString(),
-    });
+    }, companyName);
   };
 
   // Fonction pour envoyer les données du formulaire (sans fichiers)
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
-      // Préparer les données communes (même payload pour les deux webhooks)
-      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
-      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
+      // Vérifier si REACT_APP_TICKETING_CO est défini
+      const ticketingCo = process.env.REACT_APP_TICKETING_CO || '';
+      const isGenericForm = Boolean(ticketingCo);
+
+      // Préparer les données communes
       const calledFrom = process.env.REACT_APP_CALLED_FROM || 'local';
 
-      // Vérifier que les IDs HubSpot sont configurés
-      if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
-        console.error('❌ [sendFormData] Missing HubSpot IDs in environment variables');
-        throw new Error('HubSpot configuration is missing. Please check your .env file.');
+      // Si ce n'est pas un formulaire générique, récupérer et vérifier les IDs HubSpot
+      let hubspotCompanyId: string | undefined;
+      let hubspotDealId: string | undefined;
+      let hubspotContactId: string | undefined;
+
+      if (!isGenericForm) {
+        hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
+        hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
+        hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
+
+        // Vérifier que les IDs HubSpot sont configurés
+        if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
+          console.error('❌ [sendFormData] Missing HubSpot IDs in environment variables');
+          throw new Error('HubSpot configuration is missing. Please check your .env file.');
+        }
       }
 
-      const payload = {
+      // Construire le payload conditionnellement
+      const payload: any = {
         formData: formData,
-        hubspotCompanyId: hubspotCompanyId,
-        hubspotDealId: hubspotDealId,
-        hubspotContactId: hubspotContactId,
         calledFrom: calledFrom
       };
 
+      // Ajouter les IDs HubSpot seulement si ce n'est pas un formulaire générique
+      if (!isGenericForm && hubspotCompanyId && hubspotDealId && hubspotContactId) {
+        payload.hubspotCompanyId = hubspotCompanyId;
+        payload.hubspotDealId = hubspotDealId;
+        payload.hubspotContactId = hubspotContactId;
+      }
+
       // URLs des webhooks
-      const hubspotWebhookUrl = process.env.REACT_APP_WEBHOOK_URL;
+      // Si REACT_APP_TICKETING_CO est défini, utiliser REACT_APP_GENERIC_WEBHOOK, sinon REACT_APP_WEBHOOK_URL
+      const hubspotWebhookUrl = isGenericForm
+        ? (process.env.REACT_APP_GENERIC_WEBHOOK || process.env.REACT_APP_WEBHOOK_URL)
+        : process.env.REACT_APP_WEBHOOK_URL;
       const emailSummaryWebhookUrl = process.env.REACT_APP_SEND_SUMMARY;
 
       // Log pour déboguer avec les URLs complètes
       console.log('📤 [sendFormData] Webhooks configuration:', {
-        hubspotUrl: hubspotWebhookUrl || '❌ NOT CONFIGURED (REACT_APP_WEBHOOK_URL is empty)',
+        ticketingCo: ticketingCo || 'not set',
+        isGenericForm: isGenericForm,
+        hubspotUrl: hubspotWebhookUrl || '❌ NOT CONFIGURED',
+        hubspotUrlSource: isGenericForm ? 'REACT_APP_GENERIC_WEBHOOK' : 'REACT_APP_WEBHOOK_URL',
         emailSummaryUrl: emailSummaryWebhookUrl,
         hubspotConfigured: hubspotWebhookUrl ? '✅' : '❌',
         emailSummaryConfigured: emailSummaryWebhookUrl ? '✅' : '❌',
         payloadKeys: Object.keys(payload),
+        includesHubSpotIds: !isGenericForm,
         formDataKeys: formData ? Object.keys(formData) : 'null'
       });
 
       // Vérifier que les URLs sont valides
       if (!hubspotWebhookUrl) {
-        console.error('❌ [sendFormData] REACT_APP_WEBHOOK_URL is not configured! HubSpot webhook will fail.');
+        const expectedVar = isGenericForm ? 'REACT_APP_GENERIC_WEBHOOK' : 'REACT_APP_WEBHOOK_URL';
+        console.error(`❌ [sendFormData] ${expectedVar} is not configured! HubSpot webhook will fail.`);
       }
       if (!emailSummaryWebhookUrl) {
         console.error('❌ [sendFormData] REACT_APP_SEND_SUMMARY is not configured and no fallback URL!');
@@ -228,7 +253,7 @@ export const useFileUpload = () => {
   };
 
   // Fonction pour envoyer un fichier individuel
-  const sendFile = async (file: File, fieldName: string, fileInfo: any): Promise<FileUploadResult> => {
+  const sendFile = async (file: File, fieldName: string, fileInfo: any, companyName?: string): Promise<FileUploadResult> => {
     try {
       console.log(`🚀 [useFileUpload] Sending file ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) to ${fieldName}`);
       
@@ -248,26 +273,73 @@ export const useFileUpload = () => {
       const { folder, subFolder } = getGoogleDriveFolders(fieldName);
       console.log(`📁 [useFileUpload] Google Drive location: ${folder}/${subFolder}`);
 
-      // Récupérer les IDs HubSpot depuis les variables d'environnement
-      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
-      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
-      const driveId = process.env.REACT_APP_HUBSPOT_DRIVE_ID;
-      const webhookFilesUrl = process.env.REACT_APP_WEBHOOK_URL_FILES;
-
-      // Vérifier que les IDs HubSpot sont configurés
-      if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
-        console.error('❌ [useFileUpload] Missing HubSpot IDs in environment variables');
-        return {
-          success: false,
-          error: 'HubSpot configuration is missing. Please check your .env file.',
-          fileName: file.name,
-          fieldName
-        };
+      // Vérifier si REACT_APP_TICKETING_CO est défini (formulaire générique)
+      const ticketingCo = process.env.REACT_APP_TICKETING_CO || '';
+      const isGenericForm = Boolean(ticketingCo);
+      
+      console.log('🔍 [sendFile] Debug info:', {
+        ticketingCo: ticketingCo,
+        isGenericForm: isGenericForm,
+        companyName: companyName,
+        companyNameType: typeof companyName,
+        companyNameLength: companyName?.length,
+        originalFileName: file.name
+      });
+      
+      // Préparer le nom du fichier avec préfixe si formulaire générique
+      let fileNameToUse = file.name;
+      if (isGenericForm && companyName && companyName.trim()) {
+        // Nettoyer le nom de la company pour l'utiliser comme préfixe (enlever caractères spéciaux)
+        const cleanCompanyName = companyName.trim().replace(/[^a-zA-Z0-9-_]/g, '_');
+        const fileExtension = file.name.substring(file.name.lastIndexOf('.'));
+        const fileNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.'));
+        fileNameToUse = `${cleanCompanyName}_${fileNameWithoutExt}${fileExtension}`;
+        console.log('✅ [sendFile] File name prefixed:', {
+          original: file.name,
+          prefixed: fileNameToUse,
+          cleanCompanyName: cleanCompanyName
+        });
+      } else {
+        console.warn('⚠️ [sendFile] File name NOT prefixed:', {
+          isGenericForm: isGenericForm,
+          hasCompanyName: !!companyName,
+          companyNameValue: companyName,
+          reason: !isGenericForm ? 'not generic form' : (!companyName || !companyName.trim()) ? 'no company name' : 'unknown'
+        });
       }
 
+      // Récupérer les IDs HubSpot depuis les variables d'environnement (seulement si ce n'est pas un formulaire générique)
+      let hubspotCompanyId: string | undefined;
+      let hubspotDealId: string | undefined;
+      let hubspotContactId: string | undefined;
+
+      if (!isGenericForm) {
+        hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
+        hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
+        hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
+
+        // Vérifier que les IDs HubSpot sont configurés
+        if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
+          console.error('❌ [useFileUpload] Missing HubSpot IDs in environment variables');
+          return {
+            success: false,
+            error: 'HubSpot configuration is missing. Please check your .env file.',
+            fileName: file.name,
+            fieldName
+          };
+        }
+      }
+
+      const driveId = process.env.REACT_APP_HUBSPOT_DRIVE_ID;
+      
+      // Si REACT_APP_TICKETING_CO est défini, utiliser REACT_APP_GENERIC_WEBHOOK_URL_FILES, sinon REACT_APP_WEBHOOK_URL_FILES
+      const webhookFilesUrl = isGenericForm
+        ? (process.env.REACT_APP_GENERIC_WEBHOOK_URL_FILES || process.env.REACT_APP_WEBHOOK_URL_FILES)
+        : process.env.REACT_APP_WEBHOOK_URL_FILES;
+
       if (!webhookFilesUrl) {
-        console.error('❌ [useFileUpload] REACT_APP_WEBHOOK_URL_FILES is not configured!');
+        const expectedVar = isGenericForm ? 'REACT_APP_GENERIC_WEBHOOK_URL_FILES' : 'REACT_APP_WEBHOOK_URL_FILES';
+        console.error(`❌ [useFileUpload] ${expectedVar} is not configured!`);
         return {
           success: false,
           error: 'Webhook URL for files is missing. Please check your .env file.',
@@ -277,16 +349,55 @@ export const useFileUpload = () => {
       }
 
       const formData = new FormData();
-      formData.append('file', file);
+      
+      // Créer un nouveau File avec le nom préfixé si formulaire générique
+      let fileToUpload = file;
+      if (isGenericForm && companyName && companyName.trim() && fileNameToUse !== file.name) {
+        fileToUpload = new File([file], fileNameToUse, { type: file.type });
+        console.log(`📝 [sendFile] Created new File with prefixed name: "${file.name}" -> "${fileNameToUse}"`);
+      }
+      
+      formData.append('file', fileToUpload, fileNameToUse); // Spécifier explicitement le nom du fichier
       formData.append('fieldName', fieldName);
       formData.append('folder', folder);
       formData.append('subFolder', subFolder);
-      formData.append('hubspotCompanyId', hubspotCompanyId);
-      formData.append('hubspotDealId', hubspotDealId);
-      formData.append('hubspotContactId', hubspotContactId);
+      
+      // Ajouter le nom de la company si formulaire générique
+      if (isGenericForm && companyName && companyName.trim()) {
+        formData.append('companyName', companyName);
+        // Ajouter aussi le nom du fichier préfixé comme champ séparé pour que Make puisse l'utiliser
+        formData.append('fileName', fileNameToUse);
+        console.log('✅ [sendFile] Added to FormData:', {
+          companyName: companyName,
+          fileName: fileNameToUse
+        });
+      } else {
+        console.warn('⚠️ [sendFile] NOT adding companyName/fileName to FormData:', {
+          isGenericForm: isGenericForm,
+          hasCompanyName: !!companyName,
+          companyNameValue: companyName
+        });
+      }
+      
+      // Ajouter les IDs HubSpot seulement si ce n'est pas un formulaire générique
+      if (!isGenericForm && hubspotCompanyId && hubspotDealId && hubspotContactId) {
+        formData.append('hubspotCompanyId', hubspotCompanyId);
+        formData.append('hubspotDealId', hubspotDealId);
+        formData.append('hubspotContactId', hubspotContactId);
+      }
+      
       formData.append('driveId', driveId || '');
 
-      console.log(`📡 [useFileUpload] Fetching ${webhookFilesUrl}`);
+      console.log(`📡 [useFileUpload] Fetching ${webhookFilesUrl}`, {
+        isGenericForm: isGenericForm,
+        webhookUrlSource: isGenericForm ? 'REACT_APP_GENERIC_WEBHOOK_URL_FILES' : 'REACT_APP_WEBHOOK_URL_FILES',
+        includesHubSpotIds: !isGenericForm,
+        companyName: isGenericForm ? companyName : undefined,
+        originalFileName: file.name,
+        prefixedFileName: fileNameToUse,
+        fileToUploadName: fileToUpload.name,
+        fileNameMatches: fileToUpload.name === fileNameToUse
+      });
       
       const response = await fetch(webhookFilesUrl, {
         method: 'POST',
@@ -382,6 +493,26 @@ export const useFileUpload = () => {
         totalFiles += fileList.length;
       });
 
+      // Extraire le nom de la company pour les formulaires génériques
+      // Essayer plusieurs chemins possibles pour trouver le nom de la company
+      const companyName = formData?.company?.name 
+        || formData?.formData?.companyInfo?.name 
+        || formData?.formData?.company?.name
+        || '';
+      
+      console.log('🔍 [uploadToMake] Company name extraction:', {
+        formDataKeys: formData ? Object.keys(formData) : 'no formData',
+        formDataCompany: formData?.company,
+        formDataFormData: formData?.formData,
+        fromCompany: formData?.company?.name,
+        fromFormDataCompanyInfo: formData?.formData?.companyInfo?.name,
+        fromFormDataCompany: formData?.formData?.company?.name,
+        finalCompanyName: companyName,
+        companyNameLength: companyName?.length,
+        isGenericForm: Boolean(process.env.REACT_APP_TICKETING_CO),
+        ticketingCo: process.env.REACT_APP_TICKETING_CO
+      });
+
       // Traiter chaque fichier individuellement
       for (const [fieldName, fileList] of Object.entries(files)) {
         for (const file of fileList) {
@@ -390,7 +521,7 @@ export const useFileUpload = () => {
             (info: any) => info.name === file.name
           );
 
-          const result = await sendFile(file, fieldName, fileInfo);
+          const result = await sendFile(file, fieldName, fileInfo, companyName);
           fileResults.push(result);
           
           processedFiles++;
