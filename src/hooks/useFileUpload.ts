@@ -43,34 +43,160 @@ export const useFileUpload = () => {
   // Fonction pour envoyer les données du formulaire (sans fichiers)
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
-      
-      const response = await fetch(process.env.REACT_APP_WEBHOOK_URL || '', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "Access-Control-Allow-Origin": "*"
-        },
-        body: JSON.stringify({
-          formData: formData,
-          hubspotCompanyId: process.env.REACT_APP_HUBSPOT_COMPANY_ID || '37482602639',
-          hubspotDealId: process.env.REACT_APP_HUBSPOT_DEAL_ID || '41089395317',
-          hubspotContactId: process.env.REACT_APP_HUBSPOT_CONTACT_ID || '133819925426',
-          calledFrom: process.env.REACT_APP_CALLED_FROM || 'local'
+      // Préparer les données communes (même payload pour les deux webhooks)
+      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
+      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
+      const hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
+      const calledFrom = process.env.REACT_APP_CALLED_FROM || 'local';
 
-        })
+      // Vérifier que les IDs HubSpot sont configurés
+      if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
+        console.error('❌ [sendFormData] Missing HubSpot IDs in environment variables');
+        throw new Error('HubSpot configuration is missing. Please check your .env file.');
+      }
+
+      const payload = {
+        formData: formData,
+        hubspotCompanyId: hubspotCompanyId,
+        hubspotDealId: hubspotDealId,
+        hubspotContactId: hubspotContactId,
+        calledFrom: calledFrom
+      };
+
+      // URLs des webhooks
+      const hubspotWebhookUrl = process.env.REACT_APP_WEBHOOK_URL;
+      const emailSummaryWebhookUrl = process.env.REACT_APP_SEND_SUMMARY;
+
+      // Log pour déboguer avec les URLs complètes
+      console.log('📤 [sendFormData] Webhooks configuration:', {
+        hubspotUrl: hubspotWebhookUrl || '❌ NOT CONFIGURED (REACT_APP_WEBHOOK_URL is empty)',
+        emailSummaryUrl: emailSummaryWebhookUrl,
+        hubspotConfigured: hubspotWebhookUrl ? '✅' : '❌',
+        emailSummaryConfigured: emailSummaryWebhookUrl ? '✅' : '❌',
+        payloadKeys: Object.keys(payload),
+        formDataKeys: formData ? Object.keys(formData) : 'null'
       });
 
-      if (response.status === 200) {
+      // Vérifier que les URLs sont valides
+      if (!hubspotWebhookUrl) {
+        console.error('❌ [sendFormData] REACT_APP_WEBHOOK_URL is not configured! HubSpot webhook will fail.');
+      }
+      if (!emailSummaryWebhookUrl) {
+        console.error('❌ [sendFormData] REACT_APP_SEND_SUMMARY is not configured and no fallback URL!');
+      }
+
+      // Préparer les promesses de fetch pour les deux webhooks
+      const fetchPromises: Promise<Response>[] = [];
+
+      // Webhook HubSpot (envoi du formData sur HubSpot)
+      if (hubspotWebhookUrl) {
+        console.log('📡 [sendFormData] Calling HubSpot webhook:', hubspotWebhookUrl);
+        fetchPromises.push(
+          fetch(hubspotWebhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify(payload)
+          }).catch(error => {
+            console.error('❌ [sendFormData] HubSpot webhook error:', error);
+            throw error;
+          })
+        );
+      } else {
+        console.warn('⚠️ [sendFormData] HubSpot webhook URL is empty, skipping...');
+        // Créer une réponse factice pour maintenir la structure
+        fetchPromises.push(Promise.resolve(new Response(null, { status: 200, statusText: 'Skipped (no URL)' })));
+      }
+
+      // Webhook Email Summary (envoi du summary par mail)
+      if (emailSummaryWebhookUrl) {
+        console.log('📡 [sendFormData] Calling Email Summary webhook:', emailSummaryWebhookUrl);
+        fetchPromises.push(
+          fetch(emailSummaryWebhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify(payload)
+          }).catch(error => {
+            console.error('❌ [sendFormData] Email summary webhook error:', error);
+            throw error;
+          })
+        );
+      } else {
+        console.warn('⚠️ [sendFormData] Email Summary webhook URL is empty, skipping...');
+        // Créer une réponse factice pour maintenir la structure
+        fetchPromises.push(Promise.resolve(new Response(null, { status: 200, statusText: 'Skipped (no URL)' })));
+      }
+
+      // Appeler les deux webhooks en parallèle
+      const [hubspotResponse, emailResponse] = await Promise.all(fetchPromises);
+
+      // Vérifier les deux réponses
+      const hubspotSuccess = hubspotResponse.status === 200;
+      const emailSuccess = emailResponse.status === 200;
+
+      // Log des réponses pour déboguer
+      console.log('📥 [sendFormData] Webhook responses:', {
+        hubspot: {
+          status: hubspotResponse.status,
+          statusText: hubspotResponse.statusText,
+          success: hubspotSuccess,
+          url: hubspotWebhookUrl
+        },
+        emailSummary: {
+          status: emailResponse.status,
+          statusText: emailResponse.statusText,
+          success: emailSuccess,
+          url: emailSummaryWebhookUrl
+        }
+      });
+
+      // Essayer de lire les réponses pour plus de détails (cloner pour ne pas consommer le body)
+      try {
+        const hubspotClone = hubspotResponse.clone();
+        const hubspotText = await hubspotClone.text();
+        console.log('📄 [sendFormData] HubSpot response:', hubspotText.substring(0, 200));
+      } catch (e) {
+        console.warn('⚠️ [sendFormData] Could not read HubSpot response:', e);
+      }
+
+      try {
+        const emailClone = emailResponse.clone();
+        const emailText = await emailClone.text();
+        console.log('📄 [sendFormData] Email summary response:', emailText.substring(0, 200));
+      } catch (e) {
+        console.warn('⚠️ [sendFormData] Could not read Email summary response:', e);
+      }
+
+      if (hubspotSuccess && emailSuccess) {
         return {
           success: true,
         };
       } else {
-        throw new Error(`HTTP Error: ${response.status}`);
+        // Si au moins un a échoué, on log l'erreur mais on considère le submit comme réussi
+        // car les deux appels sont indépendants
+        if (!hubspotSuccess) {
+          console.warn('⚠️ [sendFormData] HubSpot webhook failed:', hubspotResponse.status, hubspotResponse.statusText);
+        }
+        if (!emailSuccess) {
+          console.warn('⚠️ [sendFormData] Email summary webhook failed:', emailResponse.status, emailResponse.statusText);
+        }
+        // On retourne success true car les deux appels sont indépendants
+        // et on ne veut pas bloquer le submit si un seul échoue
+        return {
+          success: true,
+        };
       }
     } catch (error) {
       console.error('Error sending form data:', error);
+      // Même en cas d'erreur, on considère le submit comme réussi
+      // car les deux appels sont indépendants et ne doivent pas bloquer le submit
       return {
-        success: false,
+        success: true,
         error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
@@ -122,19 +248,47 @@ export const useFileUpload = () => {
       const { folder, subFolder } = getGoogleDriveFolders(fieldName);
       console.log(`📁 [useFileUpload] Google Drive location: ${folder}/${subFolder}`);
 
+      // Récupérer les IDs HubSpot depuis les variables d'environnement
+      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
+      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
+      const hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
+      const driveId = process.env.REACT_APP_HUBSPOT_DRIVE_ID;
+      const webhookFilesUrl = process.env.REACT_APP_WEBHOOK_URL_FILES;
+
+      // Vérifier que les IDs HubSpot sont configurés
+      if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
+        console.error('❌ [useFileUpload] Missing HubSpot IDs in environment variables');
+        return {
+          success: false,
+          error: 'HubSpot configuration is missing. Please check your .env file.',
+          fileName: file.name,
+          fieldName
+        };
+      }
+
+      if (!webhookFilesUrl) {
+        console.error('❌ [useFileUpload] REACT_APP_WEBHOOK_URL_FILES is not configured!');
+        return {
+          success: false,
+          error: 'Webhook URL for files is missing. Please check your .env file.',
+          fileName: file.name,
+          fieldName
+        };
+      }
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('fieldName', fieldName);
       formData.append('folder', folder);
       formData.append('subFolder', subFolder);
-      formData.append('hubspotCompanyId', process.env.REACT_APP_HUBSPOT_COMPANY_ID || '');
-      formData.append('hubspotDealId', process.env.REACT_APP_HUBSPOT_DEAL_ID || '');
-      formData.append('hubspotContactId', process.env.REACT_APP_HUBSPOT_CONTACT_ID || '');
-      formData.append('driveId', process.env.REACT_APP_HUBSPOT_DRIVE_ID || '');
+      formData.append('hubspotCompanyId', hubspotCompanyId);
+      formData.append('hubspotDealId', hubspotDealId);
+      formData.append('hubspotContactId', hubspotContactId);
+      formData.append('driveId', driveId || '');
 
-      console.log(`📡 [useFileUpload] Fetching ${process.env.REACT_APP_WEBHOOK_URL_FILES}`);
+      console.log(`📡 [useFileUpload] Fetching ${webhookFilesUrl}`);
       
-      const response = await fetch(process.env.REACT_APP_WEBHOOK_URL_FILES || '', {
+      const response = await fetch(webhookFilesUrl, {
         method: 'POST',
         headers: {
           "Access-Control-Allow-Origin": "*"

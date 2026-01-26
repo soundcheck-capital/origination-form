@@ -1,6 +1,17 @@
+import React from 'react';
+
 const StepTitle = ({ title }: { title: string }) => {
     return (
-        <p className=" text-amber-500 my-2 text-lg font-semibold text-left">{title}</p>
+        <div className="my-4 text-left">
+            <h2 className="
+                text-base
+                font-semibold
+                tracking-wide
+                text-gray-600
+            ">
+                {title}
+            </h2>
+        </div>
     );
 };
 

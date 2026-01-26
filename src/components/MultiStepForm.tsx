@@ -13,7 +13,7 @@ import Step3 from './step3';
 import Step4 from './step4';
 import Step5 from './step5';
 import LoadingScreen from './customComponents/LoadingScreen';
-import logo from '../assets/logo_black_bold.svg';
+import logo from '../assets/logo_side_black.svg';
 import ButtonPrimary from './customComponents/ButtonPrimary';
 import ButtonSecondary from './customComponents/ButtonSecondary';
 import { useFormValidation } from '../hooks/useFormValidation';
@@ -65,6 +65,7 @@ const MultiStepFormContent: React.FC = () => {
           city: formData.formData.companyInfo.companyCity,
           state: formData.formData.companyInfo.companyState,
           zip: formData.formData.companyInfo.companyZipcode,
+          legalBusinessName: formData.formData.companyInfo.legalBusinessName,
           dba: formData.formData.companyInfo.dba,
           yearsInBusiness: formData.formData.companyInfo.yearsInBusiness,
           socials: formData.formData.companyInfo.socials,
@@ -77,14 +78,10 @@ const MultiStepFormContent: React.FC = () => {
           otherPartner: formData.formData.ticketingInfo.otherPartner,
           paymentProcessing: formData.formData.ticketingInfo.paymentProcessing,
           settlementPayout: formData.formData.ticketingInfo.settlementPayout,
-          lastYearEvents: formData.formData.volumeInfo.lastYearEvents,
-          lastYearTickets: formData.formData.volumeInfo.lastYearTickets,
-          lastYearSales: formData.formData.volumeInfo.lastYearSales,
           nextYearEvents: formData.formData.volumeInfo.nextYearEvents,
-          nextYearTickets: formData.formData.volumeInfo.nextYearTickets,
           nextYearSales: formData.formData.volumeInfo.nextYearSales,
           owners: formData.formData.ownershipInfo.owners,
-          singleEntity: formData.formData.financesInfo.singleEntity ? 'Multi Entity group structure' : 'Single Entity',
+          singleEntity: formData.formData.financesInfo.singleEntity ? 'Single Entity' : 'Multi Entity group structure',
           assetsTransferred: formData.formData.financesInfo.assetsTransferred ? 'Yes' : 'No',
           filedLastYearTaxes: formData.formData.financesInfo.filedLastYearTaxes ? 'Yes' : 'No',
           hasTicketingDebt: formData.formData.financesInfo.hasTicketingDebt ? 'Yes' : 'No',
@@ -94,18 +91,17 @@ const MultiStepFormContent: React.FC = () => {
           hasJudgments: formData.formData.financesInfo.hasJudgments ? 'Yes' : 'No',
           hasBankruptcy: formData.formData.financesInfo.hasBankruptcy ? 'Yes' : 'No',
           ownershipChanged: formData.formData.financesInfo.ownershipChanged ? 'Yes' : 'No',
-          leaseEndDate: formData.formData.financesInfo.leaseEndDate,
           debts: formData.formData.financesInfo.debts,
         },
         deal: {
           nextYearEvents: formData.formData.volumeInfo.nextYearEvents,
-          nextYearTickets: formData.formData.volumeInfo.nextYearTickets,
           nextYearSales: formData.formData.volumeInfo.nextYearSales,
           settlementPolicy: formData.formData.ticketingInfo.settlementPayout,
           purchasePrice: formData.formData.fundsInfo.yourFunds,
           useOfProceeds: formData.formData.fundsInfo.useOfProceeds,
           timingOfFunding: formData.formData.fundsInfo.timingOfFunding,
           additionalComments: formData.formData.financesInfo.additionalComments,
+          industryReferences: formData.formData.financesInfo.industryReferences,
         },
 
       };
@@ -360,15 +356,8 @@ const MultiStepFormContent: React.FC = () => {
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
       <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-hidden">
-        {/* Beta Corner Ribbon */}
-        <div className="absolute top-0 left-0 w-32 h-32 overflow-hidden z-50 pointer-events-none">
-          <div className="absolute -left-10 top-7 w-40 py-2 text-center bg-gradient-to-r from-[#FFA800] to-[#FF0057] shadow-lg transform -rotate-45">
-            <span className="text-white text-xs font-bold tracking-wider uppercase">Beta</span>
-          </div>
-        </div>
-
         <div className="flex justify-center items-center">
-          <img src={logo} alt="Logo" className="w-24 " />
+          <img src={logo} alt="Logo" className="w-48 " />
         </div>
 
        
@@ -376,11 +365,34 @@ const MultiStepFormContent: React.FC = () => {
         <div className="min-h-screen bg-white py-8">
           {/* Progress Bar */}
           <div className="w-full mx-auto">
-            
             <div className="relative w-full">
-              <div className="rounded-xl absolute top-0 left-0 h-1 bg-gray-200 w-full"></div>
-              <div  //bg-[#F99927]
-                className="rounded-xl absolute top-0 bg-gradient-to-r from-[#F99927] to-[#EF2A5F] left-0 h-1 transition-all duration-300"
+              {/* Background track with glass effect */}
+              <div className="
+                rounded-xl 
+                absolute top-0 left-0 
+                h-2 w-full
+                backdrop-blur-sm
+                border border-gray-300/30
+                bg-white/30
+                shadow-inner
+              "></div>
+              
+              {/* Progress fill with glass effect */}
+              <div 
+                className="
+                  rounded-xl 
+                  absolute top-0 left-0 
+                  h-2
+                  backdrop-blur-md
+                  border border-white/40
+                  bg-gradient-to-r from-amber-400/60 via-orange-400/60 to-rose-500/60
+                  shadow-lg shadow-amber-300/40
+                  transition-all duration-300 ease-out
+                  before:absolute before:inset-0 before:rounded-xl
+                  before:bg-gradient-to-r before:from-white/20 before:to-transparent
+                  before:pointer-events-none
+                  relative
+                "
                 style={{ width: `${((currentStep) / 5) * 100}%` }}
               ></div>
             </div>
@@ -388,7 +400,7 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="bg-white mx-auto mt-8 w-full">
-            <h1 className="text-4xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
+            <h1 className="text-2xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>
