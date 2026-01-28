@@ -40,9 +40,24 @@ export const useFileUpload = () => {
     });
   };
 
+  // Log "safe" pour vérifier la présence des variables sans exposer les valeurs
+  const logEnvPresence = (context: string) => {
+    console.log(`[env] ${context}`, {
+      hubspotCompanyId: !!process.env.REACT_APP_HUBSPOT_COMPANY_ID,
+      hubspotDealId: !!process.env.REACT_APP_HUBSPOT_DEAL_ID,
+      hubspotContactId: !!process.env.REACT_APP_HUBSPOT_CONTACT_ID,
+      hubspotDriveId: !!process.env.REACT_APP_HUBSPOT_DRIVE_ID,
+      webhookUrl: !!process.env.REACT_APP_WEBHOOK_URL,
+      webhookFilesUrl: !!process.env.REACT_APP_WEBHOOK_URL_FILES,
+      emailSummaryUrl: !!process.env.REACT_APP_SEND_SUMMARY,
+      calledFrom: !!process.env.REACT_APP_CALLED_FROM
+    });
+  };
+
   // Fonction pour envoyer les données du formulaire (sans fichiers)
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
+      logEnvPresence('sendFormData');
       // Préparer les données communes (même payload pour les deux webhooks)
       const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
       const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
@@ -231,6 +246,7 @@ export const useFileUpload = () => {
   const sendFile = async (file: File, fieldName: string, fileInfo: any): Promise<FileUploadResult> => {
     try {
       console.log(`🚀 [useFileUpload] Sending file ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) to ${fieldName}`);
+      logEnvPresence('sendFile');
       
       // Valider la taille du fichier
       if (!validateFileSize(file)) {
