@@ -34,6 +34,24 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   const { uploadFile } = useFileUpload();
   const hasFieldError = hasError(field);
   const fieldError = getFieldError(field);
+  const GENERIC_UPLOAD_ERROR_UI = 'There is a server error, please contact Soundcheck support';
+  const isFileTooLargeError = (message?: string) =>
+    !!message &&
+    (message.includes('File exceeds the maximum size of 10MB') ||
+      message.includes('File too large for server'));
+  const removeFailedFile = (fileIndex: number) => {
+    removeFile(field as keyof typeof diligenceFiles, fileIndex);
+    if (onFilesChange) {
+      const newFileInfos = fileInfos.filter((_: any, i: number) => i !== fileIndex);
+      onFilesChange(newFileInfos);
+    }
+  };
+  const pushValidationErrors = (errors: Array<{fileName: string; error: string}>) => {
+    setValidationErrors(prev => [...prev, ...errors]);
+    setTimeout(() => {
+      setValidationErrors([]);
+    }, 10000);
+  };
 
   // Constante locale pour la limite de taille (10MB)
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB en bytes
@@ -128,10 +146,17 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       const sizeMB = (file.size / 1024 / 1024).toFixed(2);
       console.error(`❌ [FileUpload] Size validation failed for ${file.name}: ${sizeMB}MB > 10MB`);
       console.log(`🔄 [FileUpload] Calling updateFileUploadStatus with error...`);
+      pushValidationErrors([
+        {
+          fileName: file.name,
+          error: `File exceeds the maximum size of 10MB (${sizeMB}MB)`
+        }
+      ]);
       updateFileUploadStatus(field as keyof typeof diligenceFiles, fileIndex, {
         status: 'error',
         error: `File exceeds the maximum size of 10MB (${sizeMB}MB)`
       });
+      removeFailedFile(fileIndex);
       console.log(`✓ [FileUpload] Status update called`);
       return;
     }
@@ -160,10 +185,20 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         fileIndex: fileIndex,
         error: result.error
       });
+      const uiError = isFileTooLargeError(result.error)
+        ? result.error || 'Upload failed'
+        : GENERIC_UPLOAD_ERROR_UI;
+      pushValidationErrors([
+        {
+          fileName: file.name,
+          error: uiError
+        }
+      ]);
       updateFileUploadStatus(field as keyof typeof diligenceFiles, fileIndex, {
         status: 'error',
-        error: result.error || 'Upload failed'
+        error: uiError
       });
+      removeFailedFile(fileIndex);
       console.log(`✓ [FileUpload] Error status set`);
     }
   };
@@ -211,12 +246,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
             fileName: f.file.name,
             error: f.error || 'Unknown error'
           }));
-          setValidationErrors(errors);
-          
-          // Effacer les erreurs après 10 secondes
-          setTimeout(() => {
-            setValidationErrors([]);
-          }, 10000);
+          pushValidationErrors(errors);
         }
         
         // Ne continuer que si on a des fichiers valides
@@ -324,12 +354,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
             fileName: f.file.name,
             error: f.error || 'Unknown error'
           }));
-          setValidationErrors(errors);
-          
-          // Effacer les erreurs après 10 secondes
-          setTimeout(() => {
-            setValidationErrors([]);
-          }, 10000);
+          pushValidationErrors(errors);
         }
         
         // Ne continuer que si on a des fichiers valides

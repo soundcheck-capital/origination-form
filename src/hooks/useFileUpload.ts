@@ -16,6 +16,21 @@ interface FileUploadResult {
 // Constante pour la limite de taille (10MB)
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB en bytes
 
+const ERROR_MESSAGES = {
+  FILE_TOO_LARGE: (sizeMB: string) => `File exceeds the maximum size of 10MB (${sizeMB}MB)`,
+  MISSING_ENV_FORMDATA: 'Missing env vars for sendFormData: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
+  MISSING_ENV_UPLOAD: 'Missing env vars for file upload: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
+  MISSING_WEBHOOK_FILES: 'Missing env var for file upload: REACT_APP_WEBHOOK_URL_FILES.',
+  SERVER_FILE_TOO_LARGE: (sizeMB: string) => `File too large for server (${sizeMB}MB). Server limit exceeded.`,
+  HTTP_400: 'Invalid file or request',
+  HTTP_415: 'File type not supported by server',
+  HTTP_500: 'Server error while processing file',
+  HTTP_503: 'Service temporarily unavailable',
+  HTTP_DEFAULT: (status: number) => `Upload failed (HTTP ${status})`,
+  NETWORK_ERROR: 'Network error',
+  UNKNOWN_ERROR: 'Unknown error',
+} as const;
+
 export const useFileUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
@@ -65,7 +80,7 @@ export const useFileUpload = () => {
       // Vérifier que les IDs nécessaires au payload sont configurés
       if (!hubspotCompanyId || !hubspotDealId) {
         console.error('❌ [sendFormData] Missing HubSpot company/deal IDs in environment variables');
-        throw new Error('Missing env vars for sendFormData: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.');
+        throw new Error(ERROR_MESSAGES.MISSING_ENV_FORMDATA);
       }
 
       const payload = {
@@ -209,7 +224,7 @@ export const useFileUpload = () => {
       // car les deux appels sont indépendants et ne doivent pas bloquer le submit
       return {
         success: true,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN_ERROR
       };
     }
   };
@@ -251,7 +266,7 @@ export const useFileUpload = () => {
         console.error(`❌ [useFileUpload] Client-side validation failed: ${sizeMB}MB > 10MB`);
         return {
           success: false,
-          error: `File exceeds the maximum size of 10MB (${sizeMB}MB)`,
+          error: ERROR_MESSAGES.FILE_TOO_LARGE(sizeMB),
           fileName: file.name,
           fieldName
         };
@@ -272,7 +287,7 @@ export const useFileUpload = () => {
         console.error('❌ [useFileUpload] Missing HubSpot company/deal IDs in environment variables');
         return {
           success: false,
-          error: 'Missing env vars for file upload: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
+          error: ERROR_MESSAGES.MISSING_ENV_UPLOAD,
           fileName: file.name,
           fieldName
         };
@@ -282,7 +297,7 @@ export const useFileUpload = () => {
         console.error('❌ [useFileUpload] REACT_APP_WEBHOOK_URL_FILES is not configured!');
         return {
           success: false,
-          error: 'Missing env var for file upload: REACT_APP_WEBHOOK_URL_FILES.',
+          error: ERROR_MESSAGES.MISSING_WEBHOOK_FILES,
           fileName: file.name,
           fieldName
         };
@@ -321,22 +336,22 @@ export const useFileUpload = () => {
         switch (response.status) {
           case 413:
             const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-            errorMessage = `File too large for server (${sizeMB}MB). Server limit exceeded.`;
+            errorMessage = ERROR_MESSAGES.SERVER_FILE_TOO_LARGE(sizeMB);
             break;
           case 400:
-            errorMessage = `Invalid file or request`;
+            errorMessage = ERROR_MESSAGES.HTTP_400;
             break;
           case 415:
-            errorMessage = `File type not supported by server`;
+            errorMessage = ERROR_MESSAGES.HTTP_415;
             break;
           case 500:
-            errorMessage = `Server error while processing file`;
+            errorMessage = ERROR_MESSAGES.HTTP_500;
             break;
           case 503:
-            errorMessage = `Service temporarily unavailable`;
+            errorMessage = ERROR_MESSAGES.HTTP_503;
             break;
           default:
-            errorMessage = `Upload failed (HTTP ${response.status})`;
+            errorMessage = ERROR_MESSAGES.HTTP_DEFAULT(response.status);
         }
         
         // Essayer de récupérer un message d'erreur du serveur
@@ -363,7 +378,7 @@ export const useFileUpload = () => {
       console.error(`❌ [useFileUpload] Exception sending file ${file.name}:`, error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Network error',
+        error: error instanceof Error ? error.message : ERROR_MESSAGES.NETWORK_ERROR,
         fileName: file.name,
         fieldName
       };
