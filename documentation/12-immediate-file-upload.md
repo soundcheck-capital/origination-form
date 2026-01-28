@@ -127,7 +127,6 @@ folder: string (ex: "Ticketing Information")
 subFolder: string (ex: "Ticketing Report")
 hubspotCompanyId: string
 hubspotDealId: string
-hubspotContactId: string
 driveId: string
 ```
 
@@ -160,7 +159,6 @@ folder: "Financial Information"
 subFolder: "Financial Statements"
 hubspotCompanyId: "37482602639"
 hubspotDealId: "41089395317"
-hubspotContactId: "133819925426"
 driveId: "1ABC..."
 ```
 
@@ -193,7 +191,6 @@ const subFolder = data.subFolder; // "Financial Statements"
   },
   "hubspotCompanyId": "...",
   "hubspotDealId": "...",
-  "hubspotContactId": "...",
   "calledFrom": "local|staging|production"
 }
 ```
@@ -258,7 +255,6 @@ REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/...
 # Identifiants HubSpot
 REACT_APP_HUBSPOT_COMPANY_ID=...
 REACT_APP_HUBSPOT_DEAL_ID=...
-REACT_APP_HUBSPOT_CONTACT_ID=...
 REACT_APP_HUBSPOT_DRIVE_ID=...
 
 # Environnement
@@ -372,4 +368,3 @@ const handleSubmit = async () => {
 - `src/components/MultiStepForm.tsx`
 - `documentation/08-backend-integration.md`
 - `documentation/09-webhooks.md`
-

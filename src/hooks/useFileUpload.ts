@@ -45,7 +45,6 @@ export const useFileUpload = () => {
     console.log(`[env] ${context}`, {
       hubspotCompanyId: !!process.env.REACT_APP_HUBSPOT_COMPANY_ID,
       hubspotDealId: !!process.env.REACT_APP_HUBSPOT_DEAL_ID,
-      hubspotContactId: !!process.env.REACT_APP_HUBSPOT_CONTACT_ID,
       hubspotDriveId: !!process.env.REACT_APP_HUBSPOT_DRIVE_ID,
       webhookUrl: !!process.env.REACT_APP_WEBHOOK_URL,
       webhookFilesUrl: !!process.env.REACT_APP_WEBHOOK_URL_FILES,
@@ -61,20 +60,18 @@ export const useFileUpload = () => {
       // Préparer les données communes (même payload pour les deux webhooks)
       const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
       const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
       const calledFrom = process.env.REACT_APP_CALLED_FROM || 'local';
 
-      // Vérifier que les IDs HubSpot sont configurés
-      if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
-        console.error('❌ [sendFormData] Missing HubSpot IDs in environment variables');
-        throw new Error('HubSpot configuration is missing. Please check your .env file.');
+      // Vérifier que les IDs nécessaires au payload sont configurés
+      if (!hubspotCompanyId || !hubspotDealId) {
+        console.error('❌ [sendFormData] Missing HubSpot company/deal IDs in environment variables');
+        throw new Error('Missing env vars for sendFormData: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.');
       }
 
       const payload = {
         formData: formData,
         hubspotCompanyId: hubspotCompanyId,
         hubspotDealId: hubspotDealId,
-        hubspotContactId: hubspotContactId,
         calledFrom: calledFrom
       };
 
@@ -267,16 +264,15 @@ export const useFileUpload = () => {
       // Récupérer les IDs HubSpot depuis les variables d'environnement
       const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
       const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const hubspotContactId = process.env.REACT_APP_HUBSPOT_CONTACT_ID;
       const driveId = process.env.REACT_APP_HUBSPOT_DRIVE_ID;
       const webhookFilesUrl = process.env.REACT_APP_WEBHOOK_URL_FILES;
 
-      // Vérifier que les IDs HubSpot sont configurés
-      if (!hubspotCompanyId || !hubspotDealId || !hubspotContactId) {
-        console.error('❌ [useFileUpload] Missing HubSpot IDs in environment variables');
+      // Vérifier que les IDs nécessaires à l'upload sont configurés
+      if (!hubspotCompanyId || !hubspotDealId) {
+        console.error('❌ [useFileUpload] Missing HubSpot company/deal IDs in environment variables');
         return {
           success: false,
-          error: 'HubSpot configuration is missing. Please check your .env file.',
+          error: 'Missing env vars for file upload: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
           fileName: file.name,
           fieldName
         };
@@ -286,7 +282,7 @@ export const useFileUpload = () => {
         console.error('❌ [useFileUpload] REACT_APP_WEBHOOK_URL_FILES is not configured!');
         return {
           success: false,
-          error: 'Webhook URL for files is missing. Please check your .env file.',
+          error: 'Missing env var for file upload: REACT_APP_WEBHOOK_URL_FILES.',
           fileName: file.name,
           fieldName
         };
@@ -299,7 +295,6 @@ export const useFileUpload = () => {
       formData.append('subFolder', subFolder);
       formData.append('hubspotCompanyId', hubspotCompanyId);
       formData.append('hubspotDealId', hubspotDealId);
-      formData.append('hubspotContactId', hubspotContactId);
       formData.append('driveId', driveId || '');
 
       console.log(`📡 [useFileUpload] Fetching ${webhookFilesUrl}`);
