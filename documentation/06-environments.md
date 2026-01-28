@@ -52,7 +52,6 @@ REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/PROD_WEBHOOK_ID
 REACT_APP_WEBHOOK_URL_FILES=https://hook.us1.make.com/PROD_FILES_WEBHOOK_ID
 REACT_APP_HUBSPOT_COMPANY_ID=your_prod_hubspot_company_id
 REACT_APP_HUBSPOT_DEAL_ID=your_prod_hubspot_deal_id
-REACT_APP_HUBSPOT_CONTACT_ID=your_prod_hubspot_contact_id
 REACT_APP_HUBSPOT_DRIVE_ID=your_prod_drive_id
 ```
 
@@ -68,7 +67,6 @@ REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/STAGING_WEBHOOK_ID
 REACT_APP_WEBHOOK_URL_FILES=https://hook.us1.make.com/STAGING_FILES_WEBHOOK_ID
 REACT_APP_HUBSPOT_COMPANY_ID=your_staging_hubspot_company_id
 REACT_APP_HUBSPOT_DEAL_ID=your_staging_hubspot_deal_id
-REACT_APP_HUBSPOT_CONTACT_ID=your_staging_hubspot_contact_id
 REACT_APP_HUBSPOT_DRIVE_ID=your_staging_drive_id
 ```
 
@@ -84,7 +82,6 @@ REACT_APP_WEBHOOK_URL=https://webhook.site/dev-test-id
 REACT_APP_WEBHOOK_URL_FILES=https://webhook.site/dev-files-test-id
 REACT_APP_HUBSPOT_COMPANY_ID=12345
 REACT_APP_HUBSPOT_DEAL_ID=67890
-REACT_APP_HUBSPOT_CONTACT_ID=11111
 REACT_APP_HUBSPOT_DRIVE_ID=test-drive-id
 ```
 
