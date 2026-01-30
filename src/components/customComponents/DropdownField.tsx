@@ -1,7 +1,7 @@
 import React from 'react';
 import { useValidation } from '../../contexts/ValidationContext';
 
-const DropdownField = ({ label, name, value, onChange, error, onBlur, options, required = false, description = '' }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: { [key: string]: string }, required?: boolean, description?: string }) => {
+const DropdownField = ({ label, name, value, onChange, error, onBlur, options, required = false, description = '', disabled = false }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void, options: { [key: string]: string }, required?: boolean, description?: string, disabled?: boolean }) => {
   const id = name.replace(/\s+/g, '_').toLowerCase();
   const { hasError, getFieldError } = useValidation();
   const hasFieldError = hasError(name);
@@ -22,8 +22,9 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
                 hasFieldError 
                   ? 'border-gray-300 focus:border-red-500' 
                   : 'border-gray-300 focus:border-purple-400'
-              }`} 
+              } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`} 
               onBlur={onBlur}
+              disabled={disabled}
             >
                 <option value="" className="text-gray-300"></option>
                 {Object.entries(options).map(([key, value]) => (
@@ -55,5 +56,4 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
 };  
 
 export default DropdownField;
-
 

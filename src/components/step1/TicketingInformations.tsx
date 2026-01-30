@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { useEffect }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updateTicketingInfo, updateVolumeInfo } from '../../store/form/formSlice';
@@ -9,12 +9,21 @@ import NumberInput from '../customComponents/NumberField';
 import CurrencyField from '../customComponents/CurrencyField';
 import { useValidation } from '../../contexts/ValidationContext';
 import { paymentProcessing, ticketingPartners, settlementPayout } from '../../store/form/hubspotLists';
+import { findTicketingPartnerKey } from '../../utils/ticketingPartnerUtils';
 
 const TicketingFundingStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
   const { setFieldError } = useValidation();
+  const ticketingCoEnv = process.env.REACT_APP_TICKETING_CO || '';
+  const lockedTicketingPartnerKey = ticketingCoEnv ? findTicketingPartnerKey(ticketingCoEnv) : null;
+
+  useEffect(() => {
+    if (lockedTicketingPartnerKey && ticketingInfo.currentPartner !== lockedTicketingPartnerKey) {
+      dispatch(updateTicketingInfo({ currentPartner: lockedTicketingPartnerKey }));
+    }
+  }, [dispatch, lockedTicketingPartnerKey, ticketingInfo.currentPartner]);
 
   // Ticketing handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -53,7 +62,7 @@ const TicketingFundingStep: React.FC = () => {
 
       <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required  />
       
-      <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required />
+      <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required disabled={!!lockedTicketingPartnerKey} />
      
      {ticketingInfo.currentPartner === 'Other' && (
       <TextField label="Other Ticketing Partner" name="otherPartner" value={ticketingInfo.otherPartner} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
