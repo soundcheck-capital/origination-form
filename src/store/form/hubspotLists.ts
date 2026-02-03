@@ -140,7 +140,7 @@ export const clientType = {
   };
   
   export const paymentProcessing = {
-    'Ticketing Co':'The Ticketing Co (e.g. Ticketmaster)',
+    'Ticketing Co':'My Ticketing Co',
     'Own Processor':'The Payment Processor (e.g. Stripe)',
     'Venue':'The Venue (e.g. MSG)',
     'It varies':'It varies'
