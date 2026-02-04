@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { useEffect }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updateTicketingInfo, updateVolumeInfo } from '../../store/form/formSlice';
@@ -9,12 +9,31 @@ import NumberInput from '../customComponents/NumberField';
 import CurrencyField from '../customComponents/CurrencyField';
 import { useValidation } from '../../contexts/ValidationContext';
 import { paymentProcessing, ticketingPartners, settlementPayout } from '../../store/form/hubspotLists';
+import { findTicketingPartnerKey } from '../../utils/ticketingPartnerUtils';
 
 const TicketingFundingStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
   const { setFieldError } = useValidation();
+  const ticketingCoEnv = process.env.REACT_APP_TICKETING_CO || '';
+  const lockedTicketingPartnerKey = ticketingCoEnv ? findTicketingPartnerKey(ticketingCoEnv) : null;
+  // When a ticketing co is locked via env, payout/settlement is forced to "Ticketing Co" (My Ticketing Co)
+  const lockedPaymentProcessingValue = lockedTicketingPartnerKey ? 'Ticketing Co' : null;
+
+  useEffect(() => {
+    if (!lockedTicketingPartnerKey) return;
+    const updates: Partial<typeof ticketingInfo> = {};
+    if (ticketingInfo.currentPartner !== lockedTicketingPartnerKey) {
+      updates.currentPartner = lockedTicketingPartnerKey;
+    }
+    if (ticketingInfo.paymentProcessing !== 'Ticketing Co') {
+      updates.paymentProcessing = 'Ticketing Co';
+    }
+    if (Object.keys(updates).length > 0) {
+      dispatch(updateTicketingInfo(updates));
+    }
+  }, [dispatch, lockedTicketingPartnerKey, ticketingInfo.currentPartner, ticketingInfo.paymentProcessing]);
 
   // Ticketing handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -51,9 +70,9 @@ const TicketingFundingStep: React.FC = () => {
       <NumberInput label="Number of Events/Year" name="nextYearEvents" value={ticketingVolume.nextYearEvents.toString()} onChange={(value) => handleNumberChange('nextYearEvents', value)} placeholder="Fill in" id="nextYearEvents" required integerOnly />
       <CurrencyField label="Gross Annual Ticketing Volume ($)" name="nextYearSales" value={ticketingVolume.nextYearSales.toString()} onChange={(value) => handleCurrencyChange('nextYearSales', value)} placeholder="Fill in" id="nextYearSales" required />
 
-      <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required  />
+      <DropdownField label="Who do you receive the payout/settlement from?" name="paymentProcessing" value={lockedPaymentProcessingValue ?? ticketingInfo.paymentProcessing} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessing} required disabled={!!lockedTicketingPartnerKey} />
       
-      <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required />
+      <DropdownField label="Ticketing Partner" name="currentPartner" value={ticketingInfo.currentPartner} onChange={handleChange} error='' onBlur={() => { }} options={ticketingPartners} required disabled={!!lockedTicketingPartnerKey} />
      
      {ticketingInfo.currentPartner === 'Other' && (
       <TextField label="Other Ticketing Partner" name="otherPartner" value={ticketingInfo.otherPartner} onChange={handleChange} error='' onBlur={() => { }} type='text' required />

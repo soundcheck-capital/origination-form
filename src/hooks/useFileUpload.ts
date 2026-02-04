@@ -45,14 +45,14 @@ export const useFileUpload = () => {
   };
 
   // Fonction publique pour uploader un seul fichier immédiatement
-  const uploadFile = async (file: File, fieldName: string): Promise<FileUploadResult> => {
+  const uploadFile = async (file: File, fieldName: string, companyName?: string): Promise<FileUploadResult> => {
     return sendFile(file, fieldName, {
       id: `file-${Date.now()}`,
       name: file.name,
       size: file.size,
       type: file.type,
       uploadedAt: new Date().toISOString(),
-    });
+    }, companyName);
   };
 
   // Log "safe" pour vérifier la présence des variables sans exposer les valeurs
@@ -255,7 +255,7 @@ export const useFileUpload = () => {
   };
 
   // Fonction pour envoyer un fichier individuel
-  const sendFile = async (file: File, fieldName: string, fileInfo: any): Promise<FileUploadResult> => {
+  const sendFile = async (file: File, fieldName: string, fileInfo: any, companyName?: string): Promise<FileUploadResult> => {
     try {
       console.log(`🚀 [useFileUpload] Sending file ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) to ${fieldName}`);
       logEnvPresence('sendFile');
@@ -308,6 +308,7 @@ export const useFileUpload = () => {
       formData.append('fieldName', fieldName);
       formData.append('folder', folder);
       formData.append('subFolder', subFolder);
+      formData.append('companyName', companyName ?? '');
       formData.append('hubspotCompanyId', hubspotCompanyId);
       formData.append('hubspotDealId', hubspotDealId);
       formData.append('driveId', driveId || '');
@@ -408,6 +409,12 @@ export const useFileUpload = () => {
         totalFiles += fileList.length;
       });
 
+      // Extraire le nom de la company pour l'upload des fichiers
+      const companyName = formData?.company?.name 
+        || formData?.formData?.companyInfo?.name 
+        || formData?.formData?.company?.name
+        || '';
+
       // Traiter chaque fichier individuellement
       for (const [fieldName, fileList] of Object.entries(files)) {
         for (const file of fileList) {
@@ -416,7 +423,7 @@ export const useFileUpload = () => {
             (info: any) => info.name === file.name
           );
 
-          const result = await sendFile(file, fieldName, fileInfo);
+          const result = await sendFile(file, fieldName, fileInfo, companyName);
           fileResults.push(result);
           
           processedFiles++;

@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { useDiligenceFiles } from '../../contexts/DiligenceFilesContext';
 import { useValidation } from '../../contexts/ValidationContext';
 import { useFileUpload } from '../../hooks/useFileUpload';
@@ -32,6 +34,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   const { diligenceFiles, addFiles, removeFile, clearFiles, updateFileUploadStatus } = useDiligenceFiles(); 
   const { hasError, getFieldError, setFieldError } = useValidation();
   const { uploadFile } = useFileUpload();
+  const companyName = useSelector((state: RootState) => state.form.formData.companyInfo.name);
   const hasFieldError = hasError(field);
   const fieldError = getFieldError(field);
   const GENERIC_UPLOAD_ERROR_UI = 'There is a server error, please contact Soundcheck support';
@@ -169,7 +172,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
 
     // Uploader le fichier
     console.log(`🌐 [FileUpload] Calling uploadFile hook...`);
-    const result = await uploadFile(file, field);
+    const result = await uploadFile(file, field, companyName);
     console.log(`🌐 [FileUpload] uploadFile result:`, result);
 
     // Mettre à jour le statut selon le résultat

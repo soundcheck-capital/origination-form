@@ -128,6 +128,10 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
             <span className="ml-2 text-xs text-blue-600 font-normal">(Click to edit)</span>
           </h3>
           <div className="grid grid-cols-1 gap-4 text-sm">
+          <div>
+              <span className=" text-gray-600 font-bold">Settlement From:</span>
+              <span className="ml-2 text-gray-800">{ticketingInfo.paymentProcessing}</span>
+            </div>
             <div>
               <span className=" text-gray-600 font-bold">Ticketing Partner:</span>
               <span className="ml-2 text-gray-800">{ticketingInfo.currentPartner}</span>
@@ -136,10 +140,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
               <span className=" text-gray-600 font-bold">Settlement Policy:</span>
               <span className="ml-2 text-gray-800">{ticketingInfo.settlementPayout}</span>
             </div>
-            <div>
-              <span className=" text-gray-600 font-bold">Membership:</span>
-              <span className="ml-2 text-gray-800">{ticketingInfo.paymentProcessing}</span>
-            </div>
+           
             {ticketingInfo.otherPartner && (
               <div>
                 <span className=" text-gray-600 font-bold">Other Partner:</span>
