@@ -20,6 +20,7 @@ Sentry.init({
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration({
       maskAllText: false,
+      maskAllInputs: false,
       blockAllMedia: true,
     }),
   ],
