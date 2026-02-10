@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from './initialFormState';
 import { loadApplication, saveApplication, submitApplication } from './formThunks';
 import { FormState } from './formTypes';
-import { submissionService } from '../../services/submissionService';
 
 // Fonction pour sauvegarder dans le localStorage
 const saveToLocalStorage = (state: FormState) => {
@@ -131,11 +130,6 @@ const formSlice = createSlice({
         
         // Sauvegarder les données (sans isSubmitted dans localStorage)
         saveToLocalStorage(state);
-        
-        // Notifier le backend (Make.com) de la soumission
-        submissionService.markAsSubmitted().catch(error => {
-          console.error('❌ Erreur lors de la notification backend:', error);
-        });
       });
   }
 });
