@@ -40,6 +40,10 @@ setPassword(e.target.value);
     try {
       // Récupérer le mot de passe depuis les variables d'environnement
       const correctPassword = process.env.REACT_APP_FORM_PASSWORD;
+      if (!correctPassword) {
+        setError('Password protection is not configured');
+        return;
+      }
     
       if (password === correctPassword) {
         // Stocker l'authentification dans le localStorage
