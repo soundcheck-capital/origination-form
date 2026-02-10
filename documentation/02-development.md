@@ -128,7 +128,7 @@ class SubmissionService {
   async checkSubmissionStatus() {
     const response = await fetch(this.webhookUrl, {
       method: 'POST',
-      body: JSON.stringify({ hubspotDealId })
+      body: JSON.stringify({})
     });
     
     return { isSubmitted: data.IsFormSubmitted === 'true' };

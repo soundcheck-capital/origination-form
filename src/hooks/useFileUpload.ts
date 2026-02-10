@@ -18,8 +18,6 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB en bytes
 
 const ERROR_MESSAGES = {
   FILE_TOO_LARGE: (sizeMB: string) => `File exceeds the maximum size of 10MB (${sizeMB}MB)`,
-  MISSING_ENV_FORMDATA: 'Missing env vars for sendFormData: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
-  MISSING_ENV_UPLOAD: 'Missing env vars for file upload: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
   MISSING_WEBHOOK_FILES: 'Missing env var for file upload: REACT_APP_WEBHOOK_URL_FILES.',
   SERVER_FILE_TOO_LARGE: (sizeMB: string) => `File too large for server (${sizeMB}MB). Server limit exceeded.`,
   HTTP_400: 'Invalid file or request',
@@ -58,13 +56,9 @@ export const useFileUpload = () => {
   // Log "safe" pour vérifier la présence des variables sans exposer les valeurs
   const logEnvPresence = (context: string) => {
     console.log(`[env] ${context}`, {
-      hubspotCompanyId: !!process.env.REACT_APP_HUBSPOT_COMPANY_ID,
-      hubspotDealId: !!process.env.REACT_APP_HUBSPOT_DEAL_ID,
-      hubspotDriveId: !!process.env.REACT_APP_HUBSPOT_DRIVE_ID,
       webhookUrl: !!process.env.REACT_APP_WEBHOOK_URL,
       webhookFilesUrl: !!process.env.REACT_APP_WEBHOOK_URL_FILES,
-      emailSummaryUrl: !!process.env.REACT_APP_SEND_SUMMARY,
-      calledFrom: !!process.env.REACT_APP_CALLED_FROM
+      emailSummaryUrl: !!process.env.REACT_APP_SEND_SUMMARY
     });
   };
 
@@ -73,21 +67,9 @@ export const useFileUpload = () => {
     try {
       logEnvPresence('sendFormData');
       // Préparer les données communes (même payload pour les deux webhooks)
-      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
-      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const calledFrom = process.env.REACT_APP_CALLED_FROM || 'local';
-
-      // Vérifier que les IDs nécessaires au payload sont configurés
-      if (!hubspotCompanyId || !hubspotDealId) {
-        console.error('❌ [sendFormData] Missing HubSpot company/deal IDs in environment variables');
-        throw new Error(ERROR_MESSAGES.MISSING_ENV_FORMDATA);
-      }
 
       const payload = {
-        formData: formData,
-        hubspotCompanyId: hubspotCompanyId,
-        hubspotDealId: hubspotDealId,
-        calledFrom: calledFrom
+        formData: formData
       };
 
       // URLs des webhooks
@@ -277,21 +259,7 @@ export const useFileUpload = () => {
       console.log(`📁 [useFileUpload] Google Drive location: ${folder}/${subFolder}`);
 
       // Récupérer les IDs HubSpot depuis les variables d'environnement
-      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
-      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const driveId = process.env.REACT_APP_HUBSPOT_DRIVE_ID;
       const webhookFilesUrl = process.env.REACT_APP_WEBHOOK_URL_FILES;
-
-      // Vérifier que les IDs nécessaires à l'upload sont configurés
-      if (!hubspotCompanyId || !hubspotDealId) {
-        console.error('❌ [useFileUpload] Missing HubSpot company/deal IDs in environment variables');
-        return {
-          success: false,
-          error: ERROR_MESSAGES.MISSING_ENV_UPLOAD,
-          fileName: file.name,
-          fieldName
-        };
-      }
 
       if (!webhookFilesUrl) {
         console.error('❌ [useFileUpload] REACT_APP_WEBHOOK_URL_FILES is not configured!');
@@ -309,9 +277,6 @@ export const useFileUpload = () => {
       formData.append('folder', folder);
       formData.append('subFolder', subFolder);
       formData.append('companyName', companyName ?? '');
-      formData.append('hubspotCompanyId', hubspotCompanyId);
-      formData.append('hubspotDealId', hubspotDealId);
-      formData.append('driveId', driveId || '');
 
       console.log(`📡 [useFileUpload] Fetching ${webhookFilesUrl}`);
       

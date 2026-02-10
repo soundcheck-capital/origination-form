@@ -22,9 +22,7 @@ Frontend App ←→ Make.com Webhook ←→ Base de Données
 ```javascript
 // 1. App démarre
 → POST https://hook.us1.make.com/a7ors7wfsfuphlbq2xg8abuxpbtrvvgi
-  Body: {
-    "hubspotDealId": "your_deal_id"
-  }
+  Body: {}
 
 // 2. Make.com répond
 ← 200 OK
@@ -46,8 +44,7 @@ Frontend App ←→ Make.com Webhook ←→ Base de Données
 → POST https://hook.us1.make.com/...
   Body: {
     "action": "mark_submitted",
-    "timestamp": "2024-01-15T10:30:00Z",
-    "hubspotDealId": "your_deal_id"
+    "timestamp": "2024-01-15T10:30:00Z"
   }
 
 // 3. Make.com traite
@@ -60,7 +57,6 @@ Frontend App ←→ Make.com Webhook ←→ Base de Données
 ```bash
 # .env
 REACT_APP_SUBMISSION_STATUS_WEBHOOK=https://hook.us1.make.com/a7ors7wfsfuphlbq2xg8abuxpbtrvvgi
-REACT_APP_HUBSPOT_DEAL_ID=your_hubspot_deal_id
 ```
 
 ### **Format de Réponse Make.com**
@@ -78,11 +74,6 @@ REACT_APP_HUBSPOT_DEAL_ID=your_hubspot_deal_id
   "IsFormSubmitted": "false"
 }
 
-// En cas d'erreur Make.com
-{
-  "error": true,
-  "message": "Deal ID not found"
-}
 ```
 
 ## 🛠️ **Implémentation Technique**
@@ -96,7 +87,6 @@ class SubmissionService {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        hubspotDealId: process.env.REACT_APP_HUBSPOT_DEAL_ID
       })
     });
 
@@ -171,15 +161,14 @@ catch (error) {
 - **Réseau** : Timeout, connexion impossible
 - **HTTP** : 404, 500, etc.
 - **JSON** : Réponse malformée
-- **Logic** : Deal ID introuvable
+- **Logic** : Identifiant introuvable
 
 ### **Logs de Debug**
 ```javascript
 🔍 Backend Integration Debug:
 {
   webhookUrl: "https://hook.us1.make.com/...",
-  hubspotDealId: "123456",
-  requestBody: {hubspotDealId: "123456"},
+  requestBody: {},
   response: {IsFormSubmitted: "true"},
   isSubmittedBackend: true,
   error: null
@@ -205,9 +194,7 @@ if (isDevelopment && !isSubmittedBackend) {
 fetch('https://hook.us1.make.com/a7ors7wfsfuphlbq2xg8abuxpbtrvvgi', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    hubspotDealId: 'your_test_id'
-  })
+  body: JSON.stringify({})
 })
 .then(r => r.text())
 .then(text => {
@@ -241,11 +228,9 @@ localStorage.removeItem('MOCK_BACKEND_ERROR');
 ```
 Webhook Reçu
     ↓
-Extraire hubspotDealId
+Valider la requête
     ↓
 Rechercher dans Base/HubSpot
-    ↓
-Vérifier si Deal = "Closed Won"
     ↓
 Retourner JSON Response
 ```
@@ -314,7 +299,7 @@ Status Checks:
 // Vérifier la connectivité
 curl -X POST https://hook.us1.make.com/... \
   -H "Content-Type: application/json" \
-  -d '{"hubspotDealId":"test"}'
+  -d '{}'
 ```
 
 ### **Format de Réponse Incorrect**
@@ -326,15 +311,6 @@ fetch(url, options)
     console.log('Raw:', text);
     return JSON.parse(text);
   });
-```
-
-### **Deal ID Introuvable**
-```javascript
-// Vérifier les variables
-console.log({
-  dealId: process.env.REACT_APP_HUBSPOT_DEAL_ID,
-  webhookUrl: process.env.REACT_APP_SUBMISSION_STATUS_WEBHOOK
-});
 ```
 
 **Votre formulaire est maintenant connecté à un vrai backend centralisé ! 🔗**

@@ -125,9 +125,6 @@ file: [File object]
 fieldName: string (ex: "ticketingCompanyReport")
 folder: string (ex: "Ticketing Information")
 subFolder: string (ex: "Ticketing Report")
-hubspotCompanyId: string
-hubspotDealId: string
-driveId: string
 ```
 
 ### Mapping des dossiers Google Drive
@@ -157,9 +154,6 @@ file: [binary data of financial-statement.pdf]
 fieldName: "financialStatements"
 folder: "Financial Information"
 subFolder: "Financial Statements"
-hubspotCompanyId: "37482602639"
-hubspotDealId: "41089395317"
-driveId: "1ABC..."
 ```
 
 **Utilisation dans Make.com** :
@@ -189,9 +183,6 @@ const subFolder = data.subFolder; // "Financial Statements"
     "company": {...},
     "deal": {...}
   },
-  "hubspotCompanyId": "...",
-  "hubspotDealId": "...",
-  "calledFrom": "local|staging|production"
 }
 ```
 
@@ -253,12 +244,8 @@ REACT_APP_WEBHOOK_URL_FILES=https://hook.us1.make.com/...
 REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/...
 
 # Identifiants HubSpot
-REACT_APP_HUBSPOT_COMPANY_ID=...
-REACT_APP_HUBSPOT_DEAL_ID=...
-REACT_APP_HUBSPOT_DRIVE_ID=...
 
 # Environnement
-REACT_APP_CALLED_FROM=local|staging|production
 ```
 
 ## 📊 Suivi et monitoring

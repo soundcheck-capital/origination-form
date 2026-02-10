@@ -29,7 +29,7 @@ Le système empêche la re-soumission du formulaire en utilisant **uniquement le
 ### **Au Démarrage de l'App**
 1. **FormSubmissionGuard** se monte
 2. **useSubmissionStatus** hook appelle le backend
-3. **GET** `https://hook.us1.make.com/...` avec `hubspotDealId`
+3. **GET** `https://hook.us1.make.com/...` avec un body JSON
 4. **Réponse** : `{IsFormSubmitted: "true/false"}`
 5. **Sync** avec Redux store local
 6. **Blocage** si `isSubmitted = true`
@@ -47,7 +47,6 @@ Le système empêche la re-soumission du formulaire en utilisant **uniquement le
 ```bash
 # .env
 REACT_APP_SUBMISSION_STATUS_WEBHOOK=https://hook.us1.make.com/a7ors7wfsfuphlbq2xg8abuxpbtrvvgi
-REACT_APP_HUBSPOT_DEAL_ID=your_deal_id
 ```
 
 ### **Format de Réponse Backend**
@@ -93,7 +92,7 @@ if (status.isSubmitted) {
 async checkSubmissionStatus() {
   const response = await fetch(webhookUrl, {
     method: 'POST',
-    body: JSON.stringify({ hubspotDealId })
+    body: JSON.stringify({})
   });
   
   return {
@@ -239,7 +238,7 @@ location.reload();
 // Vérifier la réponse
 fetch('https://hook.us1.make.com/...', {
   method: 'POST',
-  body: JSON.stringify({hubspotDealId: 'your_id'})
+  body: JSON.stringify({})
 })
 .then(r => r.text())
 .then(console.log);

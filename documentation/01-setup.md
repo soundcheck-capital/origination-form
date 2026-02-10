@@ -35,9 +35,6 @@ REACT_APP_FORM_PASSWORD=your_secure_password
 REACT_APP_WEBHOOK_URL=https://hook.us1.make.com/your_webhook
 REACT_APP_WEBHOOK_URL_FILES=https://hook.us1.make.com/your_files_webhook
 REACT_APP_SUBMISSION_STATUS_WEBHOOK=https://hook.us1.make.com/your_status_webhook
-REACT_APP_HUBSPOT_COMPANY_ID=your_company_id
-REACT_APP_HUBSPOT_DEAL_ID=your_deal_id
-REACT_APP_HUBSPOT_DRIVE_ID=your_drive_id
 ```
 
 ### **🌐 Netlify (Déploiement)**
