@@ -106,7 +106,6 @@ const formSlice = createSlice({
     resetSubmitted: (state) => {
       state.isSubmitted = false;
       localStorage.removeItem('soundcheckFormData');
-      localStorage.removeItem('formAuthenticated');
     }
   },
   extraReducers: (builder) => {
