@@ -19,12 +19,6 @@ export const clearValidationBypass = () => {
       removed.push('SKIP_VALIDATION');
     }
     
-    if (removed.length > 0) {
-      console.log('🧹 Cleared validation bypass flags:', removed);
-    } else {
-      console.log('✅ No validation bypass flags found');
-    }
-    
     return removed;
   }
   
@@ -43,7 +37,6 @@ export const checkValidationSettings = () => {
       REACT_APP_ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT
     };
     
-    console.log('🔍 Current validation settings:', settings);
     return settings;
   }
   
@@ -55,7 +48,6 @@ export const checkValidationSettings = () => {
  */
 export const forceEnableValidation = () => {
   const cleared = clearValidationBypass();
-  console.log('🔒 Validation force-enabled');
   return cleared;
 };
 

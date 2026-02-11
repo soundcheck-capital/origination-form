@@ -62,18 +62,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   // Fonction locale pour valider la taille des fichiers
   const validateFileSizeLocal = (file: File): boolean => {
     const sizeInBytes = file.size;
-    const sizeMB = (sizeInBytes / 1024 / 1024).toFixed(2);
-    const maxSizeMB = (MAX_FILE_SIZE / 1024 / 1024).toFixed(2);
     const isValid = sizeInBytes <= MAX_FILE_SIZE;
     
-    console.log(`🔍 [FileUpload] ====== SIZE VALIDATION ======`);
-    console.log(`🔍 [FileUpload] File: ${file.name}`);
-    console.log(`🔍 [FileUpload] Size in bytes: ${sizeInBytes}`);
-    console.log(`🔍 [FileUpload] Size in MB: ${sizeMB}`);
-    console.log(`🔍 [FileUpload] Max size in bytes: ${MAX_FILE_SIZE}`);
-    console.log(`🔍 [FileUpload] Max size in MB: ${maxSizeMB}`);
-    console.log(`🔍 [FileUpload] Is valid (${sizeInBytes} <= ${MAX_FILE_SIZE}): ${isValid}`);
-    console.log(`🔍 [FileUpload] ============================`);
     
     return isValid;
   };
@@ -116,39 +106,24 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
 
   // Fonction helper pour uploader un fichier immédiatement
   const uploadFileImmediately = async (file: File, fileIndex: number) => {
-    console.log(`📤 [FileUpload] Starting upload for file: ${file.name}, index: ${fileIndex}`);
-    console.log(`📤 [FileUpload] File details:`, {
-      name: file.name,
-      size: file.size,
-      sizeMB: (file.size / 1024 / 1024).toFixed(2),
-      type: file.type,
-      field: field,
-      fileIndex: fileIndex
-    });
-    
     // Valider le type de fichier
     const typeValidation = validateFileType(file);
-    console.log(`🔍 [FileUpload] Type validation result:`, typeValidation);
     
     if (!typeValidation.valid) {
       console.error(`❌ [FileUpload] Type validation failed for ${file.name}:`, typeValidation.error);
-      console.log(`🔄 [FileUpload] Calling updateFileUploadStatus with error...`);
       updateFileUploadStatus(field as keyof typeof diligenceFiles, fileIndex, {
         status: 'error',
         error: typeValidation.error
       });
-      console.log(`✓ [FileUpload] Status update called`);
       return;
     }
 
     // Valider la taille du fichier
     const isValidSize = validateFileSizeLocal(file);
-    console.log(`🔍 [FileUpload] Size validation result:`, isValidSize);
     
     if (!isValidSize) {
       const sizeMB = (file.size / 1024 / 1024).toFixed(2);
       console.error(`❌ [FileUpload] Size validation failed for ${file.name}: ${sizeMB}MB > 10MB`);
-      console.log(`🔄 [FileUpload] Calling updateFileUploadStatus with error...`);
       pushValidationErrors([
         {
           fileName: file.name,
@@ -160,34 +135,24 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         error: `File exceeds the maximum size of 10MB (${sizeMB}MB)`
       });
       removeFailedFile(fileIndex);
-      console.log(`✓ [FileUpload] Status update called`);
       return;
     }
 
     // Marquer comme en cours d'upload
-    console.log(`⏳ [FileUpload] All validations passed. Uploading ${file.name}...`);
     updateFileUploadStatus(field as keyof typeof diligenceFiles, fileIndex, {
       status: 'uploading'
     });
 
     // Uploader le fichier
-    console.log(`🌐 [FileUpload] Calling uploadFile hook...`);
     const result = await uploadFile(file, field, companyName);
-    console.log(`🌐 [FileUpload] uploadFile result:`, result);
 
     // Mettre à jour le statut selon le résultat
     if (result.success) {
-      console.log(`✅ [FileUpload] Upload successful for ${file.name}`);
       updateFileUploadStatus(field as keyof typeof diligenceFiles, fileIndex, {
         status: 'success'
       });
     } else {
       console.error(`❌ [FileUpload] Upload failed for ${file.name}:`, result.error);
-      console.log(`🔄 [FileUpload] Setting error status:`, {
-        field: field,
-        fileIndex: fileIndex,
-        error: result.error
-      });
       const uiError = isFileTooLargeError(result.error)
         ? result.error || 'Upload failed'
         : GENERIC_UPLOAD_ERROR_UI;
@@ -202,7 +167,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         error: uiError
       });
       removeFailedFile(fileIndex);
-      console.log(`✓ [FileUpload] Error status set`);
     }
   };
 
@@ -215,7 +179,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       try {
         // ✅ VALIDER TOUS LES FICHIERS AVANT DE LES AJOUTER
         const validationResults = fileArray.map(file => {
-          console.log(`🔍 [FileUpload] Pre-validating file: ${file.name}`);
           
           // Valider le type
           const typeValidation = validateFileType(file);
@@ -232,7 +195,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
             return { file, valid: false, error };
           }
           
-          console.log(`✅ [FileUpload] File ${file.name} passed validation`);
           return { file, valid: true };
         });
         
@@ -258,7 +220,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           return;
         }
         
-        console.log(`✅ [FileUpload] ${validFiles.length} valid file(s) to upload`);
         
         const startIndex = multiple ? files.length : 0;
         
@@ -323,7 +284,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       try {
         // ✅ VALIDER TOUS LES FICHIERS AVANT DE LES AJOUTER
         const validationResults = fileArray.map(file => {
-          console.log(`🔍 [FileUpload] Pre-validating dropped file: ${file.name}`);
           
           // Valider le type
           const typeValidation = validateFileType(file);
@@ -340,7 +300,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
             return { file, valid: false, error };
           }
           
-          console.log(`✅ [FileUpload] File ${file.name} passed validation`);
           return { file, valid: true };
         });
         
@@ -366,7 +325,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           return;
         }
         
-        console.log(`✅ [FileUpload] ${validFiles.length} valid file(s) to upload`);
         
         const startIndex = multiple ? files.length : 0;
         
@@ -567,13 +525,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
             {validFiles.map((file, index) => {
               const realIndex = files.findIndex(f => f === file);
               const uploadStatus = uploadStatuses[realIndex];
-              
-              // Debug log
-              console.log(`🔍 [FileUpload] Rendering file ${file.name}:`, {
-                realIndex,
-                uploadStatus,
-                allStatuses: uploadStatuses
-              });
               
               return (
                 <div 
