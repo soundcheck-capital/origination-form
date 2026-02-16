@@ -6,10 +6,8 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MultiStepForm from './components/MultiStepForm';
-import ProtectedRoute from './components/ProtectedRoute';
 import reportWebVitals from './reportWebVitals';
 import SubmitSuccess from './components/SubmitSuccess';
-import PasswordProtection from './components/PasswordProtection';
 
 Sentry.init({
   dsn: 'https://c5bcc114d568abceb81c07f53de7d301@o4510828693422080.ingest.us.sentry.io/4510828695388160',
@@ -43,12 +41,7 @@ root.render(
       <BrowserRouter>
         <Routes>
             <Route path="/" element={<Navigate to="/form" replace />} />
-            <Route path="/login" element={<PasswordProtection />} />
-            <Route path="/form" element={
-              <ProtectedRoute>
-                <MultiStepForm />
-              </ProtectedRoute>
-            } />
+            <Route path="/form" element={<MultiStepForm />} />
             <Route path="/submit-success" element={<SubmitSuccess />} />
         </Routes>
       </BrowserRouter>
@@ -57,6 +50,5 @@ root.render(
 );
 
 // If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

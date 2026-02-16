@@ -18,8 +18,6 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB en bytes
 
 const ERROR_MESSAGES = {
   FILE_TOO_LARGE: (sizeMB: string) => `File exceeds the maximum size of 10MB (${sizeMB}MB)`,
-  MISSING_ENV_FORMDATA: 'Missing env vars for sendFormData: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
-  MISSING_ENV_UPLOAD: 'Missing env vars for file upload: REACT_APP_HUBSPOT_COMPANY_ID and/or REACT_APP_HUBSPOT_DEAL_ID.',
   MISSING_WEBHOOK_FILES: 'Missing env var for file upload: REACT_APP_WEBHOOK_URL_FILES.',
   SERVER_FILE_TOO_LARGE: (sizeMB: string) => `File too large for server (${sizeMB}MB). Server limit exceeded.`,
   HTTP_400: 'Invalid file or request',
@@ -55,54 +53,18 @@ export const useFileUpload = () => {
     }, companyName);
   };
 
-  // Log "safe" pour vérifier la présence des variables sans exposer les valeurs
-  const logEnvPresence = (context: string) => {
-    console.log(`[env] ${context}`, {
-      hubspotCompanyId: !!process.env.REACT_APP_HUBSPOT_COMPANY_ID,
-      hubspotDealId: !!process.env.REACT_APP_HUBSPOT_DEAL_ID,
-      hubspotDriveId: !!process.env.REACT_APP_HUBSPOT_DRIVE_ID,
-      webhookUrl: !!process.env.REACT_APP_WEBHOOK_URL,
-      webhookFilesUrl: !!process.env.REACT_APP_WEBHOOK_URL_FILES,
-      emailSummaryUrl: !!process.env.REACT_APP_SEND_SUMMARY,
-      calledFrom: !!process.env.REACT_APP_CALLED_FROM
-    });
-  };
-
   // Fonction pour envoyer les données du formulaire (sans fichiers)
   const sendFormData = async (formData: any): Promise<UploadResult> => {
     try {
-      logEnvPresence('sendFormData');
       // Préparer les données communes (même payload pour les deux webhooks)
-      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
-      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const calledFrom = process.env.REACT_APP_CALLED_FROM || 'local';
-
-      // Vérifier que les IDs nécessaires au payload sont configurés
-      if (!hubspotCompanyId || !hubspotDealId) {
-        console.error('❌ [sendFormData] Missing HubSpot company/deal IDs in environment variables');
-        throw new Error(ERROR_MESSAGES.MISSING_ENV_FORMDATA);
-      }
 
       const payload = {
-        formData: formData,
-        hubspotCompanyId: hubspotCompanyId,
-        hubspotDealId: hubspotDealId,
-        calledFrom: calledFrom
+        formData: formData
       };
 
       // URLs des webhooks
       const hubspotWebhookUrl = process.env.REACT_APP_WEBHOOK_URL;
       const emailSummaryWebhookUrl = process.env.REACT_APP_SEND_SUMMARY;
-
-      // Log pour déboguer avec les URLs complètes
-      console.log('📤 [sendFormData] Webhooks configuration:', {
-        hubspotUrl: hubspotWebhookUrl || '❌ NOT CONFIGURED (REACT_APP_WEBHOOK_URL is empty)',
-        emailSummaryUrl: emailSummaryWebhookUrl,
-        hubspotConfigured: hubspotWebhookUrl ? '✅' : '❌',
-        emailSummaryConfigured: emailSummaryWebhookUrl ? '✅' : '❌',
-        payloadKeys: Object.keys(payload),
-        formDataKeys: formData ? Object.keys(formData) : 'null'
-      });
 
       // Vérifier que les URLs sont valides
       if (!hubspotWebhookUrl) {
@@ -117,7 +79,6 @@ export const useFileUpload = () => {
 
       // Webhook HubSpot (envoi du formData sur HubSpot)
       if (hubspotWebhookUrl) {
-        console.log('📡 [sendFormData] Calling HubSpot webhook:', hubspotWebhookUrl);
         fetchPromises.push(
           fetch(hubspotWebhookUrl, {
             method: 'POST',
@@ -139,7 +100,6 @@ export const useFileUpload = () => {
 
       // Webhook Email Summary (envoi du summary par mail)
       if (emailSummaryWebhookUrl) {
-        console.log('📡 [sendFormData] Calling Email Summary webhook:', emailSummaryWebhookUrl);
         fetchPromises.push(
           fetch(emailSummaryWebhookUrl, {
             method: 'POST',
@@ -166,35 +126,17 @@ export const useFileUpload = () => {
       const hubspotSuccess = hubspotResponse.status === 200;
       const emailSuccess = emailResponse.status === 200;
 
-      // Log des réponses pour déboguer
-      console.log('📥 [sendFormData] Webhook responses:', {
-        hubspot: {
-          status: hubspotResponse.status,
-          statusText: hubspotResponse.statusText,
-          success: hubspotSuccess,
-          url: hubspotWebhookUrl
-        },
-        emailSummary: {
-          status: emailResponse.status,
-          statusText: emailResponse.statusText,
-          success: emailSuccess,
-          url: emailSummaryWebhookUrl
-        }
-      });
-
       // Essayer de lire les réponses pour plus de détails (cloner pour ne pas consommer le body)
       try {
         const hubspotClone = hubspotResponse.clone();
-        const hubspotText = await hubspotClone.text();
-        console.log('📄 [sendFormData] HubSpot response:', hubspotText.substring(0, 200));
+        await hubspotClone.text();
       } catch (e) {
         console.warn('⚠️ [sendFormData] Could not read HubSpot response:', e);
       }
 
       try {
         const emailClone = emailResponse.clone();
-        const emailText = await emailClone.text();
-        console.log('📄 [sendFormData] Email summary response:', emailText.substring(0, 200));
+        await emailClone.text();
       } catch (e) {
         console.warn('⚠️ [sendFormData] Could not read Email summary response:', e);
       }
@@ -257,9 +199,6 @@ export const useFileUpload = () => {
   // Fonction pour envoyer un fichier individuel
   const sendFile = async (file: File, fieldName: string, fileInfo: any, companyName?: string): Promise<FileUploadResult> => {
     try {
-      console.log(`🚀 [useFileUpload] Sending file ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) to ${fieldName}`);
-      logEnvPresence('sendFile');
-      
       // Valider la taille du fichier
       if (!validateFileSize(file)) {
         const sizeMB = (file.size / 1024 / 1024).toFixed(2);
@@ -274,24 +213,9 @@ export const useFileUpload = () => {
 
       // Récupérer les informations de dossier Google Drive
       const { folder, subFolder } = getGoogleDriveFolders(fieldName);
-      console.log(`📁 [useFileUpload] Google Drive location: ${folder}/${subFolder}`);
 
       // Récupérer les IDs HubSpot depuis les variables d'environnement
-      const hubspotCompanyId = process.env.REACT_APP_HUBSPOT_COMPANY_ID;
-      const hubspotDealId = process.env.REACT_APP_HUBSPOT_DEAL_ID;
-      const driveId = process.env.REACT_APP_HUBSPOT_DRIVE_ID;
       const webhookFilesUrl = process.env.REACT_APP_WEBHOOK_URL_FILES;
-
-      // Vérifier que les IDs nécessaires à l'upload sont configurés
-      if (!hubspotCompanyId || !hubspotDealId) {
-        console.error('❌ [useFileUpload] Missing HubSpot company/deal IDs in environment variables');
-        return {
-          success: false,
-          error: ERROR_MESSAGES.MISSING_ENV_UPLOAD,
-          fileName: file.name,
-          fieldName
-        };
-      }
 
       if (!webhookFilesUrl) {
         console.error('❌ [useFileUpload] REACT_APP_WEBHOOK_URL_FILES is not configured!');
@@ -309,11 +233,7 @@ export const useFileUpload = () => {
       formData.append('folder', folder);
       formData.append('subFolder', subFolder);
       formData.append('companyName', companyName ?? '');
-      formData.append('hubspotCompanyId', hubspotCompanyId);
-      formData.append('hubspotDealId', hubspotDealId);
-      formData.append('driveId', driveId || '');
 
-      console.log(`📡 [useFileUpload] Fetching ${webhookFilesUrl}`);
       
       const response = await fetch(webhookFilesUrl, {
         method: 'POST',
@@ -323,10 +243,8 @@ export const useFileUpload = () => {
         body: formData
       });
 
-      console.log(`📥 [useFileUpload] Response status: ${response.status} ${response.statusText}`);
 
       if (response.status === 200) {
-        console.log(`✅ [useFileUpload] File ${file.name} uploaded successfully`);
         return {
           success: true,
         };

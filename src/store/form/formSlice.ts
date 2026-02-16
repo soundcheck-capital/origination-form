@@ -32,12 +32,6 @@ const formSlice = createSlice({
   initialState: (() => {
     // Essayer de charger les données sauvegardées au démarrage
     const savedData = loadFromLocalStorage();
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    isDevelopment && console.log('🔍 FormSlice Init Debug:', {
-      hasStoredData: !!savedData,
-      savedData
-    });
-    
     if (savedData) {
       return {
         ...initialState,
@@ -106,7 +100,6 @@ const formSlice = createSlice({
     resetSubmitted: (state) => {
       state.isSubmitted = false;
       localStorage.removeItem('soundcheckFormData');
-      localStorage.removeItem('formAuthenticated');
     }
   },
   extraReducers: (builder) => {

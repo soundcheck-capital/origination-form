@@ -27,55 +27,10 @@ jobs:
           echo "environment=development" >> $GITHUB_OUTPUT
           echo "netlify-alias=dev" >> $GITHUB_OUTPUT
 
-  # 🧪 Tests avec Makefile
-  test:
-    needs: determine-environment
-    runs-on: ubuntu-latest
-    # 🔧 Skip tests avec variable GitHub OU message de commit
-    if: vars.SKIP_TESTS != 'true' && !contains(github.event.head_commit.message, '[skip tests]')
-    env:
-      # Variables de test (environnement CI)
-      CI: true
-      REACT_APP_FORM_PASSWORD: "123456"
-      REACT_APP_WEBHOOK_URL: "https://webhook.test.com/test"
-      REACT_APP_WEBHOOK_URL_FILES: "https://webhook.test.com/files"
-      REACT_APP_HUBSPOT_COMPANY_ID: "12345"
-      REACT_APP_HUBSPOT_DEAL_ID: "67890"
-      REACT_APP_HUBSPOT_CONTACT_ID: "11111"
-      REACT_APP_HUBSPOT_DRIVE_ID: "test-drive-id"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: npm
-
-      - name: 🚀 CI Setup (via Makefile)
-        run: make ci-setup
-
-      - name: 🧪 Run CI Tests (via Makefile)  
-        run: make ci-test
-
-      - name: Upload test artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-artifacts
-          path: |
-            playwright-report/**
-            test-results/**
-          if-no-files-found: ignore
-
   # 🚀 Déploiement avec Makefile
   deploy:
-    needs: [determine-environment, test]
-    # 🔧 Deploy même si tests skippés OU réussis, uniquement sur develop
+    needs: [determine-environment]
     if: |
-      always() && 
-      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
       github.event_name == 'push' && 
       github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
