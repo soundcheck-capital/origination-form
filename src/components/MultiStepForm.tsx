@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
-import { fetchApplicationById } from '../store/auth/authThunks';
 import {   setSubmitted } from '../store/form/formSlice';
 import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
@@ -24,7 +23,6 @@ import { getTicketingPartnerLogo, isValidTicketingPartner } from '../utils/ticke
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const formData = useSelector((state: RootState) => state.form);
@@ -50,14 +48,6 @@ const MultiStepFormContent: React.FC = () => {
       navigate('/submit-success');
     }
   }, [isSubmitted, navigate]);
-
-  // Load application data if ID is provided
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchApplicationById(id));
-    }
-  }, [id, dispatch]);
-
 
   const handleSubmit = async () => {
     setSaveMessage('');
