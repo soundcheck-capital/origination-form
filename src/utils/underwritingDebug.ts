@@ -8,11 +8,52 @@ import { UnderwritingResult, UnderwritingInputs } from './underwritingCalculator
 /**
  * Log detailed breakdown of underwriting calculation
  */
-export function logUnderwritingBreakdown(_inputs: UnderwritingInputs, result: UnderwritingResult | null) {
+export function logUnderwritingBreakdown(inputs: UnderwritingInputs, result: UnderwritingResult | null) {
   if (process.env.NODE_ENV !== 'development') return;
-  if (!result) {
-    return;
+  
+  console.group('🏦 Underwriting Calculation Breakdown');
+  
+  console.log('📊 Inputs:', {
+    yearsInBusiness: inputs.yearsInBusiness,
+    numberOfEvents: inputs.numberOfEvents,
+    paymentRemittedBy: inputs.paymentRemittedBy,
+    paymentFrequency: inputs.paymentFrequency,
+    grossAnnualTicketSales: `$${inputs.grossAnnualTicketSales.toLocaleString()}`
+  });
+  
+  if (result) {
+    console.log('🎯 Risk Score Breakdown:', {
+      yearsInBusiness: `${result.breakdown.yearsInBusinessScore} pts (${inputs.yearsInBusiness})`,
+      events: `${result.breakdown.eventsScore} pts (${inputs.numberOfEvents} events)`,
+      paymentRemittedBy: `${result.breakdown.paymentRemittedByScore} pts (${inputs.paymentRemittedBy})`,
+      paymentFrequency: `${result.breakdown.paymentFrequencyScore} pts (${inputs.paymentFrequency})`,
+      total: `${result.totalRiskScore} / 24 pts`
+    });
+    
+    // Determine risk band
+    let riskBand = 'Unknown';
+    if (result.totalRiskScore <= 6) riskBand = 'Low Risk (0-6)';
+    else if (result.totalRiskScore <= 12) riskBand = 'Medium-Low Risk (6.01-12)';
+    else if (result.totalRiskScore <= 18) riskBand = 'Medium-High Risk (12.01-18)';
+    else riskBand = 'High Risk (18.01-24)';
+    
+    console.log('📈 Risk Assessment:', {
+      riskBand,
+      maxAdvancePercent: `${(result.maxAdvancePercent * 100).toFixed(1)}%`
+    });
+    
+    console.log('💰 Final Calculation:', {
+      grossSales: `$${inputs.grossAnnualTicketSales.toLocaleString()}`,
+      advanceRate: `${(result.maxAdvancePercent * 100).toFixed(1)}%`,
+      rawAmount: `$${(inputs.grossAnnualTicketSales * result.maxAdvancePercent).toLocaleString()}`,
+      finalAmount: `$${result.advanceAmount.toLocaleString()}`,
+      isCapped: result.isCapped ? '⚠️ YES (at $500k)' : '✅ NO'
+    });
+  } else {
+    console.log('❌ Calculation failed - missing required inputs');
   }
+  
+  console.groupEnd();
 }
 
 /**
@@ -36,6 +77,7 @@ export function validateInputsForDebug(inputs: Partial<UnderwritingInputs>): str
  */
 export function quickRiskCalculator(inputs: UnderwritingInputs) {
   if (process.env.NODE_ENV !== 'development') {
+    console.log('⚠️ Risk calculator only available in development mode');
     return;
   }
   
@@ -46,6 +88,8 @@ export function quickRiskCalculator(inputs: UnderwritingInputs) {
     logUnderwritingBreakdown(inputs, result);
     return result;
   } else {
+    console.log('❌ Invalid inputs provided');
+    console.log('Validation errors:', validateInputsForDebug(inputs));
     return null;
   }
 }
@@ -53,4 +97,5 @@ export function quickRiskCalculator(inputs: UnderwritingInputs) {
 // Make it available globally in development
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   (window as any).calculateRisk = quickRiskCalculator;
+  console.log('🔧 Debug tool available: window.calculateRisk({ yearsInBusiness: "10+ years", numberOfEvents: 50, ... })');
 }

@@ -1,0 +1,108 @@
+# Page snapshot
+
+```yaml
+- main [ref=e4]:
+  - paragraph [ref=e6]: BETA VERSION v1.0.5
+  - img "Logo" [ref=e8]
+  - generic [ref=e9]:
+    - generic [ref=e12]:
+      - heading "Due Diligence" [level=1] [ref=e13]
+      - generic [ref=e14]:
+        - paragraph [ref=e15]: Contractual and Legal Information
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - heading "Certificate of Incorporation of contracting entity *" [level=4] [ref=e18]:
+              - text: Certificate of Incorporation of contracting entity
+              - generic [ref=e19]: "*"
+            - generic [ref=e20]:
+              - button "Choose File" [ref=e21] [cursor=pointer]
+              - generic [ref=e22]:
+                - img [ref=e23]
+                - generic [ref=e25]:
+                  - generic [ref=e26]: Click to select
+                  - text: or drag and drop your files here
+                - paragraph [ref=e27]: .xlsx, .pdf, .csv, .jpg, .png accepted
+            - generic [ref=e28]:
+              - heading "Selected files (1)" [level=4] [ref=e30]
+              - generic [ref=e32]:
+                - generic [ref=e33]:
+                  - img [ref=e34]
+                  - generic [ref=e36]:
+                    - paragraph [ref=e37]: certificate-of-incorporation.pdf
+                    - paragraph [ref=e38]: 38 Bytes • application/pdf
+                - button "Remove file" [ref=e39] [cursor=pointer]:
+                  - img [ref=e40] [cursor=pointer]
+          - generic [ref=e42]:
+            - heading "Legal entity chart if more than one entity exists OR if there have been distributions to other entities in the past" [level=4] [ref=e43]
+            - generic [ref=e44]:
+              - button "Choose File" [ref=e45] [cursor=pointer]
+              - generic [ref=e46]:
+                - img [ref=e47]
+                - generic [ref=e49]:
+                  - generic [ref=e50]: Click to select
+                  - text: or drag and drop your files here
+                - paragraph [ref=e51]: .xlsx, .pdf, .csv, .jpg, .png accepted
+            - paragraph [ref=e52]: Legal entity chart is required
+          - generic [ref=e53]:
+            - heading "Scanned copy of government issued ID of the signatory of the Agreement with SoundCheck" [level=4] [ref=e54]
+            - generic [ref=e55]:
+              - button "Choose File" [ref=e56] [cursor=pointer]
+              - generic [ref=e57]:
+                - img [ref=e58]
+                - generic [ref=e60]:
+                  - generic [ref=e61]: Click to select
+                  - text: or drag and drop your files here
+                - paragraph [ref=e62]: .xlsx, .pdf, .csv, .jpg, .png accepted
+          - generic [ref=e63]:
+            - heading "Completed Form W-9" [level=4] [ref=e64]
+            - generic [ref=e65]:
+              - button "Choose File" [ref=e66] [cursor=pointer]
+              - generic [ref=e67]:
+                - img [ref=e68]
+                - generic [ref=e70]:
+                  - generic [ref=e71]: Click to select
+                  - text: or drag and drop your files here
+                - paragraph [ref=e72]: .xlsx, .pdf, .csv, .jpg, .png accepted
+            - generic [ref=e73]:
+              - heading "Selected files (1)" [level=4] [ref=e75]
+              - generic [ref=e77]:
+                - generic [ref=e78]:
+                  - img [ref=e79]
+                  - generic [ref=e81]:
+                    - paragraph [ref=e82]: w9-form.pdf
+                    - paragraph [ref=e83]: 20 Bytes • application/pdf
+                - button "Remove file" [ref=e84] [cursor=pointer]:
+                  - img [ref=e85] [cursor=pointer]
+          - generic [ref=e87]:
+            - heading "Other" [level=4] [ref=e88]
+            - paragraph [ref=e89]:
+              - text: Copy of the lease, rental agreement or property deed of the location where the event(s) take place
+              - text: "Outdoor event: copy of the event cancellation insurance"
+              - text: "Other: business plan, budget, insurance certificate, bank letter, investor deck, etc"
+            - generic [ref=e90]:
+              - button "Choose File" [ref=e91] [cursor=pointer]
+              - generic [ref=e92]:
+                - img [ref=e93]
+                - generic [ref=e95]:
+                  - generic [ref=e96]: Click to select
+                  - text: or drag and drop your files here
+                - paragraph [ref=e97]: .xlsx, .pdf, .csv, .jpg, .png accepted (multiple files accepted)
+    - paragraph [ref=e98]:
+      - generic [ref=e99]: "*"
+      - text: Required fields
+    - generic [ref=e100]:
+      - button "Previous" [ref=e101] [cursor=pointer]
+      - button "Next" [active] [ref=e102] [cursor=pointer]
+    - generic [ref=e103]:
+      - generic [ref=e104]: 🛠️ Development Tools
+      - generic [ref=e105]:
+        - checkbox "Disable step validation" [ref=e106]
+        - text: Disable step validation
+      - generic [ref=e107]:
+        - checkbox "Allow form access after submission" [ref=e108]
+        - text: Allow form access after submission
+    - generic [ref=e109]:
+      - generic [ref=e110]: 🌍 development
+      - generic [ref=e111]: •
+      - generic [ref=e112]: ⏳ Not Submitted
+```
