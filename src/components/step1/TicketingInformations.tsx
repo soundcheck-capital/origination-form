@@ -9,15 +9,15 @@ import NumberInput from '../customComponents/NumberField';
 import CurrencyField from '../customComponents/CurrencyField';
 import { useValidation } from '../../contexts/ValidationContext';
 import { paymentProcessing, ticketingPartners, settlementPayout } from '../../store/form/hubspotLists';
-import { findTicketingPartnerKey } from '../../utils/ticketingPartnerUtils';
+import { findTicketingPartnerKey, getTicketingCoFromUrl } from '../../utils/ticketingPartnerUtils';
 
 const TicketingFundingStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
   const { setFieldError } = useValidation();
-  const ticketingCoEnv = process.env.REACT_APP_TICKETING_CO || '';
-  const lockedTicketingPartnerKey = ticketingCoEnv ? findTicketingPartnerKey(ticketingCoEnv) : null;
+  const ticketingCoParam = getTicketingCoFromUrl();
+  const lockedTicketingPartnerKey = ticketingCoParam ? findTicketingPartnerKey(ticketingCoParam) : null;
   // When a ticketing co is locked via env, payout/settlement is forced to "Ticketing Co" (My Ticketing Co)
   const lockedPaymentProcessingValue = lockedTicketingPartnerKey ? 'Ticketing Co' : null;
 

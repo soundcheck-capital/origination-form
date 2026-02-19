@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
-import { fetchApplicationById } from '../store/auth/authThunks';
 import {   setSubmitted } from '../store/form/formSlice';
 import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
@@ -19,12 +18,12 @@ import ButtonSecondary from './customComponents/ButtonSecondary';
 import { useFormValidation } from '../hooks/useFormValidation';
 // Import debug utils to auto-clear validation bypass flags
 import '../utils/debugUtils';
-import { getTicketingPartnerLogo, isValidTicketingPartner } from '../utils/ticketingPartnerUtils';
+import { getTicketingCoFromUrl, getTicketingPartnerLogo, isValidTicketingPartner } from '../utils/ticketingPartnerUtils';
+import { logCriticalEvent } from '../utils/criticalLogging';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const formData = useSelector((state: RootState) => state.form);
@@ -39,10 +38,10 @@ const MultiStepFormContent: React.FC = () => {
   const [isSavingStep, setIsSavingStep] = useState(false);
   const isSubmitted = useSelector((state: RootState) => state.form.isSubmitted);
   
-  // Récupérer le ticketing partner depuis l'environnement
-  const ticketingCoEnv = process.env.REACT_APP_TICKETING_CO || '';
-  const ticketingPartnerLogo = ticketingCoEnv && isValidTicketingPartner(ticketingCoEnv) 
-    ? getTicketingPartnerLogo(ticketingCoEnv) 
+  // Récupérer le ticketing partner depuis l'URL
+  const ticketingCoParam = getTicketingCoFromUrl();
+  const ticketingPartnerLogo = ticketingCoParam && isValidTicketingPartner(ticketingCoParam) 
+    ? getTicketingPartnerLogo(ticketingCoParam) 
     : null;
   // Redirection après soumission locale réussie
   useEffect(() => {
@@ -51,16 +50,9 @@ const MultiStepFormContent: React.FC = () => {
     }
   }, [isSubmitted, navigate]);
 
-  // Load application data if ID is provided
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchApplicationById(id));
-    }
-  }, [id, dispatch]);
-
-
   const handleSubmit = async () => {
     setSaveMessage('');
+    const submitStartedAt = Date.now();
 
     try {
       // Préparer les données du formulaire avec diligenceInfo déjà inclus
@@ -118,6 +110,13 @@ const MultiStepFormContent: React.FC = () => {
       const result = await sendFormData(formDataToSend);
 
       if (result.success) {
+        logCriticalEvent({
+          event_name: 'form_submission_succeeded',
+          outcome: 'success',
+          step_id: currentStep,
+          duration_ms: Date.now() - submitStartedAt,
+        });
+
         setSaveMessage('Application submitted successfully!');
         
         dispatch(setSubmitted());
@@ -127,10 +126,29 @@ const MultiStepFormContent: React.FC = () => {
           navigate('/submit-success');
         }, 2000);
       } else {
+        logCriticalEvent({
+          event_name: 'form_submission_failed',
+          outcome: 'error',
+          step_id: currentStep,
+          duration_ms: Date.now() - submitStartedAt,
+          error_code: 'SUBMISSION_RESULT_FAILED',
+        });
+
         throw new Error(result.error || 'Failed to submit application');
       }
 
     } catch (error) {
+      logCriticalEvent(
+        {
+          event_name: 'form_submission_failed',
+          outcome: 'error',
+          step_id: currentStep,
+          duration_ms: Date.now() - submitStartedAt,
+          error_code: error instanceof Error ? error.name : 'UNKNOWN_ERROR',
+        },
+        error
+      );
+
       console.error('Submission error:', error);
       setSaveMessage(error instanceof Error ? error.message : 'Failed to submit application. Please try again.');
     } 
@@ -139,6 +157,13 @@ const MultiStepFormContent: React.FC = () => {
     const validation = validateAllSteps();
     
     if (!validation.isValid) {
+      logCriticalEvent({
+        event_name: 'step_blocked',
+        outcome: 'error',
+        step_id: currentStep,
+        error_code: 'VALIDATION_FAILED_ON_SUBMIT',
+      });
+
       // Convert the new error format to the old format for backward compatibility
       const oldFormatErrors: { [key: string]: string[] } = {};
       Object.entries(validation.errors).forEach(([section, fieldErrors]) => {
@@ -156,6 +181,13 @@ const MultiStepFormContent: React.FC = () => {
     const validation = validateCurrentStep(currentStep);
     
     if (!validation.isValid) {
+      logCriticalEvent({
+        event_name: 'step_blocked',
+        outcome: 'error',
+        step_id: currentStep,
+        error_code: 'VALIDATION_FAILED_ON_NEXT_STEP',
+      });
+
       // Merge validation errors with existing field errors
       const currentErrors = currentStepErrors || {};
       const merged = { ...currentErrors, ...validation.errors };
@@ -349,7 +381,7 @@ const MultiStepFormContent: React.FC = () => {
           {ticketingPartnerLogo && (
             <img 
               src={ticketingPartnerLogo} 
-              alt={`${ticketingCoEnv} Logo`} 
+              alt={`${ticketingCoParam} Logo`} 
               className="h-12 object-contain" 
             />
           )}
