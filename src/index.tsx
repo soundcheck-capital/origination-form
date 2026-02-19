@@ -11,8 +11,6 @@ import SubmitSuccess from './components/SubmitSuccess';
 
 Sentry.init({
   dsn: 'https://c5bcc114d568abceb81c07f53de7d301@o4510828693422080.ingest.us.sentry.io/4510828695388160',
-  // Setting this option to true will send default PII data to Sentry.
-  // For example, automatic IP address collection on events.
   sendDefaultPii: true,
   integrations: [
     Sentry.browserTracingIntegration(),
@@ -23,12 +21,12 @@ Sentry.init({
     }),
   ],
   // Tracing
-  tracesSampleRate: 1.0, // Capture 100% of the transactions
+  tracesSampleRate: 0.05,
   // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
   tracePropagationTargets: ['localhost', /^https:\/\/yourserver\.io\/api/],
   // Session Replay
-  replaysSessionSampleRate: 1.0, // This sets the sample rate at 10%.
-  replaysOnErrorSampleRate: 1.0, // Sample 100% of sessions with errors.
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
 });
 
 const root = ReactDOM.createRoot(

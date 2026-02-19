@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logCriticalEvent } from '../utils/criticalLogging';
 
 interface UploadResult {
   success: boolean;
@@ -203,6 +204,12 @@ export const useFileUpload = () => {
       if (!validateFileSize(file)) {
         const sizeMB = (file.size / 1024 / 1024).toFixed(2);
         console.error(`❌ [useFileUpload] Client-side validation failed: ${sizeMB}MB > 10MB`);
+        logCriticalEvent({
+          event_name: 'file_upload_failed',
+          outcome: 'error',
+          step_id: 4,
+          error_code: 'FILE_TOO_LARGE',
+        });
         return {
           success: false,
           error: ERROR_MESSAGES.FILE_TOO_LARGE(sizeMB),
@@ -219,6 +226,12 @@ export const useFileUpload = () => {
 
       if (!webhookFilesUrl) {
         console.error('❌ [useFileUpload] REACT_APP_WEBHOOK_URL_FILES is not configured!');
+        logCriticalEvent({
+          event_name: 'file_upload_failed',
+          outcome: 'error',
+          step_id: 4,
+          error_code: 'MISSING_WEBHOOK_FILES',
+        });
         return {
           success: false,
           error: ERROR_MESSAGES.MISSING_WEBHOOK_FILES,
@@ -285,6 +298,13 @@ export const useFileUpload = () => {
         }
         
         console.error(`❌ [useFileUpload] Upload failed:`, errorMessage);
+        logCriticalEvent({
+          event_name: 'file_upload_failed',
+          outcome: 'error',
+          step_id: 4,
+          error_code: 'UPLOAD_HTTP_ERROR',
+          http_status: response.status,
+        });
         
         return {
           success: false,
@@ -295,6 +315,15 @@ export const useFileUpload = () => {
       }
     } catch (error) {
       console.error(`❌ [useFileUpload] Exception sending file ${file.name}:`, error);
+      logCriticalEvent(
+        {
+          event_name: 'file_upload_failed',
+          outcome: 'error',
+          step_id: 4,
+          error_code: error instanceof Error ? error.name : 'NETWORK_ERROR',
+        },
+        error
+      );
       return {
         success: false,
         error: error instanceof Error ? error.message : ERROR_MESSAGES.NETWORK_ERROR,
