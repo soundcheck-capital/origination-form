@@ -117,6 +117,5 @@ const validateRiskMatrix = () => {
 
 // Auto-validate in development
 if (process.env.NODE_ENV === 'development') {
-  const validation = validateRiskMatrix();
-  console.log('🔍 Risk Matrix Validation:', validation);
+  validateRiskMatrix();
 }

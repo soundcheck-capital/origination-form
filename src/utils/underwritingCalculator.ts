@@ -146,10 +146,6 @@ export function calculateUnderwritingResult(inputs: UnderwritingInputs): Underwr
   const paymentRemittedByScore = getPaymentRemittedByScore(inputs.paymentRemittedBy);
   const paymentFrequencyScore = getPaymentFrequencyScore(inputs.paymentFrequency);
 
-  console.log('yearsInBusinessScore', yearsInBusinessScore);
-  console.log('eventsScore', eventsScore);
-  console.log('paymentRemittedByScore', paymentRemittedByScore);
-  console.log('paymentFrequencyScore', paymentFrequencyScore);
   // Calculate total risk score
   const totalRiskScore = yearsInBusinessScore + eventsScore + paymentRemittedByScore + paymentFrequencyScore;
 
