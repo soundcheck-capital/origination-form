@@ -22,6 +22,16 @@ const logoMap: { [key: string]: string } = {
 };
 
 /**
+ * Récupère le ticketing partner depuis l'URL (?ticketingco=Shotgun)
+ */
+export const getTicketingCoFromUrl = (): string => {
+  if (typeof window === 'undefined') return '';
+
+  const params = new URLSearchParams(window.location.search);
+  return params.get('ticketingco')?.trim() || '';
+};
+
+/**
  * Récupère le chemin du logo pour un ticketing partner donné
  * Le partnerName doit correspondre EXACTEMENT à une clé de ticketingPartners
  * Retourne null si le logo n'existe pas
