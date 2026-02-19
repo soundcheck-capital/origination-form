@@ -256,12 +256,14 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
   }, [diligenceFiles]);
 
   const updateFileUploadStatus = useCallback((field: keyof DiligenceFiles, index: number, status: FileUploadStatus) => {
+    console.log(`🔄 [DiligenceContext] Updating upload status for ${field}[${index}]:`, status);
     
     setDiligenceFiles(prev => {
       const currentField = prev[field];
       const newUploadStatuses = [...(currentField.uploadStatuses || [])];
       newUploadStatuses[index] = status;
       
+      console.log(`📊 [DiligenceContext] New upload statuses for ${field}:`, newUploadStatuses);
       
       return {
         ...prev,

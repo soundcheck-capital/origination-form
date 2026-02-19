@@ -140,12 +140,28 @@ export const useFormValidation = () => {
     const { ticketingInfo, volumeInfo } = formData.formData;
     const ticketingErrors: { [key: string]: string } = {};
     
+    // Debug logging
+    if (isDevelopment) {
+      console.log('🔍 Step 1 Validation Debug:', {
+        ticketingInfo,
+        volumeInfo,
+        paymentProcessing: ticketingInfo.paymentProcessing,
+        settlementPayout: ticketingInfo.settlementPayout,
+        currentPartner: ticketingInfo.currentPartner,
+        otherPartner: ticketingInfo.otherPartner
+      });
+    }
+    
     if (!ticketingInfo.paymentProcessing) ticketingErrors.paymentProcessing = 'Payment processing is required';
     if (!ticketingInfo.currentPartner.trim()) ticketingErrors.currentPartner = 'Ticketing partner is required';
     if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) ticketingErrors.otherPartner = 'Other ticketing partner is required';
     if (!ticketingInfo.settlementPayout) ticketingErrors.settlementPayout = 'Settlement payout policy is required';
     if (volumeInfo.nextYearEvents <= 0) ticketingErrors.nextYearEvents = 'Number of events must be greater than 0';
     if (volumeInfo.nextYearSales <= 0) ticketingErrors.nextYearSales = 'Gross annual ticketing volume must be greater than 0';
+    
+    if (isDevelopment) {
+      console.log('🚨 Step 1 Validation Errors:', ticketingErrors);
+    }
     
     return {
       isValid: personalValidation.isValid && companyValidation.isValid && Object.keys(ticketingErrors).length === 0,
@@ -155,9 +171,19 @@ export const useFormValidation = () => {
 
   // New function to validate current step only
   const validateCurrentStep = (step: number): { isValid: boolean; errors: { [key: string]: string } } => {
+    // Debug: Check if validation is disabled
+    if (isDevelopment) {
+      console.log('🔍 Validation Check:', {
+        step,
+        disableValidation: localStorage.getItem('DISABLE_VALIDATION'),
+        isDevelopment
+      });
+    }
+    
     // TEMPORARILY DISABLE THE VALIDATION BYPASS FOR DEBUGGING
     // Skip validation only if explicitly disabled in development mode
     // if (isDevelopment && localStorage.getItem('DISABLE_VALIDATION') === 'true') { 
+    //     isDevelopment && console.log("⚠️ VALIDATION DISABLED", localStorage.getItem('DISABLE_VALIDATION'));
     //   return { isValid: true, errors: {} };
     // }
 

@@ -6,9 +6,12 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
 export const loadApplication = createAsyncThunk(
   'form/loadApplication',
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
+    const { auth } = getState() as RootState;
+    const config = { headers: { Authorization: `Bearer ${auth.token}` } };
+
     try {
-      const res = await axios.get(`${API_URL}/applications/current`);
+      const res = await axios.get(`${API_URL}/applications/${auth.user?.id}/current`, config);
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Erreur chargement formulaire');
@@ -19,7 +22,8 @@ export const loadApplication = createAsyncThunk(
 export const createApplication = createAsyncThunk(
   'form/createApplication',
   async (_, { getState, rejectWithValue }) => {
-    const { form } = getState() as RootState;
+    const { auth, form } = getState() as RootState;
+    const config = { headers: { Authorization: `Bearer ${auth.token}` } };
 
     try {
       const payload = {
@@ -29,7 +33,7 @@ export const createApplication = createAsyncThunk(
         
       };
 
-      const res = await axios.post(`${API_URL}/applications/new`, payload);
+      const res = await axios.post(`${API_URL}/applications/new`, payload, config);
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Erreur création formulaire');
@@ -40,7 +44,8 @@ export const createApplication = createAsyncThunk(
 export const saveApplication = createAsyncThunk(
   'form/saveApplication',
   async (_, { getState, rejectWithValue }) => {
-    const { form } = getState() as RootState;
+    const { auth, form } = getState() as RootState;
+    const config = { headers: { Authorization: `Bearer ${auth.token}` } };
 
     try {
       const payload = {
@@ -50,7 +55,7 @@ export const saveApplication = createAsyncThunk(
 
       };
 
-      const res = await axios.post(`${API_URL}/applications/update`, payload);
+      const res = await axios.post(`${API_URL}/applications/update`, payload, config);
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Erreur sauvegarde formulaire');
@@ -61,7 +66,8 @@ export const saveApplication = createAsyncThunk(
 export const submitApplication = createAsyncThunk(
   'form/submitApplication',
   async (_, { getState, rejectWithValue }) => {
-    const { form } = getState() as RootState;
+    const { auth, form } = getState() as RootState;
+    const config = { headers: { Authorization: `Bearer ${auth.token}` } };
 
     try {
       const payload = {
@@ -69,7 +75,7 @@ export const submitApplication = createAsyncThunk(
         status: 'submitted'
       };
 
-      const res = await axios.post(`${API_URL}/applications/submit`, payload);
+      const res = await axios.post(`${API_URL}/applications/submit`, payload, config);
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Erreur envoi final formulaire');

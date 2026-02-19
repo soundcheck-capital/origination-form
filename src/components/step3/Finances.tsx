@@ -85,6 +85,7 @@ const FinancesStep: React.FC = () => {
     
     // Special handling for singleEntity - invert the logic for correct visual representation
     if (name === 'singleEntity') {
+      console.log('singleEntity', e.target.checked);
       // When switch is checked (right/Multi-entity), singleEntity should be false
       // When switch is unchecked (left/Single entity), singleEntity should be true
       dispatch(updateFinancesInfo({ [name]: !e.target.checked }));

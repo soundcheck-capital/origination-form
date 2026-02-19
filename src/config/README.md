@@ -47,12 +47,14 @@ To change the maximum advance amount:
 export const MAX_ADVANCE_CAP = 750000; // Changed from 500000
 ```
 
-## Validate Changes
+## Testing Changes
 
 After making changes:
 
-1. **Test manually** in the application
-2. **Update documentation** to reflect new rules
+1. **Run tests**: `npm test -- --testPathPattern="underwritingCalculator"`
+2. **Update test expectations** if needed
+3. **Test manually** in the application
+4. **Update documentation** to reflect new rules
 
 ## Validation
 
