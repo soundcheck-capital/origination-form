@@ -13,7 +13,7 @@ const FinancialInformationStep: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full animate-fade-in-right duration-1000">
-      <StepTitle title="Finance" />
+      <StepTitle title="2. Finance" />
       
       <div className="w-full">  
         <FileUploadField
