@@ -384,21 +384,21 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
     }
   };
 
-  const formatFileSize = (bytes: number): string => {
+ /*  const formatFileSize = (bytes: number): string => {
     if (!bytes || bytes === 0 || isNaN(bytes)) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
+  }; */
 
   return (  
-    <div className={`flex flex-col w-full mb-16 ${className}`}>
-      <h4 className=" text-md font-medium text-neutral-900 leading-tight ">{title}</h4>
-      {description && <p className=" text-xs font-300 text-gray-500" dangerouslySetInnerHTML={{ __html: description }} />}
+    <div className={`flex flex-col w-full mb-6 ${className}`}>
+      <h4 className="text-xs font-semibold text-neutral-700 leading-tight">{title}</h4>
+      {description && <p className="text-[10px] font-300 text-gray-400 leading-tight" dangerouslySetInnerHTML={{ __html: description }} />}
       
       <div
-        className={`relative border-2 border-dashed rounded-lg p-6 mt-4 text-center transition-colors ${
+        className={`relative border-2 border-dashed rounded-lg px-4 py-3 mt-2 text-center transition-colors ${
           isProcessing
             ? 'border-blue-500 bg-blue-50 cursor-wait'
             : dragActive 
@@ -419,48 +419,29 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           id={`file-upload-${field}`}
           disabled={isProcessing}
+          title=""
         />
         
         {isProcessing ? (
-          <div className="flex flex-col items-center justify-center space-y-2">
-            <svg className="w-8 h-8 text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <div className="flex items-center justify-center gap-2 py-1">
+            <svg className="w-4 h-4 text-blue-500 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            <div className="text-sm text-blue-600 font-medium">
-              Processing and uploading files...
-            </div>
-            <p className="text-xs text-gray-500">
-              Please wait
-            </p>
+            <span className="text-sm text-blue-600 font-medium">Uploading... please wait</span>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-2">
-            <svg 
-              className="w-8 h-8 text-gray-400" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" 
-              />
+          <div className="flex items-center justify-center gap-3 py-1">
+            <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
-            
             <div className="text-sm text-gray-600">
-              <span className="font-medium text-blue-600 hover:text-blue-500">
-                Click to select
+              <span className="font-medium text-orange-500 hover:text-rose-500 transition-colors">Click to select</span>
+              {' '}or drag & drop
+              <span className="text-xs text-gray-400 ml-2">
+                ({accept.split(',').map(ext => ext.trim()).join(', ')}{multiple && ', multiple'})
               </span>
-              {' '}or drag and drop your files here
             </div>
-            
-            <p className="text-xs text-gray-500">
-              {accept.split(',').map(ext => ext.trim()).join(', ')} accepted
-              {multiple && ' (multiple files accepted)'}
-            </p>
           </div>
         )}
       </div>
@@ -506,89 +487,55 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       
       {/* Zone d'affichage des fichiers sélectionnés */}
       {validFiles.length > 0 && (
-        <div className="mt-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium text-gray-700">
-              Selected files ({validFiles.length})
-            </h4>
+        <div className="mt-2">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] text-gray-400 uppercase tracking-wide font-medium">
+              {validFiles.length} file{validFiles.length > 1 ? 's' : ''} selected
+            </span>
             {validFiles.length > 1 && (
-              <button
-                onClick={handleClearAllFiles}
-                className="text-sm text-red-500 hover:text-red-700"
-              >
+              <button onClick={handleClearAllFiles} className="text-[10px] text-red-400 hover:text-red-600">
                 Remove all
               </button>
             )}
           </div>
-          
-          <div className="space-y-2 max-h-48 overflow-y-auto">
+          <div className="flex flex-wrap gap-1.5">
             {validFiles.map((file, index) => {
               const realIndex = files.findIndex(f => f === file);
               const uploadStatus = uploadStatuses[realIndex];
-              
+              const isError = uploadStatus?.status === 'error';
+              const isSuccess = uploadStatus?.status === 'success';
+              const isUploading = uploadStatus?.status === 'uploading';
+
               return (
-                <div 
+                <div
                   key={`${file.name}-${index}`}
-                  className={`flex items-center justify-between p-3 rounded-lg border ${
-                    uploadStatus?.status === 'error' 
-                      ? 'bg-red-50 border-red-300' 
-                      : uploadStatus?.status === 'success'
-                        ? 'bg-green-50 border-green-300'
-                        : 'bg-gray-50 border-gray-300'
+                  title={isError ? uploadStatus.error : file.name}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium border max-w-[200px] ${
+                    isError
+                      ? 'bg-red-50 border-red-200 text-red-600'
+                      : isSuccess
+                        ? 'bg-green-50 border-green-200 text-green-700'
+                        : isUploading
+                          ? 'bg-blue-50 border-blue-200 text-blue-600'
+                          : 'bg-green-50 border-green-200 text-green-700'
                   }`}
                 >
-                  <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    {/* Icône de statut */}
-                    {uploadStatus?.status === 'uploading' && (
-                      <svg className="w-5 h-5 text-blue-500 flex-shrink-0 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                    )}
-                    {uploadStatus?.status === 'success' && (
-                      <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    )}
-                    {uploadStatus?.status === 'error' && (
-                      <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    )}
-                    {(!uploadStatus || uploadStatus.status === 'pending') && (
-                      <svg className="w-5 h-5 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    )}
-                    
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium truncate ${
-                        uploadStatus?.status === 'error' ? 'text-red-700' : 'text-gray-700'
-                      }`}>
-                        {file.name || 'Unknown file'}
-                      </p>
-                      <p className={`text-xs ${
-                        uploadStatus?.status === 'error' ? 'text-red-600' : 'text-gray-500'
-                      }`}>
-                        {formatFileSize(file.size)} • {file.type || 'Unknown type'}
-                        {uploadStatus?.status === 'uploading' && ' • Uploading...'}
-                        {uploadStatus?.status === 'success' && ' • ✓ Uploaded'}
-                      </p>
-                      {uploadStatus?.status === 'error' && (
-                        <p className="text-xs text-red-600 font-semibold mt-1">
-                          ⚠️ {uploadStatus.error}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  
+                  {isUploading && (
+                    <svg className="w-2.5 h-2.5 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  )}
+                  {isSuccess && <span className="flex-shrink-0">✓</span>}
+                  {isError && <span className="flex-shrink-0">⚠</span>}
+                  <span className="truncate">{file.name || 'Unknown file'}</span>
                   <button
                     onClick={() => handleRemoveFile(index)}
-                    className="text-red-500 hover:text-red-700 p-1 ml-2 flex-shrink-0"
-                    title="Remove file"
+                    className="flex-shrink-0 ml-0.5 opacity-50 hover:opacity-100"
+                    title="Remove"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
