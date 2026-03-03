@@ -13,7 +13,7 @@ const TicketingInformationStep: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full animate-fade-in-right duration-1000">
-      <StepTitle title="Ticketing" />
+      <StepTitle title="1. Ticketing" />
       
       <div className="w-full">  
         <FileUploadField
