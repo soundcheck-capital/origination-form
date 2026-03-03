@@ -5,7 +5,7 @@ import LegalInformationStep from './LegalInformationStep';
 
 const Step4: React.FC = () => {
   return (
-    <div className="flex flex-col justify-center w-full pt-8 animate-fade-in-right duration-1000">
+    <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
       <TicketingInformationStep />
       <FinancialInformationStep />
       <LegalInformationStep />

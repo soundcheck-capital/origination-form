@@ -362,7 +362,7 @@ const MultiStepFormContent: React.FC = () => {
     <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
       {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
 
-      <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-hidden">
+      <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-x-clip">
         <div className="flex justify-center items-center gap-4">
           <img src={logo} alt="Logo" className="w-48 " />
           {ticketingPartnerLogo && (

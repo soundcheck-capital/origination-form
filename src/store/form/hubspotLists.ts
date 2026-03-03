@@ -113,7 +113,7 @@ export const clientType = {
     'Frontgate':'Frontgate',  
     'Leap Event Technology':'Leap Event Technology',
     'PreKindle':'PreKindle',
-    'See Tickets':'See Tickets',
+    'See Tickets':'Eventim/See Tickets',
     'Shotgun':'Shotgun',
     'Showpass':'Showpass',
     'SquadUp':'SquadUp',
