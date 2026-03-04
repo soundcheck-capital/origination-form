@@ -55,7 +55,8 @@ const Funding: React.FC = () => {
         numberOfEvents: numberOfEvents,
         paymentRemittedBy: mapPaymentRemittedBy(ticketingInfo.paymentProcessing),
         paymentFrequency: mapPaymentFrequency(ticketingInfo.settlementPayout),
-        grossAnnualTicketSales: grossAnnualTicketSales
+        grossAnnualTicketSales: grossAnnualTicketSales,
+        customerType: companyInfo.clientType || undefined
       };
       
       result = calculateUnderwritingResult(inputs);
@@ -71,6 +72,7 @@ const Funding: React.FC = () => {
     ticketingVolume.nextYearSales,
     ticketingVolume.nextYearEvents,
     companyInfo.yearsInBusiness,
+    companyInfo.clientType,
     ticketingInfo.paymentProcessing,
     ticketingInfo.settlementPayout
   ]);
