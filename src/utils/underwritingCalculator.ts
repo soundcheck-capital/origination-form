@@ -13,7 +13,9 @@ import {
   PAYMENT_REMITTED_BY_SCORES,
   PAYMENT_FREQUENCY_SCORES,
   RISK_MATRIX,
-  MAX_ADVANCE_CAP
+  MAX_ADVANCE_CAP,
+  CUSTOMER_TYPE_CAP,
+  DEFAULT_CUSTOMER_TYPE_CAP_PERCENT
 } from '../config/underwritingConfig';
 
 /**
@@ -25,6 +27,8 @@ export interface UnderwritingInputs {
   paymentRemittedBy: string;
   paymentFrequency: string;
   grossAnnualTicketSales: number;
+  /** Customer type (e.g. Festival, Promoter, Venue) for max advance % cap. Optional; defaults to 10%. */
+  customerType?: string;
 }
 
 /**
@@ -154,7 +158,14 @@ export function calculateUnderwritingResult(inputs: UnderwritingInputs): Underwr
   const totalRiskScore = yearsInBusinessScore + eventsScore + paymentRemittedByScore + paymentFrequencyScore;
 
   // Determine max advance percentage from risk matrix
-  const maxAdvancePercent = getMaxAdvancePercent(totalRiskScore);
+  let maxAdvancePercent = getMaxAdvancePercent(totalRiskScore);
+
+  // Apply customer type cap (Festival 25%, Promoter 20%, Venue 10%, others 10%)
+  const customerCapPercent = inputs.customerType != null && inputs.customerType !== ''
+    ? (CUSTOMER_TYPE_CAP[inputs.customerType] ?? DEFAULT_CUSTOMER_TYPE_CAP_PERCENT)
+    : DEFAULT_CUSTOMER_TYPE_CAP_PERCENT;
+  const customerCap = customerCapPercent / 100;
+  maxAdvancePercent = Math.min(maxAdvancePercent, customerCap);
 
   // Calculate raw advance amount
   const rawAdvanceAmount = grossAnnualTicketSales * maxAdvancePercent;

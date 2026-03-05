@@ -92,6 +92,16 @@ export const RISK_MATRIX = [
 export const MAX_ADVANCE_CAP = 500000;
 
 /**
+ * Max advance % by customer type: Festival 25%, Promoter 20%, Venue 10%. Others default to 10%.
+ */
+export const CUSTOMER_TYPE_CAP: Record<string, number> = {
+  Festival: 25,
+  Promoter: 20,
+  Venue: 10,
+};
+export const DEFAULT_CUSTOMER_TYPE_CAP_PERCENT = 10;
+
+/**
  * Configuration metadata
  */
 export const UNDERWRITING_CONFIG_VERSION = '1.0.0';
