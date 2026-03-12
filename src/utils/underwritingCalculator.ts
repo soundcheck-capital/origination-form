@@ -11,11 +11,13 @@ import {
   YEARS_IN_BUSINESS_SCORES,
   EVENTS_SCORES,
   PAYMENT_REMITTED_BY_SCORES,
+  PAYMENT_REMITTED_BY_ALIASES,
   PAYMENT_FREQUENCY_SCORES,
   RISK_MATRIX,
   MAX_ADVANCE_CAP,
-  CUSTOMER_TYPE_CAP,
-  DEFAULT_CUSTOMER_TYPE_CAP_PERCENT
+  CUSTOMER_TYPE_MATRIX_GROUP,
+  DEFAULT_CUSTOMER_TYPE_MATRIX_GROUP,
+  MAX_RISK_SCORE
 } from '../config/underwritingConfig';
 
 /**
@@ -27,7 +29,7 @@ export interface UnderwritingInputs {
   paymentRemittedBy: string;
   paymentFrequency: string;
   grossAnnualTicketSales: number;
-  /** Customer type (e.g. Festival, Promoter, Venue) for max advance % cap. Optional; defaults to 10%. */
+  /** Customer type (e.g. Festival, Promoter, Venue). Optional; defaults to the V/O matrix column. */
   customerType?: string;
 }
 
@@ -82,7 +84,8 @@ function getEventsScore(numberOfEvents: number): number {
  * Get risk score for payment remitted by
  */
 function getPaymentRemittedByScore(paymentRemittedBy: string): number {
-  const key = paymentRemittedBy as keyof typeof PAYMENT_REMITTED_BY_SCORES;
+  const normalizedValue = PAYMENT_REMITTED_BY_ALIASES[paymentRemittedBy] ?? paymentRemittedBy;
+  const key = normalizedValue as keyof typeof PAYMENT_REMITTED_BY_SCORES;
   const score = PAYMENT_REMITTED_BY_SCORES[key];
   if (score === undefined && paymentRemittedBy) {
     console.warn(`⚠️ Payment remitted by value not found: "${paymentRemittedBy}"`);
@@ -107,18 +110,21 @@ function getPaymentFrequencyScore(paymentFrequency: string): number {
 /**
  * Determine max advance percentage from risk matrix
  */
-function getMaxAdvancePercent(totalRiskScore: number): number {
+function getMaxAdvancePercent(totalRiskScore: number, customerType?: string): number {
   // Clamp risk score to valid range
-  const clampedScore = Math.max(0, Math.min(24, totalRiskScore));
+  const clampedScore = Math.max(0, Math.min(MAX_RISK_SCORE, totalRiskScore));
+  const customerTypeGroup = customerType != null && customerType !== ''
+    ? (CUSTOMER_TYPE_MATRIX_GROUP[customerType] ?? DEFAULT_CUSTOMER_TYPE_MATRIX_GROUP)
+    : DEFAULT_CUSTOMER_TYPE_MATRIX_GROUP;
   
   for (const band of RISK_MATRIX) {
     if (clampedScore >= band.lowerBound && clampedScore <= band.upperBound) {
-      return band.maxAdvancePercent;
+      return band.maxAdvancePercent[customerTypeGroup];
     }
   }
   
   // Fallback to lowest percentage if no match (should not happen)
-  return 0.025;
+  return RISK_MATRIX[RISK_MATRIX.length - 1].maxAdvancePercent[customerTypeGroup];
 }
 
 /**
@@ -150,22 +156,11 @@ export function calculateUnderwritingResult(inputs: UnderwritingInputs): Underwr
   const paymentRemittedByScore = getPaymentRemittedByScore(inputs.paymentRemittedBy);
   const paymentFrequencyScore = getPaymentFrequencyScore(inputs.paymentFrequency);
 
-  console.log('yearsInBusinessScore', yearsInBusinessScore);
-  console.log('eventsScore', eventsScore);
-  console.log('paymentRemittedByScore', paymentRemittedByScore);
-  console.log('paymentFrequencyScore', paymentFrequencyScore);
   // Calculate total risk score
   const totalRiskScore = yearsInBusinessScore + eventsScore + paymentRemittedByScore + paymentFrequencyScore;
 
   // Determine max advance percentage from risk matrix
-  let maxAdvancePercent = getMaxAdvancePercent(totalRiskScore);
-
-  // Apply customer type cap (Festival 25%, Promoter 20%, Venue 10%, others 10%)
-  const customerCapPercent = inputs.customerType != null && inputs.customerType !== ''
-    ? (CUSTOMER_TYPE_CAP[inputs.customerType] ?? DEFAULT_CUSTOMER_TYPE_CAP_PERCENT)
-    : DEFAULT_CUSTOMER_TYPE_CAP_PERCENT;
-  const customerCap = customerCapPercent / 100;
-  maxAdvancePercent = Math.min(maxAdvancePercent, customerCap);
+  const maxAdvancePercent = getMaxAdvancePercent(totalRiskScore, inputs.customerType);
 
   // Calculate raw advance amount
   const rawAdvanceAmount = grossAnnualTicketSales * maxAdvancePercent;

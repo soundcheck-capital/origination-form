@@ -27,15 +27,15 @@ export function logUnderwritingBreakdown(inputs: UnderwritingInputs, result: Und
       events: `${result.breakdown.eventsScore} pts (${inputs.numberOfEvents} events)`,
       paymentRemittedBy: `${result.breakdown.paymentRemittedByScore} pts (${inputs.paymentRemittedBy})`,
       paymentFrequency: `${result.breakdown.paymentFrequencyScore} pts (${inputs.paymentFrequency})`,
-      total: `${result.totalRiskScore} / 24 pts`
+      total: `${result.totalRiskScore} / 35 pts`
     });
     
     // Determine risk band
     let riskBand = 'Unknown';
-    if (result.totalRiskScore <= 6) riskBand = 'Low Risk (0-6)';
-    else if (result.totalRiskScore <= 12) riskBand = 'Medium-Low Risk (6.01-12)';
-    else if (result.totalRiskScore <= 18) riskBand = 'Medium-High Risk (12.01-18)';
-    else riskBand = 'High Risk (18.01-24)';
+    if (result.totalRiskScore <= 7) riskBand = 'Low Risk (0-7)';
+    else if (result.totalRiskScore <= 14) riskBand = 'Medium-Low Risk (8-14)';
+    else if (result.totalRiskScore <= 21) riskBand = 'Medium-High Risk (15-21)';
+    else riskBand = 'High Risk (22-35)';
     
     console.log('📈 Risk Assessment:', {
       riskBand,

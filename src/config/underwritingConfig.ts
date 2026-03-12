@@ -40,6 +40,16 @@ export const PAYMENT_REMITTED_BY_SCORES = {
 } as const;
 
 /**
+ * Aliases for payment remitted by values coming from the form/UI.
+ * We keep a canonical set of score keys and normalize user selections to them.
+ */
+export const PAYMENT_REMITTED_BY_ALIASES: Record<string, keyof typeof PAYMENT_REMITTED_BY_SCORES> = {
+  'My Ticketing Co': 'From the Ticketing Co (e.g. Ticketmaster)',
+  'The Payment Processor (e.g. Stripe)': 'From the Payment Processor (e.g. Stripe)',
+  'The Venue (e.g. MSG)': 'From the Venue (e.g. MSG)'
+};
+
+/**
  * Payment Frequency Risk Scores (from CSV)
  */
 export const PAYMENT_FREQUENCY_SCORES = {
@@ -56,33 +66,49 @@ export const PAYMENT_FREQUENCY_SCORES = {
  * 
  * Each band defines:
  * - lowerBound: Minimum risk score (inclusive)
- * - upperBound: Maximum risk score (inclusive)  
- * - maxAdvancePercent: Maximum advance percentage for this risk band
+ * - upperBound: Maximum risk score (inclusive)
+ * - maxAdvancePercent: Maximum advance percentage for this risk band by customer type
  */
 export const RISK_MATRIX = [
-  { 
-    lowerBound: 0, 
-    upperBound: 7, 
-    maxAdvancePercent: 0.10,
-    description: 'Low Risk - 10% max advance'
+  {
+    lowerBound: 0,
+    upperBound: 7,
+    maxAdvancePercent: {
+      V_O: 0.14,
+      P: 0.20,
+      F: 0.26
+    },
+    description: 'Low Risk'
   },
-  { 
-    lowerBound: 7.1, 
-    upperBound: 14, 
-    maxAdvancePercent: 0.075,
-    description: 'Medium-Low Risk - 7.5% max advance'
+  {
+    lowerBound: 7.1,
+    upperBound: 14,
+    maxAdvancePercent: {
+      V_O: 0.11,
+      P: 0.15,
+      F: 0.19
+    },
+    description: 'Medium-Low Risk'
   },
-  { 
-    lowerBound: 14.1, 
-    upperBound: 21, 
-    maxAdvancePercent: 0.05,
-    description: 'Medium-High Risk - 5% max advance'
+  {
+    lowerBound: 14.1,
+    upperBound: 21,
+    maxAdvancePercent: {
+      V_O: 0.08,
+      P: 0.10,
+      F: 0.12
+    },
+    description: 'Medium-High Risk'
   },
-  { 
-    lowerBound: 21.1, 
-    upperBound: 35, 
-    maxAdvancePercent: 0.025,
-    description: 'High Risk - 2.5% max advance'
+  {
+    lowerBound: 21.1,
+    upperBound: 35,
+    maxAdvancePercent: {
+      V_O: 0.05,
+      P: 0.05,
+      F: 0.05
+    },
+    description: 'High Risk'
   }
 ] as const;
 
@@ -92,20 +118,28 @@ export const RISK_MATRIX = [
 export const MAX_ADVANCE_CAP = 500000;
 
 /**
- * Max advance % by customer type: Festival 25%, Promoter 20%, Venue 10%. Others default to 10%.
+ * Customer type groups used by the matrix in the CSV:
+ * - V_O: Venue / Operator / Other
+ * - P: Promoter
+ * - F: Festival
  */
-export const CUSTOMER_TYPE_CAP: Record<string, number> = {
-  Festival: 25,
-  Promoter: 20,
-  Venue: 10,
+export const CUSTOMER_TYPE_MATRIX_GROUP: Record<string, 'V_O' | 'P' | 'F'> = {
+  Festival: 'F',
+  Promoter: 'P',
+  Venue: 'V_O'
 };
-export const DEFAULT_CUSTOMER_TYPE_CAP_PERCENT = 10;
+export const DEFAULT_CUSTOMER_TYPE_MATRIX_GROUP = 'V_O';
+
+/**
+ * Maximum possible risk score from the CSV scoring model.
+ */
+export const MAX_RISK_SCORE = 35;
 
 /**
  * Configuration metadata
  */
-export const UNDERWRITING_CONFIG_VERSION = '1.0.0';
-export const LAST_UPDATED = '2024-12-05';
+export const UNDERWRITING_CONFIG_VERSION = '1.1.0';
+export const LAST_UPDATED = '2026-03-12';
 
 /**
  * Validation: Ensure risk matrix covers full range
@@ -118,11 +152,11 @@ const validateRiskMatrix = () => {
     console.warn('⚠️ Risk matrix does not start at 0');
   }
   
-  if (maxScore < 24) {
-    console.warn('⚠️ Risk matrix does not cover maximum possible score (24)');
+  if (maxScore < MAX_RISK_SCORE) {
+    console.warn(`⚠️ Risk matrix does not cover maximum possible score (${MAX_RISK_SCORE})`);
   }
   
-  return { minScore, maxScore, isValid: minScore === 0 && maxScore >= 24 };
+  return { minScore, maxScore, isValid: minScore === 0 && maxScore >= MAX_RISK_SCORE };
 };
 
 // Auto-validate in development

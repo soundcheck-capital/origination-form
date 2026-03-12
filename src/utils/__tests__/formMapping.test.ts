@@ -23,9 +23,9 @@ describe('Form Key Mapping - Integration Test', () => {
     });
 
     it('should map paymentProcessing keys to correct values', () => {
-      expect(paymentProcessing['Ticketing Co']).toBe('From the Ticketing Co (e.g. Ticketmaster)');
-      expect(paymentProcessing['Own Processor']).toBe('From the Payment Processor (e.g. Stripe)');
-      expect(paymentProcessing['Venue']).toBe('From the Venue (e.g. MSG)');
+      expect(paymentProcessing['Ticketing Co']).toBe('My Ticketing Co');
+      expect(paymentProcessing['Own Processor']).toBe('The Payment Processor (e.g. Stripe)');
+      expect(paymentProcessing['Venue']).toBe('The Venue (e.g. MSG)');
       expect(paymentProcessing['It varies']).toBe('It varies');
     });
 
@@ -43,7 +43,7 @@ describe('Form Key Mapping - Integration Test', () => {
     /**
      * This simulates what happens in TicketingVolumeStep.tsx:
      * 1. Form stores keys (e.g., '0-1 year', 'Ticketing Co')
-     * 2. Mapping functions convert to values (e.g., 'Less than 1 year', 'From the Ticketing Co...')
+     * 2. Mapping functions convert to values (e.g., 'Less than 1 year', 'My Ticketing Co')
      * 3. Calculator uses values to compute scores
      */
 
@@ -60,7 +60,7 @@ describe('Form Key Mapping - Integration Test', () => {
 
       // Verify mapping worked
       expect(mapped_yearsInBusiness).toBe('Less than 1 year');
-      expect(mapped_paymentRemittedBy).toBe('From the Ticketing Co (e.g. Ticketmaster)');
+      expect(mapped_paymentRemittedBy).toBe('My Ticketing Co');
       expect(mapped_paymentFrequency).toBe('Daily');
 
       // Now calculate with mapped values
@@ -78,7 +78,7 @@ describe('Form Key Mapping - Integration Test', () => {
       expect(result).not.toBeNull();
       expect(result!.breakdown.yearsInBusinessScore).toBe(10); // Should be 10, NOT 0!
       expect(result!.breakdown.eventsScore).toBe(10); // Should be 10, NOT 0!
-      expect(result!.breakdown.paymentRemittedByScore).toBe(1); // Should be 1, NOT 0!
+      expect(result!.breakdown.paymentRemittedByScore).toBe(1); // Alias should resolve to the CSV score
       expect(result!.breakdown.paymentFrequencyScore).toBe(0); // Daily = 0 (correct)
       expect(result!.totalRiskScore).toBe(21); // 10 + 10 + 1 + 0 = 21
     });
@@ -153,4 +153,3 @@ describe('Form Key Mapping - Integration Test', () => {
     });
   });
 });
-
