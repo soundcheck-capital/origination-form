@@ -31,8 +31,12 @@ export const RISK_MATRIX = [
   { 
     lowerBound: 0, 
     upperBound: 6, 
-    maxAdvancePercent: 0.15, // Changed from 0.10 to 0.15 (15%)
-    description: 'Low Risk - 15% max advance'
+    maxAdvancePercent: {
+      V_O: 0.14,
+      P: 0.20,
+      F: 0.26
+    },
+    description: 'Low Risk'
   },
   // ... rest unchanged
 ]
@@ -59,7 +63,7 @@ After making changes:
 The configuration includes automatic validation that runs in development mode to ensure:
 
 - Risk matrix starts at score 0
-- Risk matrix covers the maximum possible score (24)
+- Risk matrix covers the maximum possible score (35)
 - No gaps in risk score coverage
 
 Check the browser console for validation messages when the app loads.
