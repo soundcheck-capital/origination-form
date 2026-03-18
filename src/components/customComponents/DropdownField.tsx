@@ -8,7 +8,7 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
   const fieldError = getFieldError(name);
   
     return (
-        <div className="relative w-full mb-4">  
+        <div className="relative w-full mb-4" data-field-name={name}>  
           <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
           <div className="relative">
             <select 
@@ -56,4 +56,3 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
 };  
 
 export default DropdownField;
-

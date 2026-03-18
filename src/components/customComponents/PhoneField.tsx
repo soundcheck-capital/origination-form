@@ -140,7 +140,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
   const id = name.replace(/\s+/g, '_').toLowerCase();
 
   return (
-    <div className="relative w-full mb-4">
+    <div className="relative w-full mb-4" data-field-name={name}>
       <label className="text-xs text-gray-500 px-2 top-2 start-1">
         {label}
       </label>
@@ -196,4 +196,3 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
 };
 
 export default PhoneField;
-

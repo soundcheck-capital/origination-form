@@ -57,13 +57,28 @@ export const ValidationProvider: React.FC<ValidationProviderProps> = ({ children
   };
 
   const focusFirstErrorField = () => {
-    // Scroll vers le haut de la page pour que l'utilisateur voie les erreurs
+    if (!currentStepErrors) return;
+
+    const firstFieldName = Object.keys(currentStepErrors)[0];
+    if (!firstFieldName) return;
+
+    const fieldWrappers = Array.from(document.querySelectorAll<HTMLElement>('[data-field-name]'));
+    const fieldWrapper = fieldWrappers.find(element => element.dataset.fieldName === firstFieldName) || null;
+    const fieldElement = fieldWrapper?.querySelector<HTMLElement>('input, select, textarea, button')
+      || document.querySelector<HTMLElement>(`[name="${firstFieldName}"]`)
+      || document.getElementById(firstFieldName);
+
+    const scrollTarget = fieldWrapper || fieldElement;
+    if (!scrollTarget) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
     setTimeout(() => {
-      window.scrollTo({ 
-        top: 0, 
-        behavior: 'smooth' 
-      });
-    }, 100);
+      fieldElement?.focus?.({ preventScroll: true });
+    }, 250);
   };
 
   const value = {

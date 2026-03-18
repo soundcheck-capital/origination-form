@@ -2,48 +2,53 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import { resetSubmitted } from '../store/form/formSlice';
-import logo from '../assets/logo_white_bold.svg';
+import logo from '../assets/logo_side_black.svg';
 import { useNavigate } from 'react-router-dom';
-import background from '../assets/background.jpeg';
 
 const SubmitSuccess: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isDevelopment = process.env.NODE_ENV === 'development';
   const navigate = useNavigate();
+
   const handleReset = () => {
     dispatch(resetSubmitted());
-      navigate('/form');
+    navigate('/form');
   };
 
-
-
   return (
-    <div className="min-h-screen  flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-cover bg-center bg-black/50 bg-blend-overlay" style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', backgroundPosition: 'center', }}>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <img 
-            src={logo} 
-            alt="SoundCheck" 
-            className="h-24 w-auto  "
+    <div className="min-h-screen bg-stone-50 px-6 py-12 text-slate-900">
+      <div className="mx-auto flex min-h-[80vh] max-w-3xl items-center justify-center">
+        <div className="w-full rounded-[32px] border border-stone-200 bg-white px-8 py-12 shadow-[0_20px_80px_rgba(15,23,42,0.08)] sm:px-12">
+          <img
+            src={logo}
+            alt="SoundCheck"
+            className="h-12 w-auto"
           />
-        </div>
-        <div className='flex flex-col items-center justify-center gap-4'>
-          <h1 className='text-2xl font-bold text-white mt-4 text-center'>Application submitted successfully!</h1>
-          <p className='text-sm text-white'>You will receive an email with your application details.</p>
-          
-          {/* Development Mode Reset Button */}
-          {  isDevelopment && localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true' && (
+
+          <div className="mt-10 max-w-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">
+              Submission received
+            </p>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+              Application submitted successfully.
+            </h1>
+            <p className="mt-4 text-base leading-7 text-slate-600">
+              We&apos;ve received your application. You will receive an email confirmation with your submission details.
+            </p>
+          </div>
+
+          {isDevelopment && localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true' && (
             <button
               onClick={handleReset}
-              className="mt-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 f "
+              className="mt-10 rounded-full border border-stone-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:border-stone-400 hover:bg-stone-50"
             >
-              Reset & Return to Form (Dev Mode)
+              Reset and return to form
             </button>
           )}
         </div>
       </div>
     </div>
   );
-}; 
+};
 
-export default SubmitSuccess; 
+export default SubmitSuccess;

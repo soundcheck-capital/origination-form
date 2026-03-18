@@ -7,7 +7,7 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
   const fieldError = getFieldError(name);
   
   return (  
-    <div className="w-full mb-4" onFocus={onFocus}>
+    <div className="w-full mb-4" onFocus={onFocus} data-field-name={name}>
       <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
       <input 
         autoComplete="on" 
@@ -21,7 +21,7 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
             : 'border-gray-300 focus:border-purple-400'
         }`} 
         placeholder={placeholder || ''} 
-        required 
+        required={required}
         onChange={onChange} 
         onBlur={onBlur} 
         onFocus={onFocus} 
@@ -35,5 +35,4 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
 };
 
 export default TextField;
-
 

@@ -28,7 +28,7 @@ const CompanyInfo: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if(name === "name"){
-      dispatch(updateCompanyInfo({ name: value, dba: value  }));
+      dispatch(updateCompanyInfo({ name: value, dba: value, legalBusinessName: value }));
       setFieldError('name', null);
     } else if (name === "role"){
       dispatch(updatePersonalInfo({ personalInfo: { ...personalInfo, role: value } }));
