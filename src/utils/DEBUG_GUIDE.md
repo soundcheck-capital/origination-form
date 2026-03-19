@@ -61,7 +61,7 @@ window.calculateRisk({
 - **Years in Business**: 0-5 points (moins d'expérience = plus de risque)
 - **Number of Events**: 0-9 points (moins d'événements = plus de risque)
 - **Payment Remitted By**: 1-5 points (venue = plus risqué que ticketing co)
-- **Payment Frequency**: 0-5 points (post-event = plus risqué que daily)
+- **Payment Frequency**: 0-10 points (monthly/post-event/other = plus risqué que daily)
 
 ### Bandes de risque
 

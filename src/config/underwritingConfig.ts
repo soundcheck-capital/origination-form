@@ -56,9 +56,9 @@ export const PAYMENT_FREQUENCY_SCORES = {
   'Daily': 0,        // "Daily" in CSV
   'Weekly': 1,       // "Weekly" in CSV
   'Bi-monthly': 2,   // "Bi Monthly" in CSV
-  'Monthly': 3,      // "Monthly" in CSV
-  'Post event': 5,   // "Post Event" in CSV
-  'It varies': 5     // "Other" in CSV
+  'Monthly': 5,      // "Monthly" in CSV
+  'Post event': 10,  // "Post Event" in CSV
+  'It varies': 10    // "Other" in CSV
 } as const;
 
 /**
@@ -138,8 +138,8 @@ export const MAX_RISK_SCORE = 35;
 /**
  * Configuration metadata
  */
-export const UNDERWRITING_CONFIG_VERSION = '1.1.0';
-export const LAST_UPDATED = '2026-03-12';
+export const UNDERWRITING_CONFIG_VERSION = '1.2.0';
+export const LAST_UPDATED = '2026-03-18';
 
 /**
  * Validation: Ensure risk matrix covers full range
