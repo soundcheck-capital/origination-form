@@ -26,9 +26,7 @@ const SubmitSuccess: React.FC = () => {
           />
 
           <div className="mt-10 max-w-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">
-              Submission received
-            </p>
+            
             <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
               Application submitted successfully.
             </h1>
