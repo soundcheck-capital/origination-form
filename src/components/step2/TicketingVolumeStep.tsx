@@ -55,7 +55,8 @@ const Funding: React.FC = () => {
         numberOfEvents: numberOfEvents,
         paymentRemittedBy: mapPaymentRemittedBy(ticketingInfo.paymentProcessing),
         paymentFrequency: mapPaymentFrequency(ticketingInfo.settlementPayout),
-        grossAnnualTicketSales: grossAnnualTicketSales
+        grossAnnualTicketSales: grossAnnualTicketSales,
+        customerType: companyInfo.clientType || undefined
       };
       
       result = calculateUnderwritingResult(inputs);
@@ -71,6 +72,7 @@ const Funding: React.FC = () => {
     ticketingVolume.nextYearSales,
     ticketingVolume.nextYearEvents,
     companyInfo.yearsInBusiness,
+    companyInfo.clientType,
     ticketingInfo.paymentProcessing,
     ticketingInfo.settlementPayout
   ]);
@@ -171,7 +173,7 @@ const Funding: React.FC = () => {
               </div>
               <div className='mt-3 pt-2 border-t border-blue-300'>
                 <div className='text-sm font-bold text-blue-800'>
-                  Total Risk Score: {underwritingResult.totalRiskScore} / 24
+                  Total Risk Score: {underwritingResult.totalRiskScore} / 35
                 </div>
                 <div className='text-xs text-blue-600'>
                   Max Advance %: {(underwritingResult.maxAdvancePercent * 100).toFixed(1)}%
@@ -217,4 +219,3 @@ const Funding: React.FC = () => {
 };
 
 export default Funding; 
-

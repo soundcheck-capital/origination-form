@@ -24,7 +24,7 @@ const PersonalInfo: React.FC = () => {
     const { name, value } = e.target;
 
     if (name === 'firstname' || name === 'lastname') {
-      const formattedValue = value.trim().replace(/[^a-zA-Z\s]/g, '');
+      const formattedValue = value.replace(/[^a-zA-ZÀ-ÿ' -]/g, '');
       dispatch(updatePersonalInfo({
         personalInfo: {
           ...personalInfo,
@@ -102,4 +102,3 @@ const PersonalInfo: React.FC = () => {
 };
 
 export default PersonalInfo;
-

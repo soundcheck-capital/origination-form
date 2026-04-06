@@ -11,9 +11,9 @@ Quand vous êtes en mode développement (`NODE_ENV=development`), un panneau de 
 Years in Business: 0 pts    Number of Events: 0 pts
 Payment Remitted By: 1 pts  Payment Frequency: 0 pts
 
-Total Risk Score: 1 / 24
-Max Advance %: 10.0%
-Raw Amount: $200,000
+Total Risk Score: 1 / 35
+Max Advance %: 14.0%
+Raw Amount: $280,000
 ```
 
 ### Dans la console du navigateur
@@ -24,7 +24,7 @@ Des logs détaillés s'affichent automatiquement quand le calcul se fait :
 🏦 Underwriting Calculation Breakdown
 📊 Inputs: { yearsInBusiness: "10+ years", ... }
 🎯 Risk Score Breakdown: { yearsInBusiness: "0 pts (10+ years)", ... }
-📈 Risk Assessment: { riskBand: "Low Risk (0-6)", ... }
+📈 Risk Assessment: { riskBand: "Low Risk (0-7)", ... }
 💰 Final Calculation: { rawAmount: "$200,000", ... }
 ```
 
@@ -61,14 +61,14 @@ window.calculateRisk({
 - **Years in Business**: 0-5 points (moins d'expérience = plus de risque)
 - **Number of Events**: 0-9 points (moins d'événements = plus de risque)
 - **Payment Remitted By**: 1-5 points (venue = plus risqué que ticketing co)
-- **Payment Frequency**: 0-5 points (post-event = plus risqué que daily)
+- **Payment Frequency**: 0-10 points (monthly/post-event/other = plus risqué que daily)
 
 ### Bandes de risque
 
-- **0-6 points**: Low Risk → 10% max advance
-- **6.01-12 points**: Medium-Low Risk → 7.5% max advance  
-- **12.01-18 points**: Medium-High Risk → 5% max advance
-- **18.01-24 points**: High Risk → 2.5% max advance
+- **0-7 points**: Low Risk → 14% `V/O`, 20% `P`, 26% `F`
+- **8-14 points**: Medium-Low Risk → 11% `V/O`, 15% `P`, 19% `F`
+- **15-21 points**: Medium-High Risk → 8% `V/O`, 10% `P`, 12% `F`
+- **22-35 points**: High Risk → 5% for all customer types
 
 ### Plafonnement
 
