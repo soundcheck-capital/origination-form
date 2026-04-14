@@ -164,3 +164,19 @@ export const clientType = {
     'Operational / Show Expenses':'Operational / Show Expenses',
     'General Working Capital Needs':'General Working Capital Needs',
     };
+
+  export const paymentProcessors = {
+    'Stripe': 'Stripe',
+    'PayPal': 'PayPal',
+    'Square': 'Square',
+    'Adyen': 'Adyen',
+    'Other': 'Other',
+  };
+
+  export const accountingSystems = {
+    'QuickBooks': 'QuickBooks',
+    'Xero': 'Xero',
+    'NetSuite': 'NetSuite',
+    'Excel': 'Excel',
+    'Other': 'Other',
+  };

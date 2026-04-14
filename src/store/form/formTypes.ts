@@ -64,7 +64,11 @@ export interface Address {
         currentPartner: string;
         otherPartner: string;
         settlementPayout: string;
-        paymentProcessing: string;  
+        paymentProcessing: string;
+        paymentProcessor: string;
+        otherPaymentProcessor: string;
+        accountingSystem: string;
+        otherAccountingSystem: string;
       };
       volumeInfo: {
         nextYearEvents: number;

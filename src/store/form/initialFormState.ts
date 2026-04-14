@@ -12,7 +12,7 @@ export const initialState: FormState = {
       businessType: '', companyAddressDisplay: '', companyAddress: '', companyZipcode: '', companyState: '', companyCountry: '', companyCity: '',
       ein: '', stateOfIncorporation: '', memberOf: ''
     },
-    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPayout: '', paymentProcessing: '' },
+    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPayout: '', paymentProcessing: '', paymentProcessor: '', otherPaymentProcessor: '', accountingSystem: '', otherAccountingSystem: '' },
     volumeInfo: {
       nextYearEvents: 0, nextYearSales: 0,
     },

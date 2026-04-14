@@ -156,6 +156,10 @@ export const useFormValidation = () => {
     if (!ticketingInfo.currentPartner.trim()) ticketingErrors.currentPartner = 'Ticketing partner is required';
     if (ticketingInfo.currentPartner === 'Other' && !ticketingInfo.otherPartner.trim()) ticketingErrors.otherPartner = 'Other ticketing partner is required';
     if (!ticketingInfo.settlementPayout) ticketingErrors.settlementPayout = 'Settlement payout policy is required';
+    if (!ticketingInfo.paymentProcessor) ticketingErrors.paymentProcessor = 'Payment processor is required';
+    if (ticketingInfo.paymentProcessor === 'Other' && !ticketingInfo.otherPaymentProcessor.trim()) ticketingErrors.otherPaymentProcessor = 'Please specify your payment processor';
+    if (!ticketingInfo.accountingSystem) ticketingErrors.accountingSystem = 'Accounting system is required';
+    if (ticketingInfo.accountingSystem === 'Other' && !ticketingInfo.otherAccountingSystem.trim()) ticketingErrors.otherAccountingSystem = 'Please specify your accounting system';
     if (volumeInfo.nextYearEvents <= 0) ticketingErrors.nextYearEvents = 'Number of events must be greater than 0';
     if (volumeInfo.nextYearSales <= 0) ticketingErrors.nextYearSales = 'Gross annual ticketing volume must be greater than 0';
     
