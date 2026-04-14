@@ -8,7 +8,7 @@ import TextField from '../customComponents/TextField';
 import NumberInput from '../customComponents/NumberField';
 import CurrencyField from '../customComponents/CurrencyField';
 import { useValidation } from '../../contexts/ValidationContext';
-import { paymentProcessing, ticketingPartners, settlementPayout } from '../../store/form/hubspotLists';
+import { paymentProcessing, ticketingPartners, settlementPayout, paymentProcessors, accountingSystems } from '../../store/form/hubspotLists';
 import { findTicketingPartnerKey } from '../../utils/ticketingPartnerUtils';
 
 const TicketingFundingStep: React.FC = () => {
@@ -79,6 +79,16 @@ const TicketingFundingStep: React.FC = () => {
      )}
 
       <DropdownField label="What is the payout/settlement policy?" name="settlementPayout" value={ticketingInfo.settlementPayout} onChange={handleChange} error='' onBlur={() => { }} options={settlementPayout} required />
+
+      <DropdownField label="Payment Processor" name="paymentProcessor" value={ticketingInfo.paymentProcessor} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessors} required />
+      {ticketingInfo.paymentProcessor === 'Other' && (
+        <TextField label="Other Payment Processor" name="otherPaymentProcessor" value={ticketingInfo.otherPaymentProcessor} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
+      )}
+
+      <DropdownField label="Accounting System" name="accountingSystem" value={ticketingInfo.accountingSystem} onChange={handleChange} error='' onBlur={() => { }} options={accountingSystems} required />
+      {ticketingInfo.accountingSystem === 'Other' && (
+        <TextField label="Other Accounting System" name="otherAccountingSystem" value={ticketingInfo.otherAccountingSystem} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
+      )}
 
     </div>
   );
