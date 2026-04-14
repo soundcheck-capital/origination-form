@@ -1,54 +1,28 @@
-# .github/workflows/ci.yml
-# 🚀 CI/CD Pipeline using Makefile commands
-name: CI/CD → Netlify
+name: E2E
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, main]
   pull_request:
-    branches: [ develop ]
+    branches: [develop, main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # Déterminer l'environnement selon la branche
-  determine-environment:
+  e2e:
     runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.set-env.outputs.environment }}
-      netlify-alias: ${{ steps.set-env.outputs.netlify-alias }}
-    steps:
-      - name: Determine environment
-        id: set-env
-        run: |
-          # Only develop branch is configured for CI/CD
-          echo "environment=development" >> $GITHUB_OUTPUT
-          echo "netlify-alias=dev" >> $GITHUB_OUTPUT
-
-  # 🚀 Déploiement avec Makefile
-  deploy:
-    needs: [determine-environment]
-    if: |
-      github.event_name == 'push' && 
-      github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    environment: ${{ needs.determine-environment.outputs.environment }}
+    if: vars.SKIP_TESTS != 'true'
     env:
-      # Variables d'environnement pour le build
-      REACT_APP_FORM_PASSWORD: ${{ secrets.REACT_APP_FORM_PASSWORD }}
-      REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
-      REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
-      REACT_APP_HUBSPOT_COMPANY_ID: ${{ secrets.REACT_APP_HUBSPOT_COMPANY_ID }}
-      REACT_APP_HUBSPOT_DEAL_ID: ${{ secrets.REACT_APP_HUBSPOT_DEAL_ID }}
-      REACT_APP_HUBSPOT_CONTACT_ID: ${{ secrets.REACT_APP_HUBSPOT_CONTACT_ID }}
-      REACT_APP_HUBSPOT_DRIVE_ID: ${{ secrets.REACT_APP_HUBSPOT_DRIVE_ID }}
-      REACT_APP_ENVIRONMENT: ${{ needs.determine-environment.outputs.environment }}
-      REACT_APP_BRANCH: ${{ github.ref_name }}
-      # Variables Netlify
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      CI: true
+      REACT_APP_FORM_PASSWORD: "123456"
+      REACT_APP_WEBHOOK_URL: "https://webhook.test.com/test"
+      REACT_APP_WEBHOOK_URL_FILES: "https://webhook.test.com/files"
+      REACT_APP_HUBSPOT_COMPANY_ID: "12345"
+      REACT_APP_HUBSPOT_DEAL_ID: "67890"
+      REACT_APP_HUBSPOT_CONTACT_ID: "11111"
+      REACT_APP_HUBSPOT_DRIVE_ID: "test-drive-id"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -60,10 +34,20 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: make install
+        run: npm ci
 
-      - name: 🏗️ Build (via Makefile)
-        run: make build
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
 
-      - name: 🚀 Deploy to Netlify (via Makefile)
-        run: make deploy-dev
+      - name: Run E2E tests
+        run: npx playwright test --project=chromium
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            playwright-report/**
+            test-results/**
+          if-no-files-found: ignore
