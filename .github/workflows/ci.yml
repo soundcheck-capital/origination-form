@@ -39,8 +39,8 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps chromium
 
-      - name: Run prod critical path E2E
-        run: npm run test:e2e:prod
+      - name: Run E2E tests
+        run: npx playwright test --project=chromium
 
       - name: Upload test artifacts
         if: always()

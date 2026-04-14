@@ -52,13 +52,6 @@ export default defineConfig({
     timeout: 120 * 1000,
     env: {
       ...process.env,
-      REACT_APP_FORM_PASSWORD: process.env.REACT_APP_FORM_PASSWORD || '123456',
-      REACT_APP_WEBHOOK_URL: process.env.REACT_APP_WEBHOOK_URL || 'https://webhook.test.com/test',
-      REACT_APP_WEBHOOK_URL_FILES: process.env.REACT_APP_WEBHOOK_URL_FILES || 'https://hook.us1.make.com/test-upload',
-      REACT_APP_HUBSPOT_COMPANY_ID: process.env.REACT_APP_HUBSPOT_COMPANY_ID || '12345',
-      REACT_APP_HUBSPOT_DEAL_ID: process.env.REACT_APP_HUBSPOT_DEAL_ID || '67890',
-      REACT_APP_HUBSPOT_CONTACT_ID: process.env.REACT_APP_HUBSPOT_CONTACT_ID || '11111',
-      REACT_APP_HUBSPOT_DRIVE_ID: process.env.REACT_APP_HUBSPOT_DRIVE_ID || 'test-drive-id',
       REACT_APP_DISABLE_FORM_GUARD: 'true', // Désactiver le FormSubmissionGuard pendant les tests
     },
   },
