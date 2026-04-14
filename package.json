@@ -54,6 +54,7 @@
     "test:navigation": "playwright test tests/e2e/steps/step-navigation.spec.ts",
     "test:api": "playwright test tests/e2e/api/",
     "test:flows": "playwright test tests/e2e/flows/",
+    "test:e2e:prod": "playwright test tests/prod-form-critical-path.spec.ts --project=chromium",
     "test:report": "playwright show-report"
   },
   "eslintConfig": {
