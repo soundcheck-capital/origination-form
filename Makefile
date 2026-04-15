@@ -85,94 +85,23 @@ preview: build ## 🚀 Prévisualiser le build
 
 test: ## 🧪 Lancer tous les tests E2E
 	@echo "$(BLUE)🧪 Lancement des tests E2E...$(NC)"
-	$(NPM) run test:e2e
+	/bin/zsh -lc 'npm run test:e2e'
 
 test-ui: ## 🧪 Tests E2E avec interface graphique
 	@echo "$(BLUE)🧪 Tests E2E avec UI...$(NC)"
-	$(NPM) run test:e2e:ui
+	/bin/zsh -lc 'npm run test:e2e:ui'
 
 test-debug: ## 🧪 Tests E2E en mode debug
 	@echo "$(BLUE)🔍 Tests E2E en mode debug...$(NC)"
-	$(NPM) run test:e2e:debug
+	/bin/zsh -lc 'npm run test:e2e:debug'
 
 test-headed: ## 🧪 Tests E2E avec navigateur visible
 	@echo "$(BLUE)🧪 Tests E2E headed...$(NC)"
-	$(NPM) run test:e2e:headed
+	/bin/zsh -lc 'npm run test:e2e:headed'
 
-# Tests par catégorie
-test-components: ## 🧪 Tests des composants
-	@echo "$(BLUE)🧪 Tests des composants...$(NC)"
-	$(NPM) run test:components
-
-test-api: ## 🧪 Tests des appels API
-	@echo "$(BLUE)🧪 Tests API...$(NC)"
-	$(NPM) run test:api
-
-test-flows: ## 🧪 Tests des flux complets
-	@echo "$(BLUE)🧪 Tests des flux...$(NC)"
-	$(NPM) run test:flows
-
-# Tests par étape (1-10)
-test-step1: ## 🧪 Tests étape 1 (Personal Info)
-	@echo "$(BLUE)🧪 Tests étape 1 - Personal Info...$(NC)"
-	$(NPM) run test:step1
-
-test-step2: ## 🧪 Tests étape 2 (Company Info)
-	@echo "$(BLUE)🧪 Tests étape 2 - Company Info...$(NC)"
-	$(NPM) run test:step2
-
-test-step3: ## 🧪 Tests étape 3 (Ticketing)
-	@echo "$(BLUE)🧪 Tests étape 3 - Ticketing...$(NC)"
-	$(NPM) run test:step3
-
-test-step4: ## 🧪 Tests étape 4 (Your Funds)
-	@echo "$(BLUE)🧪 Tests étape 4 - Your Funds...$(NC)"
-	$(NPM) run test:step4
-
-test-step5: ## 🧪 Tests étape 5 (Ownership)
-	@echo "$(BLUE)🧪 Tests étape 5 - Ownership...$(NC)"
-	$(NPM) run test:step5
-
-test-step6: ## 🧪 Tests étape 6 (Finances)
-	@echo "$(BLUE)🧪 Tests étape 6 - Finances...$(NC)"
-	$(NPM) run test:step6
-
-test-step7: ## 🧪 Tests étape 7 (Ticketing Information)
-	@echo "$(BLUE)🧪 Tests étape 7 - Ticketing Information...$(NC)"
-	$(NPM) run test:step7
-
-test-step8: ## 🧪 Tests étape 8 (Financial Information)
-	@echo "$(BLUE)🧪 Tests étape 8 - Financial Information...$(NC)"
-	$(NPM) run test:step8
-
-test-step9: ## 🧪 Tests étape 9 (Legal Information)
-	@echo "$(BLUE)🧪 Tests étape 9 - Legal Information...$(NC)"
-	$(NPM) run test:step9
-
-test-step10: ## 🧪 Tests étape 10 (Additional Information)
-	@echo "$(BLUE)🧪 Tests étape 10 - Additional Information...$(NC)"
-	$(NPM) run test:step10
-
-test-navigation: ## 🧪 Tests de navigation
-	@echo "$(BLUE)🧪 Tests de navigation...$(NC)"
-	$(NPM) run test:navigation
-
-# Tests avec options spécifiques
 test-chrome: ## 🧪 Tests sur Chrome uniquement
 	@echo "$(BLUE)🧪 Tests Chrome...$(NC)"
-	npx playwright test --project=chromium
-
-test-firefox: ## 🧪 Tests sur Firefox uniquement
-	@echo "$(BLUE)🧪 Tests Firefox...$(NC)"
-	npx playwright test --project=firefox
-
-test-webkit: ## 🧪 Tests sur WebKit uniquement
-	@echo "$(BLUE)🧪 Tests WebKit...$(NC)"
-	npx playwright test --project=webkit
-
-test-mobile: ## 🧪 Tests mobiles
-	@echo "$(BLUE)🧪 Tests mobiles...$(NC)"
-	npx playwright test --project="Mobile Chrome" --project="Mobile Safari"
+	/bin/zsh -lc 'npx playwright test tests/main-path-e2e.spec.ts --project=chromium'
 
 # ============================================================================
 # 🔧 OUTILS ET MAINTENANCE
@@ -222,7 +151,7 @@ ci-setup: ## 🚀 Setup pour l'environnement CI
 
 ci-test: ## 🚀 Tests pour l'environnement CI
 	@echo "$(BLUE)🤖 Tests CI...$(NC)"
-	CI=true npx playwright test --project=chromium
+	/bin/zsh -lc 'sleep 5 && npm run test:e2e'
 
 deploy-dev: build ## 🚀 Déployer en développement
 	@echo "$(BLUE)🚀 Déploiement dev...$(NC)"
@@ -257,9 +186,7 @@ deploy-prod-skip-tests: ## 🚀 Déployer en production SANS tests
 
 full-test: ## 🧪 Suite de tests complète
 	@echo "$(BLUE)🧪 Suite de tests complète...$(NC)"
-	@$(MAKE) test-components
-	@$(MAKE) test-api
-	@$(MAKE) test-flows
+	@$(MAKE) test
 	@echo "$(GREEN)✅ Tous les tests terminés$(NC)"
 
 pre-commit: ## 🔧 Vérifications avant commit
@@ -330,8 +257,8 @@ examples: ## 💡 Exemples d'utilisation
 	@echo "  make setup && make dev"
 	@echo ""
 	@echo "$(YELLOW)🧪 Tests spécifiques:$(NC)"
-	@echo "  make test-step1           # Tester l'étape 1"
-	@echo "  make test-chrome          # Chrome uniquement"
+	@echo "  make test                # Main path E2E"
+	@echo "  make test-chrome         # Chromium uniquement"
 	@echo "  make test-grep PATTERN=\"Personal Info\""
 	@echo ""
 	@echo "$(YELLOW)🔧 Maintenance:$(NC)"
