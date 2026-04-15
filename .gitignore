@@ -10,6 +10,7 @@
 
 # playwright test results
 test-results/
+test-results.json/
 playwright-report/
 
 # production

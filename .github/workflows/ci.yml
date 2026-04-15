@@ -1,4 +1,4 @@
-name: E2E
+name: prod-form-critical-path
 
 on:
   push:
@@ -11,7 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e:
+  prod_form_critical_path:
+    name: prod-form-critical-path
     runs-on: ubuntu-latest
     env:
       CI: true
