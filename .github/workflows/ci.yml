@@ -14,7 +14,6 @@ jobs:
   main_path_e2e:
     name: main-path-e2e
     runs-on: ubuntu-latest
-    if: vars.SKIP_TESTS != 'true'
     env:
       CI: true
       REACT_APP_CHECK_PASSWORD_CUSTOMER_LINK_WEBHOOK: "https://webhook.test.com/check-password"
