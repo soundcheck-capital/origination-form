@@ -1,42 +1,23 @@
-# .github/workflows/ci.yml
-# 🚀 CI/CD Pipeline using Makefile commands
-name: CI/CD → Netlify
+name: main-path-e2e
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, main]
   pull_request:
-    branches: [ develop ]
+    branches: [develop, main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # Déterminer l'environnement selon la branche
-  determine-environment:
+  main_path_e2e:
+    name: main-path-e2e
     runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.set-env.outputs.environment }}
-      netlify-alias: ${{ steps.set-env.outputs.netlify-alias }}
-    steps:
-      - name: Determine environment
-        id: set-env
-        run: |
-          # Only develop branch is configured for CI/CD
-          echo "environment=development" >> $GITHUB_OUTPUT
-          echo "netlify-alias=dev" >> $GITHUB_OUTPUT
-
-  # 🧪 Tests avec Makefile
-  test:
-    needs: determine-environment
-    runs-on: ubuntu-latest
-    # 🔧 Skip tests avec variable GitHub OU message de commit
-    if: vars.SKIP_TESTS != 'true' && !contains(github.event.head_commit.message, '[skip tests]')
     env:
-      # Variables de test (environnement CI)
       CI: true
-      REACT_APP_FORM_PASSWORD: "123456"
+      REACT_APP_CHECK_PASSWORD_CUSTOMER_LINK_WEBHOOK: "https://webhook.test.com/check-password"
+      REACT_APP_SEND_SUMMARY: "https://webhook.test.com/summary"
       REACT_APP_WEBHOOK_URL: "https://webhook.test.com/test"
       REACT_APP_WEBHOOK_URL_FILES: "https://webhook.test.com/files"
       REACT_APP_HUBSPOT_COMPANY_ID: "12345"
@@ -50,14 +31,17 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 24
           cache: npm
 
-      - name: 🚀 CI Setup (via Makefile)
-        run: make ci-setup
+      - name: Install dependencies
+        run: npm ci
 
-      - name: 🧪 Run CI Tests (via Makefile)  
-        run: make ci-test
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run main path e2e
+        run: npm run test:e2e
 
       - name: Upload test artifacts
         if: always()
@@ -68,47 +52,3 @@ jobs:
             playwright-report/**
             test-results/**
           if-no-files-found: ignore
-
-  # 🚀 Déploiement avec Makefile
-  deploy:
-    needs: [determine-environment, test]
-    # 🔧 Deploy même si tests skippés OU réussis, uniquement sur develop
-    if: |
-      always() && 
-      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
-      github.event_name == 'push' && 
-      github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    environment: ${{ needs.determine-environment.outputs.environment }}
-    env:
-      # Variables d'environnement pour le build
-      REACT_APP_FORM_PASSWORD: ${{ secrets.REACT_APP_FORM_PASSWORD }}
-      REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
-      REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
-      REACT_APP_HUBSPOT_COMPANY_ID: ${{ secrets.REACT_APP_HUBSPOT_COMPANY_ID }}
-      REACT_APP_HUBSPOT_DEAL_ID: ${{ secrets.REACT_APP_HUBSPOT_DEAL_ID }}
-      REACT_APP_HUBSPOT_CONTACT_ID: ${{ secrets.REACT_APP_HUBSPOT_CONTACT_ID }}
-      REACT_APP_HUBSPOT_DRIVE_ID: ${{ secrets.REACT_APP_HUBSPOT_DRIVE_ID }}
-      REACT_APP_ENVIRONMENT: ${{ needs.determine-environment.outputs.environment }}
-      REACT_APP_BRANCH: ${{ github.ref_name }}
-      # Variables Netlify
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: npm
-
-      - name: Install dependencies
-        run: make install
-
-      - name: 🏗️ Build (via Makefile)
-        run: make build
-
-      - name: 🚀 Deploy to Netlify (via Makefile)
-        run: make deploy-dev

@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo_white_bold.svg';
 import background from '../assets/background.jpeg';
-const PasswordProtection: React.FC = () => {
+import { getCompanyNameFromUrl } from '../utils/urlParams';
+
+interface PasswordProtectionProps {
+  onAuthenticated?: () => void;
+}
+
+const PasswordProtection: React.FC<PasswordProtectionProps> = ({ onAuthenticated }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-
 
 const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
   if(e.target.value.length > 0){
@@ -38,14 +40,36 @@ setPassword(e.target.value);
     setError('');
 
     try {
-      // Récupérer le mot de passe depuis les variables d'environnement
-      const correctPassword = process.env.REACT_APP_FORM_PASSWORD;
-    
-      if (password === correctPassword) {
-        // Stocker l'authentification dans le localStorage
+      const companyName = getCompanyNameFromUrl();
+      const webhookUrl = process.env.REACT_APP_CHECK_PASSWORD_CUSTOMER_LINK_WEBHOOK?.trim();
+
+      if (!webhookUrl) {
+        setError('Configuration error. Please contact support.');
+        return;
+      }
+
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ companyName, password }),
+      });
+
+      if (!response.ok) {
+        setError('Incorrect password');
+        return;
+      }
+
+      const data = await response.json();
+      const isValid =
+        data === true ||
+        data === 'true' ||
+        data?.valid === true ||
+        data?.success === true ||
+        data?.isPasswordValid === true;
+
+      if (isValid) {
         localStorage.setItem('formAuthenticated', 'true');
-        // Rediriger vers le formulaire
-        navigate('/form');
+        onAuthenticated?.();
       } else {
         setError('Incorrect password');
       }
@@ -81,7 +105,7 @@ setPassword(e.target.value);
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           
 
-          <form className="space-y-6" onSubmit={ error ? () => {} : handleSubmit}>
+          <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); if (!error) void handleSubmit(e); }}>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
