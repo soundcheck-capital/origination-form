@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PasswordProtection from './PasswordProtection';
-import { getCompanyNameFromUrl } from '../utils/urlParams';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,13 +11,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    const companyName = getCompanyNameFromUrl();
-
-    if (!companyName) {
-      setIsAuthenticated(true);
-      return;
-    }
-
+    // Vérifier si l'utilisateur est authentifié
     const authenticated = localStorage.getItem('formAuthenticated') === 'true';
     setIsAuthenticated(authenticated);
   }, [location]);
@@ -37,7 +30,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  return <PasswordProtection onAuthenticated={() => setIsAuthenticated(true)} />;
+  // Sinon, afficher la page de protection par mot de passe
+  return <PasswordProtection />;
 };
 
-export default ProtectedRoute;
+export default ProtectedRoute; 

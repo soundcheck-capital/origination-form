@@ -20,7 +20,6 @@ import { useFormValidation } from '../hooks/useFormValidation';
 // Import debug utils to auto-clear validation bypass flags
 import '../utils/debugUtils';
 import { getTicketingPartnerLogo, isValidTicketingPartner } from '../utils/ticketingPartnerUtils';
-import { getTicketingCoFromUrl } from '../utils/urlParams';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,9 +39,10 @@ const MultiStepFormContent: React.FC = () => {
   const [isSavingStep, setIsSavingStep] = useState(false);
   const isSubmitted = useSelector((state: RootState) => state.form.isSubmitted);
   
-  const ticketingCoParam = getTicketingCoFromUrl();
-  const ticketingPartnerLogo = ticketingCoParam && isValidTicketingPartner(ticketingCoParam) 
-    ? getTicketingPartnerLogo(ticketingCoParam) 
+  // Récupérer le ticketing partner depuis l'environnement
+  const ticketingCoEnv = process.env.REACT_APP_TICKETING_CO || '';
+  const ticketingPartnerLogo = ticketingCoEnv && isValidTicketingPartner(ticketingCoEnv) 
+    ? getTicketingPartnerLogo(ticketingCoEnv) 
     : null;
   // Redirection après soumission locale réussie
   useEffect(() => {
@@ -368,7 +368,7 @@ const MultiStepFormContent: React.FC = () => {
           {ticketingPartnerLogo && (
             <img 
               src={ticketingPartnerLogo} 
-              alt={`${ticketingCoParam} Logo`} 
+              alt={`${ticketingCoEnv} Logo`} 
               className="h-12 object-contain" 
             />
           )}

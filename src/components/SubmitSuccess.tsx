@@ -12,7 +12,7 @@ const SubmitSuccess: React.FC = () => {
   const navigate = useNavigate();
   const handleReset = () => {
     dispatch(resetSubmitted());
-      navigate('/');
+      navigate('/form');
   };
 
 
