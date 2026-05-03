@@ -47,7 +47,7 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
       const res = await fetch(PLAID_LINK_TOKEN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create_link_token' }),
+        body: JSON.stringify({}),
       });
       if (!res.ok) {
         const body = await res.text();

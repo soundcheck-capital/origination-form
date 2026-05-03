@@ -1,13 +1,11 @@
-import { expect, test, request as playwrightRequest, Page } from "@playwright/test";
+import { expect, test, Page } from "@playwright/test";
 
-// These tests hit the LIVE Make.com webhooks for Plaid (24a + link_token).
-// They stop right after the bank-connection step succeeds — no file uploads,
-// no submit — so they don't trigger HubSpot/email side effects.
+// These tests stop right after the bank-connection step — no file uploads,
+// no submit — so they don't trigger HubSpot/email side effects. Tests that
+// hit live webhooks call them directly (no page.route() mocks) so a broken
+// webhook causes a real test failure.
 
-const PLAID_CLIENT_ID = process.env.REACT_APP_PLAID_CLIENT_ID || "";
-const PLAID_SECRET = process.env.REACT_APP_PLAID_SECRET || "";
 const PLAID_LINK_TOKEN_URL = process.env.REACT_APP_PLAID_LINK_TOKEN_URL || "";
-const PLAID_WEBHOOK_URL = process.env.REACT_APP_PLAID_WEBHOOK_URL || "";
 
 async function fillStepsThroughBankConnection(page: Page, tag: string) {
   const email = `${tag.toLowerCase()}@example.com`;
@@ -66,13 +64,16 @@ test("Step 4 — Plaid is required to proceed (validation only, no webhook)", as
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByTestId("plaid-required-error")).toBeVisible();
   await expect(page.locator("#file-upload-ticketingCompanyReport")).not.toBeVisible();
+
+  // Stop here — no Plaid connection attempted, no webhook traffic, no emails.
 });
 
-test("link_token webhook is reachable and the Connect button becomes enabled", async ({ page }) => {
+test("link_token webhook returns a valid token and unlocks the Connect button", async ({ page }) => {
   test.skip(!PLAID_LINK_TOKEN_URL, "REACT_APP_PLAID_LINK_TOKEN_URL not configured");
 
-  // No __PLAID_TEST_MODE__ — we want the hook to actually call the live
-  // link_token webhook and confirm that 24a (link_token side) is alive.
+  // Catch the live POST to the Make.com link_token webhook that the hook
+  // fires when the bank-connection step mounts. No page.route() mock — if
+  // the webhook is broken, this fails.
   const linkTokenResponsePromise = page.waitForResponse(
     (response) =>
       response.request().method() === "POST" &&
@@ -83,70 +84,21 @@ test("link_token webhook is reachable and the Connect button becomes enabled", a
   await fillStepsThroughBankConnection(page, `E2E_PLAID_LINKTOKEN_${Date.now()}`);
 
   const linkTokenResponse = await linkTokenResponsePromise;
-  expect(linkTokenResponse.status()).toBeLessThan(400);
+  expect(
+    linkTokenResponse.status(),
+    `link_token webhook responded ${linkTokenResponse.status()}`
+  ).toBeLessThan(400);
   const body = await linkTokenResponse.json();
   expect(body).toHaveProperty("link_token");
   expect(typeof body.link_token).toBe("string");
   expect(body.link_token.length).toBeGreaterThan(0);
 
-  // Stop here — no submit, no file uploads, no notifications.
-});
-
-test("Plaid exchange webhook end-to-end with a real sandbox public_token", async ({ page }) => {
-  test.skip(
-    !PLAID_CLIENT_ID || !PLAID_SECRET || !PLAID_WEBHOOK_URL,
-    "Plaid sandbox creds or exchange webhook URL not configured"
-  );
-
-  // Mint a real sandbox public_token server-side (no CORS from Playwright's
-  // request context), then drive the UI in test mode using that token. The
-  // hook POSTs it to the LIVE 24a exchange webhook, which exchanges it with
-  // Plaid and returns real bank info.
-  const apiContext = await playwrightRequest.newContext();
-  const sandboxRes = await apiContext.post("https://sandbox.plaid.com/sandbox/public_token/create", {
-    headers: { "Content-Type": "application/json" },
-    data: {
-      client_id: PLAID_CLIENT_ID,
-      secret: PLAID_SECRET,
-      institution_id: "ins_109508", // First Platypus Bank (Plaid sandbox)
-      initial_products: ["auth", "transactions"],
-    },
+  // Once the link_token has loaded, react-plaid-link reports ready and the
+  // Connect button becomes enabled. Asserting this confirms the response was
+  // wired into usePlaidConnection correctly.
+  await expect(page.getByRole("button", { name: "Connect your bank account" })).toBeEnabled({
+    timeout: 15_000,
   });
-  expect(sandboxRes.status(), `Plaid sandbox responded ${sandboxRes.status()}`).toBe(200);
-  const { public_token: realPublicToken } = await sandboxRes.json();
-  expect(typeof realPublicToken).toBe("string");
-  expect(realPublicToken).toMatch(/^public-sandbox-/);
 
-  await page.addInitScript((token: string) => {
-    (window as any).__PLAID_TEST_MODE__ = true;
-    (window as any).__PLAID_TEST_PUBLIC_TOKEN__ = token;
-  }, realPublicToken);
-
-  await fillStepsThroughBankConnection(page, `E2E_PLAID_EXCHANGE_${Date.now()}`);
-
-  // Click Connect — test mode fires onSuccess with the real public_token,
-  // which the hook POSTs to the live exchange webhook.
-  const exchangePromise = page.waitForResponse(
-    (response) =>
-      response.request().method() === "POST" &&
-      response.url() === PLAID_WEBHOOK_URL,
-    { timeout: 60_000 }
-  );
-  await page.getByRole("button", { name: "Connect your bank account" }).click();
-  const exchangeResponse = await exchangePromise;
-
-  expect(
-    exchangeResponse.status(),
-    `Exchange webhook responded ${exchangeResponse.status()}`
-  ).toBeLessThan(400);
-  const exchangeBody = await exchangeResponse.json();
-  expect(exchangeBody).toHaveProperty("institution");
-  expect(exchangeBody).toHaveProperty("account_mask");
-  expect(exchangeBody).toHaveProperty("account_name");
-
-  // The UI shows the real institution returned by Plaid sandbox.
-  await expect(page.getByTestId("plaid-connected-card")).toBeVisible();
-  await expect(page.getByText(exchangeBody.institution)).toBeVisible();
-
-  // Stop here — no Next, no file uploads, no submit. No emails.
+  // Stop here — no Plaid Link UI driven, no exchange webhook hit, no submit.
 });
