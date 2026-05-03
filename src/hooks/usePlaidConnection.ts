@@ -4,18 +4,13 @@ import { usePlaidLink, PlaidLinkOnSuccess, PlaidLinkOnExit } from 'react-plaid-l
 import { AppDispatch, RootState } from '../store';
 import { updateBankInfo } from '../store/form/formSlice';
 
-const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
-const PLAID_CLIENT_ID = process.env.REACT_APP_PLAID_CLIENT_ID || '';
-// TODO production: move link_token creation server-side. The secret should not
-// live in the frontend bundle. Acceptable for sandbox prototype only.
-const PLAID_SECRET = process.env.REACT_APP_PLAID_SECRET || '';
+// Webhook that creates a Plaid link_token server-side. Plaid's API does not
+// support CORS for browser callers, so the frontend cannot hit
+// /link/token/create directly — it must go through a Make.com scenario that
+// holds the Plaid client_id + secret and returns { link_token }.
+const PLAID_LINK_TOKEN_URL = process.env.REACT_APP_PLAID_LINK_TOKEN_URL || '';
+// Webhook that exchanges the public_token for the bank info (24a contract).
 const PLAID_WEBHOOK_URL = process.env.REACT_APP_PLAID_WEBHOOK_URL || '';
-
-const PLAID_API_BASE: Record<string, string> = {
-  sandbox: 'https://sandbox.plaid.com',
-  development: 'https://development.plaid.com',
-  production: 'https://production.plaid.com',
-};
 
 const isTestMode = (): boolean =>
   typeof window !== 'undefined' && (window as any).__PLAID_TEST_MODE__ === true;
@@ -42,32 +37,26 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
   const [tokenRequested, setTokenRequested] = useState(false);
 
   const fetchLinkToken = useCallback(async () => {
-    if (!PLAID_CLIENT_ID || !PLAID_SECRET) {
-      setError('Plaid credentials are not configured.');
+    if (!PLAID_LINK_TOKEN_URL) {
+      setError('Plaid link_token webhook URL is not configured.');
       return;
     }
     setIsLoading(true);
     setError(null);
     try {
-      const apiBase = PLAID_API_BASE[PLAID_ENV] || PLAID_API_BASE.sandbox;
-      const res = await fetch(`${apiBase}/link/token/create`, {
+      const res = await fetch(PLAID_LINK_TOKEN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: PLAID_CLIENT_ID,
-          secret: PLAID_SECRET,
-          user: { client_user_id: `user-${Date.now()}` },
-          client_name: 'SoundCheck Capital',
-          products: ['auth', 'transactions'],
-          country_codes: ['US'],
-          language: 'en',
-        }),
+        body: JSON.stringify({ action: 'create_link_token' }),
       });
       if (!res.ok) {
         const body = await res.text();
-        throw new Error(`Plaid link_token create failed: ${res.status} ${body}`);
+        throw new Error(`link_token webhook failed: ${res.status} ${body}`);
       }
       const data = await res.json();
+      if (!data.link_token) {
+        throw new Error('link_token webhook response missing link_token field');
+      }
       setLinkToken(data.link_token);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to initialize Plaid');
@@ -126,10 +115,15 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
 
   const open = useCallback(() => {
     if (isTestMode()) {
-      // Bypass the Plaid Link iframe in E2E tests; fire onSuccess with a
-      // sandbox-shaped public_token. The hook then POSTs to the webhook
-      // (which Playwright intercepts), so the rest of the flow is real.
-      onSuccess(`public-sandbox-test-${Date.now()}`, {
+      // Bypass the Plaid Link iframe in E2E tests. Use the public_token
+      // injected by the test (a real sandbox token created by Playwright via
+      // Plaid's /sandbox/public_token/create endpoint) so the exchange hits
+      // the live Make.com webhook and returns real bank info.
+      const injectedToken = (window as any).__PLAID_TEST_PUBLIC_TOKEN__;
+      const publicToken = typeof injectedToken === 'string' && injectedToken.length > 0
+        ? injectedToken
+        : `public-sandbox-test-${Date.now()}`;
+      onSuccess(publicToken, {
         institution: { name: 'Test Bank', institution_id: 'ins_test' },
         accounts: [],
         link_session_id: 'test-session',

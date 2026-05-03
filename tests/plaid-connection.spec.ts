@@ -1,16 +1,13 @@
-import path from "node:path";
-import { expect, test, Page } from "@playwright/test";
+import { expect, test, request as playwrightRequest, Page } from "@playwright/test";
 
-const FIXTURE_PATH = path.resolve("tests/fixtures/e2e-upload.csv");
+// These tests hit the LIVE Make.com webhooks for Plaid (24a + link_token).
+// They stop right after the bank-connection step succeeds — no file uploads,
+// no submit — so they don't trigger HubSpot/email side effects.
 
-// Each test pre-injects __PLAID_TEST_MODE__ so the usePlaidConnection hook
-// short-circuits Plaid Link (third-party iframe + popup, unreliable in CI)
-// and immediately fires onSuccess with a sandbox-shaped public_token.
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    (window as any).__PLAID_TEST_MODE__ = true;
-  });
-});
+const PLAID_CLIENT_ID = process.env.REACT_APP_PLAID_CLIENT_ID || "";
+const PLAID_SECRET = process.env.REACT_APP_PLAID_SECRET || "";
+const PLAID_LINK_TOKEN_URL = process.env.REACT_APP_PLAID_LINK_TOKEN_URL || "";
+const PLAID_WEBHOOK_URL = process.env.REACT_APP_PLAID_WEBHOOK_URL || "";
 
 async function fillStepsThroughBankConnection(page: Page, tag: string) {
   const email = `${tag.toLowerCase()}@example.com`;
@@ -62,127 +59,94 @@ async function fillStepsThroughBankConnection(page: Page, tag: string) {
   await expect(page.getByRole("heading", { name: "Bank Connection" })).toBeVisible();
 }
 
-test("Step 4 — Plaid is required to proceed", async ({ page }) => {
-  await fillStepsThroughBankConnection(page, `E2E_PLAID_${Date.now()}`);
+test("Step 4 — Plaid is required to proceed (validation only, no webhook)", async ({ page }) => {
+  await fillStepsThroughBankConnection(page, `E2E_PLAID_BLOCK_${Date.now()}`);
 
-  // Clicking Next without connecting must NOT advance to Diligence Files.
+  // Click Next without connecting — must NOT advance to Diligence Files.
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByTestId("plaid-required-error")).toBeVisible();
   await expect(page.locator("#file-upload-ticketingCompanyReport")).not.toBeVisible();
-
-  // Mock the Make.com webhook so we don't depend on the live scenario.
-  await page.route("**/hook.us1.make.com/**", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        institution: "Chase",
-        account_mask: "1234",
-        account_name: "Checking",
-      }),
-    });
-  });
-
-  // Trigger the test-mode Plaid success and confirm the connected state.
-  await page.getByRole("button", { name: "Connect your bank account" }).click();
-  await expect(page.getByTestId("plaid-connected-card")).toBeVisible();
-
-  // Now Next must advance to step 5 (Diligence Files).
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
 });
 
-test("public_token est envoyé au webhook Make.com et la réponse alimente l'UI", async ({ page }) => {
-  await fillStepsThroughBankConnection(page, `E2E_PLAID_TOKEN_${Date.now()}`);
+test("link_token webhook is reachable and the Connect button becomes enabled", async ({ page }) => {
+  test.skip(!PLAID_LINK_TOKEN_URL, "REACT_APP_PLAID_LINK_TOKEN_URL not configured");
 
-  let capturedBody: any = null;
-  await page.route("**/hook.us1.make.com/**", async (route) => {
-    capturedBody = JSON.parse(route.request().postData() || "{}");
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        institution: "Wells Fargo",
-        account_mask: "5678",
-        account_name: "Business Checking",
-      }),
-    });
-  });
+  // No __PLAID_TEST_MODE__ — we want the hook to actually call the live
+  // link_token webhook and confirm that 24a (link_token side) is alive.
+  const linkTokenResponsePromise = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      response.url() === PLAID_LINK_TOKEN_URL,
+    { timeout: 30_000 }
+  );
 
-  await page.getByRole("button", { name: "Connect your bank account" }).click();
-  await expect(page.getByTestId("plaid-connected-card")).toBeVisible();
+  await fillStepsThroughBankConnection(page, `E2E_PLAID_LINKTOKEN_${Date.now()}`);
 
-  expect(capturedBody).not.toBeNull();
-  expect(capturedBody).toHaveProperty("public_token");
-  expect(typeof capturedBody.public_token).toBe("string");
-  expect(capturedBody.public_token.length).toBeGreaterThan(0);
+  const linkTokenResponse = await linkTokenResponsePromise;
+  expect(linkTokenResponse.status()).toBeLessThan(400);
+  const body = await linkTokenResponse.json();
+  expect(body).toHaveProperty("link_token");
+  expect(typeof body.link_token).toBe("string");
+  expect(body.link_token.length).toBeGreaterThan(0);
 
-  await expect(page.getByText("Wells Fargo")).toBeVisible();
-  await expect(page.getByText(/5678/)).toBeVisible();
+  // Stop here — no submit, no file uploads, no notifications.
 });
 
-test("Bank info apparaît dans le Summary Step 6", async ({ page }) => {
-  const tag = `E2E_PLAID_SUMMARY_${Date.now()}`;
-  await fillStepsThroughBankConnection(page, tag);
+test("Plaid exchange webhook end-to-end with a real sandbox public_token", async ({ page }) => {
+  test.skip(
+    !PLAID_CLIENT_ID || !PLAID_SECRET || !PLAID_WEBHOOK_URL,
+    "Plaid sandbox creds or exchange webhook URL not configured"
+  );
 
-  await page.route("**/hook.us1.make.com/**", async (route) => {
-    const raw = route.request().postData() || "";
-    let isPlaidExchange = false;
-    try {
-      const parsed = JSON.parse(raw);
-      isPlaidExchange = !!parsed.public_token;
-    } catch {
-      // Non-JSON bodies (FormData file uploads) — let them through with a 200.
-    }
-    if (isPlaidExchange) {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          institution: "Bank of America",
-          account_mask: "9999",
-          account_name: "Savings",
-        }),
-      });
-    } else {
-      await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
-    }
+  // Mint a real sandbox public_token server-side (no CORS from Playwright's
+  // request context), then drive the UI in test mode using that token. The
+  // hook POSTs it to the LIVE 24a exchange webhook, which exchanges it with
+  // Plaid and returns real bank info.
+  const apiContext = await playwrightRequest.newContext();
+  const sandboxRes = await apiContext.post("https://sandbox.plaid.com/sandbox/public_token/create", {
+    headers: { "Content-Type": "application/json" },
+    data: {
+      client_id: PLAID_CLIENT_ID,
+      secret: PLAID_SECRET,
+      institution_id: "ins_109508", // First Platypus Bank (Plaid sandbox)
+      initial_products: ["auth", "transactions"],
+    },
   });
+  expect(sandboxRes.status(), `Plaid sandbox responded ${sandboxRes.status()}`).toBe(200);
+  const { public_token: realPublicToken } = await sandboxRes.json();
+  expect(typeof realPublicToken).toBe("string");
+  expect(realPublicToken).toMatch(/^public-sandbox-/);
 
+  await page.addInitScript((token: string) => {
+    (window as any).__PLAID_TEST_MODE__ = true;
+    (window as any).__PLAID_TEST_PUBLIC_TOKEN__ = token;
+  }, realPublicToken);
+
+  await fillStepsThroughBankConnection(page, `E2E_PLAID_EXCHANGE_${Date.now()}`);
+
+  // Click Connect — test mode fires onSuccess with the real public_token,
+  // which the hook POSTs to the live exchange webhook.
+  const exchangePromise = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      response.url() === PLAID_WEBHOOK_URL,
+    { timeout: 60_000 }
+  );
   await page.getByRole("button", { name: "Connect your bank account" }).click();
+  const exchangeResponse = await exchangePromise;
+
+  expect(
+    exchangeResponse.status(),
+    `Exchange webhook responded ${exchangeResponse.status()}`
+  ).toBeLessThan(400);
+  const exchangeBody = await exchangeResponse.json();
+  expect(exchangeBody).toHaveProperty("institution");
+  expect(exchangeBody).toHaveProperty("account_mask");
+  expect(exchangeBody).toHaveProperty("account_name");
+
+  // The UI shows the real institution returned by Plaid sandbox.
   await expect(page.getByTestId("plaid-connected-card")).toBeVisible();
-  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByText(exchangeBody.institution)).toBeVisible();
 
-  // Step 5 — Diligence Files. Upload the three required fixture files,
-  // waiting for each upload's POST so the Next button leaves the saving state.
-  await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
-
-  const waitForUploadPost = () =>
-    page.waitForResponse(
-      (response) =>
-        response.request().method() === "POST" &&
-        response.url().includes("hook.us1.make.com"),
-      { timeout: 15_000 }
-    );
-
-  let pending = waitForUploadPost();
-  await page.locator("#file-upload-ticketingCompanyReport").setInputFiles(FIXTURE_PATH);
-  await pending;
-
-  pending = waitForUploadPost();
-  await page.locator("#file-upload-financialStatements").setInputFiles(FIXTURE_PATH);
-  await pending;
-
-  pending = waitForUploadPost();
-  await page.locator("#file-upload-incorporationCertificate").setInputFiles(FIXTURE_PATH);
-  await pending;
-
-  await expect(page.getByText("e2e-upload.csv").first()).toBeVisible();
-
-  await page.getByRole("button", { name: "Next" }).click();
-
-  // Step 6 — Review & Submit. Bank info must be visible.
-  await expect(page.getByRole("heading", { name: "Review & Submit" })).toBeVisible();
-  await expect(page.getByText("Bank of America")).toBeVisible();
-  await expect(page.getByText(/9999/)).toBeVisible();
+  // Stop here — no Next, no file uploads, no submit. No emails.
 });
