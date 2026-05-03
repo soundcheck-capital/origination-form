@@ -89,13 +89,19 @@ export interface Address {
           balance: string;
         }>;
         hasOverdueLiabilities: boolean;
-    
+
         hasTaxLiens: boolean;
         hasJudgments: boolean;
         hasBankruptcy: boolean;
         ownershipChanged: boolean;
         industryReferences: string;
         additionalComments: string;
+      };
+      bankInfo: {
+        plaidConnected: boolean;
+        institutionName: string;
+        accountMask: string;
+        accountName: string;
       };
     };
   

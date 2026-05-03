@@ -74,6 +74,26 @@ test("prod form critical path stays healthy", async ({ page }) => {
   await page.locator('textarea[name="additionalComments"]').fill(`Automated E2E production run ${tag}`);
 
   await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByRole("heading", { name: "Bank Connection" })).toBeVisible();
+
+  // Plaid sandbox cannot run reliably in E2E (popup, third-party script).
+  // Dispatch directly into the Redux store exposed on window to mark the bank
+  // as connected, satisfying step 4 validation without going through Plaid Link.
+  await page.evaluate(() => {
+    const store = (window as any).__STORE__;
+    store.dispatch({
+      type: "form/updateBankInfo",
+      payload: {
+        plaidConnected: true,
+        institutionName: "Chase",
+        accountMask: "1234",
+        accountName: "Checking",
+      },
+    });
+  });
+  await expect(page.getByTestId("plaid-connected-card")).toBeVisible();
+
+  await page.getByRole("button", { name: "Next" }).click();
   await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
 
   const waitForUploadPost = () =>

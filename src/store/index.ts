@@ -7,5 +7,12 @@ export const store = configureStore({
   },
 });
 
+// Expose store on window for E2E tests (Playwright) to dispatch actions
+// without going through Plaid Link sandbox. Harmless in production.
+if (typeof window !== 'undefined') {
+  (window as any).__STORE__ = store;
+}
+
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch; 
+export type AppDispatch = typeof store.dispatch;
+

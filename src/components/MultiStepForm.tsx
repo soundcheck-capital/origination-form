@@ -9,6 +9,7 @@ import { useFileUpload } from '../hooks/useFileUpload';
 import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
+import Step4Plaid from './step4plaid';
 import Step4 from './step4';
 import Step5 from './step5';
 import LoadingScreen from './customComponents/LoadingScreen';
@@ -102,7 +103,12 @@ const MultiStepFormContent: React.FC = () => {
           additionalComments: formData.formData.financesInfo.additionalComments,
           industryReferences: formData.formData.financesInfo.industryReferences,
         },
-
+        bankConnection: {
+          plaidConnected: formData.formData.bankInfo.plaidConnected,
+          institutionName: formData.formData.bankInfo.institutionName,
+          accountMask: formData.formData.bankInfo.accountMask,
+          accountName: formData.formData.bankInfo.accountName,
+        },
       };
 
       // Les fichiers sont déjà uploadés individuellement lors de leur sélection
@@ -289,8 +295,10 @@ const MultiStepFormContent: React.FC = () => {
       case 3:
         return 'Business & Ownership';
       case 4:
-        return 'Diligence Files';
+        return 'Bank Connection';
       case 5:
+        return 'Diligence Files';
+      case 6:
         return 'Review & Submit';
       default:
         return 'SoundCheck';
@@ -306,8 +314,10 @@ const MultiStepFormContent: React.FC = () => {
       case 3:
         return <Step3 />;
       case 4:
-        return <Step4 />;
+        return <Step4Plaid />;
       case 5:
+        return <Step4 />;
+      case 6:
         return <Step5 renderValidationErrors={renderValidationErrors()} onStepClick={handleStepClick} />;
       default:
         return null;
@@ -420,7 +430,7 @@ const MultiStepFormContent: React.FC = () => {
                   before:pointer-events-none
                   relative
                 "
-                style={{ width: `${((currentStep) / 5) * 100}%` }}
+                style={{ width: `${((currentStep) / 6) * 100}%` }}
               ></div>
             </div>
           </div>
@@ -451,7 +461,7 @@ const MultiStepFormContent: React.FC = () => {
               <ButtonSecondary onClick={handlePreviousStep} disabled={false}>Previous</ButtonSecondary>
             )}
 
-            {(currentStep < 5 && currentStep > 1) && (
+            {(currentStep < 6 && currentStep > 1) && (
               <ButtonPrimary onClick={handleNextStep} disabled={isSavingStep}>
                 {isSavingStep ? (
                   <div className="flex items-center gap-2">
@@ -463,7 +473,7 @@ const MultiStepFormContent: React.FC = () => {
                 )}
               </ButtonPrimary>
             )}
-            {currentStep === 5 && (
+            {currentStep === 6 && (
               <ButtonPrimary onClick={() => {
                 triggerValidationThenSubmit();
               }} disabled={false}>Submit</ButtonPrimary>
