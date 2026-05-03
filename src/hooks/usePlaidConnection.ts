@@ -17,9 +17,12 @@ const PLAID_API_BASE: Record<string, string> = {
   production: 'https://production.plaid.com',
 };
 
+const isTestMode = (): boolean =>
+  typeof window !== 'undefined' && (window as any).__PLAID_TEST_MODE__ === true;
+
 interface UsePlaidConnectionReturn {
   ready: boolean;
-  open: Function;
+  open: () => void;
   connected: boolean;
   institutionName: string;
   accountMask: string;
@@ -74,6 +77,7 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
   }, []);
 
   useEffect(() => {
+    if (isTestMode()) return;
     if (!tokenRequested && !bankInfo.plaidConnected) {
       setTokenRequested(true);
       fetchLinkToken();
@@ -114,11 +118,30 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
     if (err) setError(err.display_message || err.error_message || 'Plaid Link exited with an error.');
   }, []);
 
-  const { open, ready } = usePlaidLink({
+  const { open: realOpen, ready: realReady } = usePlaidLink({
     token: linkToken,
     onSuccess,
     onExit,
   });
+
+  const open = useCallback(() => {
+    if (isTestMode()) {
+      // Bypass the Plaid Link iframe in E2E tests; fire onSuccess with a
+      // sandbox-shaped public_token. The hook then POSTs to the webhook
+      // (which Playwright intercepts), so the rest of the flow is real.
+      onSuccess(`public-sandbox-test-${Date.now()}`, {
+        institution: { name: 'Test Bank', institution_id: 'ins_test' },
+        accounts: [],
+        link_session_id: 'test-session',
+        transfer_status: undefined,
+      } as any);
+      return;
+    }
+    realOpen();
+  }, [realOpen, onSuccess]);
+
+  const ready = isTestMode() ? true : realReady;
+  const effectiveError = isTestMode() ? null : error;
 
   const reset = useCallback(() => {
     dispatch(updateBankInfo({
@@ -138,7 +161,7 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
     institutionName: bankInfo.institutionName,
     accountMask: bankInfo.accountMask,
     accountName: bankInfo.accountName,
-    error,
+    error: effectiveError,
     isLoading,
     reset,
   };

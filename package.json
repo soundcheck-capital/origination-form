@@ -30,7 +30,9 @@
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "test:e2e:prod": "playwright test tests/prod-form-critical-path.spec.ts"
+    "test:e2e:prod": "playwright test tests/prod-form-critical-path.spec.ts",
+    "test:e2e:plaid": "playwright test tests/plaid-connection.spec.ts",
+    "test:e2e": "playwright test"
   },
   "eslintConfig": {
     "extends": [
