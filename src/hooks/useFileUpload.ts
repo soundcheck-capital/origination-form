@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { logCriticalEvent } from '../utils/criticalLogging';
+import { getUploadLabelForField } from '../utils/underwritingFields';
 
 interface UploadResult {
   success: boolean;
@@ -172,31 +173,6 @@ export const useFileUpload = () => {
     }
   };
 
-  // Mapping des champs vers leurs dossiers Google Drive
-  const getGoogleDriveFolders = (fieldName: string): { folder: string; subFolder: string } => {
-    const folderMapping: { [key: string]: { folder: string; subFolder: string } } = {
-      // Ticketing Information
-      'ticketingCompanyReport': { folder: 'Ticketing Information', subFolder: 'Ticketing Report' },
-      'ticketingServiceAgreement': { folder: 'Ticketing Information', subFolder: 'Service Agreement' },
-      
-      // Financial Information
-      'financialStatements': { folder: 'Financial Information', subFolder: 'Financial Statements' },
-      'bankStatement': { folder: 'Financial Information', subFolder: 'Bank Statements' },
-      'lastYearTaxes': { folder: 'Financial Information', subFolder: 'Last Year Taxes' },
-      
-      // Legal Information
-      'incorporationCertificate': { folder: 'Legal Information', subFolder: 'Incorporation Certificate' },
-      'legalEntityChart': { folder: 'Legal Information', subFolder: 'Legal Entity Chart' },
-      'governmentId': { folder: 'Legal Information', subFolder: 'Government ID' },
-      'w9form': { folder: 'Legal Information', subFolder: 'W9 Form' },
-      
-      // Other
-      'other': { folder: 'Other Documents', subFolder: 'Other' },
-    };
-
-    return folderMapping[fieldName] || { folder: 'Other Documents', subFolder: 'Uncategorized' };
-  };
-
   // Fonction pour envoyer un fichier individuel
   const sendFile = async (file: File, fieldName: string, fileInfo: any, companyName?: string): Promise<FileUploadResult> => {
     try {
@@ -218,8 +194,7 @@ export const useFileUpload = () => {
         };
       }
 
-      // Récupérer les informations de dossier Google Drive
-      const { folder, subFolder } = getGoogleDriveFolders(fieldName);
+      const label = getUploadLabelForField(fieldName);
 
       // Récupérer les IDs HubSpot depuis les variables d'environnement
       const webhookFilesUrl = process.env.REACT_APP_WEBHOOK_URL_FILES;
@@ -243,8 +218,7 @@ export const useFileUpload = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('fieldName', fieldName);
-      formData.append('folder', folder);
-      formData.append('subFolder', subFolder);
+      formData.append('label', label);
       formData.append('companyName', companyName ?? '');
 
       

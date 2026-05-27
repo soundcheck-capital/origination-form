@@ -10,6 +10,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import reportWebVitals from './reportWebVitals';
 import SubmitSuccess from './components/SubmitSuccess';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 Sentry.init({
   dsn: 'https://c5bcc114d568abceb81c07f53de7d301@o4510828693422080.ingest.us.sentry.io/4510828695388160',
   sendDefaultPii: true,
@@ -22,11 +24,11 @@ Sentry.init({
     }),
   ],
   // Tracing
-  tracesSampleRate: 0.05,
+  tracesSampleRate: isDevelopment ? 1.0 : 0.05,
   // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
   tracePropagationTargets: ['localhost', /^https:\/\/yourserver\.io\/api/],
-  // Session Replay
-  replaysSessionSampleRate: 0.1,
+  // Session Replay — 100% in local dev for ticket validation
+  replaysSessionSampleRate: isDevelopment ? 1.0 : 0.1,
   replaysOnErrorSampleRate: 1.0,
 });
 

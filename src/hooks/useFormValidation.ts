@@ -1,5 +1,12 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import {
+  validateAccountingSystemFields,
+  validatePaymentProcessorFields,
+  getDiligenceFileCount,
+  validateFinancialDocumentUploads,
+  validateUnderwritingUploadFields,
+} from '../utils/underwritingFields';
 
 export const useFormValidation = () => {
   const formData = useSelector((state: RootState) => state.form);
@@ -98,27 +105,46 @@ export const useFormValidation = () => {
     const errors: { [key: string]: string } = {};
 
     // Ticketing Information files
-    if (diligenceInfo.ticketingCompanyReport.files.length === 0) {
+    if (getDiligenceFileCount(diligenceInfo.ticketingCompanyReport) === 0) {
       errors.ticketingCompanyReport = 'Ticketing company report is required';
     }
-    if (formData.formData.ticketingInfo.paymentProcessing === 'Venue' && diligenceInfo.ticketingServiceAgreement.files.length === 0) {
+    if (
+      formData.formData.ticketingInfo.paymentProcessing === 'Venue' &&
+      getDiligenceFileCount(diligenceInfo.ticketingServiceAgreement) === 0
+    ) {
       errors.ticketingServiceAgreement = 'Ticketing service agreement is required';
     }
 
-    // Financial Information files
-    if (diligenceInfo.financialStatements.files.length === 0) {
-      errors.financialStatements = 'Financial statements are required';
-    }
-
     // Legal Information files
-    if (diligenceInfo.incorporationCertificate.files.length === 0) {
+    if (getDiligenceFileCount(diligenceInfo.incorporationCertificate) === 0) {
       errors.incorporationCertificate = 'Incorporation certificate is required';
     }
-    if (!financesInfo.singleEntity && diligenceInfo.legalEntityChart.files.length === 0) {
+    if (
+      !financesInfo.singleEntity &&
+      getDiligenceFileCount(diligenceInfo.legalEntityChart) === 0
+    ) {
       errors.legalEntityChart = 'Legal entity chart is required';
     }
 
-    // Additional Information validation is now handled in step 3
+    Object.assign(
+      errors,
+      validateFinancialDocumentUploads({
+        financialsYtdPL: diligenceInfo.financialsYtdPL,
+        financialsYtdBS: diligenceInfo.financialsYtdBS,
+        financialsYear1PL: diligenceInfo.financialsYear1PL,
+        financialsYear1BS: diligenceInfo.financialsYear1BS,
+        financialsYear2PL: diligenceInfo.financialsYear2PL,
+        financialsYear2BS: diligenceInfo.financialsYear2BS,
+      })
+    );
+
+    Object.assign(
+      errors,
+      validateUnderwritingUploadFields({
+        futureEventSchedule: diligenceInfo.futureEventSchedule,
+        venueAgreements: diligenceInfo.venueAgreements,
+      })
+    );
 
     return { isValid: Object.keys(errors).length === 0, errors };
   };
@@ -137,7 +163,7 @@ export const useFormValidation = () => {
     const companyValidation = validateCompanyInfo();
     
     // Add ticketing validation for step 1
-    const { ticketingInfo, volumeInfo } = formData.formData;
+    const { ticketingInfo, volumeInfo, financesInfo } = formData.formData;
     const ticketingErrors: { [key: string]: string } = {};
     
     if (!ticketingInfo.paymentProcessing) ticketingErrors.paymentProcessing = 'Payment processing is required';
@@ -146,6 +172,16 @@ export const useFormValidation = () => {
     if (!ticketingInfo.settlementPayout) ticketingErrors.settlementPayout = 'Settlement payout policy is required';
     if (volumeInfo.nextYearEvents <= 0) ticketingErrors.nextYearEvents = 'Number of events must be greater than 0';
     if (volumeInfo.nextYearSales <= 0) ticketingErrors.nextYearSales = 'Gross annual ticketing volume must be greater than 0';
+
+    Object.assign(ticketingErrors, validatePaymentProcessorFields({
+      paymentProcessor: ticketingInfo.paymentProcessor,
+      otherPaymentProcessor: ticketingInfo.otherPaymentProcessor,
+    }));
+
+    Object.assign(ticketingErrors, validateAccountingSystemFields({
+      accountingSystem: financesInfo.accountingSystem,
+      otherAccountingSystem: financesInfo.otherAccountingSystem,
+    }));
     
     return {
       isValid: personalValidation.isValid && companyValidation.isValid && Object.keys(ticketingErrors).length === 0,

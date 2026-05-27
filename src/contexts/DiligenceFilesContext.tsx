@@ -15,7 +15,6 @@ export interface FileUploadStatus {
 interface DiligenceFiles {
   ticketingCompanyReport: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
   ticketingServiceAgreement: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
-  financialStatements: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
   bankStatement: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
   incorporationCertificate: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
   legalEntityChart: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
@@ -23,6 +22,14 @@ interface DiligenceFiles {
   w9form: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
   lastYearTaxes: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
   other: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  futureEventSchedule: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  financialsYtdPL: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  financialsYtdBS: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  financialsYear1PL: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  financialsYear1BS: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  financialsYear2PL: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  financialsYear2BS: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
+  venueAgreements: { files: File[]; fileInfos: FileInfo[]; uploadStatuses: FileUploadStatus[] };
 }
 
 interface DiligenceFilesContextType {
@@ -40,7 +47,6 @@ const DiligenceFilesContext = createContext<DiligenceFilesContextType | undefine
 const initialDiligenceFiles: DiligenceFiles = {
   ticketingCompanyReport: { files: [], fileInfos: [], uploadStatuses: [] },
   ticketingServiceAgreement: { files: [], fileInfos: [], uploadStatuses: [] },
-  financialStatements: { files: [], fileInfos: [], uploadStatuses: [] },
   bankStatement: { files: [], fileInfos: [], uploadStatuses: [] },
   incorporationCertificate: { files: [], fileInfos: [], uploadStatuses: [] },
   legalEntityChart: { files: [], fileInfos: [], uploadStatuses: [] },
@@ -48,6 +54,14 @@ const initialDiligenceFiles: DiligenceFiles = {
   w9form: { files: [], fileInfos: [], uploadStatuses: [] },
   lastYearTaxes: { files: [], fileInfos: [], uploadStatuses: [] },
   other: { files: [], fileInfos: [], uploadStatuses: [] },
+  futureEventSchedule: { files: [], fileInfos: [], uploadStatuses: [] },
+  financialsYtdPL: { files: [], fileInfos: [], uploadStatuses: [] },
+  financialsYtdBS: { files: [], fileInfos: [], uploadStatuses: [] },
+  financialsYear1PL: { files: [], fileInfos: [], uploadStatuses: [] },
+  financialsYear1BS: { files: [], fileInfos: [], uploadStatuses: [] },
+  financialsYear2PL: { files: [], fileInfos: [], uploadStatuses: [] },
+  financialsYear2BS: { files: [], fileInfos: [], uploadStatuses: [] },
+  venueAgreements: { files: [], fileInfos: [], uploadStatuses: [] },
 };
 
 interface DiligenceFilesProviderProps {
@@ -86,11 +100,6 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
           fileInfos: reduxDiligenceInfo.ticketingServiceAgreement?.fileInfos || [],
           uploadStatuses: [] 
         },
-        financialStatements: { 
-          files: reduxDiligenceInfo.financialStatements?.files || [], 
-          fileInfos: reduxDiligenceInfo.financialStatements?.fileInfos || [],
-          uploadStatuses: [] 
-        },
         bankStatement: { 
           files: reduxDiligenceInfo.bankStatement?.files || [], 
           fileInfos: reduxDiligenceInfo.bankStatement?.fileInfos || [],
@@ -125,6 +134,46 @@ export const DiligenceFilesProvider: React.FC<DiligenceFilesProviderProps> = ({ 
           files: reduxDiligenceInfo.lastYearTaxes?.files || [], 
           fileInfos: reduxDiligenceInfo.lastYearTaxes?.fileInfos || [],
           uploadStatuses: [] 
+        },
+        futureEventSchedule: {
+          files: reduxDiligenceInfo.futureEventSchedule?.files || [],
+          fileInfos: reduxDiligenceInfo.futureEventSchedule?.fileInfos || [],
+          uploadStatuses: [],
+        },
+        financialsYtdPL: {
+          files: reduxDiligenceInfo.financialsYtdPL?.files || [],
+          fileInfos: reduxDiligenceInfo.financialsYtdPL?.fileInfos || [],
+          uploadStatuses: [],
+        },
+        financialsYtdBS: {
+          files: reduxDiligenceInfo.financialsYtdBS?.files || [],
+          fileInfos: reduxDiligenceInfo.financialsYtdBS?.fileInfos || [],
+          uploadStatuses: [],
+        },
+        financialsYear1PL: {
+          files: reduxDiligenceInfo.financialsYear1PL?.files || [],
+          fileInfos: reduxDiligenceInfo.financialsYear1PL?.fileInfos || [],
+          uploadStatuses: [],
+        },
+        financialsYear1BS: {
+          files: reduxDiligenceInfo.financialsYear1BS?.files || [],
+          fileInfos: reduxDiligenceInfo.financialsYear1BS?.fileInfos || [],
+          uploadStatuses: [],
+        },
+        financialsYear2PL: {
+          files: reduxDiligenceInfo.financialsYear2PL?.files || [],
+          fileInfos: reduxDiligenceInfo.financialsYear2PL?.fileInfos || [],
+          uploadStatuses: [],
+        },
+        financialsYear2BS: {
+          files: reduxDiligenceInfo.financialsYear2BS?.files || [],
+          fileInfos: reduxDiligenceInfo.financialsYear2BS?.fileInfos || [],
+          uploadStatuses: [],
+        },
+        venueAgreements: {
+          files: reduxDiligenceInfo.venueAgreements?.files || [],
+          fileInfos: reduxDiligenceInfo.venueAgreements?.fileInfos || [],
+          uploadStatuses: [],
         },
       };
       
