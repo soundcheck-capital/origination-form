@@ -127,6 +127,10 @@ const formSlice = createSlice({
       state.formData.financesInfo = { ...state.formData.financesInfo, ...action.payload };
       saveToLocalStorage(state);
     },
+    updateBankInfo: (state, action: PayloadAction<Partial<FormState['formData']['bankInfo']>>) => {
+      state.formData.bankInfo = { ...state.formData.bankInfo, ...action.payload };
+      saveToLocalStorage(state);
+    },
     updateDiligenceInfo: (state, action: PayloadAction<Partial<FormState['diligenceInfo']>>) => {
       state.diligenceInfo = mergeDiligenceInfo({
         ...state.diligenceInfo,
@@ -190,8 +194,9 @@ export const {
   updateVolumeInfo, 
   updateFundsInfo, 
   updateOwnershipInfo, 
-  updateFinancesInfo, 
-  updateDiligenceInfo, 
+  updateFinancesInfo,
+  updateBankInfo,
+  updateDiligenceInfo,
   loadSavedApplication,
   clearFormData,
   setSubmitted,

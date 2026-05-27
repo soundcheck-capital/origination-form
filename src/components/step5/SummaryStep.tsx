@@ -25,7 +25,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
   const formData = useSelector((state: RootState) => state.form.formData);
   const diligenceInfo = useSelector((state: RootState) => state.form.diligenceInfo);
   
-  const { personalInfo, companyInfo, ticketingInfo, volumeInfo, fundsInfo, ownershipInfo, financesInfo } = formData;
+  const { personalInfo, companyInfo, ticketingInfo, volumeInfo, fundsInfo, ownershipInfo, financesInfo, bankInfo } = formData;
 
   const [disableSubmissionBlock] = useState(() => {
     return localStorage.getItem('DISABLE_SUBMISSION_BLOCK') === 'true';
@@ -113,8 +113,24 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
           </div>
         </div>
 
-        {/* Step 4 — Diligence Files */}
+        {/* Step 4 — Bank Connection */}
         <div className={cardClass} onClick={() => onStepClick?.(4)}>
+          <PencilIcon />
+          <h3 className="text-sm font-semibold text-gray-800 mb-2">Bank Connection</h3>
+          <div className="space-y-0.5">
+            <Row label="Status" value={bankInfo.plaidConnected ? 'Connected' : 'Not Connected'} />
+            {bankInfo.plaidConnected && (
+              <>
+                <Row label="Institution" value={bankInfo.institutionName} />
+                <Row label="Account" value={bankInfo.accountMask ? `••••${bankInfo.accountMask}` : '—'} />
+                <Row label="Account Name" value={bankInfo.accountName} />
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Step 5 — Diligence Files */}
+        <div className={cardClass} onClick={() => onStepClick?.(5)}>
           <PencilIcon />
           <h3 className="text-sm font-semibold text-gray-800 mb-2">Diligence Files</h3>
           <div className="space-y-0.5">

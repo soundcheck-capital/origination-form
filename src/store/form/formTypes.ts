@@ -91,7 +91,7 @@ export interface Address {
           balance: string;
         }>;
         hasOverdueLiabilities: boolean;
-    
+
         hasTaxLiens: boolean;
         hasJudgments: boolean;
         hasBankruptcy: boolean;
@@ -100,6 +100,12 @@ export interface Address {
         additionalComments: string;
         accountingSystem: string;
         otherAccountingSystem: string;
+      };
+      bankInfo: {
+        plaidConnected: boolean;
+        institutionName: string;
+        accountMask: string;
+        accountName: string;
       };
     };
   

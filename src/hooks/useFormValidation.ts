@@ -99,6 +99,15 @@ export const useFormValidation = () => {
     return { isValid: Object.keys(errors).length === 0, errors };
   };
 
+  const validateBankConnection = (): { isValid: boolean; errors: { [key: string]: string } } => {
+    const { bankInfo } = formData.formData;
+    const errors: { [key: string]: string } = {};
+    if (!bankInfo.plaidConnected) {
+      errors.plaidConnected = 'Please connect your bank account to continue';
+    }
+    return { isValid: Object.keys(errors).length === 0, errors };
+  };
+
   const validateAllUploadsInfo = (): { isValid: boolean; errors: { [key: string]: string } } => {
     const { diligenceInfo } = formData;
     const { financesInfo } = formData.formData;
@@ -205,8 +214,10 @@ export const useFormValidation = () => {
       case 3:
         return validateBusinessFinancialInfo(); // Business + Financial
       case 4:
-        return validateAllUploadsInfo(); // All Uploads
+        return validateBankConnection(); // Plaid bank connection
       case 5:
+        return validateAllUploadsInfo(); // All Uploads
+      case 6:
         return { isValid: true, errors: {} }; // Summary step - no validation needed
       default:
         return { isValid: true, errors: {} };
@@ -217,18 +228,21 @@ export const useFormValidation = () => {
     const step1Info = validateStep1();
     const ticketingFundingInfo = validateTicketingFundingInfo();
     const businessFinancialInfo = validateBusinessFinancialInfo();
+    const bankConnectionInfo = validateBankConnection();
     const allUploadsInfo = validateAllUploadsInfo();
-    
+
     const allErrors = {
       'Tell us about your business': step1Info.errors,
       'Ticketing & Funding': ticketingFundingInfo.errors,
       'Business & Ownership': businessFinancialInfo.errors,
+      'Bank Connection': bankConnectionInfo.errors,
       'Diligence': allUploadsInfo.errors,
     };
 
-    const isValid = step1Info.isValid && 
-                   ticketingFundingInfo.isValid && 
-                   businessFinancialInfo.isValid && 
+    const isValid = step1Info.isValid &&
+                   ticketingFundingInfo.isValid &&
+                   businessFinancialInfo.isValid &&
+                   bankConnectionInfo.isValid &&
                    allUploadsInfo.isValid;
 
     return { isValid, errors: allErrors };
@@ -240,10 +254,12 @@ export const useFormValidation = () => {
     validateStep1,
     validateTicketingFundingInfo,
     validateBusinessFinancialInfo,
+    validateBankConnection,
     validateAllUploadsInfo,
     validateAdditionalInfo,
     validateCurrentStep,
     validateAllSteps,
     isDevelopment,
   };
-}; 
+};
+

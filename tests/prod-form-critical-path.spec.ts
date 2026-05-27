@@ -30,6 +30,27 @@ test("prod form critical path stays healthy", async ({ page }) => {
   const email = "e2e@example.com";
   const fixturePath = path.resolve("tests/fixtures/e2e-upload.csv");
 
+  // Bypass the Plaid Link iframe (third-party, popup, unreliable in CI) by
+  // putting the hook into test mode. Connect-button click fires onSuccess
+  // synthetically with a fake public_token; we mock the Plaid webhook so it
+  // doesn't 500 on the unrecognized token. The dedicated plaid-connection
+  // spec covers the real webhook contract.
+  await page.addInitScript(() => {
+    (window as any).__PLAID_TEST_MODE__ = true;
+  });
+  const plaidWebhookHost = new URL(process.env.REACT_APP_PLAID_WEBHOOK_URL || "https://hook.us1.make.com/t7uk729x2wsmnkhp8wyghxnusru5afk7").pathname;
+  await page.route(`**${plaidWebhookHost}`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        institution: "Chase",
+        account_mask: "1234",
+        account_name: "Checking",
+      }),
+    });
+  });
+
   const failedCriticalRequests: string[] = [];
   const badCriticalResponses: Array<{ url: string; status: number }> = [];
 
@@ -120,10 +141,25 @@ test("prod form critical path stays healthy", async ({ page }) => {
   );
 
   await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByRole("heading", { name: "Bank Connection" })).toBeVisible();
 
-  // ── Step 4 — Diligence Files ──────────────────────────────────────────────
+  // Click Connect — test mode synthesizes a public_token, hook POSTs to the
+  // real Make.com webhook from 24a, response populates Redux.
+  const plaidWebhookResponse = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      response.url().includes("hook.us1.make.com") &&
+      (response.request().postData() || "").includes("public_token"),
+    { timeout: 30_000 }
+  );
+  await page.getByRole("button", { name: "Connect your bank account" }).click();
+  const plaidResult = await plaidWebhookResponse;
+  expect(plaidResult.status()).toBeLessThan(400);
+  await expect(page.getByTestId("plaid-connected-card")).toBeVisible();
 
-  // Verify at least the first required upload field is visible
+  await page.getByRole("button", { name: "Next" }).click();
+
+  // ── Step 5 — Diligence Files ──────────────────────────────────────────────
   await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
 
   // Helper: trigger a file upload and wait for the Make webhook POST to respond
@@ -154,7 +190,7 @@ test("prod form critical path stays healthy", async ({ page }) => {
   await expect(nextButton).toBeEnabled();
   await nextButton.click();
 
-  // ── Step 5 — Review & Submit ──────────────────────────────────────────────
+  // ── Step 6 — Review & Submit ──────────────────────────────────────────────
 
   const submitButton = page.getByRole("button", { name: "Submit" });
   await expect(submitButton).toBeVisible();

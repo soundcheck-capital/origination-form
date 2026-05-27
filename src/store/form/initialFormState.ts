@@ -31,13 +31,19 @@ export const initialState: FormState = {
     },
     financesInfo: {
       singleEntity: true, assetsTransferred: false, filedLastYearTaxes: false, hasBusinessDebt: false,
-      debts: [], hasOverdueLiabilities: false, 
+      debts: [], hasOverdueLiabilities: false,
        hasTaxLiens: false, hasJudgments: false,
       hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false,
       industryReferences: '',
       additionalComments: '',
       accountingSystem: '',
       otherAccountingSystem: '',
+    },
+    bankInfo: {
+      plaidConnected: false,
+      institutionName: '',
+      accountMask: '',
+      accountName: '',
     },
   },
 
