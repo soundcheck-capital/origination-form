@@ -12,7 +12,14 @@ export const initialState: FormState = {
       businessType: '', companyAddressDisplay: '', companyAddress: '', companyZipcode: '', companyState: '', companyCountry: '', companyCity: '',
       ein: '', stateOfIncorporation: '', memberOf: ''
     },
-    ticketingInfo: { currentPartner: '', otherPartner: '', settlementPayout: '', paymentProcessing: '' },
+    ticketingInfo: {
+      currentPartner: '',
+      otherPartner: '',
+      settlementPayout: '',
+      paymentProcessing: '',
+      paymentProcessor: '',
+      otherPaymentProcessor: '',
+    },
     volumeInfo: {
       nextYearEvents: 0, nextYearSales: 0,
     },
@@ -29,6 +36,8 @@ export const initialState: FormState = {
       hasBankruptcy: false, ownershipChanged: false, hasTicketingDebt: false,
       industryReferences: '',
       additionalComments: '',
+      accountingSystem: '',
+      otherAccountingSystem: '',
     },
     bankInfo: {
       plaidConnected: false,
@@ -41,7 +50,6 @@ export const initialState: FormState = {
   diligenceInfo: {
     ticketingCompanyReport: { files: [], fileInfos: [] },
     ticketingServiceAgreement: { files: [], fileInfos: [] },
-    financialStatements: { files: [], fileInfos: [] },
     bankStatement: { files: [], fileInfos: [] },
     incorporationCertificate: { files: [], fileInfos: [] },
     legalEntityChart: { files: [], fileInfos: [] },
@@ -49,5 +57,13 @@ export const initialState: FormState = {
     w9form: { files: [], fileInfos: [] },
     lastYearTaxes: { files: [], fileInfos: [] },
     other: { files: [], fileInfos: [] },
+    futureEventSchedule: { files: [], fileInfos: [] },
+    financialsYtdPL: { files: [], fileInfos: [] },
+    financialsYtdBS: { files: [], fileInfos: [] },
+    financialsYear1PL: { files: [], fileInfos: [] },
+    financialsYear1BS: { files: [], fileInfos: [] },
+    financialsYear2PL: { files: [], fileInfos: [] },
+    financialsYear2BS: { files: [], fileInfos: [] },
+    venueAgreements: { files: [], fileInfos: [] },
   }
 };

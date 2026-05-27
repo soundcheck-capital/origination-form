@@ -2,9 +2,10 @@ import React from 'react';
 
 const ButtonPrimary = ({ children, onClick, disabled, className }: { children: React.ReactNode, onClick: () => void, disabled: boolean, className?: string }) => {
     return (
-        <button 
-            onClick={onClick} 
-            disabled={disabled} 
+        <button
+            type="button"
+            onClick={onClick}
+            disabled={disabled}
             className={`
                 ${className || ''} 
                 px-6 py-2.5 

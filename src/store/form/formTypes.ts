@@ -64,7 +64,9 @@ export interface Address {
         currentPartner: string;
         otherPartner: string;
         settlementPayout: string;
-        paymentProcessing: string;  
+        paymentProcessing: string;
+        paymentProcessor: string;
+        otherPaymentProcessor: string;
       };
       volumeInfo: {
         nextYearEvents: number;
@@ -96,6 +98,8 @@ export interface Address {
         ownershipChanged: boolean;
         industryReferences: string;
         additionalComments: string;
+        accountingSystem: string;
+        otherAccountingSystem: string;
       };
       bankInfo: {
         plaidConnected: boolean;
@@ -108,7 +112,6 @@ export interface Address {
     diligenceInfo: {
       ticketingCompanyReport: DiligenceFileData;
       ticketingServiceAgreement: DiligenceFileData;
-      financialStatements: DiligenceFileData;
       bankStatement: DiligenceFileData;
       incorporationCertificate: DiligenceFileData;
       legalEntityChart: DiligenceFileData;
@@ -116,6 +119,14 @@ export interface Address {
       w9form: DiligenceFileData;
       lastYearTaxes: DiligenceFileData;
       other: DiligenceFileData;
+      futureEventSchedule: DiligenceFileData;
+      financialsYtdPL: DiligenceFileData;
+      financialsYtdBS: DiligenceFileData;
+      financialsYear1PL: DiligenceFileData;
+      financialsYear1BS: DiligenceFileData;
+      financialsYear2PL: DiligenceFileData;
+      financialsYear2BS: DiligenceFileData;
+      venueAgreements: DiligenceFileData;
     };
   }
   

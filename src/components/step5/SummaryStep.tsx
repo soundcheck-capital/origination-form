@@ -62,6 +62,14 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
             <Row label="Ticketing Partner" value={ticketingInfo.currentPartner} />
             <Row label="Settlement From" value={ticketingInfo.paymentProcessing} />
             <Row label="Settlement Policy" value={ticketingInfo.settlementPayout} />
+            <Row label="Payment Processor" value={ticketingInfo.paymentProcessor} />
+            {ticketingInfo.paymentProcessor === 'Other' && (
+              <Row label="Other Payment Processor" value={ticketingInfo.otherPaymentProcessor} />
+            )}
+            <Row label="Accounting System" value={financesInfo.accountingSystem} />
+            {financesInfo.accountingSystem === 'Other' && (
+              <Row label="Other Accounting System" value={financesInfo.otherAccountingSystem} />
+            )}
             <Row label="Events / Year" value={volumeInfo.nextYearEvents} />
             <Row label="Gross Ticketing Volume" value={formatCurrency(volumeInfo.nextYearSales)} />
           </div>
@@ -127,9 +135,16 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
           <h3 className="text-sm font-semibold text-gray-800 mb-2">Diligence Files</h3>
           <div className="space-y-0.5">
             {[
+              { label: 'Future Event Schedule', key: 'futureEventSchedule' },
               { label: 'Ticketing Company Report', key: 'ticketingCompanyReport' },
               { label: 'Ticketing Service Agreement', key: 'ticketingServiceAgreement' },
-              { label: 'Financial Statements', key: 'financialStatements' },
+              { label: 'Year To Date — P&L', key: 'financialsYtdPL' },
+              { label: 'Year To Date — Balance Sheet', key: 'financialsYtdBS' },
+              { label: 'Year - 1 — P&L', key: 'financialsYear1PL' },
+              { label: 'Year - 1 — Balance Sheet', key: 'financialsYear1BS' },
+              { label: 'Year - 2 — P&L', key: 'financialsYear2PL' },
+              { label: 'Year - 2 — Balance Sheet', key: 'financialsYear2BS' },
+              { label: 'Venue Agreements', key: 'venueAgreements' },
               { label: 'Bank Statement', key: 'bankStatement' },
               { label: 'Incorporation Certificate', key: 'incorporationCertificate' },
               { label: 'Legal Entity Chart', key: 'legalEntityChart' },
@@ -137,7 +152,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
               { label: 'W9 Form', key: 'w9form' },
               { label: 'Other Documents', key: 'other' },
             ].map(({ label, key }) => {
-              const count = (diligenceInfo as any)[key].fileInfos.length;
+              const count = (diligenceInfo as any)[key]?.fileInfos?.length ?? 0;
               return (
                 <div key={key} className="flex justify-between gap-2">
                   <span className="text-gray-500 shrink-0">{label}:</span>

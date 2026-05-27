@@ -1,19 +1,20 @@
 import React, { useEffect }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { updateTicketingInfo, updateVolumeInfo } from '../../store/form/formSlice';
+import { updateFinancesInfo, updateTicketingInfo, updateVolumeInfo } from '../../store/form/formSlice';
 import StepTitle from '../customComponents/StepTitle';
 import DropdownField from '../customComponents/DropdownField';
 import TextField from '../customComponents/TextField';
 import NumberInput from '../customComponents/NumberField';
 import CurrencyField from '../customComponents/CurrencyField';
 import { useValidation } from '../../contexts/ValidationContext';
-import { paymentProcessing, ticketingPartners, settlementPayout } from '../../store/form/hubspotLists';
+import { accountingSystemOptions, paymentProcessing, paymentProcessorOptions, ticketingPartners, settlementPayout } from '../../store/form/hubspotLists';
 import { findTicketingPartnerKey, getTicketingCoFromUrl } from '../../utils/ticketingPartnerUtils';
 
 const TicketingFundingStep: React.FC = () => {
   const dispatch = useDispatch();
   const ticketingInfo = useSelector((state: RootState) => state.form.formData.ticketingInfo);
+  const financesInfo = useSelector((state: RootState) => state.form.formData.financesInfo);
   const ticketingVolume = useSelector((state: RootState) => state.form.formData.volumeInfo);
   const { setFieldError } = useValidation();
   const ticketingCoParam = getTicketingCoFromUrl();
@@ -39,6 +40,12 @@ const TicketingFundingStep: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     dispatch(updateTicketingInfo({ [name]: value }));
+    setFieldError(name, null);
+  };
+
+  const handleFinancesChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    dispatch(updateFinancesInfo({ [name]: value }));
     setFieldError(name, null);
   };
 
@@ -79,6 +86,18 @@ const TicketingFundingStep: React.FC = () => {
      )}
 
       <DropdownField label="What is the payout/settlement policy?" name="settlementPayout" value={ticketingInfo.settlementPayout} onChange={handleChange} error='' onBlur={() => { }} options={settlementPayout} required />
+
+      <DropdownField label="Payment Processor" name="paymentProcessor" value={ticketingInfo.paymentProcessor} onChange={handleChange} error='' onBlur={() => { }} options={paymentProcessorOptions} required />
+
+      {ticketingInfo.paymentProcessor === 'Other' && (
+        <TextField label="Other Payment Processor" name="otherPaymentProcessor" value={ticketingInfo.otherPaymentProcessor} onChange={handleChange} error='' onBlur={() => { }} type='text' required />
+      )}
+
+      <DropdownField label="Accounting System" name="accountingSystem" value={financesInfo.accountingSystem} onChange={handleFinancesChange} error='' onBlur={() => { }} options={accountingSystemOptions} required />
+
+      {financesInfo.accountingSystem === 'Other' && (
+        <TextField label="Other Accounting System" name="otherAccountingSystem" value={financesInfo.otherAccountingSystem} onChange={handleFinancesChange} error='' onBlur={() => { }} type='text' required />
+      )}
 
     </div>
   );

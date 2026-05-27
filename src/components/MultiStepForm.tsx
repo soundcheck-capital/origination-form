@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
@@ -21,6 +21,7 @@ import { useFormValidation } from '../hooks/useFormValidation';
 import '../utils/debugUtils';
 import { getTicketingCoFromUrl, getTicketingPartnerLogo, isValidTicketingPartner } from '../utils/ticketingPartnerUtils';
 import { logCriticalEvent } from '../utils/criticalLogging';
+import { buildUnderwritingWebhookCompanyFields } from '../utils/underwritingFields';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,7 +30,9 @@ const MultiStepFormContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const formData = useSelector((state: RootState) => state.form);
   const [saveMessage, setSaveMessage] = useState('');
-  const { sendFormData, isUploading } = useFileUpload();
+  const { sendFormData } = useFileUpload();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitInFlightRef = useRef(false);
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
   
   // Vérifier l'environnement (development, staging, production)
@@ -52,6 +55,12 @@ const MultiStepFormContent: React.FC = () => {
   }, [isSubmitted, navigate]);
 
   const handleSubmit = async () => {
+    if (submitInFlightRef.current || isSubmitted) {
+      return;
+    }
+
+    submitInFlightRef.current = true;
+    setIsSubmitting(true);
     setSaveMessage('');
     const submitStartedAt = Date.now();
 
@@ -78,6 +87,16 @@ const MultiStepFormContent: React.FC = () => {
           otherPartner: formData.formData.ticketingInfo.otherPartner,
           paymentProcessing: formData.formData.ticketingInfo.paymentProcessing,
           settlementPayout: formData.formData.ticketingInfo.settlementPayout,
+          ...buildUnderwritingWebhookCompanyFields(
+            {
+              paymentProcessor: formData.formData.ticketingInfo.paymentProcessor,
+              otherPaymentProcessor: formData.formData.ticketingInfo.otherPaymentProcessor,
+            },
+            {
+              accountingSystem: formData.formData.financesInfo.accountingSystem,
+              otherAccountingSystem: formData.formData.financesInfo.otherAccountingSystem,
+            }
+          ),
           nextYearEvents: formData.formData.volumeInfo.nextYearEvents,
           nextYearSales: formData.formData.volumeInfo.nextYearSales,
           owners: formData.formData.ownershipInfo.owners,
@@ -126,11 +145,6 @@ const MultiStepFormContent: React.FC = () => {
         setSaveMessage('Application submitted successfully!');
         
         dispatch(setSubmitted());
-
-        // Navigate to success page after a delay
-        setTimeout(() => {
-          navigate('/submit-success');
-        }, 2000);
       } else {
         logCriticalEvent({
           event_name: 'form_submission_failed',
@@ -157,9 +171,16 @@ const MultiStepFormContent: React.FC = () => {
 
       console.error('Submission error:', error);
       setSaveMessage(error instanceof Error ? error.message : 'Failed to submit application. Please try again.');
-    } 
+      submitInFlightRef.current = false;
+      setIsSubmitting(false);
+    }
   };
+
   const triggerValidationThenSubmit = () => {
+    if (submitInFlightRef.current || isSubmitting || isSubmitted) {
+      return;
+    }
+
     const validation = validateAllSteps();
     
     if (!validation.isValid) {
@@ -180,7 +201,7 @@ const MultiStepFormContent: React.FC = () => {
     }
 
     setValidationErrors(null);
-    handleSubmit();
+    void handleSubmit();
   };
 
   const handleNextStep = async () => {
@@ -446,7 +467,7 @@ const MultiStepFormContent: React.FC = () => {
           {/* Navigation Buttons */}
           <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
             {currentStep === 1 && (
-              <ButtonPrimary className='lg:first:w-[40%] ' onClick={handleNextStep} disabled={isSavingStep}>
+              <ButtonPrimary className='lg:first:w-[40%] ' onClick={handleNextStep} disabled={isSavingStep || isSubmitting}>
                 {isSavingStep ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -458,11 +479,11 @@ const MultiStepFormContent: React.FC = () => {
               </ButtonPrimary>
             )}
             {currentStep > 1 && (
-              <ButtonSecondary onClick={handlePreviousStep} disabled={false}>Previous</ButtonSecondary>
+              <ButtonSecondary onClick={handlePreviousStep} disabled={isSubmitting}>Previous</ButtonSecondary>
             )}
 
             {(currentStep < 6 && currentStep > 1) && (
-              <ButtonPrimary onClick={handleNextStep} disabled={isSavingStep}>
+              <ButtonPrimary onClick={handleNextStep} disabled={isSavingStep || isSubmitting}>
                 {isSavingStep ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -474,9 +495,19 @@ const MultiStepFormContent: React.FC = () => {
               </ButtonPrimary>
             )}
             {currentStep === 6 && (
-              <ButtonPrimary onClick={() => {
-                triggerValidationThenSubmit();
-              }} disabled={false}>Submit</ButtonPrimary>
+              <ButtonPrimary
+                onClick={triggerValidationThenSubmit}
+                disabled={isSubmitting || isSubmitted}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Submitting...</span>
+                  </div>
+                ) : (
+                  'Submit'
+                )}
+              </ButtonPrimary>
             )}
                     </div>
  {/* Success/Error Message */}
@@ -489,8 +520,7 @@ const MultiStepFormContent: React.FC = () => {
           </div>
         )}
 
-        {/* Submission in progress */}
-        {isUploading && (
+        {isSubmitting && (
           <div className="w-full mx-auto my-4 p-4 rounded-lg bg-blue-50 border border-blue-200">
             <div className="text-center">
               <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
