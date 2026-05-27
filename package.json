@@ -17,6 +17,7 @@
     "googleapis": "^150.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-plaid-link": "^4.1.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.0",
     "react-scripts": "5.0.1",
@@ -29,7 +30,9 @@
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "test:e2e:prod": "playwright test tests/prod-form-critical-path.spec.ts"
+    "test:e2e:prod": "playwright test tests/prod-form-critical-path.spec.ts",
+    "test:e2e:plaid": "playwright test tests/plaid-connection.spec.ts",
+    "test:e2e": "playwright test"
   },
   "eslintConfig": {
     "extends": [

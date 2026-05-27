@@ -1,4 +1,9 @@
 import { defineConfig } from "@playwright/test";
+import dotenv from "dotenv";
+
+// Load .env so tests can read REACT_APP_* vars (e.g. webhook URLs) the same
+// way react-scripts does at build time.
+dotenv.config();
 
 export default defineConfig({
   testDir: "./tests",
