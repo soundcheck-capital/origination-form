@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from './initialFormState';
-import { loadApplication, saveApplication, submitApplication } from './formThunks';
 import { FormState, DiligenceFileData } from './formTypes';
 
 const mergeDiligenceInfo = (
@@ -156,29 +155,6 @@ const formSlice = createSlice({
       localStorage.removeItem('soundcheckFormData');
     }
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loadApplication.fulfilled, (state, action) => {
-        const newState = hydrateFormState({
-          ...state,
-          currentStep: action.payload.currentStep || 1,
-          formData: action.payload.formData,
-          diligenceInfo: action.payload.diligenceInfo,
-        });
-        saveToLocalStorage(newState);
-        return newState;
-      })
-      .addCase(saveApplication.fulfilled, (state, action) => {
-        // tu peux ajouter une confirmation ou update une clé "lastSaved"
-      })
-      .addCase(submitApplication.fulfilled, (state, action) => {
-        // MARQUER LE FORMULAIRE COMME SOUMIS LOCALEMENT
-        state.isSubmitted = true;
-        
-        // Sauvegarder les données (sans isSubmitted dans localStorage)
-        saveToLocalStorage(state);
-      });
-  }
 });
 
 export const { 
