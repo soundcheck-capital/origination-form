@@ -32,8 +32,9 @@ const REQUIRED_UPLOAD_SELECTORS = [
 // What's mocked: exchange only (needs iframe-generated public_token)
 
 test("generic happy path", async ({ page }) => {
-  const now = Date.now();
-  const tag = `GENERIC_E2E_${now}`;
+  const now = new Date();
+  const monthYear = `${String(now.getMonth() + 1).padStart(2, "0")}-${now.getFullYear()}`;
+  const tag = `GENERIC E2E - ${monthYear}`;
   const email = "e2e@example.com";
   const fixturePath = path.resolve("tests/fixtures/e2e-upload.csv");
 
