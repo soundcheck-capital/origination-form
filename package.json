@@ -32,6 +32,7 @@
     "eject": "react-scripts eject",
     "test": "react-scripts test --watchAll=false",
     "test:e2e:prod": "playwright test tests/prod-form-critical-path.spec.ts",
+    "test:e2e:custom": "playwright test tests/custom-link-path.spec.ts",
     "test:e2e:plaid": "playwright test tests/plaid-connection.spec.ts",
     "test:e2e": "playwright test"
   },
