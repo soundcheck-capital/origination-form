@@ -27,9 +27,17 @@ interface UsePlaidConnectionReturn {
   reset: () => void;
 }
 
+const PLAID_API_KEY = process.env.REACT_APP_PLAID_API_KEY || '';
+
+const plaidHeaders = (): Record<string, string> => ({
+  'Content-Type': 'application/json',
+  ...(PLAID_API_KEY ? { 'X-API-Key': PLAID_API_KEY } : {}),
+});
+
 export const usePlaidConnection = (): UsePlaidConnectionReturn => {
   const dispatch = useDispatch<AppDispatch>();
   const bankInfo = useSelector((state: RootState) => state.form.formData.bankInfo);
+  const companyName = useSelector((state: RootState) => state.form.formData.companyInfo.name);
 
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +54,7 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
     try {
       const res = await fetch(PLAID_LINK_TOKEN_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: plaidHeaders(),
         body: JSON.stringify({}),
       });
       if (!res.ok) {
@@ -83,8 +91,8 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
     try {
       const res = await fetch(PLAID_WEBHOOK_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ public_token }),
+        headers: plaidHeaders(),
+        body: JSON.stringify({ public_token, companyName }),
       });
       if (!res.ok) {
         throw new Error(`Webhook returned ${res.status}`);
@@ -101,7 +109,7 @@ export const usePlaidConnection = (): UsePlaidConnectionReturn => {
     } finally {
       setIsLoading(false);
     }
-  }, [dispatch]);
+  }, [dispatch, companyName]);
 
   const onExit = useCallback<PlaidLinkOnExit>((err) => {
     if (err) setError(err.display_message || err.error_message || 'Plaid Link exited with an error.');

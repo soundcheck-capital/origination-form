@@ -2,7 +2,7 @@ name: Playwright PR
 
 on:
   pull_request:
-    branches: [main-new]
+    branches: [main-new, stagging]
     types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
@@ -19,6 +19,8 @@ jobs:
       REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
       REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
       REACT_APP_SEND_SUMMARY: ${{ secrets.REACT_APP_SEND_SUMMARY }}
+      REACT_APP_PLAID_LINK_TOKEN_URL: ${{ secrets.REACT_APP_PLAID_LINK_TOKEN_URL }}
+      REACT_APP_PLAID_WEBHOOK_URL: ${{ secrets.REACT_APP_PLAID_WEBHOOK_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
