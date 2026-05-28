@@ -23,7 +23,7 @@ import { getTicketingCoFromUrl, getTicketingPartnerLogo, isValidTicketingPartner
 import { logCriticalEvent } from '../utils/criticalLogging';
 import { buildUnderwritingWebhookCompanyFields } from '../utils/underwritingFields';
 
-const STEP_TRANSITION_LOADER_MS = 1000;
+const STEP_TRANSITION_LOADER_MS = 2000;
 const STEP_SAVE_ANIMATION_MS = 200;
 
 const readPersistedStep = (): number => {
@@ -426,9 +426,7 @@ const MultiStepFormContent: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
-      {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
-
+    <div className="flex flex-row lg:w-[30%] xs:w-[100%] mx-auto">
       <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-x-clip">
         <div className="flex justify-center items-center gap-4">
           <img src={logo} alt="Logo" className="w-48 " />
@@ -480,15 +478,13 @@ const MultiStepFormContent: React.FC = () => {
           </div>
 
           {/* Form Content */}
-          <div className="bg-white mx-auto mt-8 w-full">
+          <div className="bg-white mx-auto mt-8 w-full animate-fade-in-right">
             <h1 className="text-2xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
             {renderStep()}
-            {/* {renderCurrentStepErrors()} */}
           </div>
-         
 
-          {/* Navigation Buttons */}
-          <div className="flex gap-4 w-full mx-auto mt-4  justify-center">
+          {/* Navigation Buttons — outside step fade-in so CTAs stay visible on white background */}
+          <div className="relative z-10 flex gap-4 w-full mx-auto mt-6 justify-center pb-4">
             {currentStep === 1 && (
               <ButtonPrimary className='lg:first:w-[40%] ' onClick={handleNextStep} disabled={isSavingStep || isSubmitting}>
                 {isSavingStep ? (
