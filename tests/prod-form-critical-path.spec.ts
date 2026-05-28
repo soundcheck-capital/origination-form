@@ -213,10 +213,10 @@ test("prod form critical path stays healthy", async ({ page }) => {
 
 // ─── isolated validation tests ───────────────────────────────────────────────
 
-test("step 4: Next is blocked when no files are uploaded", async ({ page }) => {
-  // Navigate through steps 1-3 using the minimum valid data, then verify
-  // that clicking Next on an empty step 4 shows validation errors instead of
-  // advancing to step 5.
+test("step 5: Next is blocked when no files are uploaded", async ({ page }) => {
+  // Navigate through steps 1-4 using the minimum valid data, then verify
+  // that clicking Next on an empty step 5 shows validation errors instead of
+  // advancing to step 6.
 
   await page.goto("/form", { waitUntil: "domcontentloaded" });
 
@@ -264,10 +264,16 @@ test("step 4: Next is blocked when no files are uploaded", async ({ page }) => {
   await page.locator('textarea[name="additionalComments"]').fill("Comments");
   await page.getByRole("button", { name: "Next" }).click();
 
-  // Step 4 — click Next without uploading anything
+  // Step 4 — Bank Connection (Plaid test mode bypass)
+  await expect(page.getByRole("heading", { name: "Bank Connection" })).toBeVisible();
+  await page.getByRole("button", { name: "Connect your bank account" }).click();
+  await expect(page.getByTestId("plaid-connected-card")).toBeVisible();
+  await page.getByRole("button", { name: "Next" }).click();
+
+  // Step 5 — click Next without uploading anything
   await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
 
-  // Must stay on step 4 (upload fields still visible) and show at least one error
+  // Must stay on step 5 (upload fields still visible) and show at least one error
   await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
 });
