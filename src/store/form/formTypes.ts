@@ -33,6 +33,7 @@ export interface Address {
     email: string;
     emailError: string;
     isSubmitted: boolean;
+    companyNameFromUrl: boolean;
     formData: {
       personalInfo: {
         email: string;

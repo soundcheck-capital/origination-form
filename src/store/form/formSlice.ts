@@ -159,7 +159,11 @@ const formSlice = createSlice({
     resetSubmitted: (state) => {
       state.isSubmitted = false;
       localStorage.removeItem('soundcheckFormData');
-    }
+    },
+    setCompanyNameFromUrl: (state, action: PayloadAction<boolean>) => {
+      state.companyNameFromUrl = action.payload;
+      saveToLocalStorage(state);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -186,20 +190,21 @@ const formSlice = createSlice({
   }
 });
 
-export const { 
-  setCurrentStep, 
-  updatePersonalInfo, 
-  updateCompanyInfo, 
-  updateTicketingInfo, 
-  updateVolumeInfo, 
-  updateFundsInfo, 
-  updateOwnershipInfo, 
+export const {
+  setCurrentStep,
+  updatePersonalInfo,
+  updateCompanyInfo,
+  updateTicketingInfo,
+  updateVolumeInfo,
+  updateFundsInfo,
+  updateOwnershipInfo,
   updateFinancesInfo,
   updateBankInfo,
   updateDiligenceInfo,
   loadSavedApplication,
   clearFormData,
   setSubmitted,
-  resetSubmitted
+  resetSubmitted,
+  setCompanyNameFromUrl
 } = formSlice.actions;
 export default formSlice.reducer;
