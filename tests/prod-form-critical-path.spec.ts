@@ -120,9 +120,11 @@ test("generic happy path", async ({ page }) => {
 
   await page.getByRole("button", { name: "Next" }).click();
 
-  // ── Step 2 — Get funding ──────────────────────────────────────────────────
+  // ── Step 2 — Get funding (step 1→2 shows a 2s loading screen) ─────────────
 
-  await expect(page.locator('select[name="timingOfFunding"]')).toBeVisible();
+  await expect(page.locator('select[name="timingOfFunding"]')).toBeVisible({
+    timeout: 15_000,
+  });
   await page.locator('select[name="timingOfFunding"]').selectOption("In the next month");
   await page.locator('select[name="useOfProceeds"]').selectOption("General Working Capital Needs");
 

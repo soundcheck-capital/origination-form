@@ -21,6 +21,7 @@ jobs:
       REACT_APP_SEND_SUMMARY: ${{ secrets.REACT_APP_SEND_SUMMARY }}
       REACT_APP_PLAID_LINK_TOKEN_URL: ${{ secrets.REACT_APP_PLAID_LINK_TOKEN_URL }}
       REACT_APP_PLAID_WEBHOOK_URL: ${{ secrets.REACT_APP_PLAID_WEBHOOK_URL }}
+      REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
