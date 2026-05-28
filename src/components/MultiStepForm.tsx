@@ -47,6 +47,13 @@ const MultiStepFormContent: React.FC = () => {
   const ticketingPartnerLogo = ticketingCoParam && isValidTicketingPartner(ticketingCoParam) 
     ? getTicketingPartnerLogo(ticketingCoParam) 
     : null;
+  useEffect(() => {
+    const healthUrl = process.env.REACT_APP_PLAID_HEALTH_URL;
+    if (healthUrl) {
+      fetch(healthUrl, { method: 'GET' }).catch(() => {});
+    }
+  }, []);
+
   // Redirection après soumission locale réussie
   useEffect(() => {
     if (isSubmitted) {
