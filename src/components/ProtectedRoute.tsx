@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PasswordProtection from './PasswordProtection';
+import { isClientFormAuthenticated } from '../utils/clientFormAuth';
 import { getCompanyNameFromUrl } from '../utils/urlParams';
 
 interface ProtectedRouteProps {
@@ -18,8 +19,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       setIsAuthenticated(true);
       return;
     }
-    const authenticated = localStorage.getItem('formAuthenticated') === 'true';
-    setIsAuthenticated(authenticated);
+    setIsAuthenticated(isClientFormAuthenticated());
   }, [location]);
 
   if (isAuthenticated === null) {

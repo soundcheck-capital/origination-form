@@ -16,10 +16,11 @@ import { useValidation } from "../../contexts/ValidationContext";
 
 const libraries: ("places")[] = ["places"];
 
+const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY?.trim() ?? '';
+
 export const AddressAutocomplete: React.FC<{ label: string, name: string, value: string, onSelect: any, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, error: string, onBlur: (e: React.FocusEvent<HTMLInputElement>) => void, type: string, ref?: React.RefObject<HTMLInputElement>, id: string, required?: boolean }> = ({ label, name, value, onSelect, onChange, error = '', onBlur, type, ref, id, required = false }) => {
-  //const dispatch = useDispatch();
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyA7_2peM-CW7KqJzdHEAmL2PYK-DEnjX0A",
+    googleMapsApiKey,
     libraries,
   });
   const inputRef = useRef<HTMLInputElement>(null);
@@ -118,6 +119,13 @@ export const AddressAutocomplete: React.FC<{ label: string, name: string, value:
       };
   }, [isLoaded]);
 
+  if (!googleMapsApiKey) {
+    return (
+      <div className="w-full mb-4 text-sm text-red-600 px-2">
+        Address autocomplete is unavailable (missing REACT_APP_GOOGLE_MAPS_API_KEY).
+      </div>
+    );
+  }
   if (loadError) return <div>Erreur de chargement Google Maps</div>;
   if (!isLoaded) return <div>Chargement...</div>;
 

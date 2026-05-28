@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo_white_bold.svg';
 import background from '../assets/background.jpeg';
+import { setClientFormAuth } from '../utils/clientFormAuth';
 import { getCompanyNameFromUrl } from '../utils/urlParams';
 
 const PasswordProtection: React.FC = () => {
@@ -54,7 +55,7 @@ const PasswordProtection: React.FC = () => {
       const isValid = data === true || data === 'true' || data?.valid === true || data?.success === true || data?.isPasswordValid === true;
 
       if (isValid) {
-        localStorage.setItem('formAuthenticated', 'true');
+        setClientFormAuth();
         navigate('/form');
       } else {
         setError('Incorrect password');

@@ -101,41 +101,36 @@ const formSlice = createSlice({
     },
     updatePersonalInfo: (state, action: PayloadAction<Partial<FormState['formData']>>) => {
       state.formData = { ...state.formData, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateCompanyInfo: (state, action: PayloadAction<Partial<FormState['formData']['companyInfo']>>) => {
       state.formData.companyInfo = { ...state.formData.companyInfo, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateTicketingInfo: (state, action: PayloadAction<Partial<FormState['formData']['ticketingInfo']>>) => {
       state.formData.ticketingInfo = { ...state.formData.ticketingInfo, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateVolumeInfo: (state, action: PayloadAction<Partial<FormState['formData']['volumeInfo']>>) => {
       state.formData.volumeInfo = { ...state.formData.volumeInfo, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateFundsInfo: (state, action: PayloadAction<Partial<FormState['formData']['fundsInfo']>>) => {
       state.formData.fundsInfo = { ...state.formData.fundsInfo, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateOwnershipInfo: (state, action: PayloadAction<Partial<FormState['formData']['ownershipInfo'] >>) => {
       state.formData.ownershipInfo = { ...state.formData.ownershipInfo, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateFinancesInfo: (state, action: PayloadAction<Partial<FormState['formData']['financesInfo']>>) => {
       state.formData.financesInfo = { ...state.formData.financesInfo, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateBankInfo: (state, action: PayloadAction<Partial<FormState['formData']['bankInfo']>>) => {
       state.formData.bankInfo = { ...state.formData.bankInfo, ...action.payload };
-      saveToLocalStorage(state);
     },
     updateDiligenceInfo: (state, action: PayloadAction<Partial<FormState['diligenceInfo']>>) => {
       state.diligenceInfo = mergeDiligenceInfo({
         ...state.diligenceInfo,
         ...action.payload,
       });
+    },
+    persistFormDraft: (state, action: PayloadAction<{ currentStep: number }>) => {
+      state.currentStep = action.payload.currentStep;
       saveToLocalStorage(state);
     },
     loadSavedApplication: (state, action) => {
@@ -197,6 +192,7 @@ export const {
   updateFinancesInfo,
   updateBankInfo,
   updateDiligenceInfo,
+  persistFormDraft,
   loadSavedApplication,
   clearFormData,
   setSubmitted,

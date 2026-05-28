@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
-import {   setSubmitted } from '../store/form/formSlice';
+import { persistFormDraft, setSubmitted } from '../store/form/formSlice';
 import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
@@ -23,10 +23,24 @@ import { getTicketingCoFromUrl, getTicketingPartnerLogo, isValidTicketingPartner
 import { logCriticalEvent } from '../utils/criticalLogging';
 import { buildUnderwritingWebhookCompanyFields } from '../utils/underwritingFields';
 
+const STEP_TRANSITION_LOADER_MS = 1000;
+const STEP_SAVE_ANIMATION_MS = 200;
+
+const readPersistedStep = (): number => {
+  try {
+    const saved = localStorage.getItem('soundcheckFormData');
+    if (!saved) return 1;
+    const step = JSON.parse(saved).currentStep;
+    return typeof step === 'number' && step >= 1 && step <= 6 ? step : 1;
+  } catch {
+    return 1;
+  }
+};
+
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(readPersistedStep);
   const [isLoading, setIsLoading] = useState(false);
   const formData = useSelector((state: RootState) => state.form);
   const [saveMessage, setSaveMessage] = useState('');
@@ -34,7 +48,12 @@ const MultiStepFormContent: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submitInFlightRef = useRef(false);
   const { validateAllSteps, validateCurrentStep, isDevelopment } = useFormValidation();
-  
+
+  const goToStep = (step: number) => {
+    setCurrentStep(step);
+    dispatch(persistFormDraft({ currentStep: step }));
+  };
+
   // Vérifier l'environnement (development, staging, production)
   const currentEnvironment = process.env.REACT_APP_ENVIRONMENT || 'development';
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string[] } | null>(null);
@@ -239,13 +258,12 @@ const MultiStepFormContent: React.FC = () => {
     if (currentStep === 1) {
       setIsLoading(true);
       
-      // Simuler l'analyse des informations pendant 3 secondes
       setTimeout(() => {
         setIsLoading(false);
-        setCurrentStep(currentStep + 1);
+        goToStep(currentStep + 1);
         setCurrentStepErrors({});
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 3000);
+      }, STEP_TRANSITION_LOADER_MS);
       
       return;
     }
@@ -254,12 +272,10 @@ const MultiStepFormContent: React.FC = () => {
     setIsSavingStep(true);
 
     try {
-      // Simuler une petite pause pour l'animation (500ms)
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, STEP_SAVE_ANIMATION_MS));
 
-      // Only clear errors if validation passes
       setCurrentStepErrors(null);
-      setCurrentStep(currentStep + 1);
+      goToStep(currentStep + 1);
       window.scrollTo(0, 0);
     } finally {
       setIsSavingStep(false);
@@ -268,13 +284,13 @@ const MultiStepFormContent: React.FC = () => {
 
   const handlePreviousStep = () => {
     setCurrentStepErrors(null);
-    setCurrentStep(currentStep - 1);
+    goToStep(currentStep - 1);
     window.scrollTo(0, 0);
   };
 
   const handleStepClick = (stepNumber: number) => {
     setCurrentStepErrors(null);
-    setCurrentStep(stepNumber);
+    goToStep(stepNumber);
     window.scrollTo(0, 0);
   };
 
