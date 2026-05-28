@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
-import {   setSubmitted } from '../store/form/formSlice';
+import { setSubmitted, updateCompanyInfo, setCompanyNameFromUrl } from '../store/form/formSlice';
 import { DiligenceFilesProvider } from '../contexts/DiligenceFilesContext';
 import { ValidationProvider, useValidation } from '../contexts/ValidationContext';
 import { useFileUpload } from '../hooks/useFileUpload';
@@ -22,6 +22,7 @@ import '../utils/debugUtils';
 import { getTicketingCoFromUrl, getTicketingPartnerLogo, isValidTicketingPartner } from '../utils/ticketingPartnerUtils';
 import { logCriticalEvent } from '../utils/criticalLogging';
 import { buildUnderwritingWebhookCompanyFields } from '../utils/underwritingFields';
+import { getCompanyNameFromUrl } from '../utils/urlParams';
 
 const MultiStepFormContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -53,6 +54,16 @@ const MultiStepFormContent: React.FC = () => {
       navigate('/submit-success');
     }
   }, [isSubmitted, navigate]);
+
+  useEffect(() => {
+    const companyNameFromUrl = getCompanyNameFromUrl();
+    if (!companyNameFromUrl) return;
+
+    if (!formData.formData.companyInfo.name) {
+      dispatch(updateCompanyInfo({ name: companyNameFromUrl, dba: companyNameFromUrl, legalBusinessName: companyNameFromUrl }));
+    }
+    dispatch(setCompanyNameFromUrl(true));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async () => {
     if (submitInFlightRef.current || isSubmitted) {
