@@ -33,7 +33,7 @@ const REQUIRED_UPLOAD_SELECTORS = [
 
 test("generic happy path", async ({ page }) => {
   const now = Date.now();
-  const tag = `E2E_PROD_${now}`;
+  const tag = `GENERIC_E2E_${now}`;
   const email = "e2e@example.com";
   const fixturePath = path.resolve("tests/fixtures/e2e-upload.csv");
 
