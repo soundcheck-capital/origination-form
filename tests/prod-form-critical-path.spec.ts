@@ -218,6 +218,22 @@ test("step 5: Next is blocked when no files are uploaded", async ({ page }) => {
   // that clicking Next on an empty step 5 shows validation errors instead of
   // advancing to step 6.
 
+  await page.addInitScript(() => {
+    (window as any).__PLAID_TEST_MODE__ = true;
+  });
+  const plaidWebhookHost = new URL(process.env.REACT_APP_PLAID_WEBHOOK_URL || "https://hook.us1.make.com/placeholder").pathname;
+  await page.route(`**${plaidWebhookHost}`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        institution: "Test Bank",
+        account_mask: "9999",
+        account_name: "Checking",
+      }),
+    });
+  });
+
   await page.goto("/form", { waitUntil: "domcontentloaded" });
 
   // Step 1
