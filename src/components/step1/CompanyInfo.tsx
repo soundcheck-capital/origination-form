@@ -22,12 +22,13 @@ const CompanyInfo: React.FC = () => {
   const companyInfo = useSelector((state: RootState) => state.form.formData.companyInfo);
   const personalInfo = useSelector((state: RootState) => state.form.formData.personalInfo);
   const { setFieldError } = useValidation();
- 
+  const companyNameLocked = useSelector((state: RootState) => state.form.companyNameFromUrl);
 
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if(name === "name"){
+      if (companyNameLocked) return;
       dispatch(updateCompanyInfo({ name: value, dba: value, legalBusinessName: value }));
       setFieldError('name', null);
     } else if (name === "role"){
@@ -47,7 +48,10 @@ const CompanyInfo: React.FC = () => {
     <div className="flex flex-col justify-center w-full animate-fade-in-right duration-1000">
       <StepTitle title="Company" />
 
-      <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}} required />
+      <TextField type="text" label="Company Name" name="name" value={companyInfo.name} onChange={handleChange} error='' onBlur={()=>{}} required disabled={companyNameLocked} />
+      {companyNameLocked && (
+        <p className="text-xs text-gray-500 -mt-3 mb-3 px-2">Company name set from your invitation link</p>
+      )}
       <TextField type="text" label="Your Role" name="role" value={personalInfo.role} onChange={handleChange} error='' onBlur={()=>{}} required />
 
       <DropdownField label="Company Type" name="clientType" value={companyInfo.clientType} onChange={handleChange} error='' onBlur={()=>{}} options={clientType} required />

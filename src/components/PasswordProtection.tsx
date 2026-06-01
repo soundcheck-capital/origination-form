@@ -56,7 +56,7 @@ const PasswordProtection: React.FC = () => {
 
       if (isValid) {
         setClientFormAuth();
-        navigate('/form');
+        navigate('/form' + window.location.search);
       } else {
         setError('Incorrect password');
       }
