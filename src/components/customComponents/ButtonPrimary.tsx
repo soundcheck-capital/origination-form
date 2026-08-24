@@ -1,34 +1,17 @@
 import React from 'react';
 
 const ButtonPrimary = ({ children, onClick, disabled, className }: { children: React.ReactNode, onClick: () => void, disabled: boolean, className?: string }) => {
+    const enabled =
+        'cursor-pointer bg-gradient-to-r from-[#f78fa7] to-[#fbbf7a] shadow-[0_8px_22px_rgba(247,143,167,0.4)]';
+    const disabledClass =
+        'cursor-not-allowed bg-gradient-to-r from-[#f9c3cf] to-[#fcdcae] opacity-85 shadow-none';
     return (
-        <button 
-            onClick={onClick} 
-            disabled={disabled} 
-            className={`
-                ${className || ''} 
-                px-6 py-2.5 
-                rounded-3xl 
-                font-bold 
-                text-white
-                flex items-center justify-center
-                relative
-                backdrop-blur-md
-                border border-white/40
-                bg-gradient-to-br from-rose-400/60 via-rose-500/70 to-amber-500/60
-                shadow-lg shadow-rose-300/40
-                hover:from-rose-500/70 hover:via-rose-600/80 hover:to-amber-600/70
-                hover:shadow-xl hover:shadow-rose-400/50
-                hover:border-white/50
-                active:translate-y-0.5
-                disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg
-                transition-all duration-300 ease-out
-                before:absolute before:inset-0 before:rounded-3xl
-                before:bg-gradient-to-br before:from-white/20 before:to-transparent
-                before:pointer-events-none
-            `}
+        <button
+            onClick={onClick}
+            disabled={disabled}
+            className={`${className || ''} inline-flex items-center justify-center rounded-full border-0 px-11 py-4 text-[17px] font-bold text-white transition-opacity duration-150 ${disabled ? disabledClass : enabled}`}
         >
-            <span className="relative z-10">{children}</span>
+            {children}
         </button>
     );
 };

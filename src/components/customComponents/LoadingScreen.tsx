@@ -13,7 +13,7 @@ const LoadingScreen: React.FC = () => {
   }, []);
 
   return (
-    <div className={`fixed inset-0 bg-white z-50 flex flex-col items-center justify-center transition-opacity duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`fixed inset-0 bg-[#fbfbfc] z-50 flex flex-col items-center justify-center transition-opacity duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
       
        {/* Indicateur de progression avec barres animées comme le logo */}
        <LoadingBars className="mt-8" visible={barsVisible} />

@@ -372,24 +372,23 @@ const MultiStepFormContent: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row  animate-fade-in-right duration-1000 lg:w-[30%] xs:w-[100%] mx-auto">
-      {/* <Sidebar activeMenuItem={activeMenuItem} setActiveMenuItem={setActiveMenuItem} /> */}
-
-      <main className="w-full h-full flex flex-col bg-white p-6 relative overflow-x-clip">
-        <div className="flex justify-center items-center gap-4">
-          <img src={logo} alt="Logo" className="w-48 " />
+    <div className="min-h-screen w-full animate-fade-in-right bg-[#fbfbfc] pb-20 duration-1000">
+      <div className="sticky top-0 z-20 border-b border-[#eef0f3] bg-[#fbfbfc]/90 backdrop-blur-[10px]">
+        <div className="mx-auto flex max-w-[760px] items-center justify-between gap-4 px-7 py-[18px]">
+          <img src={logo} alt="SoundCheck Capital" className="h-10 w-auto shrink-0" />
           {ticketingPartnerLogo && (
-            <img 
-              src={ticketingPartnerLogo} 
-              alt={`${ticketingCoParam} Logo`} 
-              className="h-12 object-contain" 
+            <img
+              src={ticketingPartnerLogo}
+              alt={`${ticketingCoParam} Logo`}
+              className="h-10 shrink-0 object-contain"
             />
           )}
         </div>
+        <div className="h-[3px] bg-gradient-to-r from-[#f8d36b] to-[#f4a0a8]" />
+      </div>
 
-       
-
-        <div className="min-h-screen bg-white py-8">
+      <main className="mx-auto max-w-[760px] px-7 relative overflow-x-clip">
+        <div className="py-8">
           {/* Progress Bar */}
           <div className="w-full mx-auto">
             <div className="relative w-full">
@@ -426,8 +425,8 @@ const MultiStepFormContent: React.FC = () => {
           </div>
 
           {/* Form Content */}
-          <div className="bg-white mx-auto mt-8 w-full">
-            <h1 className="text-2xl mb-4 text-center font-bold text-neutral-900">{stepTitles()}</h1>
+          <div className="mx-auto mt-8 w-full">
+            <h1 className="mb-6 mt-4 text-center text-[32px] font-extrabold tracking-tight text-[#161b22] sm:text-[40px]">{stepTitles()}</h1>
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>

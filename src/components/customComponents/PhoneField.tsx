@@ -141,24 +141,26 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
 
   return (
     <div className="relative w-full mb-4" data-field-name={name}>
-      <label className="text-xs text-gray-500 px-2 top-2 start-1">
+      <label htmlFor={id} className="mb-[7px] ml-1 block text-left text-sm text-[#6b7280]">
         {label}
+        {required ? <span className="text-[#ef6b2f]"> *</span> : null}
       </label>
-      
-      <div className="flex items-center gap-2">
+
+      <div className="flex items-center gap-3">
         {/* Sélecteur de préfixe pays */}
         <select
           value={countryCode}
           onChange={handleCountryCodeChange}
           className={`
-            block p-2 text-sm text-gray-900 rounded-3xl border focus:outline-none
-            ${hasFieldError 
-              ? 'border-gray-300 focus:border-red-500' 
-              : 'border-gray-300 focus:border-purple-400'
+            block w-[150px] flex-none rounded-[14px] border bg-white px-4 py-3.5 text-[15px] text-[#1f2a37]
+            focus:outline-none focus:ring-[3px] focus:ring-violet-500/10
+            ${hasFieldError
+              ? 'border-red-300 focus:border-red-500'
+              : 'border-[#dfe3e8] focus:border-violet-500'
             }
-            min-w-[120px]
           `}
           style={{ fontFamily: 'inherit' }}
+          aria-label="Country code"
         >
           {COUNTRY_CODES.map(({ code, label: codeLabel }) => (
             <option key={code} value={code}>
@@ -166,7 +168,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
             </option>
           ))}
         </select>
-        
+
         {/* Champ de numéro */}
         <input
           id={id}
@@ -176,20 +178,20 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
           onChange={handlePhoneChange}
           onFocus={handleFocus}
           onBlur={handleBlurEvent}
-          placeholder={countryCode === '+1' ? '(XXX) XXX-XXXX' : 'Enter phone number'}
+          placeholder={countryCode === '+1' ? '(555) 123-4567' : 'Enter phone number'}
           className={`
-            flex-1 block p-2 text-sm text-gray-900 rounded-3xl border
-            focus:outline-none
-            ${hasFieldError 
-              ? 'border-gray-300 focus:border-red-500' 
-              : 'border-gray-300 focus:border-purple-400'
+            min-w-0 flex-1 rounded-[14px] border bg-white px-[18px] py-3.5 text-base text-[#1f2a37] placeholder:text-[#aab1bb]
+            focus:outline-none focus:ring-[3px] focus:ring-violet-500/10
+            ${hasFieldError
+              ? 'border-red-300 focus:border-red-500'
+              : 'border-[#dfe3e8] focus:border-violet-500'
             }
           `}
         />
       </div>
-      
+
       {(fieldError || error) && (
-        <p className="mt-1 text-sm text-red-600 px-2">{fieldError || error}</p>
+        <p className="mt-1.5 ml-1 text-left text-sm text-red-600">{fieldError || error}</p>
       )}
     </div>
   );

@@ -24,8 +24,8 @@ const Switch: React.FC<SwitchProps> = ({ id, name, checked, onChange, className 
            backdrop-blur-md border border-white/30
            bg-gradient-to-r from-gray-300/50 via-gray-200/50 to-gray-100/50
            shadow-lg shadow-gray-200/50
-           checked:from-blue-200/50 checked:via-purple-100/45 checked:to-rose-200/50
-           checked:shadow-lg checked:shadow-blue-200/30 checked:border-white/60
+           checked:from-[#f78fa7]/60 checked:via-[#f9a98f]/55 checked:to-[#fbbf7a]/60
+           checked:shadow-lg checked:shadow-rose-200/40 checked:border-white/60
            overflow-visible
            after:absolute after:left-[-4px] after:top-1/2 after:-translate-y-1/2
            after:h-7 after:w-7 after:rounded-full
@@ -35,8 +35,8 @@ const Switch: React.FC<SwitchProps> = ({ id, name, checked, onChange, className 
            after:z-10
            checked:after:translate-x-[2.5rem] checked:after:bg-white
            hover:shadow-xl hover:shadow-gray-300/60
-           checked:hover:shadow-xl checked:hover:shadow-blue-300/40
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/30 focus-visible:ring-offset-2
+           checked:hover:shadow-xl checked:hover:shadow-rose-300/40
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/30 focus-visible:ring-offset-2
            motion-reduce:transition-none motion-reduce:after:transition-none
            ${className}`}
       />

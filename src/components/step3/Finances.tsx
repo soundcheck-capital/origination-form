@@ -231,25 +231,15 @@ const FinancesStep: React.FC = () => {
               <button
                 onClick={addDebt}
                 className="
-                  inline-block
-                  px-4 py-2
-                  backdrop-blur-md
-                  border border-white/60
-                  bg-gradient-to-br from-blue-200/50 via-purple-100/45 to-rose-200/50
-                  shadow-lg shadow-blue-200/30
-                  rounded-full
-                  before:absolute before:inset-0 before:rounded-full
-                  before:bg-gradient-to-br before:from-white/20 before:to-transparent
-                  before:pointer-events-none
-                  relative
-                  ring-1 ring-white/50
-                  hover:shadow-xl hover:shadow-blue-300/40
-                  hover:border-white/70
-                  transition-all duration-300 ease-out
-                  cursor-pointer
+                  inline-flex items-center justify-center
+                  cursor-pointer rounded-full border border-[#dfe3e8] bg-white
+                  px-[26px] py-3 text-sm font-semibold text-[#1f2a37]
+                  shadow-[0_1px_2px_rgba(16,24,40,0.04)]
+                  hover:border-[#cfd5dd]
+                  transition-opacity duration-150
                 "
               >
-                <span className="relative z-10 text-gray-700 font-semibold text-sm">
+                <span>
                   Add Debt
                 </span>
               </button>

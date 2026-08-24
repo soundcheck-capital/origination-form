@@ -35,13 +35,13 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ renderValidationErrors, onSte
     localStorage.setItem('DISABLE_SUBMISSION_BLOCK', disableSubmissionBlock.toString());
   }, [disableSubmissionBlock]);
 
-  const cardClass = "bg-white rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 relative";
+  const cardClass = "bg-white rounded-2xl border border-[#eef0f3] p-4 cursor-pointer hover:border-[#cfd5dd] transition-colors duration-200 relative text-left";
 
   return (
     <div className="flex flex-col items-center justify-center w-full mt-4 animate-fade-in-right duration-1000">
       {renderValidationErrors}
 
-      <div className="w-full max-w-2xl space-y-1 text-xs">
+      <div className="w-full max-w-2xl space-y-3 text-xs">
 
         {/* Step 1 — Business Info */}
         <div className={cardClass} onClick={() => onStepClick?.(1)}>
