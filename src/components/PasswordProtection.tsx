@@ -55,7 +55,7 @@ const PasswordProtection: React.FC = () => {
 
       if (isValid) {
         localStorage.setItem('formAuthenticated', 'true');
-        navigate('/form');
+        navigate('/form' + window.location.search);
       } else {
         setError('Incorrect password');
       }

@@ -11,7 +11,8 @@ interface FileUploadFieldProps {
   multiple?: boolean;
   className?: string;
   onFilesChange?: (fileInfos: any[]) => void;
-  title?: string;
+  title?: React.ReactNode;
+  uploadPeriods?: string[];
   required?: boolean;
   error?: string;
 }
@@ -24,6 +25,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   className = "",
   onFilesChange,
   title = "",
+  uploadPeriods,
   required = false,
   error = ''
 }) => {
@@ -393,9 +395,22 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   }; */
 
   return (  
-    <div className={`flex flex-col w-full mb-6 ${className}`}>
+    <div className={`flex flex-col w-full mb-6 ${className}`} data-field-name={field}>
       <h4 className="ml-1 text-left text-sm font-semibold text-[#1f2a37] leading-tight">{title}</h4>
-      {description && <p className="ml-1 text-left text-[13px] text-[#9aa3af] leading-tight" dangerouslySetInnerHTML={{ __html: description }} />}
+      {uploadPeriods && uploadPeriods.length > 0 && (
+        <p className="mt-1.5 ml-1 flex flex-wrap items-center gap-1.5">
+          <span className="text-[10px] text-[#6b7280]">One file each for</span>
+          {uploadPeriods.map((period) => (
+            <span
+              key={period}
+              className="inline-flex rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-medium text-orange-900 ring-1 ring-orange-200/80"
+            >
+              {period}
+            </span>
+          ))}
+        </p>
+      )}
+      {description && <p className="ml-1 text-left text-[13px] text-[#9aa3af] leading-tight mt-1" dangerouslySetInnerHTML={{ __html: description }} />}
 
       <div
         className={`relative border-[1.5px] border-dashed rounded-2xl px-5 py-4 mt-2 text-center transition-colors ${

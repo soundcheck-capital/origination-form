@@ -145,6 +145,22 @@ export const clientType = {
     'Venue':'The Venue (e.g. MSG)',
     'It varies':'It varies'
   };
+
+  export const paymentProcessorOptions = {
+    'Stripe': 'Stripe',
+    'PayPal': 'PayPal',
+    'Square': 'Square',
+    'Adyen': 'Adyen',
+    'Other': 'Other',
+  };
+
+  export const accountingSystemOptions = {
+    'QuickBooks': 'QuickBooks',
+    'Xero': 'Xero',
+    'NetSuite': 'NetSuite',
+    'Excel': 'Excel',
+    'Other': 'Other',
+  };
   export const precision = [
     'The Ticketing Co is the merchant of record',
     'From the Payment Processor (e.g. Stripe) We are the merchant of record',

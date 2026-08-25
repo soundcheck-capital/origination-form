@@ -1,7 +1,63 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from './initialFormState';
 import { loadApplication, saveApplication, submitApplication } from './formThunks';
-import { FormState } from './formTypes';
+import { FormState, DiligenceFileData } from './formTypes';
+
+const mergeDiligenceInfo = (
+  saved?: Partial<FormState['diligenceInfo']>
+): FormState['diligenceInfo'] => {
+  const base = initialState.diligenceInfo;
+  return (Object.keys(base) as Array<keyof FormState['diligenceInfo']>).reduce(
+    (merged, key) => {
+      const savedField = saved?.[key];
+      merged[key] = {
+        files: savedField?.files ?? [],
+        fileInfos: savedField?.fileInfos ?? [],
+      };
+      return merged;
+    },
+    {} as Record<keyof FormState['diligenceInfo'], DiligenceFileData>
+  ) as FormState['diligenceInfo'];
+};
+
+const hydrateFormState = (saved: Partial<FormState>): FormState => ({
+  ...initialState,
+  ...saved,
+  formData: {
+    ...initialState.formData,
+    ...saved.formData,
+    personalInfo: {
+      ...initialState.formData.personalInfo,
+      ...saved.formData?.personalInfo,
+    },
+    companyInfo: {
+      ...initialState.formData.companyInfo,
+      ...saved.formData?.companyInfo,
+    },
+    ticketingInfo: {
+      ...initialState.formData.ticketingInfo,
+      ...saved.formData?.ticketingInfo,
+    },
+    volumeInfo: {
+      ...initialState.formData.volumeInfo,
+      ...saved.formData?.volumeInfo,
+    },
+    fundsInfo: {
+      ...initialState.formData.fundsInfo,
+      ...saved.formData?.fundsInfo,
+    },
+    ownershipInfo: {
+      ...initialState.formData.ownershipInfo,
+      ...saved.formData?.ownershipInfo,
+    },
+    financesInfo: {
+      ...initialState.formData.financesInfo,
+      ...saved.formData?.financesInfo,
+    },
+  },
+  diligenceInfo: mergeDiligenceInfo(saved.diligenceInfo),
+  isSubmitted: false,
+});
 
 // Fonction pour sauvegarder dans le localStorage
 const saveToLocalStorage = (state: FormState) => {
@@ -33,11 +89,7 @@ const formSlice = createSlice({
     // Essayer de charger les données sauvegardées au démarrage
     const savedData = loadFromLocalStorage();
     if (savedData) {
-      return {
-        ...initialState,
-        ...savedData,
-        isSubmitted: false // Toujours false au démarrage, seul le backend détermine
-      };
+      return hydrateFormState(savedData);
     }
     
     return initialState;
@@ -75,17 +127,24 @@ const formSlice = createSlice({
       state.formData.financesInfo = { ...state.formData.financesInfo, ...action.payload };
       saveToLocalStorage(state);
     },
+    updateBankInfo: (state, action: PayloadAction<Partial<FormState['formData']['bankInfo']>>) => {
+      state.formData.bankInfo = { ...state.formData.bankInfo, ...action.payload };
+      saveToLocalStorage(state);
+    },
     updateDiligenceInfo: (state, action: PayloadAction<Partial<FormState['diligenceInfo']>>) => {
-      state.diligenceInfo = { ...state.diligenceInfo, ...action.payload };
+      state.diligenceInfo = mergeDiligenceInfo({
+        ...state.diligenceInfo,
+        ...action.payload,
+      });
       saveToLocalStorage(state);
     },
     loadSavedApplication: (state, action) => {
-      const newState = {
+      const newState = hydrateFormState({
         ...state,
         currentStep: action.payload.currentStep || 0,
-        formData: action.payload.formData || initialState.formData,
-        diligenceInfo: action.payload.diligenceInfo || initialState.diligenceInfo
-      };
+        formData: action.payload.formData,
+        diligenceInfo: action.payload.diligenceInfo,
+      });
       saveToLocalStorage(newState);
       return newState;
     },
@@ -100,17 +159,21 @@ const formSlice = createSlice({
     resetSubmitted: (state) => {
       state.isSubmitted = false;
       localStorage.removeItem('soundcheckFormData');
-    }
+    },
+    setCompanyNameFromUrl: (state, action: PayloadAction<boolean>) => {
+      state.companyNameFromUrl = action.payload;
+      saveToLocalStorage(state);
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(loadApplication.fulfilled, (state, action) => {
-        const newState = {
+        const newState = hydrateFormState({
           ...state,
           currentStep: action.payload.currentStep || 1,
-          formData: action.payload.formData || initialState.formData,
-          diligenceInfo: action.payload.diligenceInfo || initialState.diligenceInfo
-        };
+          formData: action.payload.formData,
+          diligenceInfo: action.payload.diligenceInfo,
+        });
         saveToLocalStorage(newState);
         return newState;
       })
@@ -127,19 +190,21 @@ const formSlice = createSlice({
   }
 });
 
-export const { 
-  setCurrentStep, 
-  updatePersonalInfo, 
-  updateCompanyInfo, 
-  updateTicketingInfo, 
-  updateVolumeInfo, 
-  updateFundsInfo, 
-  updateOwnershipInfo, 
-  updateFinancesInfo, 
-  updateDiligenceInfo, 
+export const {
+  setCurrentStep,
+  updatePersonalInfo,
+  updateCompanyInfo,
+  updateTicketingInfo,
+  updateVolumeInfo,
+  updateFundsInfo,
+  updateOwnershipInfo,
+  updateFinancesInfo,
+  updateBankInfo,
+  updateDiligenceInfo,
   loadSavedApplication,
   clearFormData,
   setSubmitted,
-  resetSubmitted
+  resetSubmitted,
+  setCompanyNameFromUrl
 } = formSlice.actions;
 export default formSlice.reducer;

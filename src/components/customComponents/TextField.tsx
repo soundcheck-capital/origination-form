@@ -1,6 +1,6 @@
 import { useValidation } from '../../contexts/ValidationContext';
 
-const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type, id, placeholder, required }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, error: string, onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void, onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void, type: string, id?: string, placeholder?: string, required?: boolean }) => {
+const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type, id, placeholder, required, disabled }: { label: string, name: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, error: string, onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void, onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void, type: string, id?: string, placeholder?: string, required?: boolean, disabled?: boolean }) => {
   const inputId = id || name.replace(/\s+/g, '_').toLowerCase();
   const { hasError, getFieldError } = useValidation();
   const hasFieldError = hasError(name);
@@ -22,9 +22,10 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
           hasFieldError
             ? 'border-red-300 focus:border-red-500'
             : 'border-[#dfe3e8] focus:border-violet-500'
-        }`}
+        } ${disabled ? 'bg-gray-50 cursor-not-allowed opacity-75' : ''}`}
         placeholder={placeholder || ''}
         required={required}
+        disabled={disabled}
         onChange={onChange}
         onBlur={onBlur}
         onFocus={onFocus}

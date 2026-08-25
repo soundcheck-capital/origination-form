@@ -7,6 +7,7 @@ const ButtonPrimary = ({ children, onClick, disabled, className }: { children: R
         'cursor-not-allowed bg-gradient-to-r from-[#f9c3cf] to-[#fcdcae] opacity-85 shadow-none';
     return (
         <button
+            type="button"
             onClick={onClick}
             disabled={disabled}
             className={`${className || ''} inline-flex items-center justify-center rounded-full border-0 px-11 py-4 text-[17px] font-bold text-white transition-opacity duration-150 ${disabled ? disabledClass : enabled}`}

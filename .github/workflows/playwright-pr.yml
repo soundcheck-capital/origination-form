@@ -2,7 +2,7 @@ name: Playwright PR
 
 on:
   pull_request:
-    branches: [main-new]
+    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
@@ -19,6 +19,11 @@ jobs:
       REACT_APP_WEBHOOK_URL: ${{ secrets.REACT_APP_WEBHOOK_URL }}
       REACT_APP_WEBHOOK_URL_FILES: ${{ secrets.REACT_APP_WEBHOOK_URL_FILES }}
       REACT_APP_SEND_SUMMARY: ${{ secrets.REACT_APP_SEND_SUMMARY }}
+      REACT_APP_PLAID_LINK_TOKEN_URL: ${{ secrets.REACT_APP_PLAID_LINK_TOKEN_URL }}
+      REACT_APP_PLAID_WEBHOOK_URL: ${{ secrets.REACT_APP_PLAID_WEBHOOK_URL }}
+      REACT_APP_CHECK_PASSWORD_CUSTOMER_LINK_WEBHOOK: ${{ secrets.REACT_APP_CHECK_PASSWORD_CUSTOMER_LINK_WEBHOOK }}
+      E2E_COMPANY_NAME: ${{ secrets.E2E_COMPANY_NAME }}
+      E2E_COMPANY_PASSWORD: ${{ secrets.E2E_COMPANY_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,8 +40,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright critical path
+      - name: Run Playwright critical path (generic)
         run: npm run test:e2e:prod
+
+      - name: Run Playwright critical path (custom link)
+        if: ${{ env.E2E_COMPANY_NAME != '' }}
+        run: npm run test:e2e:custom
 
       - name: Upload Playwright artifacts
         if: ${{ always() }}

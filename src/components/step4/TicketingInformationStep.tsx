@@ -35,6 +35,25 @@ const TicketingInformationStep: React.FC = () => {
           required={ticketingInfo.paymentProcessing === 'Venue' ? true : false}
         />
 
+        <FileUploadField
+          field="futureEventSchedule"
+          title="Schedule of Future Events"
+          description="Upload the schedule of future events you are seeking financing for"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
+          multiple={true}
+          onFilesChange={(fileInfos) => handleFilesChange('futureEventSchedule', fileInfos)}
+          required={true}
+        />
+
+        <FileUploadField
+          field="venueAgreements"
+          title="Venue Agreements"
+          accept=".xlsx,.pdf,.csv,.jpg,.png"
+          multiple={true}
+          onFilesChange={(fileInfos) => handleFilesChange('venueAgreements', fileInfos)}
+          required={true}
+        />
+
       </div>
     </div>
   );

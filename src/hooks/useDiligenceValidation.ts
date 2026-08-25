@@ -13,10 +13,15 @@ export const useDiligenceValidation = () => {
   };
 
   const validateFinancialInformation = (): boolean => {
-    return (
-      diligenceInfo.financialStatements.fileInfos.length > 0 &&
-      diligenceInfo.bankStatement.fileInfos.length > 0
-    );
+    const hasRequiredFinancialDocuments =
+      diligenceInfo.financialsYtdPL.fileInfos.length > 0 &&
+      diligenceInfo.financialsYtdBS.fileInfos.length > 0 &&
+      diligenceInfo.financialsYear1PL.fileInfos.length > 0 &&
+      diligenceInfo.financialsYear1BS.fileInfos.length > 0 &&
+      diligenceInfo.financialsYear2PL.fileInfos.length > 0 &&
+      diligenceInfo.financialsYear2BS.fileInfos.length > 0;
+
+    return hasRequiredFinancialDocuments && diligenceInfo.bankStatement.fileInfos.length > 0;
   };
 
   const validateLegalInformation = (): boolean => {
@@ -49,8 +54,23 @@ export const useDiligenceValidation = () => {
     }
 
     // Validation Financial Information
-    if (diligenceInfo.financialStatements.fileInfos.length === 0) {
-      errors.push('Financial statements are required');
+    if (diligenceInfo.financialsYtdPL.fileInfos.length === 0) {
+      errors.push('Year To Date — P&L is required');
+    }
+    if (diligenceInfo.financialsYtdBS.fileInfos.length === 0) {
+      errors.push('Year To Date — Balance Sheet is required');
+    }
+    if (diligenceInfo.financialsYear1PL.fileInfos.length === 0) {
+      errors.push('Year - 1 — P&L is required');
+    }
+    if (diligenceInfo.financialsYear1BS.fileInfos.length === 0) {
+      errors.push('Year - 1 — Balance Sheet is required');
+    }
+    if (diligenceInfo.financialsYear2PL.fileInfos.length === 0) {
+      errors.push('Year - 2 — P&L is required');
+    }
+    if (diligenceInfo.financialsYear2BS.fileInfos.length === 0) {
+      errors.push('Year - 2 — Balance Sheet is required');
     }
     if (diligenceInfo.bankStatement.fileInfos.length === 0) {
       errors.push('Bank statements are required');
