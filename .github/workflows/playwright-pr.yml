@@ -2,7 +2,7 @@ name: Playwright PR
 
 on:
   pull_request:
-    branches: [main-new, stagging]
+    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
