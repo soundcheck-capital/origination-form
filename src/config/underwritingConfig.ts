@@ -96,7 +96,7 @@ export const RISK_MATRIX = [
     maxAdvancePercent: {
       V_O: 0.10,
       P: 0.10,
-      F: 0.11
+      F: 0.10
     },
     description: 'Medium-High Risk'
   },
