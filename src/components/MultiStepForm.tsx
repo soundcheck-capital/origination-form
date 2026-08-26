@@ -423,7 +423,7 @@ const MultiStepFormContent: React.FC = () => {
   return (
     <div className="min-h-screen w-full animate-fade-in-right bg-[#fbfbfc] pb-20 duration-1000">
       <div className="sticky top-0 z-20 border-b border-[#eef0f3] bg-[#fbfbfc]/90 backdrop-blur-[10px]">
-        <div className="mx-auto flex max-w-[760px] items-center justify-between gap-4 px-7 py-[18px]">
+        <div className="mx-auto flex max-w-[760px] items-center justify-center gap-4 px-7 py-[18px]">
           <img src={logo} alt="SoundCheck Capital" className="h-10 w-auto shrink-0" />
           {ticketingPartnerLogo && (
             <img
@@ -475,7 +475,7 @@ const MultiStepFormContent: React.FC = () => {
 
           {/* Form Content */}
           <div className="mx-auto mt-8 w-full">
-            <h1 className="mb-6 mt-4 text-center text-[32px] font-extrabold tracking-tight text-[#161b22] sm:text-[40px]">{stepTitles()}</h1>
+            <h1 className="mb-6 mt-4 text-center text-2xl font-extrabold tracking-tight text-[#161b22] sm:text-3xl">{stepTitles()}</h1>
             {renderStep()}
             {/* {renderCurrentStepErrors()} */}
           </div>

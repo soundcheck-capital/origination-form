@@ -4,7 +4,7 @@
  * Implements the updated underwriting formula based on:
  * - Risk Score calculation from 4 categories
  * - Risk matrix for Max Advance %
- * - Final advance amount with $500k cap
+ * - Final advance amount capped at MAX_ADVANCE_CAP
  */
 
 import {

@@ -168,7 +168,7 @@ export const clientType = {
     ''
   ];
   export const timingOfFunding = {
-    'In the next 2 weeks':'In the next 2 weeks',
+    'In the next week':'In the next week',
     'In the next month':'In the next month',
     'In the next 3 months':'In the next 3 months',
   };
