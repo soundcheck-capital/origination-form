@@ -135,8 +135,8 @@ const Funding: React.FC = () => {
           " style={{
             boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5), 0 0 20px rgba(147, 51, 234, 0.1), 0 0 30px rgba(236, 72, 153, 0.1)'
           }}>
-            <p className='text-2xl text-neutral-900 mx-auto mb-4 text-center font-medium relative z-10'>You're eligible for an advance up to:</p>
-            <h3 className='font-black text-6xl text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 drop-shadow-sm relative z-10' 
+            <p className='text-lg text-neutral-900 mx-auto mb-4 text-center font-medium relative z-10'>You're eligible for an advance up to:</p>
+            <h3 className='font-black text-4xl sm:text-5xl text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 drop-shadow-sm relative z-10'
                 style={{ 
                   fontFamily: '"SF Pro Display", "Helvetica Neue", "Arial Black", "Impact", "Franklin Gothic Medium", sans-serif', 
                   fontWeight: 900, 

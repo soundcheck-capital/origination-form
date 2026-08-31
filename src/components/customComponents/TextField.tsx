@@ -5,35 +5,37 @@ const TextField = ({ label, name, value, onChange, error, onBlur, onFocus, type,
   const { hasError, getFieldError } = useValidation();
   const hasFieldError = hasError(name);
   const fieldError = getFieldError(name);
-  
-  return (  
+
+  return (
     <div className="w-full mb-4" onFocus={onFocus} data-field-name={name}>
-      <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
-      <input 
-        autoComplete="on" 
-        type={type} 
-        id={inputId} 
-        value={value} 
-        name={name} 
-        className={`w-full px-4 py-2 text-sm text-gray-900 rounded-3xl border focus:outline-none  focus:ring-purple-400 ${
+      <label htmlFor={inputId} className="mb-[7px] ml-1 block text-left text-sm text-[#6b7280]">
+        {label}
+        {required ? <span className="text-[#ef6b2f]"> *</span> : null}
+      </label>
+      <input
+        autoComplete="on"
+        type={type}
+        id={inputId}
+        value={value}
+        name={name}
+        className={`w-full rounded-[14px] border bg-white px-[18px] py-3.5 text-base text-[#1f2a37] placeholder:text-[#aab1bb] focus:outline-none focus:ring-[3px] focus:ring-violet-500/10 ${
           hasFieldError
-            ? 'border-gray-300 focus:border-red-500'
-            : 'border-gray-300 focus:border-purple-400'
-        } ${disabled ? 'bg-gray-100 cursor-not-allowed opacity-75' : ''}`}
+            ? 'border-red-300 focus:border-red-500'
+            : 'border-[#dfe3e8] focus:border-violet-500'
+        } ${disabled ? 'bg-gray-50 cursor-not-allowed opacity-75' : ''}`}
         placeholder={placeholder || ''}
         required={required}
         disabled={disabled}
-        onChange={onChange} 
-        onBlur={onBlur} 
-        onFocus={onFocus} 
-        title='Please enter your information here' 
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        title='Please enter your information here'
       />
       {fieldError && (
-        <p className="mt-1 text-sm text-red-600 px-2">{fieldError}</p>
+        <p className="mt-1.5 ml-1 text-left text-sm text-red-600">{fieldError}</p>
       )}
     </div>
   );
 };
 
 export default TextField;
-

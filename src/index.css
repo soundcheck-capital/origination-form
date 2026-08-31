@@ -1,6 +1,8 @@
 body {
   margin: 0;
   font-family: 'Libre Franklin', sans-serif;
+  background: #fbfbfc;
+  color: #1f2a37;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

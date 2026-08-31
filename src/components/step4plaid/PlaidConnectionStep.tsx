@@ -25,8 +25,8 @@ const PlaidConnectionStep: React.FC = () => {
     <div className="flex flex-col w-full animate-fade-in-right duration-1000">
       <StepTitle title="Connect your bank account" />
 
-      <div className="w-full max-w-2xl mx-auto bg-white rounded-lg p-6 mt-4">
-        <p className="text-sm text-gray-600 mb-4">
+      <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl border border-[#eef0f3] p-6 mt-4 text-left">
+        <p className="text-[15px] text-[#5b6573] mb-4">
           We use Plaid to securely connect to your business bank account. We only read account
           identity, balances and recent transactions — we never move money or store your credentials.
         </p>

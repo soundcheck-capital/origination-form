@@ -132,39 +132,40 @@ export const AddressAutocomplete: React.FC<{ label: string, name: string, value:
   };
   
   return <div className="w-full mb-4">
-    <label className="text-xs text-gray-500 px-2 top-2 start-1">
+    <label htmlFor={id} className="mb-[7px] ml-1 block text-left text-sm text-[#6b7280]">
       {label}
+      {required ? <span className="text-[#ef6b2f]"> *</span> : null}
     </label>
     <div className="relative">
-      <input 
-        autoComplete="on" 
-        ref={inputRef} 
-        type={type} 
-        id={id} 
-        value={value} 
-        name={name} 
-        className={`block w-full p-2 text-sm text-gray-900 rounded-3xl border focus:ring-1 focus:ring-purple-400 focus:outline-none ${
-          hasSelectedFromGoogle 
-            ? 'border-green-400 focus:border-green-500' 
-            : 'border-gray-300 focus:border-purple-400'
+      <input
+        autoComplete="on"
+        ref={inputRef}
+        type={type}
+        id={id}
+        value={value}
+        name={name}
+        className={`block w-full rounded-[14px] border bg-white px-[18px] py-3.5 text-base text-[#1f2a37] placeholder:text-[#aab1bb] focus:ring-[3px] focus:ring-violet-500/10 focus:outline-none ${
+          hasSelectedFromGoogle
+            ? 'border-green-400 focus:border-green-500'
+            : 'border-[#dfe3e8] focus:border-violet-500'
         }`}
-        placeholder=" "  
-        onChange={handleManualChange} 
-        onBlur={onBlur} 
+        placeholder=" "
+        onChange={handleManualChange}
+        onBlur={onBlur}
       />
       {hasSelectedFromGoogle && value && (
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500" title="Address validated by Google">
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1f8a4c]" title="Address validated by Google">
           ✓
         </span>
       )}
     </div>
     {!hasSelectedFromGoogle && value && value.length > 3 && (
-      <p className="mt-1 text-xs text-amber-600 px-2">
+      <p className="mt-1 ml-1 text-left text-[13px] text-[#9aa3af]">
         💡 Please select an address from the dropdown suggestions to validate the address
       </p>
     )}
     {hasFieldError && (
-        <p className="mt-1 text-sm text-red-600 px-2">{fieldError}</p>
-      )}  
-  </div>    
+        <p className="mt-1.5 ml-1 text-left text-sm text-red-600">{fieldError}</p>
+      )}
+  </div>
 };

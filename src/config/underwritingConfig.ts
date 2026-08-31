@@ -53,12 +53,12 @@ export const PAYMENT_REMITTED_BY_ALIASES: Record<string, keyof typeof PAYMENT_RE
  * Payment Frequency Risk Scores (from CSV)
  */
 export const PAYMENT_FREQUENCY_SCORES = {
-  'Daily': 0,        // "Daily" in CSV
-  'Weekly': 1,       // "Weekly" in CSV
-  'Bi-monthly': 2,   // "Bi Monthly" in CSV
-  'Monthly': 5,      // "Monthly" in CSV
-  'Post event': 10,  // "Post Event" in CSV
-  'It varies': 10    // "Other" in CSV
+  'Daily': 0,        // "Daily" in sheet
+  'Weekly': 1,       // "Weekly" in sheet
+  'Bi-monthly': 2,   // "Bi Monthly" in sheet
+  'Monthly': 3,      // "Monthly" in sheet
+  'Post event': 5,   // "Post Event" in sheet
+  'It varies': 5     // "Other" in sheet
 } as const;
 
 /**
@@ -74,9 +74,9 @@ export const RISK_MATRIX = [
     lowerBound: 0,
     upperBound: 7,
     maxAdvancePercent: {
-      V_O: 0.14,
+      V_O: 0.20,
       P: 0.20,
-      F: 0.26
+      F: 0.25
     },
     description: 'Low Risk'
   },
@@ -84,9 +84,9 @@ export const RISK_MATRIX = [
     lowerBound: 7.1,
     upperBound: 14,
     maxAdvancePercent: {
-      V_O: 0.11,
+      V_O: 0.15,
       P: 0.15,
-      F: 0.19
+      F: 0.18
     },
     description: 'Medium-Low Risk'
   },
@@ -94,9 +94,9 @@ export const RISK_MATRIX = [
     lowerBound: 14.1,
     upperBound: 21,
     maxAdvancePercent: {
-      V_O: 0.08,
+      V_O: 0.10,
       P: 0.10,
-      F: 0.12
+      F: 0.10
     },
     description: 'Medium-High Risk'
   },
@@ -115,7 +115,7 @@ export const RISK_MATRIX = [
 /**
  * Maximum advance amount cap (in dollars)
  */
-export const MAX_ADVANCE_CAP = 500000;
+export const MAX_ADVANCE_CAP = 1000000;
 
 /**
  * Customer type groups used by the matrix in the CSV:
@@ -138,8 +138,8 @@ export const MAX_RISK_SCORE = 35;
 /**
  * Configuration metadata
  */
-export const UNDERWRITING_CONFIG_VERSION = '1.2.0';
-export const LAST_UPDATED = '2026-03-18';
+export const UNDERWRITING_CONFIG_VERSION = '2.0.0'; // "New Model 8-24-26" sheet
+export const LAST_UPDATED = '2026-08-26';
 
 /**
  * Validation: Ensure risk matrix covers full range

@@ -8,21 +8,23 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
   const fieldError = getFieldError(name);
   
     return (
-        <div className="relative w-full mb-4" data-field-name={name}>  
-          <label className="text-xs text-gray-500 px-2 top-2 start-1">{label}</label>
+        <div className="relative w-full mb-4" data-field-name={name}>
+          <label className="mb-[7px] ml-1 block text-left text-sm text-[#6b7280]">
+            {label}
+            {required ? <span className="text-[#ef6b2f]"> *</span> : null}
+          </label>
           <div className="relative">
-            <select 
-              id={id} 
-              name={name} 
-              value={value} 
-              onChange={onChange} 
-              className={`block w-full px-3 py-2 text-sm text-gray-900 
-              rounded-3xl border
-             focus:outline-none pr-10 appearance-none cursor-pointer ${
-                hasFieldError 
-                  ? 'border-gray-300 focus:border-red-500' 
-                  : 'border-gray-300 focus:border-purple-400'
-              } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`} 
+            <select
+              id={id}
+              name={name}
+              value={value}
+              onChange={onChange}
+              className={`block w-full rounded-[14px] border bg-white px-[18px] py-3.5 text-base text-[#1f2a37]
+             focus:outline-none focus:ring-[3px] focus:ring-violet-500/10 pr-10 appearance-none cursor-pointer ${
+                hasFieldError
+                  ? 'border-red-300 focus:border-red-500'
+                  : 'border-[#dfe3e8] focus:border-violet-500'
+              } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}
               onBlur={onBlur}
               disabled={disabled}
             >
@@ -47,9 +49,9 @@ const DropdownField = ({ label, name, value, onChange, error, onBlur, options, r
               </svg>
             </div>
           </div>
-            {description && <p className='text-xs text-amber-500 text-left w-full ml-2 mt-1'>{description}</p>}
+            {description && <p className='text-[13px] text-[#9aa3af] text-left w-full ml-1 mt-1'>{description}</p>}
             {fieldError && (
-              <p className="mt-1 text-sm text-red-600 px-2">{fieldError}</p>
+              <p className="mt-1.5 ml-1 text-left text-sm text-red-600">{fieldError}</p>
             )}
         </div>
     );

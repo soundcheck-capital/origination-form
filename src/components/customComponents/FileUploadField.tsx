@@ -396,10 +396,10 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
 
   return (  
     <div className={`flex flex-col w-full mb-6 ${className}`} data-field-name={field}>
-      <h4 className="text-xs font-semibold text-neutral-700 leading-tight">{title}</h4>
+      <h4 className="ml-1 text-left text-sm font-semibold text-[#1f2a37] leading-tight">{title}</h4>
       {uploadPeriods && uploadPeriods.length > 0 && (
-        <p className="mt-1.5 flex flex-wrap items-center gap-1.5">
-          <span className="text-[10px] text-gray-500">One file each for</span>
+        <p className="mt-1.5 ml-1 flex flex-wrap items-center gap-1.5">
+          <span className="text-[10px] text-[#6b7280]">One file each for</span>
           {uploadPeriods.map((period) => (
             <span
               key={period}
@@ -410,15 +410,15 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           ))}
         </p>
       )}
-      {description && <p className="text-[10px] font-300 text-gray-400 leading-tight mt-1" dangerouslySetInnerHTML={{ __html: description }} />}
-      
+      {description && <p className="ml-1 text-left text-[13px] text-[#9aa3af] leading-tight mt-1" dangerouslySetInnerHTML={{ __html: description }} />}
+
       <div
-        className={`relative border-2 border-dashed rounded-lg px-4 py-3 mt-2 text-center transition-colors ${
+        className={`relative border-[1.5px] border-dashed rounded-2xl px-5 py-4 mt-2 text-center transition-colors ${
           isProcessing
-            ? 'border-blue-500 bg-blue-50 cursor-wait'
-            : dragActive 
-              ? 'border-blue-500 bg-blue-50' 
-              : 'border-gray-300 hover:border-gray-400'
+            ? 'border-violet-500 bg-violet-50 cursor-wait'
+            : dragActive
+              ? 'border-violet-500 bg-violet-50'
+              : 'border-[#cfd5dd] bg-[#f7f8fa] hover:border-[#b8c0ca]'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -450,8 +450,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
             <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
-            <div className="text-sm text-gray-600">
-              <span className="font-medium text-orange-500 hover:text-rose-500 transition-colors">Click to select</span>
+            <div className="text-sm text-[#3f4a57]">
+              <span className="font-semibold text-[#ef6b2f] hover:text-rose-500 transition-colors">Click to select</span>
               {' '}or drag & drop
               <span className="text-xs text-gray-400 ml-2">
                 ({accept.split(',').map(ext => ext.trim()).join(', ')}{multiple && ', multiple'})

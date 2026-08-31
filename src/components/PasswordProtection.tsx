@@ -104,7 +104,7 @@ const PasswordProtection: React.FC = () => {
                   title='Please enter the password to access the application form'
                   autoComplete="current-password"
                   required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                  className="appearance-none block w-full rounded-[14px] border border-[#dfe3e8] bg-white px-[18px] py-3.5 text-base text-[#1f2a37] placeholder:text-[#aab1bb] focus:outline-none focus:ring-[3px] focus:ring-violet-500/10 focus:border-violet-500"
                   placeholder="Enter password"
                   value={password}
                   onChange={onChangePassword}
@@ -121,7 +121,7 @@ const PasswordProtection: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center rounded-full border-0 bg-gradient-to-r from-[#f78fa7] to-[#fbbf7a] px-4 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_22px_rgba(247,143,167,0.4)] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Verifying...' : 'Access Form'}
               </button>
