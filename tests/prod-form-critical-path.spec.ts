@@ -24,7 +24,7 @@ const REQUIRED_UPLOAD_SELECTORS = [
 
 // ─── generic happy path ─────────────────────────────────────────────────────
 //
-// True E2E — every call hits the real Make.com webhooks except the Plaid
+// True E2E — every call hits the real n8n webhooks except the Plaid
 // exchange which requires a public_token from the Plaid Link iframe (a
 // third-party UI we cannot drive in CI). The link-token call IS real.
 //
@@ -32,6 +32,7 @@ const REQUIRED_UPLOAD_SELECTORS = [
 // What's mocked: exchange only (needs iframe-generated public_token)
 
 test("generic happy path", async ({ page }) => {
+  test.setTimeout(180_000);
   const now = new Date();
   const monthYear = `${String(now.getMonth() + 1).padStart(2, "0")}-${now.getFullYear()}`;
   const tag = `GENERIC E2E - ${monthYear}`;
@@ -46,7 +47,7 @@ test("generic happy path", async ({ page }) => {
   });
 
   // Mock only the exchange webhook — it will receive a synthetic public_token
-  // that Make.com cannot process. Everything else hits the real webhooks.
+  // that n8n cannot process. Everything else hits the real webhooks.
   const exchangeWebhookUrl = process.env.REACT_APP_PLAID_WEBHOOK_URL || "";
   if (exchangeWebhookUrl) {
     const exchangePath = new URL(exchangeWebhookUrl).pathname;
@@ -67,7 +68,7 @@ test("generic happy path", async ({ page }) => {
   const badCriticalResponses: Array<{ url: string; status: number }> = [];
 
   const isCriticalUrl = (url: string) =>
-    /(make\.com|\/applications\/|webhook|upload)/i.test(url);
+    /(\/applications\/|webhook|upload)/i.test(url);
 
   page.on("requestfailed", (request) => {
     if (isCriticalUrl(request.url())) {
@@ -156,7 +157,7 @@ test("generic happy path", async ({ page }) => {
 
   // ── Step 4 — Bank Connection ──────────────────────────────────────────────
   //
-  // link-token: REAL call to Make.com (fires automatically on mount)
+  // link-token: REAL call to n8n (fires automatically on mount)
   // exchange:   MOCKED (needs a real public_token from the Plaid Link iframe)
 
   await expect(page.getByRole("heading", { name: "Bank Connection" })).toBeVisible();
@@ -174,12 +175,14 @@ test("generic happy path", async ({ page }) => {
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
 
-  // Helper: trigger a file upload and wait for the real Make webhook POST
+  // Helper: trigger a file upload and wait for the real upload webhook POST
+  // Each upload answers once the file is in Drive (~4s), matched by the configured webhook path.
+  const uploadWebhookPath = new URL(process.env.REACT_APP_WEBHOOK_URL_FILES || "http://unset/upload").pathname;
   const waitForUploadPost = () =>
     page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&
-        response.url().includes("hook.us1.make.com"),
+        response.url().includes(uploadWebhookPath),
       { timeout: 30_000 }
     );
 
