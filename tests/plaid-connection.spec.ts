@@ -71,7 +71,7 @@ test("Step 4 — Plaid is required to proceed (validation only, no webhook)", as
 test("link_token webhook returns a valid token and unlocks the Connect button", async ({ page }) => {
   test.skip(!PLAID_LINK_TOKEN_URL, "REACT_APP_PLAID_LINK_TOKEN_URL not configured");
 
-  // Catch the live POST to the Make.com link_token webhook that the hook
+  // Catch the live POST to the n8n link_token webhook that the hook
   // fires when the bank-connection step mounts. No page.route() mock — if
   // the webhook is broken, this fails.
   const linkTokenResponsePromise = page.waitForResponse(

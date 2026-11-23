@@ -21,7 +21,7 @@ const REQUIRED_UPLOAD_SELECTORS = [
 //
 // True E2E for the password-protected custom company link flow.
 // A client accesses the form via ?companyName=..., enters a real password
-// verified by the Make.com → HubSpot webhook, then fills the form with the
+// verified by the n8n → HubSpot webhook, then fills the form with the
 // Company Name field locked (read-only).
 //
 // What's real:  password verification, link-token, file uploads, form submission
@@ -30,6 +30,7 @@ const REQUIRED_UPLOAD_SELECTORS = [
 // Requires env vars: E2E_COMPANY_NAME, E2E_COMPANY_PASSWORD
 
 test("custom link happy path – password + locked company name", async ({ page }) => {
+  test.setTimeout(180_000);
   const companyName = process.env.E2E_COMPANY_NAME;
   const companyPassword = process.env.E2E_COMPANY_PASSWORD;
 
@@ -67,7 +68,7 @@ test("custom link happy path – password + locked company name", async ({ page 
   const badCriticalResponses: Array<{ url: string; status: number }> = [];
 
   const isCriticalUrl = (url: string) =>
-    /(make\.com|\/applications\/|webhook|upload)/i.test(url);
+    /(\/applications\/|webhook|upload)/i.test(url);
 
   page.on("requestfailed", (request) => {
     if (isCriticalUrl(request.url())) {
@@ -94,7 +95,7 @@ test("custom link happy path – password + locked company name", async ({ page 
   // Verify password screen is shown
   await expect(page.getByRole("heading", { name: "Access Required" })).toBeVisible();
 
-  // Enter password and submit (real call to Make.com → HubSpot)
+  // Enter password and submit (real call to n8n → HubSpot)
   await page.locator('input[name="password"]').fill(companyPassword);
   await page.getByRole("button", { name: "Access Form" }).click();
 
@@ -185,11 +186,13 @@ test("custom link happy path – password + locked company name", async ({ page 
 
   await expect(page.locator("#file-upload-ticketingCompanyReport")).toBeVisible();
 
+  // Each upload answers once the file is in Drive (~4s), matched by the configured webhook path.
+  const uploadWebhookPath = new URL(process.env.REACT_APP_WEBHOOK_URL_FILES || "http://unset/upload").pathname;
   const waitForUploadPost = () =>
     page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&
-        response.url().includes("hook.us1.make.com"),
+        response.url().includes(uploadWebhookPath),
       { timeout: 30_000 }
     );
 
